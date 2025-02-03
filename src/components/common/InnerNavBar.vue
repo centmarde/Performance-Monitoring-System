@@ -1,6 +1,6 @@
 <template>
   <v-app-bar class="bg-card"> 
-    <v-toolbar-title class="text-h6 title">Boarding Spot</v-toolbar-title>
+    <v-toolbar-title class="text-h6 title">perfomance-monitoring-system</v-toolbar-title>
     <v-icon class="me-5" @click="toggleTheme">{{ themeIcon }}</v-icon>
     <v-menu transition="slide-y-transition">
       <template v-slot:activator="{ props }">
@@ -57,8 +57,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue';
 import { useTheme } from 'vuetify';
-import { doLogout } from '@/lib/supabase';
+// import { doLogout } from '@/lib/supabase';
 import { useUserInfo } from '@/composables/userInfo'; // Adjust the path as necessary
+import router from '@/router';
 
 const theme = useTheme();
 const isDarkTheme = computed(() => theme.global.current.value.dark);
@@ -73,7 +74,8 @@ function toggleTheme() {
 const {userEmail } = useUserInfo();
 
 function handleLogoutClick() {
-  doLogout();
+ /*  doLogout(); */
+ router.push('/');
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
   <v-app-bar>
-    <v-toolbar-title class="text-h6 title">Boarding Spot</v-toolbar-title>
+    <v-toolbar-title class="text-h6 title">perfomance-monitoring-system</v-toolbar-title>
     <!-- <v-icon class="me-5" @click="toggleTheme">{{ themeIcon }}</v-icon> -->
   </v-app-bar>
 </template>
