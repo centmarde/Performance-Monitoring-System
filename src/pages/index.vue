@@ -1,9 +1,8 @@
 <template>
-  <div class="custom-shape-divider-bottom-1734636264">
-    <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
-    </svg>
-</div>
+  <br>
+  <br>
+  <br>
+  <br>
 
   <div id="background">
     <v-container>
@@ -13,7 +12,7 @@
         <v-col cols="12" lg="8">
           <h1 class="header mx-auto">Welcome Back!</h1>
           <p class="text-light mx-5">
-           The ultimate platform for tenants and landlords to connect, manage, and share boarding house experiences seamlessly.
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum beatae neque doloribus, nesciunt quasi libero laudantium totam ducimus labore eaque asperiores pariatur vero cumque aliquam sint obcaecati maxime voluptas soluta?
           </p>
         </v-col>
       
@@ -29,5 +28,16 @@
 </template>
 
 <script lang="ts" setup>
-  //
+import { ref } from 'vue';
+import LoginForm from "@/components/auth/LoginForm.vue";
+import NavBar from "@/components/common/NavBar.vue";
+import RegisterForm from "@/components/auth/RegisterForm.vue";
+
+const showRegisterDialog = ref(false);
+
+function handleOpenRegisterDialog() {
+  console.log('Opening register dialog');
+  showRegisterDialog.value = true;
+}
 </script>
+

@@ -18,7 +18,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="6">
+      <v-col cols="12">
         <v-text-field
           v-model="formData.password"
           prepend-inner-icon="mdi-lock-outline"
@@ -30,7 +30,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="6">
+      <v-col cols="12">
         <v-text-field
           v-model="formData.password_confirmation"
           label="Password Confirmation"
@@ -45,8 +45,8 @@
       </v-col>
       <v-col cols="12">
         <v-radio-group v-model="formData.userType" :rules="[requiredValidator]" row>
-          <v-radio label="Tenant" value="tenant"></v-radio>
-          <v-radio label="Landlord" value="landlord"></v-radio>
+          <v-radio label="Teacher" value="teacher"></v-radio>
+          <v-radio label="Admin" value="admin"></v-radio>
         </v-radio-group>
       </v-col>
     </v-row>
