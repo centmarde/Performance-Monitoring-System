@@ -52,6 +52,7 @@ import { ref, computed, inject } from 'vue';
 import { useAuthUserStore } from '../../stores/authUser';
 import { useToast } from 'vue-toastification';
 import { requiredValidator, emailValidator } from '../../lib/validator';
+import router from '@/router';
 
 const loginEmail = ref('');
 const loginPassword = ref('');
@@ -66,7 +67,8 @@ const authUserStore = useAuthUserStore();
 
 const onFormSubmit = async () => {
   formAction.value.formProcess = true;
-  try {
+  
+  /* try {
     const { error } = await authUserStore.signIn(loginEmail.value, loginPassword.value);
     if (error) {
       throw new Error(error.message);
@@ -76,7 +78,9 @@ const onFormSubmit = async () => {
     toast.error(`Login error: ${err.message || 'An unknown error occurred'}`);
   } finally {
     formAction.value.formProcess = false;
-  }
+  } */
+
+  router.push("/home");
 };
 
 // Listen for the registration success event
@@ -91,4 +95,4 @@ const onRegistrationSuccess = () => {
 .v-btn {
   margin-top: 20px;
 }
-</style> 
+</style>  

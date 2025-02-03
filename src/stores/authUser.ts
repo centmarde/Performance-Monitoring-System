@@ -40,7 +40,7 @@ export const useAuthUserStore = defineStore('authUser', () => {
 
   // Getters
   const userRole = computed(() => {
-    return userData.value?.user_type === 'landlord' ? 'Landlord' : 'Tenant'
+    return userData.value?.user_type === 'admin' ? 'Admin' : 'Teacher'
   })
 
   // Reset State Action
