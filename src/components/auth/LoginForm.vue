@@ -1,6 +1,6 @@
 <template>
   <v-card class="pa-10" :class="themeClass" elevation="8">
-    <v-form ref="refVForm" @submit.prevent="onFormSubmit">
+    <v-form  @submit.prevent="onFormSubmit">
       <v-row dense>
         <v-col cols="12">
           <v-text-field
@@ -48,10 +48,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, inject } from 'vue';
-import { useAuthUserStore } from '../../stores/authUser';
+import { ref, computed } from 'vue';
+import { useAuthUserStore } from '@/stores/authUser';
 import { useToast } from 'vue-toastification';
-import { requiredValidator, emailValidator } from '../../lib/validator';
+import { requiredValidator, emailValidator } from '@/lib/validator';
 import router from '@/router';
 
 const loginEmail = ref('');
@@ -65,37 +65,27 @@ const themeClass = computed(() => (isDarkTheme.value ? 'light-theme' : 'dark-the
 
 const authUserStore = useAuthUserStore();
 
-const onFormSubmit = async () => {
+const onFormSubmit = async (event: SubmitEvent): Promise<void> => {
+  event.preventDefault();
   formAction.value.formProcess = true;
 
   try {
     const { error } = await authUserStore.signIn(loginEmail.value, loginPassword.value);
     if (error) {
-      //@ts-ignore
-      throw new Error(error.message);
+      throw new Error(typeof error === 'string' ? error : error.message);
     }
 
-    
     toast.success('Login successful', {
-      //@ts-ignore
-      position: 'top-left',
       timeout: 3000,
       closeOnClick: true,
     });
     router.push("/home");
   } catch (err) {
-    //@ts-ignore
-    toast.error(`Login error: ${err.message || 'An unknown error occurred'}`);
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+    toast.error(`Login error: ${errorMessage}`);
   } finally {
     formAction.value.formProcess = false;
   }
-};
-
-// Listen for the registration success event
-const onRegistrationSuccess = () => {
-  // Close the dialog
-  //@ts-ignore
-  $emit('close-dialog');
 };
 </script>
 

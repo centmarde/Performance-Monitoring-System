@@ -7,7 +7,7 @@
       >
         mdi-close
       </v-icon>
-      <v-form ref="refVForm" @submit.prevent="onFormSubmit">
+      <v-form  @submit.prevent="onFormSubmit">
   <v-row dense>
     <v-col cols="12">
       <v-text-field
@@ -68,8 +68,8 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { requiredValidator, emailValidator, passwordValidator, confirmedValidator } from '../../lib/validator';
-import { useAuthUserStore } from '../../stores/authUser';
+import { requiredValidator, emailValidator, passwordValidator, confirmedValidator } from '@/lib/validator';
+import { useAuthUserStore } from '@/stores/authUser';
 import { useToast } from "vue-toastification";
 
 // Define the emit function for the component
@@ -89,35 +89,32 @@ const isPasswordConfirmVisible = ref(false);
 
 const authUserStore = useAuthUserStore();
 
-async function onFormSubmit() {
-formAction.value.formProcess = true;
+async function onFormSubmit(event: SubmitEvent): Promise<void> {
+  event.preventDefault();
+  formAction.value.formProcess = true;
 
-const { error } = await authUserStore.registerUser(
-  formData.value.email,
-  formData.value.password,
-  formData.value.userType
-);
+  const { error } = await authUserStore.registerUser(
+    formData.value.email,
+    formData.value.password,
+    formData.value.userType
+  );
 
-formAction.value.formProcess = false;
+  formAction.value.formProcess = false;
 
-if (error) {
-  //@ts-ignore
-  toast.error(`Registration error: ${error.message}`, {
-    //@ts-ignore
-    position: 'top-left',
-    timeout: 3000,
-    closeOnClick: true,
-  });
-} else {
-  toast.success('Registration successful', {
-    //@ts-ignore
-    position: 'top-left',
-    timeout: 3000,
-    closeOnClick: true,
-  });
-  emit('registration-success');
-  emit('close-dialog');
-}
+  if (error) {
+    const errorMessage = typeof error === 'string' ? error : error.message;
+    toast.error(`Registration error: ${errorMessage}`, {
+      timeout: 3000,
+      closeOnClick: true,
+    });
+  } else {
+    toast.success('Registration successful', {
+      timeout: 3000,
+      closeOnClick: true,
+    });
+    emit('registration-success');
+    emit('close-dialog');
+  }
 }
 
 </script>
