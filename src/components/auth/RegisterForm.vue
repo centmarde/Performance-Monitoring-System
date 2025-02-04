@@ -116,7 +116,7 @@ async function onFormSubmit(event: SubmitEvent): Promise<void> {
     });
     emit('registration-success');
     emit('close-dialog');
-  } */
+  } 
 }
 
 </script>
