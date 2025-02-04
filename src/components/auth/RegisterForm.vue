@@ -56,7 +56,7 @@
             <span class="caption blue--text ml-n4">Terms & Conditions</span>
           </v-col>
         </v-row>
-        <v-btn color="blue" dark block tile>Sign up</v-btn>
+        <v-btn color="#2E7D32" dark block tile>Sign up</v-btn>
 
         <h5 class="text-center grey--text mt-4 mb-3">Or Sign up using</h5>
         <div class="d-flex justify-space-between align-center mx-10 mb-11">

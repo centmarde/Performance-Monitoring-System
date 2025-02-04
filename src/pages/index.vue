@@ -10,7 +10,7 @@
                 <v-col
                   cols="12"
                   md="6"
-                  style="background-color: #2196f3"
+                  style="background-color: #2e7d32"
                   class="rounded-bl-xl"
                 >
                   <div style="text-align: center; padding: 180px 0">
@@ -33,7 +33,7 @@
                 <v-col
                   cols="12"
                   md="6"
-                  style="background-color: #2196f3"
+                  style="background-color: #2e7d32"
                   class="rounded-br-xl"
                 >
                   <div style="text-align: center; padding: 180px 0">

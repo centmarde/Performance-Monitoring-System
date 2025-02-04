@@ -39,7 +39,7 @@
           <v-btn
             class="mt-2"
             type="submit"
-            color="#00A4E5"
+            color="#2E7D32"
             prepend-icon="mdi-login"
             :disabled="formAction.formProcess"
             :loading="formAction.formProcess"
