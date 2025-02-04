@@ -7,7 +7,7 @@
       >
         mdi-close
       </v-icon>
-      <v-form ref="refVForm" @submit.prevent="onFormSubmit">
+      <v-form ref="refVForm">
   <v-row dense>
     <v-col cols="12">
       <v-text-field
@@ -89,33 +89,7 @@ const isPasswordConfirmVisible = ref(false);
 
 const authUserStore = useAuthUserStore();
 
-async function onFormSubmit(event: SubmitEvent): Promise<void> {
-  event.preventDefault();
-  formAction.value.formProcess = true;
 
-  const { error } = await authUserStore.registerUser(
-    formData.value.email,
-    formData.value.password,
-    formData.value.userType
-  );
-
-  formAction.value.formProcess = false;
-
-  if (error) {
-    const errorMessage = typeof error === 'string' ? error : error.message;
-    toast.error(`Registration error: ${errorMessage}`, {
-      timeout: 3000,
-      closeOnClick: true,
-    });
-  } else {
-    toast.success('Registration successful', {
-      timeout: 3000,
-      closeOnClick: true,
-    });
-    emit('registration-success');
-    emit('close-dialog');
-  }
-}
 
 </script>
 
