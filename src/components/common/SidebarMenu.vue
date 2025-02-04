@@ -19,7 +19,7 @@ const menu = ref([
     hiddenOnCollapse: true,
   },
   {
-    href: '/',
+    href: '/home',
     title: 'Dashboard',
     icon: 'fa fa-user',
   },

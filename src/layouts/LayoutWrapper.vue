@@ -12,6 +12,7 @@
             <ScrollDown />
           </v-col>
         </v-row>
+        <AppFooter />
       </v-container>
     </v-main>
   </v-app>
