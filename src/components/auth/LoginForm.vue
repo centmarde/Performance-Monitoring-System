@@ -54,12 +54,12 @@ import { useToast } from 'vue-toastification';
 import { requiredValidator, emailValidator } from '@/lib/validator';
 import router from '@/router';
 
-const loginEmail = ref('');
-const loginPassword = ref('');
-const isPasswordVisible = ref(false);
-const formAction = ref({ formProcess: false });
+const loginEmail = ref<string>('');
+const loginPassword = ref<string>('');
+const isPasswordVisible = ref<boolean>(false);
+const formAction = ref<{ formProcess: boolean }>({ formProcess: false });
 const toast = useToast();
-const isDarkTheme = inject('isDarkTheme', ref(false));
+const isDarkTheme = inject('isDarkTheme', ref<boolean>(false));
 
 const themeClass = computed(() => (isDarkTheme.value ? 'light-theme' : 'dark-theme'));
 
@@ -93,4 +93,4 @@ const onFormSubmit = async (): Promise<void> => {
 .v-btn {
   margin-top: 20px;
 }
-</style> 
+</style>
