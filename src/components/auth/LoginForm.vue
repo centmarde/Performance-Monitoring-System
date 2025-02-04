@@ -39,7 +39,7 @@
         class="mt-2 v-btn"
         href="#"
         :class="{ 'v-btn--disabled': formAction.formProcess }"
-        @click.prevent="$emit('open-register-dialog')"
+        @click.prevent="openRegisterDialog"
       >
         Register
       </a>
@@ -87,10 +87,14 @@ const onFormSubmit = async (event: SubmitEvent): Promise<void> => {
     formAction.value.formProcess = false;
   }
 };
+
+const openRegisterDialog = () => {
+  // Implement the logic to open the register dialog
+};
 </script>
 
 <style scoped>
 .v-btn {
   margin-top: 20px;
 }
-</style> 
+</style>

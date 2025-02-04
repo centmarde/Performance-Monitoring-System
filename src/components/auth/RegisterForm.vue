@@ -1,13 +1,13 @@
 <template>
   <v-card class="mx-auto pa-10" max-width="600" elevation="8">
-      <v-icon
-        class="close-icon"
-        @click="emit('close-dialog')"
-        right
-      >
-        mdi-close
-      </v-icon>
-      <v-form ref="refVForm" @submit="onFormSubmit">
+    <v-icon
+      class="close-icon"
+      @click="closeDialog"
+      right
+    >
+      mdi-close
+    </v-icon>
+    <v-form ref="refVForm" @submit="onFormSubmit">
   <v-row dense>
     <v-col cols="12">
       <v-text-field
@@ -72,9 +72,6 @@ import { requiredValidator, emailValidator, passwordValidator, confirmedValidato
 import { useAuthUserStore } from '@/stores/authUser';
 import { useToast } from "vue-toastification";
 
-// Define the emit function for the component
-const emit = defineEmits(['registration-success', 'close-dialog']);
-
 const toast = useToast();
 
 const formData = ref({
@@ -112,10 +109,18 @@ async function onFormSubmit(event: SubmitEvent): Promise<void> {
       timeout: 3000,
       closeOnClick: true,
     });
-    emit('registration-success');
-    emit('close-dialog');
+    registrationSuccess();
+    closeDialog();
   }
 }
+
+const closeDialog = () => {
+  // Implement the logic to close the dialog
+};
+
+const registrationSuccess = () => {
+  // Implement the logic to handle registration success
+};
 
 </script>
 
