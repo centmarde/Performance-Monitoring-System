@@ -67,7 +67,6 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
 import { requiredValidator, emailValidator, passwordValidator, confirmedValidator } from '@/lib/validator';
 import { useAuthUserStore } from '@/stores/authUser';
 import { useToast } from "vue-toastification";
@@ -77,29 +76,29 @@ const emit = defineEmits(['registration-success', 'close-dialog']);
 
 const toast = useToast();
 
-const formData = ref({
-email: '',
-password: '',
-password_confirmation: '',
-userType: ''
-});
-const formAction = ref({ formProcess: false });
-const isPasswordVisible = ref(false);
-const isPasswordConfirmVisible = ref(false);
+const formData = {
+  email: '',
+  password: '',
+  password_confirmation: '',
+  userType: ''
+};
+const formAction = { formProcess: false };
+let isPasswordVisible = false;
+let isPasswordConfirmVisible = false;
 
 const authUserStore = useAuthUserStore();
 
 async function onFormSubmit(event: SubmitEvent): Promise<void> {
-  
-  formAction.value.formProcess = true;
+  event.preventDefault();
+  formAction.formProcess = true;
 
   const { error } = await authUserStore.registerUser(
-    formData.value.email,
-    formData.value.password,
-    formData.value.userType
+    formData.email,
+    formData.password,
+    formData.userType
   );
 
-  formAction.value.formProcess = false;
+  formAction.formProcess = false;
 
   if (error) {
     const errorMessage = typeof error === 'string' ? error : error.message;
