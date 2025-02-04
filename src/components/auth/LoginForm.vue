@@ -66,7 +66,7 @@ const themeClass = computed(() => (isDarkTheme.value ? 'light-theme' : 'dark-the
 const authUserStore = useAuthUserStore();
 
 const onFormSubmit = async () => {
-  formAction.value.formProcess = true;
+  /* formAction.value.formProcess = true; */
   
   /* try {
     const { error } = await authUserStore.signIn(loginEmail.value, loginPassword.value);
