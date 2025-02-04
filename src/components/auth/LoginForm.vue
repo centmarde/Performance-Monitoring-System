@@ -1,6 +1,6 @@
 <template>
   <v-card class="pa-10" :class="themeClass" elevation="8">
-    <v-form ref="refVForm" @submit.prevent="onFormSubmit">
+    <v-form  @submit.prevent="onFormSubmit">
       <v-row dense>
         <v-col cols="12">
           <v-text-field
@@ -53,7 +53,6 @@ import { useAuthUserStore } from '@/stores/authUser';
 import { useToast } from 'vue-toastification';
 import { requiredValidator, emailValidator } from '@/lib/validator';
 import router from '@/router';
-import type { SubmitEventPromise } from '@/types/SubmitEventPromise';
 
 const loginEmail = ref('');
 const loginPassword = ref('');
@@ -66,7 +65,7 @@ const themeClass = computed(() => (isDarkTheme.value ? 'light-theme' : 'dark-the
 
 const authUserStore = useAuthUserStore();
 
-const onFormSubmit = async (event: SubmitEvent): SubmitEventPromise => {
+const onFormSubmit = async (event: SubmitEvent): Promise<void> => {
   event.preventDefault();
   formAction.value.formProcess = true;
 
@@ -87,8 +86,6 @@ const onFormSubmit = async (event: SubmitEvent): SubmitEventPromise => {
   } finally {
     formAction.value.formProcess = false;
   }
-
-  return Promise.resolve(event);
 };
 </script>
 

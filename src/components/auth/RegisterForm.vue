@@ -7,7 +7,7 @@
       >
         mdi-close
       </v-icon>
-      <v-form ref="refVForm" @submit.prevent="onFormSubmit">
+      <v-form  @submit.prevent="onFormSubmit">
   <v-row dense>
     <v-col cols="12">
       <v-text-field
@@ -71,7 +71,6 @@ import { ref } from 'vue';
 import { requiredValidator, emailValidator, passwordValidator, confirmedValidator } from '@/lib/validator';
 import { useAuthUserStore } from '@/stores/authUser';
 import { useToast } from "vue-toastification";
-import type { SubmitEventPromise } from '@/types/SubmitEventPromise';
 
 // Define the emit function for the component
 const emit = defineEmits(['registration-success', 'close-dialog']);
@@ -90,7 +89,7 @@ const isPasswordConfirmVisible = ref(false);
 
 const authUserStore = useAuthUserStore();
 
-async function onFormSubmit(event: SubmitEvent): SubmitEventPromise {
+async function onFormSubmit(event: SubmitEvent): Promise<void> {
   event.preventDefault();
   formAction.value.formProcess = true;
 
@@ -116,8 +115,6 @@ async function onFormSubmit(event: SubmitEvent): SubmitEventPromise {
     emit('registration-success');
     emit('close-dialog');
   }
-
-  return Promise.resolve(event);
 }
 
 </script>
