@@ -7,14 +7,14 @@
         >
           mdi-close
         </v-icon>
-        <v-form ref="refVForm" @submit.prevent="onFormSubmit">
+        <v-form ref="refVForm" @submit.prevent="router.push('/')">
     <v-row dense>
       <v-col cols="12">
         <v-text-field
           v-model="formData.email"
           label="Email"
           prepend-inner-icon="mdi-email-outline"
-        
+          :rules="[requiredValidator, emailValidator]"
         ></v-text-field>
       </v-col>
 
@@ -26,7 +26,7 @@
           :type="isPasswordVisible ? 'text' : 'password'"
           :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
           @click:append-inner="isPasswordVisible = !isPasswordVisible"
-         
+          :rules="[requiredValidator, passwordValidator]"
         ></v-text-field>
       </v-col>
 
@@ -71,6 +71,7 @@ import { ref } from 'vue';
 import { requiredValidator, emailValidator, passwordValidator, confirmedValidator } from '../../lib/validator';
 import { useAuthUserStore } from '../../stores/authUser';
 import { useToast } from "vue-toastification";
+import router from '@/router';
 
 // Define the emit function for the component
 const emit = defineEmits(['registration-success', 'close-dialog']);

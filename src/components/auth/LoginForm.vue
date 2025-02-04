@@ -1,13 +1,13 @@
 <template>
   <v-card class="pa-10" :class="themeClass" elevation="8">
-    <v-form ref="refVForm" @submit.prevent="onFormSubmit">
+    <v-form ref="refVForm" @submit.prevent="router.push('/home')">
       <v-row dense>
         <v-col cols="12">
           <v-text-field
             v-model="loginEmail"
             label="Email"
             prepend-inner-icon="mdi-email-outline"
-           
+            :rules="[requiredValidator, emailValidator]"
           ></v-text-field>
         </v-col>
 
@@ -19,7 +19,7 @@
             :type="isPasswordVisible ? 'text' : 'password'"
             :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
             @click:append-inner="isPasswordVisible = !isPasswordVisible"
-          
+            :rules="[requiredValidator]"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -95,4 +95,4 @@ const onRegistrationSuccess = () => {
 .v-btn {
   margin-top: 20px;
 }
-</style>  
+</style>
