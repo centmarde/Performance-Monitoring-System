@@ -1,49 +1,6 @@
 <template>
   <v-card class="pa-10" :class="themeClass" elevation="8">
-    <v-form ref="refVForm" @submit.prevent="onFormSubmit">
-      <v-row dense>
-        <v-col cols="12">
-          <v-text-field
-            v-model="loginEmail"
-            label="Email"
-            prepend-inner-icon="mdi-email-outline"
-            :rules="[requiredValidator, emailValidator]"
-          ></v-text-field>
-        </v-col>
-
-        <v-col cols="12">
-          <v-text-field
-            v-model="loginPassword"
-            prepend-inner-icon="mdi-lock-outline"
-            label="Password"
-            :type="isPasswordVisible ? 'text' : 'password'"
-            :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-            @click:append-inner="isPasswordVisible = !isPasswordVisible"
-            :rules="[requiredValidator]"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-
-      <v-btn
-        class="mt-2"
-        type="submit"
-        color="#00A4E5"
-        prepend-icon="mdi-login"
-        :disabled="formAction.formProcess"
-        :loading="formAction.formProcess"
-        block
-      >
-        Login
-      </v-btn>
-      <a
-        class="mt-2 v-btn"
-        href="#"
-        :class="{ 'v-btn--disabled': formAction.formProcess }"
-        @click.prevent="$emit('open-register-dialog')"
-      >
-        Register
-      </a>
-    </v-form>
+  
   </v-card>
 </template>
 
