@@ -2,10 +2,10 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { useToast } from 'vue-toastification';
-import { useRouter } from 'vue-router';
+
 
 const toast = useToast();
-const router = useRouter();
+
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
@@ -21,7 +21,7 @@ export async function doLogout() {
     }
     
     // Supabase Logout
-  
+    await supabase.auth.signOut();
 
     // Delete all data in the rooms table
 

@@ -18,7 +18,7 @@ import { createApp } from 'vue'
 
 const app = createApp(App).use(Toast);
 
-app.config.warnHandler = () => {};
+// app.config.warnHandler = () => {};
 
 app.use(VueSidebarMenu);
 

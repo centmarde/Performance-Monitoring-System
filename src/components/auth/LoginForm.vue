@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, inject } from 'vue';
+import { ref, computed } from 'vue';
 import { useAuthUserStore } from '@/stores/authUser';
 import { useToast } from 'vue-toastification';
 import { requiredValidator, emailValidator } from '@/lib/validator';
@@ -93,4 +93,4 @@ const onFormSubmit = async (event: SubmitEvent): Promise<void> => {
 .v-btn {
   margin-top: 20px;
 }
-</style> 
+</style>

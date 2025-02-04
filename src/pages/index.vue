@@ -16,7 +16,7 @@
           </p>
         </v-col>
       
-        <v-col cols="12" lg="4"></v-col>
+        <v-col cols="12" lg="4"> <LoginForm @open-register-dialog="handleOpenRegisterDialog" /> </v-col>
       </v-row>
     </v-container>
   </div>
