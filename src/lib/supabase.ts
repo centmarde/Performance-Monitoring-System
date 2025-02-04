@@ -24,11 +24,6 @@ export async function doLogout() {
   
 
     // Delete all data in the rooms table
-    const { error: deleteError } = await supabase.from('rooms').delete().eq('add', true); // Deletes all rows
-    if (deleteError) {
-      toast.error("Error deleting rooms data.");
-      return;
-    }
 
     toast("Logout Successfully!"); // Notify successful logout
     localStorage.clear(); // Clear local storage
