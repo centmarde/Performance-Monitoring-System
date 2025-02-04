@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar class="bg-card"> 
+  <v-app-bar class="bg-card rounded-border my-3 mx-3"> 
     <v-toolbar-title class="text-h6 title">perfomance-monitoring-system</v-toolbar-title>
     <v-icon class="me-5" @click="toggleTheme">{{ themeIcon }}</v-icon>
     <v-menu transition="slide-y-transition">
@@ -12,7 +12,7 @@
         </v-btn>
       </template>
 
-      <v-sheet class="pa-0 mt-2 me-1 menu-card" color="grey-darken-3">
+      <v-sheet class="pa-0 mt-2 me-1 menu-card rounded-border" color="grey-darken-3">
         <div>
           <v-btn
             class="justify-start"
@@ -86,6 +86,10 @@ function handleLogoutClick() {
   box-shadow: 0 4px 10px rgba(254, 79, 90, 0.3);
   backdrop-filter: blur(5px);
 }
+
+.rounded-border {
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
 </style>
-  
-  
+
