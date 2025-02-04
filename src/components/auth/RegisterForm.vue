@@ -14,7 +14,7 @@
           v-model="formData.email"
           label="Email"
           prepend-inner-icon="mdi-email-outline"
-          :rules="[requiredValidator, emailValidator]"
+        
         ></v-text-field>
       </v-col>
 
@@ -26,7 +26,7 @@
           :type="isPasswordVisible ? 'text' : 'password'"
           :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
           @click:append-inner="isPasswordVisible = !isPasswordVisible"
-          :rules="[requiredValidator, passwordValidator]"
+         
         ></v-text-field>
       </v-col>
 

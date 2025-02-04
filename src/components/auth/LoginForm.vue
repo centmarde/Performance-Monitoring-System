@@ -7,7 +7,7 @@
             v-model="loginEmail"
             label="Email"
             prepend-inner-icon="mdi-email-outline"
-            :rules="[requiredValidator, emailValidator]"
+           
           ></v-text-field>
         </v-col>
 
@@ -19,7 +19,7 @@
             :type="isPasswordVisible ? 'text' : 'password'"
             :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
             @click:append-inner="isPasswordVisible = !isPasswordVisible"
-            :rules="[requiredValidator]"
+          
           ></v-text-field>
         </v-col>
       </v-row>
