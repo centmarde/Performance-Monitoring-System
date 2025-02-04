@@ -14,6 +14,7 @@
         v-model="formData.email"
         label="Email"
         prepend-inner-icon="mdi-email-outline"
+        :rules="[requiredValidator, emailValidator]"
       ></v-text-field>
     </v-col>
 
@@ -25,6 +26,7 @@
         :type="isPasswordVisible ? 'text' : 'password'"
         :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
         @click:append-inner="isPasswordVisible = !isPasswordVisible"
+        :rules="[requiredValidator, passwordValidator]"
       ></v-text-field>
     </v-col>
 
@@ -35,10 +37,14 @@
         :type="isPasswordConfirmVisible ? 'text' : 'password'"
         :append-inner-icon="isPasswordConfirmVisible ? 'mdi-eye-off' : 'mdi-eye'"
         @click:append-inner="isPasswordConfirmVisible = !isPasswordConfirmVisible"
+        :rules="[
+          requiredValidator,
+          confirmedValidator(formData.password_confirmation, formData.password)
+        ]"
       ></v-text-field>
     </v-col>
     <v-col cols="12">
-      <v-radio-group v-model="formData.userType" row>
+      <v-radio-group v-model="formData.userType" :rules="[requiredValidator]" row>
         <v-radio label="Teacher" value="teacher"></v-radio>
         <v-radio label="Admin" value="admin"></v-radio>
       </v-radio-group>
@@ -62,6 +68,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
+import { requiredValidator, emailValidator, passwordValidator, confirmedValidator } from '@/lib/validator';
 import { useAuthUserStore } from '@/stores/authUser';
 import { useToast } from "vue-toastification";
 
@@ -82,8 +89,8 @@ const isPasswordConfirmVisible = ref(false);
 
 const authUserStore = useAuthUserStore();
 
-async function onFormSubmit(event: SubmitEvent): Promise<void> {
-  event.preventDefault();
+async function onFormSubmit(): Promise<void> {
+ 
   formAction.value.formProcess = true;
 
   const { error } = await authUserStore.registerUser(
