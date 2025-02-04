@@ -1,22 +1,27 @@
 <template>
   <v-app>
     <v-main>
-      <div id="main-content">
+      <v-container fluid>
+        <v-row>
+          <v-col cols="12">
+            <SidebarMenu />
+          </v-col>
+          <v-col cols="12">
             <InnerNavBar />
             <slot name="content"></slot>
             <ScrollDown />
-           
-      </div>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
 import InnerNavBar from '../components/common/InnerNavBar.vue';
 import ScrollDown from '../components/common/ScrollDown.vue';
-</script> 
+import SidebarMenu from '../components/common/SidebarMenu.vue';
+</script>
 
 <style scoped>
-
 </style>

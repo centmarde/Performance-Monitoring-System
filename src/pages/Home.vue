@@ -2,11 +2,8 @@
   <LayoutWrapper>
     <template #content>
       <div>
-        <CircleRooms />
-        
-      <RoomSuggest />
-        <v-divider></v-divider>
-        <CardRooms />
+      asdasd
+       
       </div>
     </template>
   </LayoutWrapper>
