@@ -68,8 +68,8 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { requiredValidator, emailValidator, passwordValidator, confirmedValidator } from '../../lib/validator';
-import { useAuthUserStore } from '../../stores/authUser';
+import { requiredValidator, emailValidator, passwordValidator, confirmedValidator } from '@/lib/validator';
+import { useAuthUserStore } from '@/stores/authUser';
 import { useToast } from "vue-toastification";
 
 // Define the emit function for the component
