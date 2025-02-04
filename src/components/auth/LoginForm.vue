@@ -8,46 +8,47 @@
       </h6>
       <v-row align="center" justify="center mt-3">
         <v-col cols="12" sm="8">
-          <v-text-field
-            v-model="loginEmail"
-            label="Email"
-            prepend-inner-icon="mdi-email-outline"
-            :rules="[requiredValidator, emailValidator]"
-          ></v-text-field>
-          <v-text-field
-            v-model="loginPassword"
-            prepend-inner-icon="mdi-lock-outline"
-            label="Password"
-            :type="isPasswordVisible ? 'text' : 'password'"
-            :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-            @click:append-inner="isPasswordVisible = !isPasswordVisible"
-            :rules="[requiredValidator]"
-          ></v-text-field>
+          <v-form ref="refVForm" @submit.prevent="onFormSubmit">
+            <v-text-field
+              v-model="loginEmail"
+              label="Email"
+              prepend-inner-icon="mdi-email-outline"
+              :rules="[requiredValidator, emailValidator]"
+            ></v-text-field>
+            <v-text-field
+              v-model="loginPassword"
+              prepend-inner-icon="mdi-lock-outline"
+              label="Password"
+              :type="isPasswordVisible ? 'text' : 'password'"
+              :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+              @click:append-inner="isPasswordVisible = !isPasswordVisible"
+              :rules="[requiredValidator]"
+            ></v-text-field>
 
-          <v-row>
-            <v-col cols="12" sm="7">
-              <v-checkbox
-                label="Remember Me"
-                class="mt-n1"
-                color="blue"
-              ></v-checkbox>
-            </v-col>
-            <v-col cols="12" sm="5">
-              <span class="caption blue--text">Forgot password</span>
-            </v-col>
-          </v-row>
-          <v-btn
-            class="mt-2"
-            type="submit"
-            color="#2E7D32"
-            prepend-icon="mdi-login"
-            :disabled="formAction.formProcess"
-            :loading="formAction.formProcess"
-            block
-          >
-            Login
-          </v-btn>
-
+            <v-row>
+              <v-col cols="12" sm="7">
+                <v-checkbox
+                  label="Remember Me"
+                  class="mt-n1"
+                  color="blue"
+                ></v-checkbox>
+              </v-col>
+              <v-col cols="12" sm="5">
+                <span class="caption blue--text">Forgot password</span>
+              </v-col>
+            </v-row>
+            <v-btn
+              class="mt-2"
+              type="submit"
+              color="#2E7D32"
+              prepend-icon="mdi-login"
+              :disabled="formAction.formProcess"
+              :loading="formAction.formProcess"
+              block
+            >
+              Login
+            </v-btn>
+          </v-form>
           <h5 class="text-center grey--text mt-4 mb-3">Or Log in using</h5>
           <div class="d-flex justify-space-between align-center mx-10 mb-16">
             <!-- Replaced FontAwesome icons with Vuetify icons -->

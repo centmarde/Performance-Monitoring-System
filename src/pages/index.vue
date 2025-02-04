@@ -64,7 +64,7 @@
 
 <script lang="ts" setup>
 import LoginForm from "@/components/auth/LoginForm.vue";
-import { ref, defineProps } from "vue";
+import { ref } from "vue";
 import { useDisplay } from "vuetify";
 
 const step = ref(1);
