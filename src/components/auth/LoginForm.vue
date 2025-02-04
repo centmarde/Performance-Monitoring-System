@@ -65,7 +65,8 @@ const themeClass = computed(() => (isDarkTheme.value ? 'light-theme' : 'dark-the
 
 const authUserStore = useAuthUserStore();
 
-const onFormSubmit = async () => {
+const onFormSubmit = async (event: Event) => {
+  event.preventDefault();
   formAction.value.formProcess = true;
 
   try {
@@ -75,7 +76,6 @@ const onFormSubmit = async () => {
       throw new Error(error.message);
     }
 
-    
     toast.success('Login successful', {
       //@ts-ignore
       position: 'top-left',
@@ -89,13 +89,6 @@ const onFormSubmit = async () => {
   } finally {
     formAction.value.formProcess = false;
   }
-};
-
-// Listen for the registration success event
-const onRegistrationSuccess = () => {
-  // Close the dialog
-  //@ts-ignore
-  $emit('close-dialog');
 };
 </script>
 

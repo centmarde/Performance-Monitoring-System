@@ -89,35 +89,36 @@ const isPasswordConfirmVisible = ref(false);
 
 const authUserStore = useAuthUserStore();
 
-async function onFormSubmit() {
-formAction.value.formProcess = true;
+async function onFormSubmit(event: Event) {
+  event.preventDefault();
+  formAction.value.formProcess = true;
 
-const { error } = await authUserStore.registerUser(
-  formData.value.email,
-  formData.value.password,
-  formData.value.userType
-);
+  const { error } = await authUserStore.registerUser(
+    formData.value.email,
+    formData.value.password,
+    formData.value.userType
+  );
 
-formAction.value.formProcess = false;
+  formAction.value.formProcess = false;
 
-if (error) {
-  //@ts-ignore
-  toast.error(`Registration error: ${error.message}`, {
+  if (error) {
     //@ts-ignore
-    position: 'top-left',
-    timeout: 3000,
-    closeOnClick: true,
-  });
-} else {
-  toast.success('Registration successful', {
-    //@ts-ignore
-    position: 'top-left',
-    timeout: 3000,
-    closeOnClick: true,
-  });
-  emit('registration-success');
-  emit('close-dialog');
-}
+    toast.error(`Registration error: ${error.message}`, {
+      //@ts-ignore
+      position: 'top-left',
+      timeout: 3000,
+      closeOnClick: true,
+    });
+  } else {
+    toast.success('Registration successful', {
+      //@ts-ignore
+      position: 'top-left',
+      timeout: 3000,
+      closeOnClick: true,
+    });
+    emit('registration-success');
+    emit('close-dialog');
+  }
 }
 
 </script>
