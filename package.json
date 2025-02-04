@@ -21,6 +21,7 @@
     "core-js": "^3.37.1",
     "roboto-fontface": "*",
     "vue": "^3.4.31",
+    "vue-sidebar-menu": "^5.4.2",
     "vue-toastification": "^2.0.0-rc.5",
     "vuetify": "^3.6.14"
   },
