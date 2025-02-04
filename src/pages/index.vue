@@ -1,22 +1,38 @@
 <template>
-  <br>
-  <br>
-  <br>
-  <br>
-
   <div id="background">
-    <v-container>
+    <v-container
+      fluid
+      class="pa-0 d-flex align-center justify-center"
+      style="height: 100vh; background-color: #f5f5f5"
+    >
       <NavBar />
-      <div id="spacer"></div>
-      <v-row class="mb-10">
-        <v-col cols="12" lg="8">
-          <h1 class="header mx-auto">Welcome Back!</h1>
-          <p class="text-light mx-5">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorum beatae neque doloribus, nesciunt quasi libero laudantium totam ducimus labore eaque asperiores pariatur vero cumque aliquam sint obcaecati maxime voluptas soluta?
-          </p>
+
+      <v-row class="d-flex align-center justify-center" style="width: 80%">
+        <!-- Left Side (Welcome Back Section) -->
+        <v-col
+          cols="12"
+          lg="8"
+          class="bg-light-green-darken-4 h-screen pa-0 d-flex justify-center align-center"
+          v-if="!mobile"
+        >
+          <!-- Replace the image with a background color -->
+          <div
+            style="
+              background-color: #388e3c;
+              height: 100px;
+              width: 100px;
+              border-radius: 50%;
+            "
+            class="mx-auto"
+          ></div>
         </v-col>
-      
-        <v-col cols="12" lg="4"> <LoginForm @open-register-dialog="handleOpenRegisterDialog" /> </v-col>
+
+        <!-- Login Form Section -->
+        <v-col cols="12" lg="4" :class="mobile ? '' : ''">
+          <v-card class="mx-auto" elevation="0" max-width="600">
+            <LoginForm></LoginForm>
+          </v-card>
+        </v-col>
       </v-row>
     </v-container>
   </div>
@@ -24,20 +40,20 @@
   <v-dialog v-model="showRegisterDialog" max-width="600">
     <RegisterForm @close-dialog="showRegisterDialog = false" />
   </v-dialog>
-
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref } from "vue";
 import LoginForm from "@/components/auth/LoginForm.vue";
 import NavBar from "@/components/common/NavBar.vue";
 import RegisterForm from "@/components/auth/RegisterForm.vue";
+import { useDisplay } from "vuetify";
 
+const { mobile } = useDisplay();
 const showRegisterDialog = ref(false);
 
 function handleOpenRegisterDialog() {
-  console.log('Opening register dialog');
+  console.log("Opening register dialog");
   showRegisterDialog.value = true;
 }
 </script>
-

@@ -1,6 +1,8 @@
 <template>
-  <v-app-bar class="bg-card"> 
-    <v-toolbar-title class="text-h6 title">perfomance-monitoring-system</v-toolbar-title>
+  <v-app-bar class="bg-card">
+    <v-toolbar-title class="text-h6 text-light-green-darken-4 font-weight-bold"
+      >Performance Monitoring System</v-toolbar-title
+    >
     <v-icon class="me-5" @click="toggleTheme">{{ themeIcon }}</v-icon>
     <v-menu transition="slide-y-transition">
       <template v-slot:activator="{ props }">
@@ -30,8 +32,7 @@
               <v-col> {{ userEmail }}</v-col>
             </v-row>
           </v-btn>
-    
-         
+
           <v-btn
             class="justify-start"
             rounded="0"
@@ -55,37 +56,36 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
-import { useTheme } from 'vuetify';
+import { computed } from "vue";
+import { useTheme } from "vuetify";
 // import { doLogout } from '@/lib/supabase';
-import { useUserInfo } from '@/composables/userInfo'; // Adjust the path as necessary
-import router from '@/router';
+import { useUserInfo } from "@/composables/userInfo"; // Adjust the path as necessary
+import router from "@/router";
 
 const theme = useTheme();
 const isDarkTheme = computed(() => theme.global.current.value.dark);
-const themeIcon = computed(() => (isDarkTheme.value ? 'mdi-weather-sunny' : 'mdi-weather-night'));
+const themeIcon = computed(() =>
+  isDarkTheme.value ? "mdi-weather-sunny" : "mdi-weather-night"
+);
 
 function toggleTheme() {
-  const newTheme = isDarkTheme.value ? 'light' : 'dark';
+  const newTheme = isDarkTheme.value ? "light" : "dark";
   theme.global.name.value = newTheme;
-  localStorage.setItem('theme', newTheme);
+  localStorage.setItem("theme", newTheme);
 }
 
-const {userEmail } = useUserInfo();
+const { userEmail } = useUserInfo();
 
 function handleLogoutClick() {
- /*  doLogout(); */
- router.push('/');
+  /*  doLogout(); */
+  router.push("/");
 }
 </script>
 
 <style scoped>
-
 .bg-card {
   background: rgba(161, 205, 247, 0.15);
   box-shadow: 0 4px 10px rgba(254, 79, 90, 0.3);
   backdrop-filter: blur(5px);
 }
 </style>
-  
-  
