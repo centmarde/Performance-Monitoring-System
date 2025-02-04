@@ -7,7 +7,6 @@
             v-model="loginEmail"
             label="Email"
             prepend-inner-icon="mdi-email-outline"
-            :rules="[requiredValidator, emailValidator]"
           ></v-text-field>
         </v-col>
 
@@ -19,7 +18,6 @@
             :type="isPasswordVisible ? 'text' : 'password'"
             :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
             @click:append-inner="isPasswordVisible = !isPasswordVisible"
-            :rules="[requiredValidator]"
           ></v-text-field>
         </v-col>
       </v-row>
@@ -39,7 +37,7 @@
         class="mt-2 v-btn"
         href="#"
         :class="{ 'v-btn--disabled': formAction.formProcess }"
-        @click.prevent="openRegisterDialog"
+        @click.prevent="$emit('open-register-dialog')"
       >
         Register
       </a>
@@ -51,7 +49,6 @@
 import { ref, computed, inject } from 'vue';
 import { useAuthUserStore } from '@/stores/authUser';
 import { useToast } from 'vue-toastification';
-import { requiredValidator, emailValidator } from '@/lib/validator';
 import router from '@/router';
 
 const loginEmail = ref('');
@@ -86,10 +83,6 @@ const onFormSubmit = async (event: SubmitEvent): Promise<void> => {
   } finally {
     formAction.value.formProcess = false;
   }
-};
-
-const openRegisterDialog = () => {
-  // Implement the logic to open the register dialog
 };
 </script>
 
