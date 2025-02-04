@@ -1,6 +1,8 @@
 <template>
-  <v-app-bar class="bg-card rounded-border my-3 mx-3"> 
-    <v-toolbar-title class="text-h6 title">perfomance-monitoring-system</v-toolbar-title>
+  <v-app-bar class="bg-card">
+    <v-toolbar-title class="text-h6 text-light-green-darken-4 font-weight-bold"
+      >Performance Monitoring System</v-toolbar-title
+    >
     <v-icon class="me-5" @click="toggleTheme">{{ themeIcon }}</v-icon>
     <v-menu transition="slide-y-transition">
       <template v-slot:activator="{ props }">
@@ -30,8 +32,7 @@
               <v-col> {{ userEmail }}</v-col>
             </v-row>
           </v-btn>
-    
-         
+
           <v-btn
             class="justify-start"
             rounded="0"
@@ -63,15 +64,17 @@ import router from '@/router';
 
 const theme = useTheme();
 const isDarkTheme = computed(() => theme.global.current.value.dark);
-const themeIcon = computed(() => (isDarkTheme.value ? 'mdi-weather-sunny' : 'mdi-weather-night'));
+const themeIcon = computed(() =>
+  isDarkTheme.value ? "mdi-weather-sunny" : "mdi-weather-night"
+);
 
 function toggleTheme() {
-  const newTheme = isDarkTheme.value ? 'light' : 'dark';
+  const newTheme = isDarkTheme.value ? "light" : "dark";
   theme.global.name.value = newTheme;
-  localStorage.setItem('theme', newTheme);
+  localStorage.setItem("theme", newTheme);
 }
 
-const {userEmail } = useUserInfo();
+const { userEmail } = useUserInfo();
 
 function handleLogoutClick() {
   doLogout();
@@ -80,7 +83,6 @@ function handleLogoutClick() {
 </script>
 
 <style scoped>
-
 .bg-card {
   background: rgba(161, 205, 247, 0.15);
   box-shadow: 0 4px 10px rgba(254, 79, 90, 0.3);
