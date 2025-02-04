@@ -67,20 +67,28 @@ const authUserStore = useAuthUserStore();
 
 const onFormSubmit = async () => {
   formAction.value.formProcess = true;
-  
-  /* try {
+
+  try {
     const { error } = await authUserStore.signIn(loginEmail.value, loginPassword.value);
     if (error) {
+      //@ts-ignore
       throw new Error(error.message);
     }
-  } catch (err) {
+
+    
+    toast.success('Login successful', {
       //@ts-ignore
+      position: 'top-left',
+      timeout: 3000,
+      closeOnClick: true,
+    });
+    router.push("/home");
+  } catch (err) {
+    //@ts-ignore
     toast.error(`Login error: ${err.message || 'An unknown error occurred'}`);
   } finally {
     formAction.value.formProcess = false;
-  } */
-
-  router.push("/home");
+  }
 };
 
 // Listen for the registration success event
@@ -95,4 +103,4 @@ const onRegistrationSuccess = () => {
 .v-btn {
   margin-top: 20px;
 }
-</style>  
+</style>
