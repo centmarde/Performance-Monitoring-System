@@ -89,7 +89,7 @@ const isPasswordConfirmVisible = ref(false);
 
 const authUserStore = useAuthUserStore();
 
-async function onFormSubmit(event: Event) {
+async function onFormSubmit(event: SubmitEvent): Promise<void> {
   event.preventDefault();
   formAction.value.formProcess = true;
 
@@ -102,7 +102,6 @@ async function onFormSubmit(event: Event) {
   formAction.value.formProcess = false;
 
   if (error) {
-    
     const errorMessage = typeof error === 'string' ? error : error.message;
     toast.error(`Registration error: ${errorMessage}`, {
       timeout: 3000,

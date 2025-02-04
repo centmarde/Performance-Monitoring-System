@@ -65,14 +65,13 @@ const themeClass = computed(() => (isDarkTheme.value ? 'light-theme' : 'dark-the
 
 const authUserStore = useAuthUserStore();
 
-const onFormSubmit = async (event: Event) => {
+const onFormSubmit = async (event: SubmitEvent): Promise<void> => {
   event.preventDefault();
   formAction.value.formProcess = true;
 
   try {
     const { error } = await authUserStore.signIn(loginEmail.value, loginPassword.value);
     if (error) {
-     
       throw new Error(typeof error === 'string' ? error : error.message);
     }
 
@@ -82,7 +81,6 @@ const onFormSubmit = async (event: Event) => {
     });
     router.push("/home");
   } catch (err) {
-   
     const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
     toast.error(`Login error: ${errorMessage}`);
   } finally {
