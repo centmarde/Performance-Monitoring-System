@@ -72,20 +72,19 @@ const onFormSubmit = async (event: Event) => {
   try {
     const { error } = await authUserStore.signIn(loginEmail.value, loginPassword.value);
     if (error) {
-      //@ts-ignore
-      throw new Error(error.message);
+     
+      throw new Error(typeof error === 'string' ? error : error.message);
     }
 
     toast.success('Login successful', {
-      //@ts-ignore
-      position: 'top-left',
       timeout: 3000,
       closeOnClick: true,
     });
     router.push("/home");
   } catch (err) {
-    //@ts-ignore
-    toast.error(`Login error: ${err.message || 'An unknown error occurred'}`);
+   
+    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+    toast.error(`Login error: ${errorMessage}`);
   } finally {
     formAction.value.formProcess = false;
   }

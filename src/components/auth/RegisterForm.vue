@@ -102,17 +102,14 @@ async function onFormSubmit(event: Event) {
   formAction.value.formProcess = false;
 
   if (error) {
-    //@ts-ignore
-    toast.error(`Registration error: ${error.message}`, {
-      //@ts-ignore
-      position: 'top-left',
+    
+    const errorMessage = typeof error === 'string' ? error : error.message;
+    toast.error(`Registration error: ${errorMessage}`, {
       timeout: 3000,
       closeOnClick: true,
     });
   } else {
     toast.success('Registration successful', {
-      //@ts-ignore
-      position: 'top-left',
       timeout: 3000,
       closeOnClick: true,
     });
