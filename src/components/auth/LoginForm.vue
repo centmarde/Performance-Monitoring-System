@@ -65,7 +65,8 @@ const themeClass = computed(() => (isDarkTheme.value ? 'light-theme' : 'dark-the
 
 const authUserStore = useAuthUserStore();
 
-const onFormSubmit = async () => {
+const onFormSubmit = async (event: Event): Promise<void> => {
+  event.preventDefault();
   /* formAction.value.formProcess = true; */
   
   /* try {

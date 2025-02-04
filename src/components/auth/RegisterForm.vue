@@ -90,8 +90,9 @@ const isPasswordConfirmVisible = ref(false);
 
 const authUserStore = useAuthUserStore();
 
-async function onFormSubmit() {
- /*  formAction.value.formProcess = true;
+async function onFormSubmit(event: Event): Promise<void> {
+  event.preventDefault();
+  /* formAction.value.formProcess = true;
 
   const { error } = await authUserStore.registerUser(
     formData.value.email,
