@@ -6,9 +6,9 @@
         Log in to your account so you can continue monitoring
         <br />and managing your users
       </h6>
-      <v-row align="center" justify="center mt-3">
+      <v-row align="center" justify="center" class="mt-3">
         <v-col cols="12" sm="8">
-          <v-form ref="refVForm" @submit.prevent="onFormSubmit">
+          <v-form  @submit.prevent="onFormSubmit">
             <v-text-field
               v-model="loginEmail"
               label="Email"
