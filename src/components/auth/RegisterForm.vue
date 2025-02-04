@@ -101,7 +101,7 @@ const isPasswordConfirmVisible = ref(false);
 
 const authUserStore = useAuthUserStore();
 
-async function onFormSubmit(): Promise<void> {
+export async function onFormSubmit(): Promise<void> {
   formAction.value.formProcess = true;
 
   const { error } = await authUserStore.registerUser(
