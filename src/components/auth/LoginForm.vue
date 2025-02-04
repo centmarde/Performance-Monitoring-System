@@ -48,28 +48,29 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, computed, inject } from 'vue';
 import { useAuthUserStore } from '@/stores/authUser';
 import { useToast } from 'vue-toastification';
 import { requiredValidator, emailValidator } from '@/lib/validator';
 import router from '@/router';
 
-const loginEmail = '';
-const loginPassword = '';
-let isPasswordVisible = false;
-const formAction = { formProcess: false };
+const loginEmail = ref('');
+const loginPassword = ref('');
+const isPasswordVisible = ref(false);
+const formAction = ref({ formProcess: false });
 const toast = useToast();
-const isDarkTheme = false; // Replace with actual theme logic
+const isDarkTheme = inject('isDarkTheme', ref(false));
 
-const themeClass = isDarkTheme ? 'light-theme' : 'dark-theme';
+const themeClass = computed(() => (isDarkTheme.value ? 'light-theme' : 'dark-theme'));
 
 const authUserStore = useAuthUserStore();
 
 const onFormSubmit = async (event: SubmitEvent): Promise<void> => {
   event.preventDefault();
-  formAction.formProcess = true;
+  formAction.value.formProcess = true;
 
   try {
-    const { error } = await authUserStore.signIn(loginEmail, loginPassword);
+    const { error } = await authUserStore.signIn(loginEmail.value, loginPassword.value);
     if (error) {
       throw new Error(typeof error === 'string' ? error : error.message);
     }
@@ -83,7 +84,7 @@ const onFormSubmit = async (event: SubmitEvent): Promise<void> => {
     const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
     toast.error(`Login error: ${errorMessage}`);
   } finally {
-    formAction.formProcess = false;
+    formAction.value.formProcess = false;
   }
 };
 </script>
@@ -92,4 +93,4 @@ const onFormSubmit = async (event: SubmitEvent): Promise<void> => {
 .v-btn {
   margin-top: 20px;
 }
-</style>
+</style> 

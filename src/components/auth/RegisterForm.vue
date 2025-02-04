@@ -7,7 +7,7 @@
       >
         mdi-close
       </v-icon>
-      <v-form ref="refVForm" @submit.prevent="onFormSubmit">
+      <v-form ref="refVForm" @submit="onFormSubmit">
   <v-row dense>
     <v-col cols="12">
       <v-text-field
@@ -67,6 +67,7 @@
 </template>
 
 <script lang="ts" setup>
+import { ref } from 'vue';
 import { requiredValidator, emailValidator, passwordValidator, confirmedValidator } from '@/lib/validator';
 import { useAuthUserStore } from '@/stores/authUser';
 import { useToast } from "vue-toastification";
@@ -76,29 +77,29 @@ const emit = defineEmits(['registration-success', 'close-dialog']);
 
 const toast = useToast();
 
-const formData = {
-  email: '',
-  password: '',
-  password_confirmation: '',
-  userType: ''
-};
-const formAction = { formProcess: false };
-let isPasswordVisible = false;
-let isPasswordConfirmVisible = false;
+const formData = ref({
+email: '',
+password: '',
+password_confirmation: '',
+userType: ''
+});
+const formAction = ref({ formProcess: false });
+const isPasswordVisible = ref(false);
+const isPasswordConfirmVisible = ref(false);
 
 const authUserStore = useAuthUserStore();
 
 async function onFormSubmit(event: SubmitEvent): Promise<void> {
   event.preventDefault();
-  formAction.formProcess = true;
+  formAction.value.formProcess = true;
 
   const { error } = await authUserStore.registerUser(
-    formData.email,
-    formData.password,
-    formData.userType
+    formData.value.email,
+    formData.value.password,
+    formData.value.userType
   );
 
-  formAction.formProcess = false;
+  formAction.value.formProcess = false;
 
   if (error) {
     const errorMessage = typeof error === 'string' ? error : error.message;
