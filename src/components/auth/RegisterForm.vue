@@ -77,31 +77,20 @@ const emit = defineEmits(['registration-success', 'close-dialog']);
 
 const toast = useToast();
 
-interface FormData {
-  email: string;
-  password: string;
-  password_confirmation: string;
-  userType: string;
-}
-
-interface FormAction {
-  formProcess: boolean;
-}
-
-const formData = ref<FormData>({
-  email: '',
-  password: '',
-  password_confirmation: '',
-  userType: ''
+const formData = ref({
+email: '',
+password: '',
+password_confirmation: '',
+userType: ''
 });
-
-const formAction = ref<FormAction>({ formProcess: false });
+const formAction = ref({ formProcess: false });
 const isPasswordVisible = ref(false);
 const isPasswordConfirmVisible = ref(false);
 
 const authUserStore = useAuthUserStore();
 
-export async function onFormSubmit(): Promise<void> {
+async function onFormSubmit(event: SubmitEvent): Promise<void> {
+  event.preventDefault();
   formAction.value.formProcess = true;
 
   const { error } = await authUserStore.registerUser(
