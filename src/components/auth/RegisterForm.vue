@@ -7,7 +7,7 @@
         >
           mdi-close
         </v-icon>
-        <v-form ref="refVForm" @submit.prevent="router.push('/')">
+        <v-form ref="refVForm" @submit.prevent="onFormSubmit">
     <v-row dense>
       <v-col cols="12">
         <v-text-field
@@ -71,7 +71,6 @@ import { ref } from 'vue';
 import { requiredValidator, emailValidator, passwordValidator, confirmedValidator } from '../../lib/validator';
 import { useAuthUserStore } from '../../stores/authUser';
 import { useToast } from "vue-toastification";
-import router from '@/router';
 
 // Define the emit function for the component
 const emit = defineEmits(['registration-success', 'close-dialog']);
@@ -90,6 +89,35 @@ const isPasswordConfirmVisible = ref(false);
 
 const authUserStore = useAuthUserStore();
 
+async function onFormSubmit() {
+ /*  formAction.value.formProcess = true;
+
+  const { error } = await authUserStore.registerUser(
+    formData.value.email,
+    formData.value.password,
+    formData.value.userType
+  );
+
+  formAction.value.formProcess = false;
+
+  if (error) {
+    toast.error(`Registration error: ${error.message}`, {
+        //@ts-ignore
+      position: 'top-left',
+      timeout: 3000,
+      closeOnClick: true,
+    });
+  } else {
+    toast.success('Registration successful', {
+        //@ts-ignore
+      position: 'top-left',
+      timeout: 3000,
+      closeOnClick: true,
+    });
+ 
+    emit('close-dialog');
+  } */
+}
 
 </script>
 
