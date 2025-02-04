@@ -13,14 +13,17 @@
                   style="background-color: #2e7d32"
                   class="rounded-bl-xl"
                 >
-                  <div style="text-align: center; padding: 100px 0">
+                  <div style="text-align: center; padding: 10px 0">
                     <v-card-text class="white--text">
                       <v-img
                         class="mx-auto rounded-circle"
                         src="/images/school-logo.png"
-                        width="25%"
+                        width="50%"
                       ></v-img>
-                      <h3 class="text-center mt-3">
+                      <h2 class="text-center mt-3">
+                        Los Angeles National High School
+                      </h2>
+                      <h3 class="text-center mt-15">
                         Don't Have an Account Yet?
                       </h3>
                     </v-card-text>
@@ -46,14 +49,17 @@
                   style="background-color: #2e7d32"
                   class="rounded-br-xl"
                 >
-                  <div style="text-align: center; padding: 180px 0">
+                  <div style="text-align: center; padding: 10px 0">
                     <v-card-text class="white--text">
                       <v-img
                         class="mx-auto rounded-circle"
                         src="/images/school-logo.png"
-                        width="25%"
+                        width="50%"
                       ></v-img>
-                      <h3 class="text-center mt-3">Already Signed up?</h3>
+                      <h2 class="text-center mt-3">
+                        Los Angeles National High School
+                      </h2>
+                      <h3 class="text-center mt-15">Already Signed up?</h3>
                     </v-card-text>
                     <div class="text-center">
                       <v-btn

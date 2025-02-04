@@ -3,8 +3,8 @@
     <v-card-text class="mt-12">
       <h4 class="text-center">Login to Your Account</h4>
       <h6 class="text-center grey--text mt-2">
-        Log in to your account so you can continue building
-        <br />and editing your onboarding flows
+        Log in to your account so you can continue monitoring
+        <br />and managing your users
       </h6>
       <v-row align="center" justify="center mt-3">
         <v-col cols="12" sm="8">

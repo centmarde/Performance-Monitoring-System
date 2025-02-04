@@ -2,8 +2,8 @@
   <v-card-text class="mt-12">
     <h4 class="text-center">Sign Up for an Account</h4>
     <h6 class="text-center grey--text mt-2">
-      Let's get you all set up so you can start creating your first onboarding
-      experience
+      Log in to your account so you can continue monitoring
+      <br />and managing your users
     </h6>
     <v-row align="center" justify="center mt-3">
       <v-col cols="12" sm="8">
