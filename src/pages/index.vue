@@ -13,16 +13,26 @@
                   style="background-color: #2e7d32"
                   class="rounded-bl-xl"
                 >
-                  <div style="text-align: center; padding: 180px 0">
+                  <div style="text-align: center; padding: 100px 0">
                     <v-card-text class="white--text">
-                      <h3 class="text-center">Don't Have an Account Yet?</h3>
-                      <h6 class="text-center">
-                        Let's get you all set up so you can start creating your
-                        first onboarding experience
-                      </h6>
+                      <v-img
+                        class="mx-auto rounded-circle"
+                        src="/images/school-logo.png"
+                        width="25%"
+                      ></v-img>
+                      <h3 class="text-center mt-3">
+                        Don't Have an Account Yet?
+                      </h3>
                     </v-card-text>
                     <div class="text-center">
-                      <v-btn tile outlined dark @click="step++">SIGN UP</v-btn>
+                      <v-btn
+                        outlined
+                        dark
+                        @click="step++"
+                        style="border-radius: 25px"
+                      >
+                        SIGN UP
+                      </v-btn>
                     </div>
                   </div>
                 </v-col>
@@ -38,14 +48,22 @@
                 >
                   <div style="text-align: center; padding: 180px 0">
                     <v-card-text class="white--text">
-                      <h3 class="text-center">Already Signed up?</h3>
-                      <h6 class="text-center">
-                        Log in to your account so you can continue building and
-                        editing your onboarding flows
-                      </h6>
+                      <v-img
+                        class="mx-auto rounded-circle"
+                        src="/images/school-logo.png"
+                        width="25%"
+                      ></v-img>
+                      <h3 class="text-center mt-3">Already Signed up?</h3>
                     </v-card-text>
                     <div class="text-center">
-                      <v-btn tile outlined dark @click="step--">Log in</v-btn>
+                      <v-btn
+                        outlined
+                        dark
+                        @click="step--"
+                        style="border-radius: 25px"
+                      >
+                        Log in
+                      </v-btn>
                     </div>
                   </div>
                 </v-col>

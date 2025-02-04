@@ -45,6 +45,7 @@
               :disabled="formAction.formProcess"
               :loading="formAction.formProcess"
               block
+              style="border-radius: 25px"
             >
               Login
             </v-btn>
