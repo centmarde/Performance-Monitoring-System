@@ -61,7 +61,7 @@
       <v-btn
         class="mt-2"
         type="submit"
-        color="#00A4E5"
+        color="light-green-darken-4"
         prepend-icon="mdi-account-plus"
         :disabled="formAction.formProcess"
         :loading="formAction.formProcess"
