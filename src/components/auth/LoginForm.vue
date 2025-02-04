@@ -65,24 +65,7 @@ const themeClass = computed(() => (isDarkTheme.value ? 'light-theme' : 'dark-the
 
 const authUserStore = useAuthUserStore();
 
-const onFormSubmit = async (event: Event): Promise<void> => {
-  event.preventDefault();
-  /* formAction.value.formProcess = true; */
-  
-  /* try {
-    const { error } = await authUserStore.signIn(loginEmail.value, loginPassword.value);
-    if (error) {
-      throw new Error(error.message);
-    }
-  } catch (err) {
-      //@ts-ignore
-    toast.error(`Login error: ${err.message || 'An unknown error occurred'}`);
-  } finally {
-    formAction.value.formProcess = false;
-  } */
 
-  router.push("/home");
-};
 
 // Listen for the registration success event
 const onRegistrationSuccess = () => {
