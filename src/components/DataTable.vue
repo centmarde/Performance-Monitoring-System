@@ -52,7 +52,11 @@ const props = defineProps<{
 }
 
 .styled-table tr:nth-child(even) {
-  background-color: #f2f2f2; /* Optional: Add alternating row colors */
+  background-color: var(--row-bg);
+}
+
+.dark-mode .styled-table tr:nth-child(even) {
+  background-color: var(--row-bg-dark);
 }
 
 .styled-table tr:hover {
