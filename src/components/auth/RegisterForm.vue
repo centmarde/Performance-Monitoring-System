@@ -144,8 +144,10 @@ async function onFormSubmit(event: SubmitEvent): Promise<void> {
       timeout: 3000,
       closeOnClick: true,
     });
+
    window.location.reload();
   }
+
 }
 </script>
 
