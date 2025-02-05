@@ -25,12 +25,13 @@
     </v-sheet>
 
     <v-list>
+      <!-- Render menu items with router-links -->
       <v-list-item
         v-for="(item, i) in menu"
         :key="i"
-        :value="item"
         active-class="border"
         :ripple="false"
+        :to="item.href"
       >
         <template v-slot:prepend>
           <v-icon :icon="item.icon" color="#B49239"></v-icon>
@@ -66,10 +67,11 @@ import { useTheme } from "vuetify";
 const theme = useTheme();
 const drawer = ref(true);
 
+// Define the menu with conditional links for Admin and Teachers
 const menu = ref([
-  { title: "Users", icon: "mdi-account", href: "/home" },
-  { title: "Teachers", icon: "mdi-account-tie", href: "/charts" },
-  { title: "Settings", icon: "mdi-cog-outline", href: "/settings" },
+  { title: "Users", icon: "mdi-account", href: "/admin" }, // Admin link
+  { title: "Teachers", icon: "mdi-account-tie", href: "/teachers" }, // Teachers link
+  { title: "Settings", icon: "mdi-cog-outline", href: "/settings" }, // Settings link
 ]);
 
 const activeUsers = ref([
