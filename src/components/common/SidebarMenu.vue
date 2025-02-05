@@ -1,4 +1,5 @@
 <template>
+
   <v-navigation-drawer
     v-model="drawer"
     app
@@ -80,6 +81,7 @@ const activeUsers = ref([
   { src: "/public/images/christ.png" },
   { src: "/public/images/marde.png" },
 ]);
+
 
 const currentTheme = computed(() =>
   theme.global.current.value.dark ? "dark-theme" : "white-theme"

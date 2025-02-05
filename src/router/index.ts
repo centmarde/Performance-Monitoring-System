@@ -1,3 +1,4 @@
+
 import { createRouter, createWebHistory } from "vue-router/auto";
 import { setupLayouts } from "virtual:generated-layouts";
 import { useAuthUserStore } from "../stores/authUser";
@@ -10,9 +11,11 @@ import NotFound from "@/pages/NotFound.vue";
 import Admin from "@/pages/Admin.vue";
 import Profiles from "@/pages/Profiles.vue";
 
+
 const toast = useToast();
 
 const routes = setupLayouts([
+
   { path: "/", component: Hero },
   {
     path: "/home",
@@ -39,6 +42,7 @@ const routes = setupLayouts([
     meta: { requiresAuth: true, role: "admin" },
   }, // Add Teachers route here
   { path: "/:pathMatch(.*)*", component: NotFound, name: "NotFound" },
+
 ]);
 
 const router = createRouter({
@@ -50,8 +54,10 @@ router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem("access_token") !== null;
   const userRole = localStorage.getItem("Role");
   const publicPages = ["/", "/login"];
+
   const adminPages = ["/admin", "/teachers"];
   const protectedPages = ["/home", "/profiles", "/admin", "/teachers"];
+
 
   if (to.meta.requiresAuth && !isLoggedIn) {
     toast.error("Authentication is required to access this page.");
@@ -66,12 +72,14 @@ router.beforeEach((to, from, next) => {
     return next(userRole === "admin" ? "/admin" : "/home");
   }
 
+
   if (userRole === "admin" && !adminPages.includes(to.path)) {
     return next("/admin");
   }
 
   if (userRole !== "admin" && adminPages.includes(to.path)) {
     return next("/home");
+
   }
 
   next();
