@@ -7,8 +7,8 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AppFooter: typeof import('./components/AppFooter.vue')['default']
-    DataTable: typeof import('./components/DataTable.vue')['default']
+    AppFooter: typeof import('./components/common/AppFooter.vue')['default']
+    DataTable: typeof import('./components/common/DataTable.vue')['default']
     InnerNavBar: typeof import('./components/common/InnerNavBar.vue')['default']
     LoginForm: typeof import('./components/auth/LoginForm.vue')['default']
     NavBar: typeof import('./components/common/NavBar.vue')['default']

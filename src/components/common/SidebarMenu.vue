@@ -18,7 +18,7 @@
         :width="2"
       >
         <v-avatar size="85">
-          <v-img src="/public/images/christ.png" alt="User Avatar"></v-img>
+          <v-img src="/images/christ.png" alt="User Avatar"></v-img>
         </v-avatar>
       </v-progress-circular>
       <div class="mt-4">Admin</div>
@@ -76,10 +76,10 @@ const menu = ref([
 ]);
 
 const activeUsers = ref([
-  { src: "/public/images/christ.png" },
-  { src: "/public/images/marde.png" },
-  { src: "/public/images/christ.png" },
-  { src: "/public/images/marde.png" },
+  { src: "/images/christ.png" },
+  { src: "/images/marde.png" },
+  { src: "/images/christ.png" },
+  { src: "/images/marde.png" },
 ]);
 
 

@@ -3,16 +3,12 @@
     <template #content>
       <v-container fluid>
         <div class="p-8 bg-gray-100 min-h-screen">
-          <!-- Row for Search Bar and Add User Button -->
           <v-row align="center" justify="space-between">
-            <!-- Add User Button -->
             <v-col cols="auto">
               <v-btn @click="showAddUserForm = true" color="#2E7D32">
                 Add User
               </v-btn>
             </v-col>
-
-            <!-- Search Bar -->
             <v-col cols="4">
               <v-text-field
                 v-model="searchQuery"
@@ -30,55 +26,122 @@
               <v-card-title>
                 <span class="headline">Add User</span>
               </v-card-title>
-
               <v-card-text>
-                <!-- Add User Form -->
-                <v-form @submit.prevent="addUser" :lazy-validation="true">
-                  <!-- Name Field -->
-                  <v-text-field
-                    v-model="newUser.name"
-                    label="Name"
-                    :error-messages="nameError"
-                    required
-                  />
-                  <!-- Email Field -->
+                <v-form
+                  @submit.prevent="addUser"
+                  ref="addUserForm"
+                  v-model="formValidAdd"
+                >
+                  <v-text-field v-model="newUser.name" label="Name" required />
                   <v-text-field
                     v-model="newUser.email"
                     label="Email"
-                    :error-messages="emailError"
+                    :rules="[emailValidator]"
                     required
                   />
-                  <!-- Password Field -->
                   <v-text-field
                     v-model="newUser.password"
                     label="Password"
-                    :error-messages="passwordError"
-                    required
                     type="password"
-                  />
-                  <!-- Role Field -->
-                  <v-text-field
-                    v-model="newUser.role"
-                    label="Role"
-                    :error-messages="roleError"
+                    :rules="[passwordValidator]"
                     required
                   />
+                  <v-text-field v-model="newUser.role" label="Role" required />
                 </v-form>
               </v-card-text>
-
               <v-card-actions>
-                <!-- Cancel Button -->
-                <v-btn @click="showAddUserForm = false" color="grey darken-1">
-                  Cancel
-                </v-btn>
-                <!-- Add User Button -->
-                <v-btn @click="addUser" color="#2E7D32">Add User</v-btn>
+                <v-btn @click="showAddUserForm = false" color="grey darken-1"
+                  >Cancel</v-btn
+                >
+                <v-btn
+                  @click="addUser"
+                  color="#2E7D32"
+                  :disabled="!formValidAdd"
+                  >Add User</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-dialog>
 
-          <!-- Data Table -->
-          <DataTable :items="filteredItems"></DataTable>
+          <!-- Edit User Dialog -->
+          <v-dialog v-model="showEditUserForm" max-width="500px">
+            <v-card>
+              <v-card-title>
+                <span class="headline">Edit User</span>
+              </v-card-title>
+              <v-card-text>
+                <v-form
+                  @submit.prevent="updateUser"
+                  ref="editUserForm"
+                  v-model="formValidEdit"
+                >
+                  <v-text-field
+                    v-model="editedUser.name"
+                    label="Name"
+                    required
+                  />
+                  <v-text-field
+                    v-model="editedUser.email"
+                    label="Email"
+                    :rules="[emailValidator]"
+                    required
+                  />
+                  <v-text-field
+                    v-model="editedUser.password"
+                    label="Password"
+                    type="password"
+                    :rules="[passwordValidator]"
+                    required
+                  />
+                  <v-text-field
+                    v-model="editedUser.role"
+                    label="Role"
+                    required
+                  />
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn @click="showEditUserForm = false" color="grey darken-1"
+                  >Cancel</v-btn
+                >
+                <v-btn
+                  @click="updateUser"
+                  color="blue"
+                  :disabled="!formValidEdit"
+                  >Save Changes</v-btn
+                >
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
+          <!-- Data Table with DataTables.net -->
+          <DataTable class="display">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="user in filteredItems" :key="user.id">
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+                <td>
+                  <v-btn icon @click="openEditDialog(user)">
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+                  <v-btn icon color="red" @click="deleteUser(user.id)">
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </td>
+              </tr>
+            </tbody>
+          </DataTable>
         </div>
       </v-container>
     </template>
@@ -88,10 +151,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import LayoutWrapper from "../layouts/LayoutWrapper.vue";
-import DataTable from "../components/DataTable.vue";
+import { emailValidator, passwordValidator } from "@/lib/validator";
 
-// Define the type of the items prop
-interface Item {
+
+// User Interface
+interface User {
   id: number;
   name: string;
   email: string;
@@ -99,93 +163,93 @@ interface Item {
   role: string;
 }
 
-const items = ref<Item[]>([]); // Initialize items as an empty array
-const showAddUserForm = ref(false); // To toggle the add user dialog
-const newUser = ref({
+const items = ref<User[]>([]);
+const showAddUserForm = ref(false);
+const showEditUserForm = ref(false);
+const searchQuery = ref("");
+const newUser = ref<User>({
   id: 0,
   name: "",
   email: "",
   password: "",
   role: "",
-}); // For holding new user data
-const searchQuery = ref(""); // For the search input field
-
-// Error messages for validation
-const nameError = ref<string | null>(null);
-const emailError = ref<string | null>(null);
-const passwordError = ref<string | null>(null);
-const roleError = ref<string | null>(null);
-
-// Computed property to filter items based on the search query
-const filteredItems = computed(() => {
-  if (!searchQuery.value) return items.value; // If no search query, return all items
-
-  return items.value.filter((item) => {
-    return (
-      item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      item.email.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      item.role.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
-  });
+});
+const editedUser = ref<User>({
+  id: 0,
+  name: "",
+  email: "",
+  password: "",
+  role: "",
 });
 
+// Form validation models
+const formValidAdd = ref(false);
+const formValidEdit = ref(false);
+
+// Table headers
+const headers = ref([
+  { text: "ID", value: "id" },
+  { text: "Name", value: "name" },
+  { text: "Email", value: "email" },
+  { text: "Role", value: "role" },
+  { text: "Actions", value: "actions", sortable: false },
+]);
+
+// Search filter
+const filteredItems = computed(() => {
+  if (!searchQuery.value) return items.value;
+  return items.value.filter((user) =>
+    [user.name, user.email, user.role].some((field) =>
+      field.toLowerCase().includes(searchQuery.value.toLowerCase())
+    )
+  );
+});
+
+// Fetch users data
 onMounted(async () => {
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com/users");
     const data = await response.json();
-
-    items.value = data.map((item: any) => ({
-      id: item.id,
-      name: item.name,
-      email: item.email,
-      password: "password", // Placeholder
-      role: "User", // Placeholder
+    items.value = data.map((user: any) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      password: "password",
+      role: "User",
     }));
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Error fetching users:", error);
   }
 });
 
-// Add user method with validation
+// Open edit dialog
+const openEditDialog = (user: User) => {
+  editedUser.value = { ...user };
+  showEditUserForm.value = true;
+};
+
+// Add new user
 const addUser = () => {
-  // Clear previous error messages
-  nameError.value = null;
-  emailError.value = null;
-  passwordError.value = null;
-  roleError.value = null;
+  newUser.value.id = items.value.length + 1;
+  items.value.push({ ...newUser.value });
+  newUser.value = { id: 0, name: "", email: "", password: "", role: "" };
+  showAddUserForm.value = false;
+};
 
-  let valid = true;
-
-  // Validation for required fields
-  if (!newUser.value.name) {
-    nameError.value = "Name is required.";
-    valid = false;
+// Update existing user
+const updateUser = () => {
+  const index = items.value.findIndex(
+    (user) => user.id === editedUser.value.id
+  );
+  if (index !== -1) {
+    items.value[index] = { ...editedUser.value };
   }
+  showEditUserForm.value = false;
+};
 
-  if (!newUser.value.email) {
-    emailError.value = "Email is required.";
-    valid = false;
-  }
-
-  if (!newUser.value.password) {
-    passwordError.value = "Password is required.";
-    valid = false;
-  }
-
-  if (!newUser.value.role) {
-    roleError.value = "Role is required.";
-    valid = false;
-  }
-
-  // If valid, add the user to the list
-  if (valid) {
-    const newId = items.value.length + 1;
-    const user = { ...newUser.value, id: newId };
-
-    items.value.push(user); // Add new user to the items array
-    newUser.value = { id: 0, name: "", email: "", password: "", role: "" }; // Clear form
-    showAddUserForm.value = false; // Hide the dialog
-  }
+// Delete user
+const deleteUser = (id: number) => {
+  items.value = items.value.filter((user) => user.id !== id);
 };
 </script>
 
@@ -195,7 +259,6 @@ const addUser = () => {
   border-radius: 16px;
   box-shadow: 0 4px 10px rgba(79, 204, 254, 0.3);
   backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
   border: 1px solid #64b5f6;
 }
 </style>
