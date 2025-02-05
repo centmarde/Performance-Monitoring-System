@@ -50,7 +50,8 @@ router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem("access_token") !== null;
   const userRole = localStorage.getItem("Role");
   const publicPages = ["/", "/login"];
-  const protectedPages = ["/home", "/profiles"];
+  const adminPages = ["/admin", "/teachers"];
+  const protectedPages = ["/home", "/profiles", "/admin", "/teachers"];
 
   if (to.meta.requiresAuth && !isLoggedIn) {
     toast.error("Authentication is required to access this page.");
@@ -65,11 +66,11 @@ router.beforeEach((to, from, next) => {
     return next(userRole === "admin" ? "/admin" : "/home");
   }
 
-  if (userRole === "admin" && to.path !== "/admin") {
+  if (userRole === "admin" && !adminPages.includes(to.path)) {
     return next("/admin");
   }
 
-  if (userRole !== "admin" && to.path === "/admin") {
+  if (userRole !== "admin" && adminPages.includes(to.path)) {
     return next("/home");
   }
 

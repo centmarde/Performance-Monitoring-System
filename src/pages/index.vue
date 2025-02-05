@@ -87,7 +87,7 @@
 </template>
 
 <script lang="ts" setup>
-import LoginForm from "@/components/auth/LoginForm.vue";
+
 import { ref } from "vue";
 import { useDisplay } from "vuetify";
 
