@@ -3,60 +3,79 @@
     <template #content>
       <v-container fluid>
         <div class="p-8 bg-gray-100 min-h-screen">
-          <!-- Search Bar -->
-          <v-text-field
-            v-model="searchQuery"
-            prepend-icon="mdi-magnify"
-            label="Search Users"
-            outlined
-            dense
-          />
+          <!-- Row for Search Bar and Add User Button -->
+          <v-row align="center" justify="space-between">
+            <!-- Add User Button -->
+            <v-col cols="auto">
+              <v-btn @click="showAddUserForm = true" color="#2E7D32">
+                Add User
+              </v-btn>
+            </v-col>
 
-          <!-- Add User Form -->
-          <div>
-            <v-btn @click="showAddUserForm = !showAddUserForm" color="#2E7D32">
-              {{ showAddUserForm ? "Cancel" : "Add User" }}
-            </v-btn>
+            <!-- Search Bar -->
+            <v-col cols="4">
+              <v-text-field
+                v-model="searchQuery"
+                prepend-icon="mdi-magnify"
+                label="Search Users"
+                outlined
+                dense
+              />
+            </v-col>
+          </v-row>
 
-            <v-form
-              v-if="showAddUserForm"
-              @submit.prevent="addUser"
-              :lazy-validation="true"
-            >
-              <!-- Name Field -->
-              <v-text-field
-                class="mt-2"
-                v-model="newUser.name"
-                label="Name"
-                :error-messages="nameError"
-                required
-              />
-              <!-- Email Field -->
-              <v-text-field
-                v-model="newUser.email"
-                label="Email"
-                :error-messages="emailError"
-                required
-              />
-              <!-- Password Field -->
-              <v-text-field
-                v-model="newUser.password"
-                label="Password"
-                :error-messages="passwordError"
-                required
-                type="password"
-              />
-              <!-- Role Field -->
-              <v-text-field
-                v-model="newUser.role"
-                label="Role"
-                :error-messages="roleError"
-                required
-              />
+          <!-- Add User Dialog -->
+          <v-dialog v-model="showAddUserForm" max-width="500px">
+            <v-card>
+              <v-card-title>
+                <span class="headline">Add User</span>
+              </v-card-title>
 
-              <v-btn type="submit" color="#2E7D32">Add User</v-btn>
-            </v-form>
-          </div>
+              <v-card-text>
+                <!-- Add User Form -->
+                <v-form @submit.prevent="addUser" :lazy-validation="true">
+                  <!-- Name Field -->
+                  <v-text-field
+                    v-model="newUser.name"
+                    label="Name"
+                    :error-messages="nameError"
+                    required
+                  />
+                  <!-- Email Field -->
+                  <v-text-field
+                    v-model="newUser.email"
+                    label="Email"
+                    :error-messages="emailError"
+                    required
+                  />
+                  <!-- Password Field -->
+                  <v-text-field
+                    v-model="newUser.password"
+                    label="Password"
+                    :error-messages="passwordError"
+                    required
+                    type="password"
+                  />
+                  <!-- Role Field -->
+                  <v-text-field
+                    v-model="newUser.role"
+                    label="Role"
+                    :error-messages="roleError"
+                    required
+                  />
+                </v-form>
+              </v-card-text>
+
+              <v-card-actions>
+                <!-- Cancel Button -->
+                <v-btn @click="showAddUserForm = false" color="grey darken-1">
+                  Cancel
+                </v-btn>
+                <!-- Add User Button -->
+                <v-btn @click="addUser" color="#2E7D32">Add User</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
 
           <!-- Data Table -->
           <DataTable :items="filteredItems"></DataTable>
@@ -81,7 +100,7 @@ interface Item {
 }
 
 const items = ref<Item[]>([]); // Initialize items as an empty array
-const showAddUserForm = ref(false); // To toggle the add user form
+const showAddUserForm = ref(false); // To toggle the add user dialog
 const newUser = ref({
   id: 0,
   name: "",
@@ -165,7 +184,7 @@ const addUser = () => {
 
     items.value.push(user); // Add new user to the items array
     newUser.value = { id: 0, name: "", email: "", password: "", role: "" }; // Clear form
-    showAddUserForm.value = false; // Hide the form
+    showAddUserForm.value = false; // Hide the dialog
   }
 };
 </script>
