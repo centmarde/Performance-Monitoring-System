@@ -19,6 +19,8 @@
     "@mdi/font": "7.4.47",
     "@supabase/supabase-js": "^2.48.1",
     "core-js": "^3.37.1",
+    "datatables.net-dt": "^2.2.2",
+    "datatables.net-vue3": "^3.0.4",
     "roboto-fontface": "*",
     "vue": "^3.4.31",
     "vue-sidebar-menu": "^5.2.2",

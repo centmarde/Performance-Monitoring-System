@@ -114,28 +114,34 @@
             </v-card>
           </v-dialog>
 
-          <!-- ✅ FIXED: Data Table with Proper Headers -->
-          <v-data-table
-            :headers="headers"
-            :items="filteredItems"
-            class="elevation-1"
-          >
-            <template v-slot:top>
-              <v-toolbar flat>
-                <v-toolbar-title>Users Table</v-toolbar-title>
-                <v-spacer></v-spacer>
-              </v-toolbar>
-            </template>
-
-            <template v-slot:item.actions="{ item }">
-              <v-btn icon @click="openEditDialog(item)">
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-btn icon color="red" @click="deleteUser(item.id)">
-                <v-icon>mdi-delete</v-icon>
-              </v-btn>
-            </template>
-          </v-data-table>
+          <!-- Data Table with DataTables.net -->
+          <DataTable class="display">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="user in filteredItems" :key="user.id">
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.role }}</td>
+                <td>
+                  <v-btn icon @click="openEditDialog(user)">
+                    <v-icon>mdi-pencil</v-icon>
+                  </v-btn>
+                  <v-btn icon color="red" @click="deleteUser(user.id)">
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </td>
+              </tr>
+            </tbody>
+          </DataTable>
         </div>
       </v-container>
     </template>
@@ -146,6 +152,7 @@
 import { ref, computed, onMounted } from "vue";
 import LayoutWrapper from "../layouts/LayoutWrapper.vue";
 import { emailValidator, passwordValidator } from "@/lib/validator";
+
 
 // User Interface
 interface User {
