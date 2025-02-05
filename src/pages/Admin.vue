@@ -92,11 +92,28 @@
             </v-card>
           </v-dialog>
 
-          <!-- Data Table with edit functionality -->
-          <DataTable
+          <!-- ✅ FIXED: Data Table with Proper Headers -->
+          <v-data-table
+            :headers="headers"
             :items="filteredItems"
-            @edit-user="openEditDialog"
-          ></DataTable>
+            class="elevation-1"
+          >
+            <template v-slot:top>
+              <v-toolbar flat>
+                <v-toolbar-title>Users Table</v-toolbar-title>
+                <v-spacer></v-spacer>
+              </v-toolbar>
+            </template>
+
+            <template v-slot:item.actions="{ item }">
+              <v-btn icon @click="openEditDialog(item)">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+              <v-btn icon color="red" @click="deleteUser(item.id)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-data-table>
         </div>
       </v-container>
     </template>
@@ -106,9 +123,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import LayoutWrapper from "../layouts/LayoutWrapper.vue";
-import DataTable from "../components/DataTable.vue";
 
-interface Item {
+interface User {
   id: number;
   name: string;
   email: string;
@@ -116,18 +132,18 @@ interface Item {
   role: string;
 }
 
-const items = ref<Item[]>([]);
+const items = ref<User[]>([]);
 const showAddUserForm = ref(false);
 const showEditUserForm = ref(false);
 const searchQuery = ref("");
-const newUser = ref<Item>({
+const newUser = ref<User>({
   id: 0,
   name: "",
   email: "",
   password: "",
   role: "",
 });
-const editedUser = ref<Item>({
+const editedUser = ref<User>({
   id: 0,
   name: "",
   email: "",
@@ -135,52 +151,79 @@ const editedUser = ref<Item>({
   role: "",
 });
 
+// ✅ FIXED: Table Headers
+const headers = ref([
+  { text: "ID", value: "id" },
+  { text: "Name", value: "name" },
+  { text: "Email", value: "email" },
+  { text: "Role", value: "role" },
+  { text: "Actions", value: "actions", sortable: false },
+]);
+
+// ✅ FIXED: Search Filter
 const filteredItems = computed(() => {
   if (!searchQuery.value) return items.value;
-  return items.value.filter((item) =>
-    [item.name, item.email, item.role].some((field) =>
+  return items.value.filter((user) =>
+    [user.name, user.email, user.role].some((field) =>
       field.toLowerCase().includes(searchQuery.value.toLowerCase())
     )
   );
 });
 
+// Fetch user data
 onMounted(async () => {
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com/users");
     const data = await response.json();
-    items.value = data.map((item: any) => ({
-      id: item.id,
-      name: item.name,
-      email: item.email,
+    items.value = data.map((user: any) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
       password: "password",
       role: "User",
     }));
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Error fetching users:", error);
   }
 });
 
-// Open edit dialog with selected user data
-const openEditDialog = (user: Item) => {
-  editedUser.value = { ...user }; // Clone the object to avoid modifying it directly
+// Open edit user dialog
+const openEditDialog = (user: User) => {
+  editedUser.value = { ...user };
   showEditUserForm.value = true;
 };
 
-// Update user data in the table
+// Add user
+const addUser = () => {
+  newUser.value.id = items.value.length + 1;
+  items.value.push({ ...newUser.value });
+  newUser.value = { id: 0, name: "", email: "", password: "", role: "" };
+  showAddUserForm.value = false;
+};
+
+// Update user
 const updateUser = () => {
-  const index = items.value.findIndex((u) => u.id === editedUser.value.id);
+  const index = items.value.findIndex(
+    (user) => user.id === editedUser.value.id
+  );
   if (index !== -1) {
-    items.value[index] = { ...editedUser.value }; // Save changes
+    items.value[index] = { ...editedUser.value };
   }
   showEditUserForm.value = false;
 };
 
-// Add new user
-const addUser = () => {
-  const newId = items.value.length + 1;
-  const user = { ...newUser.value, id: newId };
-  items.value.push(user);
-  newUser.value = { id: 0, name: "", email: "", password: "", role: "" };
-  showAddUserForm.value = false;
+// Delete user
+const deleteUser = (id: number) => {
+  items.value = items.value.filter((user) => user.id !== id);
 };
 </script>
+
+<style scoped>
+.bg-card {
+  background: rgba(161, 205, 247, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(79, 204, 254, 0.3);
+  backdrop-filter: blur(5px);
+  border: 1px solid #64b5f6;
+}
+</style>
