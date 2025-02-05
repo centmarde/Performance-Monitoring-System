@@ -10,7 +10,6 @@ declare module 'vue' {
     AppFooter: typeof import('./components/AppFooter.vue')['default']
     DataTable: typeof import('./components/DataTable.vue')['default']
     InnerNavBar: typeof import('./components/common/InnerNavBar.vue')['default']
-    Login: typeof import('./components/Login.vue')['default']
     LoginForm: typeof import('./components/auth/LoginForm.vue')['default']
     NavBar: typeof import('./components/common/NavBar.vue')['default']
     RegisterForm: typeof import('./components/auth/RegisterForm.vue')['default']
