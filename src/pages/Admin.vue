@@ -27,18 +27,24 @@
                 <span class="headline">Add User</span>
               </v-card-title>
               <v-card-text>
-                <v-form @submit.prevent="addUser">
+                <v-form
+                  @submit.prevent="addUser"
+                  ref="addUserForm"
+                  v-model="formValidAdd"
+                >
                   <v-text-field v-model="newUser.name" label="Name" required />
                   <v-text-field
                     v-model="newUser.email"
                     label="Email"
+                    :rules="[emailValidator]"
                     required
                   />
                   <v-text-field
                     v-model="newUser.password"
                     label="Password"
-                    required
                     type="password"
+                    :rules="[passwordValidator]"
+                    required
                   />
                   <v-text-field v-model="newUser.role" label="Role" required />
                 </v-form>
@@ -47,7 +53,12 @@
                 <v-btn @click="showAddUserForm = false" color="grey darken-1"
                   >Cancel</v-btn
                 >
-                <v-btn @click="addUser" color="#2E7D32">Add User</v-btn>
+                <v-btn
+                  @click="addUser"
+                  color="#2E7D32"
+                  :disabled="!formValidAdd"
+                  >Add User</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -59,7 +70,11 @@
                 <span class="headline">Edit User</span>
               </v-card-title>
               <v-card-text>
-                <v-form @submit.prevent="updateUser">
+                <v-form
+                  @submit.prevent="updateUser"
+                  ref="editUserForm"
+                  v-model="formValidEdit"
+                >
                   <v-text-field
                     v-model="editedUser.name"
                     label="Name"
@@ -68,13 +83,15 @@
                   <v-text-field
                     v-model="editedUser.email"
                     label="Email"
+                    :rules="[emailValidator]"
                     required
                   />
                   <v-text-field
                     v-model="editedUser.password"
                     label="Password"
-                    required
                     type="password"
+                    :rules="[passwordValidator]"
+                    required
                   />
                   <v-text-field
                     v-model="editedUser.role"
@@ -87,7 +104,12 @@
                 <v-btn @click="showEditUserForm = false" color="grey darken-1"
                   >Cancel</v-btn
                 >
-                <v-btn @click="updateUser" color="blue">Save Changes</v-btn>
+                <v-btn
+                  @click="updateUser"
+                  color="blue"
+                  :disabled="!formValidEdit"
+                  >Save Changes</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -123,7 +145,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import LayoutWrapper from "../layouts/LayoutWrapper.vue";
+import { emailValidator, passwordValidator } from "@/lib/validator";
 
+// User Interface
 interface User {
   id: number;
   name: string;
@@ -151,7 +175,11 @@ const editedUser = ref<User>({
   role: "",
 });
 
-// ✅ FIXED: Table Headers
+// Form validation models
+const formValidAdd = ref(false);
+const formValidEdit = ref(false);
+
+// Table headers
 const headers = ref([
   { text: "ID", value: "id" },
   { text: "Name", value: "name" },
@@ -160,7 +188,7 @@ const headers = ref([
   { text: "Actions", value: "actions", sortable: false },
 ]);
 
-// ✅ FIXED: Search Filter
+// Search filter
 const filteredItems = computed(() => {
   if (!searchQuery.value) return items.value;
   return items.value.filter((user) =>
@@ -170,7 +198,7 @@ const filteredItems = computed(() => {
   );
 });
 
-// Fetch user data
+// Fetch users data
 onMounted(async () => {
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com/users");
@@ -187,13 +215,13 @@ onMounted(async () => {
   }
 });
 
-// Open edit user dialog
+// Open edit dialog
 const openEditDialog = (user: User) => {
   editedUser.value = { ...user };
   showEditUserForm.value = true;
 };
 
-// Add user
+// Add new user
 const addUser = () => {
   newUser.value.id = items.value.length + 1;
   items.value.push({ ...newUser.value });
@@ -201,7 +229,7 @@ const addUser = () => {
   showAddUserForm.value = false;
 };
 
-// Update user
+// Update existing user
 const updateUser = () => {
   const index = items.value.findIndex(
     (user) => user.id === editedUser.value.id
