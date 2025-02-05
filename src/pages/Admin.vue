@@ -29,7 +29,7 @@
               <v-card-text>
                 <v-form
                   @submit.prevent="addUser"
-                  ref="addUserForm"
+                
                   v-model="formValidAdd"
                 >
                   <v-text-field v-model="newUser.name" label="Name" required />
@@ -72,7 +72,7 @@
               <v-card-text>
                 <v-form
                   @submit.prevent="updateUser"
-                  ref="editUserForm"
+                 
                   v-model="formValidEdit"
                 >
                   <v-text-field
