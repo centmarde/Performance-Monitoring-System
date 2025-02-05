@@ -5,23 +5,25 @@
  */
 
 // Plugins
-import { registerPlugins } from '@/plugins'
+import { registerPlugins } from "@/plugins";
 import "vue-toastification/dist/index.css";
-import VueSidebarMenu from 'vue-sidebar-menu'
-import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
+import VueSidebarMenu from "vue-sidebar-menu";
+import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
 import Toast from "vue-toastification";
 // Components
-import App from './App.vue'
+import App from "./App.vue";
+// Router
+import router from "./router"; // Import the router
 
 // Composables
-import { createApp } from 'vue'
+import { createApp } from "vue";
 
-const app = createApp(App).use(Toast);
+const app = createApp(App).use(Toast).use(router); // Add the router
 
 // app.config.warnHandler = () => {};
 
 app.use(VueSidebarMenu);
 
-registerPlugins(app)
+registerPlugins(app);
 
-app.mount('#app')
+app.mount("#app");
