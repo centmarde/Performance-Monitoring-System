@@ -7,58 +7,74 @@
     </h6>
     <v-row align="center" justify="center" class="mt-3">
       <v-col cols="12" sm="8">
-        <v-row class="mt-">
-          <v-col cols="12" sm="6"> </v-col>
-        </v-row>
-        <v-text-field
-          v-model="formData.email"
-          label="Email"
-          prepend-inner-icon="mdi-email-outline"
-          :rules="[requiredValidator, emailValidator]"
-        ></v-text-field>
-        <v-text-field
-          v-model="formData.password"
-          prepend-inner-icon="mdi-lock-outline"
-          label="Password"
-          :type="isPasswordVisible ? 'text' : 'password'"
-          :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-          @click:append-inner="isPasswordVisible = !isPasswordVisible"
-          :rules="[requiredValidator, passwordValidator]"
-        ></v-text-field>
-        <v-text-field
-          v-model="formData.password_confirmation"
-          label="Password Confirmation"
-          :type="isPasswordConfirmVisible ? 'text' : 'password'"
-          :append-inner-icon="
-            isPasswordConfirmVisible ? 'mdi-eye-off' : 'mdi-eye'
-          "
-          @click:append-inner="
-            isPasswordConfirmVisible = !isPasswordConfirmVisible
-          "
-          :rules="[
-            requiredValidator,
-            confirmedValidator(
-              formData.password_confirmation,
-              formData.password
-            ),
-          ]"
-        ></v-text-field>
+        <v-form @submit.prevent="onFormSubmit">
+          <v-row class="mt-">
+            <v-col cols="12" sm="6"> </v-col>
+          </v-row>
+          <v-text-field
+            v-model="formData.email"
+            label="Email"
+            prepend-inner-icon="mdi-email-outline"
+            :rules="[requiredValidator, emailValidator]"
+          ></v-text-field>
+          <v-text-field
+            v-model="formData.password"
+            prepend-inner-icon="mdi-lock-outline"
+            label="Password"
+            :type="isPasswordVisible ? 'text' : 'password'"
+            :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
+            @click:append-inner="isPasswordVisible = !isPasswordVisible"
+            :rules="[requiredValidator, passwordValidator]"
+          ></v-text-field>
+          <v-text-field
+            v-model="formData.password_confirmation"
+            label="Password Confirmation"
+            :type="isPasswordConfirmVisible ? 'text' : 'password'"
+            :append-inner-icon="
+              isPasswordConfirmVisible ? 'mdi-eye-off' : 'mdi-eye'
+            "
+            @click:append-inner="
+              isPasswordConfirmVisible = !isPasswordConfirmVisible
+            "
+            :rules="[
+              requiredValidator,
+              confirmedValidator(
+                formData.password_confirmation,
+                formData.password
+              ),
+            ]"
+          ></v-text-field>
+          <v-select
+            v-model="formData.userType"
+            :items="userTypes"
+            label="User Type"
+            :rules="[requiredValidator]"
+            placeholder="Select User Type"
+          ></v-select>
 
-        <v-row>
-          <v-col cols="12" sm="7">
-            <v-checkbox
-              label="I Accept AAE"
-              class="mt-n1"
-              color="blue"
-            ></v-checkbox>
-          </v-col>
-          <v-col cols="12" sm="5">
-            <span class="caption blue--text ml-n4">Terms & Conditions</span>
-          </v-col>
-        </v-row>
-        <v-btn color="#2E7D32" dark block style="border-radius: 25px"
-          >Sign up</v-btn
-        >
+          <v-row>
+            <v-col cols="12" sm="7">
+              <v-checkbox
+                label="I Accept AAE"
+                class="mt-n1"
+                color="blue"
+              ></v-checkbox>
+            </v-col>
+            <v-col cols="12" sm="5">
+              <span class="caption blue--text ml-n4">Terms & Conditions</span>
+            </v-col>
+          </v-row>
+          <v-btn 
+            :loading="formAction.formProcess"
+            color="#2E7D32" 
+            dark 
+            block 
+            style="border-radius: 25px" 
+            type="submit"
+          >
+            Sign up
+          </v-btn>
+        </v-form>
 
         <h5 class="text-center grey--text mt-4 mb-3">Or Sign up using</h5>
         <div class="d-flex justify-space-between align-center mx-10 mb-11">
@@ -93,7 +109,7 @@ const formData = ref({
 email: '',
 password: '',
 password_confirmation: '',
-userType: ''
+userType: 'Teacher'
 });
 const formAction = ref({ formProcess: false });
 const isPasswordVisible = ref(false);
@@ -101,16 +117,18 @@ const isPasswordConfirmVisible = ref(false);
 
 const authUserStore = useAuthUserStore();
 
+const userTypes = ['Teacher', 'Admin'];
 
 async function onFormSubmit(event: SubmitEvent): Promise<void> {
   event.preventDefault();
   formAction.value.formProcess = true;
 
+  const userTypeLowerCase = formData.value.userType.toLowerCase();
 
   const { error } = await authUserStore.registerUser(
     formData.value.email,
     formData.value.password,
-    formData.value.userType
+    userTypeLowerCase
   );
 
   formAction.value.formProcess = false;
@@ -126,8 +144,7 @@ async function onFormSubmit(event: SubmitEvent): Promise<void> {
       timeout: 3000,
       closeOnClick: true,
     });
-    emit('registration-success');
-    emit('close-dialog');
+   window.location.reload();
   }
 }
 </script>

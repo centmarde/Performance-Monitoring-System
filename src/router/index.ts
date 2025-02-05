@@ -8,6 +8,8 @@ import Home from '@/pages/Home.vue';
 import NotFound from '@/pages/NotFound.vue';
 import Admin from '@/pages/Admin.vue';
 import Profiles from '@/pages/Profiles.vue';
+import UserList from '@/pages/UserList.vue';
+import TeacherList from '@/pages/TeacherList.vue';
 
 const toast = useToast();
 
@@ -15,6 +17,8 @@ const routes = setupLayouts([
   { path: '/', component: Hero },
   { path: '/home', component: Home, name: 'Home', meta: { requiresAuth: true, role: 'teacher' } },
   { path: '/admin', component: Admin, name: 'Admin', meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/user_list', component: UserList, name: 'UserList', meta: { requiresAuth: true, role: 'admin' } },
+  { path: '/teacher_list', component: TeacherList, name: 'TeacherList', meta: { requiresAuth: true, role: 'admin' } },
   { path: '/profiles', component: Profiles, name: 'Profiles', meta: { requiresAuth: true } },
   { path: '/:pathMatch(.*)*', component: NotFound, name: 'NotFound' },
 ]);
@@ -24,13 +28,11 @@ const router = createRouter({
   routes,
 });
 
-
-
 router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem("access_token") !== null;
   const userRole = localStorage.getItem("Role");
   const publicPages = ["/", "/login"];
-  const protectedPages = ["/home", "/profiles"];
+  const protectedPages = ["/home", "/profiles", "/admin", "/user_list", "/teacher_list"];
 
   if (to.meta.requiresAuth && !isLoggedIn) {
     toast.error("Authentication is required to access this page.");
@@ -45,11 +47,11 @@ router.beforeEach((to, from, next) => {
     return next(userRole === 'admin' ? "/admin" : "/home");
   }
 
-  if (userRole === 'admin' && to.path !== '/admin') {
+  if (userRole === 'admin' && !['/admin', '/user_list', '/teacher_list'].includes(to.path)) {
     return next('/admin');
   }
 
-  if (userRole !== 'admin' && to.path === '/admin') {
+  if (userRole !== 'admin' && ['/admin', '/user_list', '/teacher_list'].includes(to.path)) {
     return next('/home');
   }
 
