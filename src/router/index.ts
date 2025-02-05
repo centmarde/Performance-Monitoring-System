@@ -1,26 +1,48 @@
-import { createRouter, createWebHistory } from 'vue-router/auto';
-import { setupLayouts } from 'virtual:generated-layouts';
-import { useAuthUserStore } from '../stores/authUser';
-import { useToast } from 'vue-toastification';
 
-import Hero from '@/pages/index.vue';
-import Home from '@/pages/Home.vue';
-import NotFound from '@/pages/NotFound.vue';
-import Admin from '@/pages/Admin.vue';
-import Profiles from '@/pages/Profiles.vue';
-import UserList from '@/pages/UserList.vue';
-import TeacherList from '@/pages/TeacherList.vue';
+import { createRouter, createWebHistory } from "vue-router/auto";
+import { setupLayouts } from "virtual:generated-layouts";
+import { useAuthUserStore } from "../stores/authUser";
+import { useToast } from "vue-toastification";
+
+import TeachersPage from "@/pages/TeachersPage.vue";
+import Hero from "@/pages/index.vue";
+import Home from "@/pages/Home.vue";
+import NotFound from "@/pages/NotFound.vue";
+import Admin from "@/pages/Admin.vue";
+import Profiles from "@/pages/Profiles.vue";
+
 
 const toast = useToast();
 
 const routes = setupLayouts([
-  { path: '/', component: Hero },
-  { path: '/home', component: Home, name: 'Home', meta: { requiresAuth: true, role: 'teacher' } },
-  { path: '/admin', component: Admin, name: 'Admin', meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/user_list', component: UserList, name: 'UserList', meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/teacher_list', component: TeacherList, name: 'TeacherList', meta: { requiresAuth: true, role: 'admin' } },
-  { path: '/profiles', component: Profiles, name: 'Profiles', meta: { requiresAuth: true } },
-  { path: '/:pathMatch(.*)*', component: NotFound, name: 'NotFound' },
+
+  { path: "/", component: Hero },
+  {
+    path: "/home",
+    component: Home,
+    name: "Home",
+    meta: { requiresAuth: true, role: "teacher" },
+  },
+  {
+    path: "/admin",
+    component: Admin,
+    name: "Admin",
+    meta: { requiresAuth: true, role: "admin" },
+  },
+  {
+    path: "/profiles",
+    component: Profiles,
+    name: "Profiles",
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/teachers",
+    component: TeachersPage,
+    name: "Teachers",
+    meta: { requiresAuth: true, role: "admin" },
+  }, // Add Teachers route here
+  { path: "/:pathMatch(.*)*", component: NotFound, name: "NotFound" },
+
 ]);
 
 const router = createRouter({
@@ -32,7 +54,10 @@ router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem("access_token") !== null;
   const userRole = localStorage.getItem("Role");
   const publicPages = ["/", "/login"];
-  const protectedPages = ["/home", "/profiles", "/admin", "/user_list", "/teacher_list"];
+
+  const adminPages = ["/admin", "/teachers"];
+  const protectedPages = ["/home", "/profiles", "/admin", "/teachers"];
+
 
   if (to.meta.requiresAuth && !isLoggedIn) {
     toast.error("Authentication is required to access this page.");
@@ -40,32 +65,34 @@ router.beforeEach((to, from, next) => {
   }
 
   if (publicPages.includes(to.path) && isLoggedIn) {
-    return next(userRole === 'admin' ? "/admin" : "/home");
+    return next(userRole === "admin" ? "/admin" : "/home");
   }
 
   if (to.meta.role && to.meta.role !== userRole) {
-    return next(userRole === 'admin' ? "/admin" : "/home");
+    return next(userRole === "admin" ? "/admin" : "/home");
   }
 
-  if (userRole === 'admin' && !['/admin', '/user_list', '/teacher_list'].includes(to.path)) {
-    return next('/admin');
+
+  if (userRole === "admin" && !adminPages.includes(to.path)) {
+    return next("/admin");
   }
 
-  if (userRole !== 'admin' && ['/admin', '/user_list', '/teacher_list'].includes(to.path)) {
-    return next('/home');
+  if (userRole !== "admin" && adminPages.includes(to.path)) {
+    return next("/home");
+
   }
 
   next();
 });
 
 router.onError((err, to) => {
-  if (err?.message?.includes?.('Failed to fetch dynamically imported module')) {
-    if (!localStorage.getItem('vuetify:dynamic-reload')) {
-      console.log('Reloading page to fix dynamic import error');
-      localStorage.setItem('vuetify:dynamic-reload', 'true');
+  if (err?.message?.includes?.("Failed to fetch dynamically imported module")) {
+    if (!localStorage.getItem("vuetify:dynamic-reload")) {
+      console.log("Reloading page to fix dynamic import error");
+      localStorage.setItem("vuetify:dynamic-reload", "true");
       location.assign(to.fullPath);
     } else {
-      console.error('Dynamic import error, reloading page did not fix it', err);
+      console.error("Dynamic import error, reloading page did not fix it", err);
     }
   } else {
     console.error(err);
@@ -73,7 +100,7 @@ router.onError((err, to) => {
 });
 
 router.isReady().then(() => {
-  localStorage.removeItem('vuetify:dynamic-reload');
+  localStorage.removeItem("vuetify:dynamic-reload");
 });
 
 export default router;
