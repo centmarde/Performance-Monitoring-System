@@ -148,7 +148,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import LayoutWrapper from "../layouts/LayoutWrapper.vue";
+import LayoutWrapper from "@/layouts/LayoutWrapper.vue";
 import DataTable from "@/components/common/DataTable.vue";
 import {
   emailValidator,

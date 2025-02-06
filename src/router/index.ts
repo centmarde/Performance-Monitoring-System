@@ -4,15 +4,15 @@ import { setupLayouts } from "virtual:generated-layouts";
 import { useAuthUserStore } from "../stores/authUser";
 import { useToast } from "vue-toastification";
 
-import TeachersPage from "@/pages/TeachersPage.vue";
+import TeachersPage from "@/pages/admin/TeachersPage.vue";
 import Hero from "@/pages/index.vue";
-import Home from "@/pages/Home.vue";
+import Home from "@/pages/home/Home.vue";
 import NotFound from "@/pages/NotFound.vue";
-import Admin from "@/pages/Admin.vue";
-import Profiles from "@/pages/Profiles.vue";
+import Admin from "@/pages/admin/Admin.vue";
+import Profiles from "@/pages/home/Profiles.vue";
 
 //@ts-ignore
-import TeacherAccount from "@/pages/TeacherAccount.vue";
+import TeacherAccount from "@/pages/admin/TeacherAccount.vue";
 
 
 const toast = useToast();
