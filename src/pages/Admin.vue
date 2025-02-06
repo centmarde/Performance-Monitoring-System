@@ -20,33 +20,35 @@
             </v-col>
           </v-row>
 
+          <!-- Items per page selector -->
+
           <!-- Add User Dialog -->
           <v-dialog v-model="showAddUserForm" max-width="500px">
             <v-card>
-              <v-card-title>
-                <span class="headline">Add User</span>
-              </v-card-title>
+              <v-card-title>Add User</v-card-title>
               <v-card-text>
-                <v-form
-                  @submit.prevent="addUser"
-                
-                  v-model="formValidAdd"
-                >
-                  <v-text-field v-model="newUser.name" label="Name" required />
+                <v-form @submit.prevent="addUser">
+                  <v-text-field
+                    v-model="newUser.name"
+                    label="Name"
+                    :rules="[requiredValidator]"
+                  />
                   <v-text-field
                     v-model="newUser.email"
                     label="Email"
-                    :rules="[emailValidator]"
-                    required
+                    :rules="[requiredValidator, emailValidator]"
                   />
                   <v-text-field
                     v-model="newUser.password"
                     label="Password"
                     type="password"
-                    :rules="[passwordValidator]"
-                    required
+                    :rules="[requiredValidator, passwordValidator]"
                   />
-                  <v-text-field v-model="newUser.role" label="Role" required />
+                  <v-text-field
+                    v-model="newUser.role"
+                    label="Role"
+                    :rules="[requiredValidator]"
+                  />
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -56,7 +58,7 @@
                 <v-btn
                   @click="addUser"
                   color="#2E7D32"
-                  :disabled="!formValidAdd"
+                  :disabled="!isAddUserValid"
                   >Add User</v-btn
                 >
               </v-card-actions>
@@ -66,37 +68,29 @@
           <!-- Edit User Dialog -->
           <v-dialog v-model="showEditUserForm" max-width="500px">
             <v-card>
-              <v-card-title>
-                <span class="headline">Edit User</span>
-              </v-card-title>
+              <v-card-title>Edit User</v-card-title>
               <v-card-text>
-                <v-form
-                  @submit.prevent="updateUser"
-                 
-                  v-model="formValidEdit"
-                >
+                <v-form @submit.prevent="updateUser">
                   <v-text-field
                     v-model="editedUser.name"
                     label="Name"
-                    required
+                    :rules="[requiredValidator]"
                   />
                   <v-text-field
                     v-model="editedUser.email"
                     label="Email"
-                    :rules="[emailValidator]"
-                    required
+                    :rules="[requiredValidator, emailValidator]"
                   />
                   <v-text-field
                     v-model="editedUser.password"
                     label="Password"
                     type="password"
-                    :rules="[passwordValidator]"
-                    required
+                    :rules="[requiredValidator, passwordValidator]"
                   />
                   <v-text-field
                     v-model="editedUser.role"
                     label="Role"
-                    required
+                    :rules="[requiredValidator]"
                   />
                 </v-form>
               </v-card-text>
@@ -107,41 +101,62 @@
                 <v-btn
                   @click="updateUser"
                   color="blue"
-                  :disabled="!formValidEdit"
+                  :disabled="!isEditUserValid"
                   >Save Changes</v-btn
                 >
               </v-card-actions>
             </v-card>
           </v-dialog>
 
-          <!-- Data Table with DataTables.net -->
-          <DataTable class="display">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="user in filteredItems" :key="user.id">
-                <td>{{ user.id }}</td>
-                <td>{{ user.name }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.role }}</td>
-                <td>
-                  <v-btn icon @click="openEditDialog(user)">
-                    <v-icon>mdi-pencil</v-icon>
-                  </v-btn>
-                  <v-btn icon color="red" @click="deleteUser(user.id)">
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
-                </td>
-              </tr>
-            </tbody>
-          </DataTable>
+          <!-- Delete Confirmation Dialog -->
+          <v-dialog v-model="showDeleteConfirmation" max-width="400px">
+            <v-card>
+              <v-card-title>Confirm Deletion</v-card-title>
+              <v-card-text>
+                Are you sure you want to delete this user?
+              </v-card-text>
+              <v-card-actions>
+                <v-btn
+                  @click="showDeleteConfirmation = false"
+                  color="grey darken-1"
+                  >Cancel</v-btn
+                >
+                <v-btn @click="confirmDeleteUser" color="red">Delete</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
+          <!-- Data Table -->
+          <DataTable
+            :items="paginatedItems"
+            @edit-user="openEditDialog"
+            @delete-user="promptDeleteUser"
+          />
+
+          <!-- Pagination Controls -->
+          <v-row justify="center" class="mt-4">
+            <v-btn @click="prevPage" :disabled="currentPage === 1">Prev</v-btn>
+            <v-btn
+              @click="nextPage"
+              :disabled="currentPage * itemsPerPage >= filteredItems.length"
+              >Next</v-btn
+            >
+
+            <!-- Items per page dropdown aligned to the right -->
+            <v-spacer></v-spacer>
+            <!-- This will push the next items to the right -->
+            <v-col cols="auto" class="d-flex">
+              <v-select
+                v-model="itemsPerPage"
+                :items="[10, 20, 30, 50, 100]"
+                label="Items per page"
+                dense
+                outlined
+                min-width="150"
+                class="mt-0"
+              />
+            </v-col>
+          </v-row>
         </div>
       </v-container>
     </template>
@@ -151,10 +166,13 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import LayoutWrapper from "../layouts/LayoutWrapper.vue";
-import { emailValidator, passwordValidator } from "@/lib/validator";
+import DataTable from "@/components/common/DataTable.vue";
+import {
+  emailValidator,
+  passwordValidator,
+  requiredValidator,
+} from "@/lib/validator";
 
-
-// User Interface
 interface User {
   id: number;
   name: string;
@@ -166,6 +184,8 @@ interface User {
 const items = ref<User[]>([]);
 const showAddUserForm = ref(false);
 const showEditUserForm = ref(false);
+const showDeleteConfirmation = ref(false);
+const userToDelete = ref<number | null>(null);
 const searchQuery = ref("");
 const newUser = ref<User>({
   id: 0,
@@ -182,20 +202,28 @@ const editedUser = ref<User>({
   role: "",
 });
 
-// Form validation models
-const formValidAdd = ref(false);
-const formValidEdit = ref(false);
+// Pagination related state
+const currentPage = ref(1);
+const itemsPerPage = ref(10); // Default to 10, but can be changed
 
-// Table headers
-const headers = ref([
-  { text: "ID", value: "id" },
-  { text: "Name", value: "name" },
-  { text: "Email", value: "email" },
-  { text: "Role", value: "role" },
-  { text: "Actions", value: "actions", sortable: false },
-]);
+const isAddUserValid = computed(() => {
+  return (
+    newUser.value.name.trim() !== "" &&
+    emailValidator(newUser.value.email) === true &&
+    passwordValidator(newUser.value.password) === true &&
+    newUser.value.role.trim() !== ""
+  );
+});
 
-// Search filter
+const isEditUserValid = computed(() => {
+  return (
+    editedUser.value.name.trim() !== "" &&
+    emailValidator(editedUser.value.email) === true &&
+    passwordValidator(editedUser.value.password) === true &&
+    editedUser.value.role.trim() !== ""
+  );
+});
+
 const filteredItems = computed(() => {
   if (!searchQuery.value) return items.value;
   return items.value.filter((user) =>
@@ -205,7 +233,26 @@ const filteredItems = computed(() => {
   );
 });
 
-// Fetch users data
+// Paginated Items (dynamic based on selected itemsPerPage)
+const paginatedItems = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredItems.value.slice(start, end);
+});
+
+// Pagination methods
+const nextPage = () => {
+  if (currentPage.value * itemsPerPage.value < filteredItems.value.length) {
+    currentPage.value += 1;
+  }
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1;
+  }
+};
+
 onMounted(async () => {
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com/users");
@@ -222,21 +269,18 @@ onMounted(async () => {
   }
 });
 
-// Open edit dialog
+// Methods for managing users
 const openEditDialog = (user: User) => {
   editedUser.value = { ...user };
   showEditUserForm.value = true;
 };
 
-// Add new user
 const addUser = () => {
-  newUser.value.id = items.value.length + 1;
-  items.value.push({ ...newUser.value });
+  items.value.push({ ...newUser.value, id: items.value.length + 1 });
   newUser.value = { id: 0, name: "", email: "", password: "", role: "" };
   showAddUserForm.value = false;
 };
 
-// Update existing user
 const updateUser = () => {
   const index = items.value.findIndex(
     (user) => user.id === editedUser.value.id
@@ -247,18 +291,16 @@ const updateUser = () => {
   showEditUserForm.value = false;
 };
 
-// Delete user
-const deleteUser = (id: number) => {
-  items.value = items.value.filter((user) => user.id !== id);
+const promptDeleteUser = (id: number) => {
+  userToDelete.value = id;
+  showDeleteConfirmation.value = true;
+};
+
+const confirmDeleteUser = () => {
+  if (userToDelete.value !== null) {
+    items.value = items.value.filter((user) => user.id !== userToDelete.value);
+    userToDelete.value = null;
+  }
+  showDeleteConfirmation.value = false;
 };
 </script>
-
-<style scoped>
-.bg-card {
-  background: rgba(161, 205, 247, 0.15);
-  border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(79, 204, 254, 0.3);
-  backdrop-filter: blur(5px);
-  border: 1px solid #64b5f6;
-}
-</style>
