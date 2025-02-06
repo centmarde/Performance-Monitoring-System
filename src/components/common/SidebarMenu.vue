@@ -43,24 +43,26 @@
       </v-list-item>
     </v-list>
 
-    <!-- Active Users Section -->
-    <h5 class="ml-5 text-yellow-darken-2">ACTIVE USERS</h5>
-    <v-row align="center" class="spacer ml-16 mt-4" no-gutters>
-      <v-col
-        v-for="(user, index) in activeUsers"
-        :key="index"
-        cols="4"
-        sm="2"
-        md="1"
-      >
-        <v-avatar size="36px">
-          <v-img :src="user.src" alt="Avatar"></v-img>
-        </v-avatar>
-      </v-col>
-      <v-col cols="4" sm="2" md="1">
-        <v-avatar size="36px" color="#B49239">+70</v-avatar>
-      </v-col>
-    </v-row>
+    <!-- Active Users Section Positioned at the Bottom -->
+    <div class="active-users">
+      <h5 class="ml-5 text-yellow-darken-2">ACTIVE USERS</h5>
+      <v-row align="center" class="spacer ml-16 mt-4" no-gutters>
+        <v-col
+          v-for="(user, index) in activeUsers"
+          :key="index"
+          cols="4"
+          sm="2"
+          md="1"
+        >
+          <v-avatar size="36px">
+            <v-img :src="user.src" alt="Avatar"></v-img>
+          </v-avatar>
+        </v-col>
+        <v-col cols="4" sm="2" md="1">
+          <v-avatar size="36px" color="#B49239">+70</v-avatar>
+        </v-col>
+      </v-row>
+    </div>
   </v-navigation-drawer>
 </template>
 
@@ -95,6 +97,8 @@ const activeUsers = ref([
   height: 100vh !important;
   overflow: visible !important; /* Ensure button is not cut off */
   z-index: 1000; /* Keep on top */
+  display: flex;
+  flex-direction: column;
 }
 
 /* ✅ Toggle Button Inside Sidebar */
@@ -114,8 +118,19 @@ const activeUsers = ref([
   right: 0; /* Move the button when the drawer is closed */
 }
 
-/* ✅ Ensure the Sidebar Content is Positioned Correctly */
+/* ✅ Sidebar Content Positioning */
 .v-navigation-drawer__content {
   padding-right: 48px; /* Prevent content overlap with button */
+  flex-grow: 1; /* Allow space for the active users to be pushed to the bottom */
+}
+
+/* ✅ Active Users Section Styling */
+.active-users {
+  position: absolute;
+  bottom: 16px; /* Pin it at the bottom of the sidebar */
+  left: 0;
+  width: 100%;
+  padding: 16px;
+  background-color: #425c5a;
 }
 </style>
