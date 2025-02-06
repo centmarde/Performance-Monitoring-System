@@ -70,9 +70,9 @@
   
   // Define the menu with conditional links for Admin and Teachers
   const menu = ref([
-    { title: "Users", icon: "mdi-account", href: "/admin" }, // Admin link
-    { title: "Teachers", icon: "mdi-account-tie", href: "/teachers" }, // Teachers link
-    { title: "Settings", icon: "mdi-cog-outline", href: "/settings" }, // Settings link
+    { title: "Dashboard", icon: "mdi-dashboard", href: "/home" }, // Admin link
+    { title: "Data Entry", icon: "mdi-dashboard", href: "/data_entry" }, // Teachers link
+    { title: "Tracking", icon: "mdi-cog-outline", href: "/tracking" }, // Settings link
   ]);
   
   const activeUsers = ref([

@@ -13,6 +13,8 @@ import Profiles from "@/pages/home/Profiles.vue";
 
 //@ts-ignore
 import TeacherAccount from "@/pages/admin/TeacherAccount.vue";
+import DataEntry from "@/pages/home/DataEntry.vue";
+import Tracking from "@/pages/home/Tracking.vue";
 
 
 const toast = useToast();
@@ -50,6 +52,19 @@ const routes = setupLayouts([
     name: "teacher_account",
     meta: { requiresAuth: true, role: "admin" },
   },
+  {
+    path: "/data_entry",
+    component: DataEntry,
+    name: "data_entry",
+    meta: { requiresAuth: true, role: "teacher" },
+  },
+  {
+    path: "/tracking",
+    component: Tracking,
+    name: "tracking",
+    meta: { requiresAuth: true, role: "teacher" },
+  },
+  
   { path: "/:pathMatch(.*)*", component: NotFound, name: "NotFound" },
 
 ]);
@@ -65,7 +80,7 @@ router.beforeEach((to, from, next) => {
   const publicPages = ["/", "/login"];
 
   const adminPages = ["/admin", "/teachers", "/teacher_account"];
-  const protectedPages = ["/home", "/profiles", "/admin", "/teachers", "/teacher_account"];
+  // const protectedPages = ["/home", "/profiles", "/admin", "/teachers", "/teacher_account"];
 
 
   if (to.meta.requiresAuth && !isLoggedIn) {
