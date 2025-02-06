@@ -19,13 +19,15 @@ declare module 'vue-router/auto-routes' {
    */
   export interface RouteNamedMap {
     '/': RouteRecordInfo<'/', '/', Record<never, never>, Record<never, never>>,
-    '/Admin': RouteRecordInfo<'/Admin', '/Admin', Record<never, never>, Record<never, never>>,
-    '/Home': RouteRecordInfo<'/Home', '/Home', Record<never, never>, Record<never, never>>,
+    '/admin/Admin': RouteRecordInfo<'/admin/Admin', '/admin/Admin', Record<never, never>, Record<never, never>>,
+    '/admin/Settings': RouteRecordInfo<'/admin/Settings', '/admin/Settings', Record<never, never>, Record<never, never>>,
+    '/admin/TeacherAccount': RouteRecordInfo<'/admin/TeacherAccount', '/admin/TeacherAccount', Record<never, never>, Record<never, never>>,
+    '/admin/TeacherList': RouteRecordInfo<'/admin/TeacherList', '/admin/TeacherList', Record<never, never>, Record<never, never>>,
+    '/admin/TeachersPage': RouteRecordInfo<'/admin/TeachersPage', '/admin/TeachersPage', Record<never, never>, Record<never, never>>,
+    '/admin/UserList': RouteRecordInfo<'/admin/UserList', '/admin/UserList', Record<never, never>, Record<never, never>>,
+    '/home/Home': RouteRecordInfo<'/home/Home', '/home/Home', Record<never, never>, Record<never, never>>,
+    '/home/Profiles': RouteRecordInfo<'/home/Profiles', '/home/Profiles', Record<never, never>, Record<never, never>>,
     '/NotFound': RouteRecordInfo<'/NotFound', '/NotFound', Record<never, never>, Record<never, never>>,
-    '/Profiles': RouteRecordInfo<'/Profiles', '/Profiles', Record<never, never>, Record<never, never>>,
-
-    '/Settings': RouteRecordInfo<'/Settings', '/Settings', Record<never, never>, Record<never, never>>,
-    '/TeachersPage': RouteRecordInfo<'/TeachersPage', '/TeachersPage', Record<never, never>, Record<never, never>>,
-
+    '/sample1': RouteRecordInfo<'/sample1', '/sample1', Record<never, never>, Record<never, never>>,
   }
 }
