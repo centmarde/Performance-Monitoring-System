@@ -106,12 +106,40 @@
             </v-card>
           </v-dialog>
 
+          <!-- Delete Confirmation Dialog -->
+          <v-dialog v-model="showDeleteConfirmation" max-width="400px">
+            <v-card>
+              <v-card-title>Confirm Deletion</v-card-title>
+              <v-card-text>
+                Are you sure you want to delete this user?
+              </v-card-text>
+              <v-card-actions>
+                <v-btn
+                  @click="showDeleteConfirmation = false"
+                  color="grey darken-1"
+                  >Cancel</v-btn
+                >
+                <v-btn @click="confirmDeleteUser" color="red">Delete</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
           <!-- Data Table -->
           <DataTable
-            :items="filteredItems"
+            :items="paginatedItems"
             @edit-user="openEditDialog"
-            @delete-user="deleteUser"
+            @delete-user="promptDeleteUser"
           />
+
+          <!-- Pagination Controls -->
+          <v-row justify="center" class="mt-4">
+            <v-btn @click="prevPage" :disabled="currentPage === 1">Prev</v-btn>
+            <v-btn
+              @click="nextPage"
+              :disabled="currentPage * itemsPerPage >= filteredItems.length"
+              >Next</v-btn
+            >
+          </v-row>
         </div>
       </v-container>
     </template>
@@ -139,6 +167,8 @@ interface User {
 const items = ref<User[]>([]);
 const showAddUserForm = ref(false);
 const showEditUserForm = ref(false);
+const showDeleteConfirmation = ref(false);
+const userToDelete = ref<number | null>(null);
 const searchQuery = ref("");
 const newUser = ref<User>({
   id: 0,
@@ -154,6 +184,10 @@ const editedUser = ref<User>({
   password: "",
   role: "",
 });
+
+// Pagination related state
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
 
 const isAddUserValid = computed(() => {
   return (
@@ -182,6 +216,26 @@ const filteredItems = computed(() => {
   );
 });
 
+// Paginated Items (10 per page)
+const paginatedItems = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredItems.value.slice(start, end);
+});
+
+// Pagination methods
+const nextPage = () => {
+  if (currentPage.value * itemsPerPage.value < filteredItems.value.length) {
+    currentPage.value += 1;
+  }
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1;
+  }
+};
+
 onMounted(async () => {
   try {
     const response = await fetch("https://jsonplaceholder.typicode.com/users");
@@ -198,21 +252,19 @@ onMounted(async () => {
   }
 });
 
+// Methods for managing users
 const openEditDialog = (user: User) => {
   editedUser.value = { ...user };
   showEditUserForm.value = true;
 };
 
 const addUser = () => {
-  if (!isAddUserValid.value) return;
-  newUser.value.id = items.value.length + 1;
-  items.value.push({ ...newUser.value });
+  items.value.push({ ...newUser.value, id: items.value.length + 1 });
   newUser.value = { id: 0, name: "", email: "", password: "", role: "" };
   showAddUserForm.value = false;
 };
 
 const updateUser = () => {
-  if (!isEditUserValid.value) return;
   const index = items.value.findIndex(
     (user) => user.id === editedUser.value.id
   );
@@ -222,7 +274,16 @@ const updateUser = () => {
   showEditUserForm.value = false;
 };
 
-const deleteUser = (id: number) => {
-  items.value = items.value.filter((user) => user.id !== id);
+const promptDeleteUser = (id: number) => {
+  userToDelete.value = id;
+  showDeleteConfirmation.value = true;
+};
+
+const confirmDeleteUser = () => {
+  if (userToDelete.value !== null) {
+    items.value = items.value.filter((user) => user.id !== userToDelete.value);
+    userToDelete.value = null;
+  }
+  showDeleteConfirmation.value = false;
 };
 </script>
