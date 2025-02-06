@@ -1,104 +1,66 @@
 <template>
-
-  <v-navigation-drawer
-    v-model="drawer"
-    app
-    color="#425C5A"
-    class="rounded-e-xl"
-  >
+  <v-navigation-drawer v-model="drawer" app class="fixed-sidebar">
     <v-btn icon @click="drawer = !drawer" class="toggle-btn">
       <v-icon>{{ drawer ? "mdi-chevron-left" : "mdi-chevron-right" }}</v-icon>
     </v-btn>
 
-    <v-sheet color="#3D5654" class="pa-4 rounded-te-xl text-center">
-      <v-progress-circular
-        model-value="80"
-        color="#B49239"
-        :size="100"
-        :width="2"
-      >
-        <v-avatar size="85">
-          <v-img src="/images/christ.png" alt="User Avatar"></v-img>
-        </v-avatar>
-      </v-progress-circular>
-      <div class="mt-4">Admin</div>
-      <span class="mb-6 text-caption">admin@superuser.com</span>
-    </v-sheet>
-
-    <v-list>
-      <!-- Render menu items with router-links -->
-      <v-list-item
-        v-for="(item, i) in menu"
-        :key="i"
-        active-class="border"
-        :ripple="false"
-        :to="item.href"
-      >
-        <template v-slot:prepend>
-          <v-icon :icon="item.icon" color="#B49239"></v-icon>
-        </template>
-        <v-list-item-title v-text="item.title"></v-list-item-title>
-      </v-list-item>
-    </v-list>
-
-    <h5 class="ml-5 text-yellow-darken-2">ACTIVE USERS</h5>
-    <v-row align="center" class="spacer ml-16 mt-4" no-gutters>
-      <v-col
-        v-for="(user, index) in activeUsers"
-        :key="index"
-        cols="4"
-        sm="2"
-        md="1"
-      >
-        <v-avatar size="36px">
-          <v-img :src="user.src" alt="Avatar"></v-img>
-        </v-avatar>
-      </v-col>
-      <v-col cols="4" sm="2" md="1">
-        <v-avatar size="36px" color="#B49239">+70</v-avatar>
-      </v-col>
-    </v-row>
+    <!-- Vue Sidebar Menu -->
+    <div class="sidebar-content">
+      <sidebar-menu :menu="menu" />
+    </div>
   </v-navigation-drawer>
 </template>
 
-<script setup>
-import { ref, computed, watch } from "vue";
-import { useTheme } from "vuetify";
+<script>
+import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
 
-const theme = useTheme();
-const drawer = ref(true);
-
-// Define the menu with conditional links for Admin and Teachers
-const menu = ref([
-  { title: "Users", icon: "mdi-account", href: "/admin" }, // Admin link
-  { title: "Teachers", icon: "mdi-account-tie", href: "/teachers" }, // Teachers link
-  { title: "Settings", icon: "mdi-cog-outline", href: "/settings" }, // Settings link
-]);
-
-const activeUsers = ref([
-  { src: "/images/christ.png" },
-  { src: "/images/marde.png" },
-  { src: "/images/christ.png" },
-  { src: "/images/marde.png" },
-]);
-
-
-const currentTheme = computed(() =>
-  theme.global.current.value.dark ? "dark-theme" : "white-theme"
-);
-
-watch(theme.global.current, (newTheme) => {
-  // React to theme changes if necessary
-});
+export default {
+  data() {
+    return {
+      drawer: true,
+      menu: [
+        {
+          title: "Users",
+          icon: "mdi-account",
+          href: "/admin",
+        },
+        {
+          title: "Teachers",
+          icon: "mdi-account-tie",
+          href: "/teachers",
+        },
+        {
+          title: "Settings",
+          icon: "mdi-cog",
+          href: "/settings",
+        },
+      ],
+    };
+  },
+};
 </script>
 
 <style scoped>
-.toggle-btn {
-  position: absolute;
-  top: 50%;
-  right: -20px;
-  transform: translateY(-50%);
-  background-color: #3d5654;
-  border-radius: 50%;
+/* Keep the sidebar fixed while scrolling */
+.fixed-sidebar {
+  position: fixed !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+}
+
+/* Allow scrolling inside the sidebar */
+.sidebar-content {
+  height: calc(100vh - 50px); /* Adjust based on your layout */
+  overflow-y: auto;
+}
+
+/* Ensure sidebar content scrolls properly */
+.sidebar-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
 }
 </style>
