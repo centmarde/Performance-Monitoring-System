@@ -115,7 +115,7 @@
               <v-card-text>
                 Are you sure you want to delete this user?
               </v-card-text>
-              <v-card-actions>
+              <v-card-actions class="mx-auto">
                 <v-btn
                   @click="showDeleteConfirmation = false"
                   color="grey darken-1"

@@ -7,7 +7,8 @@
         <th>Email</th>
         <th>Password</th>
         <th>Role</th>
-        <th>Actions</th>
+        <th class="actions-header">Actions</th>
+        <!-- Added class for styling -->
       </tr>
     </thead>
     <tbody>
@@ -17,7 +18,8 @@
         <td>{{ item.email }}</td>
         <td>{{ item.password }}</td>
         <td>{{ item.role }}</td>
-        <td>
+        <td class="actions-cell">
+          <!-- Added class for styling -->
           <button @click="editUser(item)" class="edit-btn">Edit</button>
           <button @click="deleteUser(item.id)" class="delete-btn">
             Delete
@@ -59,6 +61,16 @@ const deleteUser = (id: number) => {
 .styled-table th {
   background: #2e7d32;
   color: white;
+}
+
+.actions-header {
+  text-align: center; /* Centers the header text */
+}
+
+.actions-cell {
+  display: flex;
+  justify-content: center; /* Centers the buttons horizontally */
+  gap: 10px; /* Adds space between the buttons */
 }
 
 .edit-btn {
