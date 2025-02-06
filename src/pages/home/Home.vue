@@ -1,16 +1,16 @@
 <template>
-  <LayoutWrapper>
+  <HomeLayout>
     <template #content>
       <div>
-      asdasd
-       
+      <StudentsStanding/>
+       <MissedActivites/>
       </div>
     </template>
-  </LayoutWrapper>
+  </HomeLayout>
 </template>
 
 <script setup lang="ts">
 // import { supabase } from '../lib/supabase';
-import LayoutWrapper from '@/layouts/LayoutWrapper.vue';
+import HomeLayout from '@/layouts/HomeLayout.vue';
 
 </script>
