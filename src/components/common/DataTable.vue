@@ -67,6 +67,7 @@ const deleteUser = (id: number) => {
   border: none;
   padding: 5px 10px;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 .delete-btn {
@@ -76,5 +77,6 @@ const deleteUser = (id: number) => {
   padding: 5px 10px;
   margin-left: 5px;
   cursor: pointer;
+  border-radius: 5px;
 }
 </style>
