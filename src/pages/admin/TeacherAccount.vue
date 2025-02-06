@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import LayoutWrapper from "../layouts/LayoutWrapper.vue";
+import LayoutWrapper from "@/layouts/LayoutWrapper.vue";
 
     export default {
         components: {
