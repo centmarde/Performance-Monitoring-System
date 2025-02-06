@@ -19,6 +19,9 @@
         <td>{{ item.role }}</td>
         <td>
           <button @click="editUser(item)" class="edit-btn">Edit</button>
+          <button @click="deleteUser(item.id)" class="delete-btn">
+            Delete
+          </button>
         </td>
       </tr>
     </tbody>
@@ -28,11 +31,15 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from "vue";
 
-const props = defineProps(["items"]);
-const emit = defineEmits(["edit-user"]);
+const props = defineProps<{ items: any[] }>();
+const emit = defineEmits(["edit-user", "delete-user"]);
 
 const editUser = (user: any) => {
   emit("edit-user", user);
+};
+
+const deleteUser = (id: number) => {
+  emit("delete-user", id);
 };
 </script>
 
@@ -52,5 +59,22 @@ const editUser = (user: any) => {
 .styled-table th {
   background: #2e7d32;
   color: white;
+}
+
+.edit-btn {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-left: 5px;
+  cursor: pointer;
 }
 </style>
