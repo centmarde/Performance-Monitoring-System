@@ -20,6 +20,8 @@
             </v-col>
           </v-row>
 
+          <!-- Items per page selector -->
+
           <!-- Add User Dialog -->
           <v-dialog v-model="showAddUserForm" max-width="500px">
             <v-card>
@@ -113,7 +115,7 @@
               <v-card-text>
                 Are you sure you want to delete this user?
               </v-card-text>
-              <v-card-actions>
+              <v-card-actions class="mx-auto">
                 <v-btn
                   @click="showDeleteConfirmation = false"
                   color="grey darken-1"
@@ -126,7 +128,7 @@
 
           <!-- Data Table -->
           <DataTable
-            :items="filteredItems"
+            :items="paginatedItems"
             @edit-user="openEditDialog"
             @delete-user="promptDeleteUser"
           />
@@ -139,6 +141,21 @@
               :disabled="currentPage * itemsPerPage >= filteredItems.length"
               >Next</v-btn
             >
+
+            <!-- Items per page dropdown aligned to the right -->
+            <v-spacer></v-spacer>
+            <!-- This will push the next items to the right -->
+            <v-col cols="auto" class="d-flex">
+              <v-select
+                v-model="itemsPerPage"
+                :items="[10, 20, 30, 50, 100]"
+                label="Items per page"
+                dense
+                outlined
+                min-width="150"
+                class="mt-0"
+              />
+            </v-col>
           </v-row>
         </div>
       </v-container>
@@ -187,7 +204,7 @@ const editedUser = ref<User>({
 
 // Pagination related state
 const currentPage = ref(1);
-const itemsPerPage = ref(10);
+const itemsPerPage = ref(10); // Default to 10, but can be changed
 
 const isAddUserValid = computed(() => {
   return (
@@ -216,7 +233,7 @@ const filteredItems = computed(() => {
   );
 });
 
-// Paginated Items (10 per page)
+// Paginated Items (dynamic based on selected itemsPerPage)
 const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;

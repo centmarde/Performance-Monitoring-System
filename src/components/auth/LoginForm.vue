@@ -8,7 +8,7 @@
       </h6>
       <v-row align="center" justify="center" class="mt-3">
         <v-col cols="12" sm="8">
-          <v-form  @submit.prevent="onFormSubmit">
+          <v-form @submit.prevent="onFormSubmit">
             <v-text-field
               v-model="loginEmail"
               label="Email"
@@ -70,11 +70,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
-import { useAuthUserStore } from '@/stores/authUser';
-import { useToast } from 'vue-toastification';
-import { requiredValidator, emailValidator } from '@/lib/validator';
-import router from '@/router';
+import { ref, computed } from "vue";
+import { useAuthUserStore } from "@/stores/authUser";
+import { useToast } from "vue-toastification";
+import { requiredValidator, emailValidator } from "@/lib/validator";
+import router from "@/router";
 
 const loginEmail = ref("");
 const loginPassword = ref("");
@@ -94,18 +94,22 @@ const onFormSubmit = async (event: SubmitEvent): Promise<void> => {
   formAction.value.formProcess = true;
 
   try {
-    const { error } = await authUserStore.signIn(loginEmail.value, loginPassword.value);
+    const { error } = await authUserStore.signIn(
+      loginEmail.value,
+      loginPassword.value
+    );
     if (error) {
-      throw new Error(typeof error === 'string' ? error : error.message);
+      throw new Error(typeof error === "string" ? error : error.message);
     }
 
-    toast.success('Login successful', {
+    toast.success("Login successful", {
       timeout: 3000,
       closeOnClick: true,
     });
     router.push("/home");
   } catch (err) {
-    const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+    const errorMessage =
+      err instanceof Error ? err.message : "An unknown error occurred";
     toast.error(`Login error: ${errorMessage}`);
   } finally {
     formAction.value.formProcess = false;
