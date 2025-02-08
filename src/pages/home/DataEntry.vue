@@ -8,7 +8,7 @@
 
         <v-row>
           <!-- "Add New" Card -->
-          <v-col cols="12" sm="6" md="4">
+          <v-col v-if="currentPage === 1" cols="12" sm="6" md="4">
             <v-card class="subject-card add-new-card" @click="openNewClass">
               <v-container
                 class="d-flex flex-column align-center justify-center fill-height"
@@ -156,7 +156,7 @@ import HomeLayout from "@/layouts/HomeLayout.vue";
 const classRecordDialog = ref(false);
 const activeSubject = ref("");
 const currentPage = ref(1);
-const itemsPerPage = 5;
+const itemsPerPage = 6;
 
 const subjects = ref([
   { name: "English 8 - FG2", image: "/src/assets/class_record.png" },
@@ -168,11 +168,15 @@ const subjects = ref([
   { name: "Biology 10 - FG2", image: "/src/assets/class_record.png" },
 ]);
 
-const totalPages = computed(() =>
-  Math.ceil(subjects.value.length / itemsPerPage)
-);
+const totalPages = computed(() => {
+  const remainingSubjects = subjects.value.length - 5; // First page has 5 subjects
+  return 1 + Math.ceil(remainingSubjects / itemsPerPage);
+});
 const paginatedSubjects = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage;
+  if (currentPage.value === 1) {
+    return subjects.value.slice(0, 5); // First page only has 5 subjects
+  }
+  const start = 5 + (currentPage.value - 2) * itemsPerPage;
   return subjects.value.slice(start, start + itemsPerPage);
 });
 
