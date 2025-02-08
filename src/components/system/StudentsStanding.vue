@@ -61,14 +61,14 @@ export default defineComponent({
         { name: "MIRAL", score: 78 },
       ],
       "ENGLISH - ED2": [
-        { name: "NATOY", score: 76 },
-        { name: "AUDREY", score: 74 },
+        { name: "MARDE", score: 76 },
+        { name: "GABALES", score: 74 },
         { name: "YANG", score: 73 },
       ],
       "ENGLISH - DE1": [
-        { name: "YANG", score: 85 },
-        { name: "YANG", score: 88 },
-        { name: "YANG", score: 90 },
+        { name: "BASLOT", score: 85 },
+        { name: "MIRAL", score: 88 },
+        { name: "GABALES", score: 90 },
       ],
     });
 
