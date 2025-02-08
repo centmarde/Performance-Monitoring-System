@@ -9,7 +9,7 @@
         <v-row>
           <!-- "Add New" Card -->
           <v-col cols="12" sm="6" md="4">
-            <v-card class="add-new-card" @click="openNewClass">
+            <v-card class="subject-card add-new-card" @click="openNewClass">
               <v-container
                 class="d-flex flex-column align-center justify-center fill-height"
               >
@@ -19,9 +19,9 @@
             </v-card>
           </v-col>
 
-          <!-- Subject Cards -->
+          <!-- Subject Cards with Pagination -->
           <v-col
-            v-for="(subject, index) in subjects"
+            v-for="(subject, index) in paginatedSubjects"
             :key="index"
             cols="12"
             sm="6"
@@ -35,6 +35,13 @@
             </v-card>
           </v-col>
         </v-row>
+
+        <!-- Pagination Control -->
+        <v-pagination
+          v-model="currentPage"
+          :length="totalPages"
+          class="mt-4 d-flex justify-center"
+        ></v-pagination>
 
         <!-- Class Record Dialog -->
         <v-dialog v-model="classRecordDialog" max-width="900px">
@@ -148,12 +155,26 @@ import HomeLayout from "@/layouts/HomeLayout.vue";
 
 const classRecordDialog = ref(false);
 const activeSubject = ref("");
+const currentPage = ref(1);
+const itemsPerPage = 5;
 
-// Sample subjects
 const subjects = ref([
   { name: "English 8 - FG2", image: "/src/assets/class_record.png" },
   { name: "Science 7 - DE1", image: "/src/assets/class_record.png" },
+  { name: "Math 9 - FG1", image: "/src/assets/class_record.png" },
+  { name: "History 10 - FG2", image: "/src/assets/class_record.png" },
+  { name: "Physics 11 - FG3", image: "/src/assets/class_record.png" },
+  { name: "Chemistry 12 - FG1", image: "/src/assets/class_record.png" },
+  { name: "Biology 10 - FG2", image: "/src/assets/class_record.png" },
 ]);
+
+const totalPages = computed(() =>
+  Math.ceil(subjects.value.length / itemsPerPage)
+);
+const paginatedSubjects = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  return subjects.value.slice(start, start + itemsPerPage);
+});
 
 // Default template for new class records
 const defaultClassRecord = () => ({
@@ -175,37 +196,27 @@ const defaultClassRecord = () => ({
   ],
 });
 
-// Store different records per subject
 const subjectRecords = ref<{ [key: string]: any }>({});
-
-// Current working class record
 const classRecord = ref(defaultClassRecord());
 
-// Open existing class record
 const openClassRecord = (subject: { name: string }) => {
   activeSubject.value = subject.name;
-
   if (!subjectRecords.value[subject.name]) {
     subjectRecords.value[subject.name] = defaultClassRecord();
     subjectRecords.value[subject.name].subject = subject.name;
   }
-
-  // Create a deep copy of the selected class record
   classRecord.value = JSON.parse(
     JSON.stringify(subjectRecords.value[subject.name])
   );
-
   classRecordDialog.value = true;
 };
 
-// Open "Add New" functionality
 const openNewClass = () => {
   activeSubject.value = "";
   classRecord.value = defaultClassRecord();
   classRecordDialog.value = true;
 };
 
-// Add new subject
 const addNewSubject = () => {
   if (!classRecord.value.subject.trim()) {
     alert("Please enter a subject name.");
@@ -226,15 +237,14 @@ const getFinalGrade = (student: any) =>
       getTotal(student.performance) * 0.6 +
       student.assessment * 0.2
   );
+
 const saveClassRecord = () => {
   const previousName = activeSubject.value;
   const newName = classRecord.value.subject.trim();
-
   if (!newName) {
     alert("Subject name cannot be empty.");
     return;
   }
-
   if (previousName && previousName !== newName) {
     const subjectIndex = subjects.value.findIndex(
       (subject) => subject.name === previousName
@@ -242,15 +252,11 @@ const saveClassRecord = () => {
     if (subjectIndex !== -1) {
       subjects.value[subjectIndex].name = newName;
     }
-
     subjectRecords.value[newName] = { ...subjectRecords.value[previousName] };
     delete subjectRecords.value[previousName];
-
     activeSubject.value = newName;
   }
-
   subjectRecords.value[newName] = { ...classRecord.value };
-
   classRecordDialog.value = false;
 };
 </script>
@@ -283,15 +289,13 @@ const saveClassRecord = () => {
 
 .subject-card {
   cursor: pointer;
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   transition: 0.3s;
 }
-
 .subject-card:hover {
   transform: scale(1.05);
-}
-
-.subject-image {
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
 }
 </style>
