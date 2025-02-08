@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./components/common/AppFooter.vue')['default']
     DataTable: typeof import('./components/common/DataTable.vue')['default']
+    GradeDistribution: typeof import('./components/system/GradeDistribution.vue')['default']
     InnerNavBar: typeof import('./components/common/InnerNavBar.vue')['default']
     Loader: typeof import('./components/common/Loader.vue')['default']
     LoginForm: typeof import('./components/auth/LoginForm.vue')['default']
