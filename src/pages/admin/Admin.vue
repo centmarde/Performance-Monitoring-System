@@ -172,12 +172,17 @@ import {
   passwordValidator,
   requiredValidator,
 } from "@/lib/validator";
+import { supabase } from "@/lib/supabase";
 
 interface User {
   id: number;
   name: string;
   email: string;
+  firstname: string;
   password: string;
+  lastname: string;
+  phone: string;
+  complete_address: string;
   role: string;
 }
 
@@ -191,14 +196,22 @@ const newUser = ref<User>({
   id: 0,
   name: "",
   email: "",
+  firstname: "",
+  lastname: "",
   password: "",
+  phone: "",
+  complete_address: "",
   role: "",
 });
 const editedUser = ref<User>({
   id: 0,
   name: "",
   email: "",
+  firstname: "",
+  lastname: "",
   password: "",
+  phone: "",
+  complete_address: "",
   role: "",
 });
 
@@ -255,14 +268,25 @@ const prevPage = () => {
 
 onMounted(async () => {
   try {
-    const response = await fetch("https://jsonplaceholder.typicode.com/users");
-    const data = await response.json();
-    items.value = data.map((user: any) => ({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      password: "password",
-      role: "User",
+    const { data: { user } } = await supabase.auth.getUser();
+
+    const { data: profiles, error } = await supabase
+      .from("users")
+      .select("*");
+    if (error) {
+      throw error;
+    }
+
+    items.value = profiles.map((profile: any) => ({
+      id: profile.id,
+      name: profile.name,
+      email: profile.email,
+      firstname: profile.firstname,
+      lastname: profile.lastname,
+      phone: profile.phone,
+      password: profile.password,
+      complete_address: profile.complete_address,
+      role: profile.user_type,
     }));
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -275,20 +299,42 @@ const openEditDialog = (user: User) => {
   showEditUserForm.value = true;
 };
 
-const addUser = () => {
-  items.value.push({ ...newUser.value, id: items.value.length + 1 });
-  newUser.value = { id: 0, name: "", email: "", password: "", role: "" };
-  showAddUserForm.value = false;
+const addUser = async () => {
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .insert([newUser.value])
+      .select();
+    if (error) {
+      throw error;
+    }
+    items.value.push({ ...newUser.value, id: data[0].id });
+    newUser.value = { id: 0, name: "", email: "", password: "", firstname: "", lastname: "", phone: "", complete_address: "", role: "" };
+    showAddUserForm.value = false;
+  } catch (error) {
+    console.error("Error adding user:", error);
+  }
 };
 
-const updateUser = () => {
-  const index = items.value.findIndex(
-    (user) => user.id === editedUser.value.id
-  );
-  if (index !== -1) {
-    items.value[index] = { ...editedUser.value };
+const updateUser = async () => {
+  try {
+    const { error } = await supabase
+      .from("users")
+      .update(editedUser.value)
+      .eq("id", editedUser.value.id);
+    if (error) {
+      throw error;
+    }
+    const index = items.value.findIndex(
+      (user) => user.id === editedUser.value.id
+    );
+    if (index !== -1) {
+      items.value[index] = { ...editedUser.value };
+    }
+    showEditUserForm.value = false;
+  } catch (error) {
+    console.error("Error updating user:", error);
   }
-  showEditUserForm.value = false;
 };
 
 const promptDeleteUser = (id: number) => {
@@ -296,11 +342,22 @@ const promptDeleteUser = (id: number) => {
   showDeleteConfirmation.value = true;
 };
 
-const confirmDeleteUser = () => {
-  if (userToDelete.value !== null) {
-    items.value = items.value.filter((user) => user.id !== userToDelete.value);
-    userToDelete.value = null;
+const confirmDeleteUser = async () => {
+  try {
+    if (userToDelete.value !== null) {
+      const { error } = await supabase
+        .from("users")
+        .delete()
+        .eq("id", userToDelete.value);
+      if (error) {
+        throw error;
+      }
+      items.value = items.value.filter((user) => user.id !== userToDelete.value);
+      userToDelete.value = null;
+    }
+    showDeleteConfirmation.value = false;
+  } catch (error) {
+    console.error("Error deleting user:", error);
   }
-  showDeleteConfirmation.value = false;
 };
 </script>
