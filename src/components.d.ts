@@ -26,5 +26,6 @@ declare module 'vue' {
     SidebarMenuLink: typeof import('./components/common/SidebarMenuLink.vue')['default']
     SidebarMenuScroll: typeof import('./components/common/SidebarMenuScroll.vue')['default']
     StudentsStanding: typeof import('./components/system/StudentsStanding.vue')['default']
+    StudentsStanding1: typeof import('./components/system/StudentsStanding1.vue')['default']
   }
 }
