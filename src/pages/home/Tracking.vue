@@ -88,9 +88,14 @@ const students = ref([
     works: [1, 5],
     tasks: [2, 4],
   },
-  { name: "Natoy Cruz", subject: "Math 9 - FG1", works: [1, 2], tasks: [1, 3] },
   {
-    name: "Lucas Reyes",
+    name: "Centmarde Campado",
+    subject: "Math 9 - FG1",
+    works: [1, 2],
+    tasks: [1, 3],
+  },
+  {
+    name: "Christ Charl Gabales",
     subject: "Science 7 - FG2",
     works: [3, 4],
     tasks: [4, 5],

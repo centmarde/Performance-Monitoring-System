@@ -186,13 +186,13 @@ const defaultClassRecord = () => ({
   subject: "",
   students: [
     {
-      name: "Natoy",
+      name: "Centmarde",
       written: [0, 0, 0, 0, 0],
       performance: [0, 0, 0, 0, 0],
       assessment: 0,
     },
     {
-      name: "MJ",
+      name: "Christ",
       written: [0, 0, 0, 0, 0],
       performance: [0, 0, 0, 0, 0],
       assessment: 0,
