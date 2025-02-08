@@ -3,9 +3,11 @@
     <thead>
       <tr>
         <th>ID</th>
-        <th>Name</th>
         <th>Email</th>
-        <th>Password</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Phone</th>
+        <th>Address</th>
         <th>Role</th>
         <th class="actions-header">Actions</th>
         <!-- Added class for styling -->
@@ -14,9 +16,11 @@
     <tbody>
       <tr v-for="item in items" :key="item.id">
         <td>{{ item.id }}</td>
-        <td>{{ item.name }}</td>
         <td>{{ item.email }}</td>
-        <td>{{ item.password }}</td>
+        <td>{{ item.firstname }}</td>
+        <td>{{ item.lastname }}</td>
+        <td>{{ item.phone }}</td>
+        <td>{{ item.complete_address }}</td>
         <td>{{ item.role }}</td>
         <td class="actions-cell">
           <!-- Added class for styling -->

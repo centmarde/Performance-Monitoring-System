@@ -15,6 +15,8 @@ import Profiles from "@/pages/home/Profiles.vue";
 import TeacherAccount from "@/pages/admin/TeacherAccount.vue";
 import DataEntry from "@/pages/home/DataEntry.vue";
 import Tracking from "@/pages/home/Tracking.vue";
+//@ts-ignore
+import Welcome from "@/pages/Welcome.vue";
 
 
 const toast = useToast();
@@ -22,6 +24,7 @@ const toast = useToast();
 const routes = setupLayouts([
 
   { path: "/", component: Hero },
+  { path: "/welcome", component: Welcome, meta: { requiresAuth: true } },
   {
     path: "/home",
     component: Home,
