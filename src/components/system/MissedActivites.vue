@@ -7,6 +7,7 @@
           <v-divider class="mb-4"></v-divider>
         </v-col>
       </v-row>
+
       <v-row>
         <v-col
           v-for="activity in missedActivities"
@@ -16,26 +17,34 @@
           class="text-center"
         >
           <v-card class="pa-3" outlined>
+            <!-- Progress Circular with Dynamic Color -->
             <v-progress-circular
-              :rotate="360"
               :size="100"
               :width="10"
-              :value="activity.missed"
+              :value="(activity.missed / maxMissed) * 100"
               :color="getMissedColor(activity.missed)"
+              class="my-2"
             >
-              {{ activity.missed }} Students
+              <span
+                :style="{
+                  color: getMissedColor(activity.missed),
+                  fontWeight: 'bold',
+                }"
+              >
+                {{ activity.missed }} Students
+              </span>
             </v-progress-circular>
             <p class="mt-2 font-weight-bold">{{ activity.subject }}</p>
           </v-card>
         </v-col>
       </v-row>
 
-      <!-- Bar Chart for Grade Distribution -->
+      <!-- Grade Distribution Graph -->
       <v-row>
         <v-col cols="12">
           <v-card class="pa-4">
             <h3 class="text-center font-weight-bold">Grade Distribution</h3>
-            <v-chart :option="chartOptions" style="height: 400px"></v-chart>
+            <VChart :option="chartOptions" style="height: 400px"></VChart>
           </v-card>
         </v-col>
       </v-row>
@@ -44,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent, ref } from "vue";
 import { use } from "echarts/core";
 import { BarChart } from "echarts/charts";
 import { CanvasRenderer } from "echarts/renderers";
@@ -56,13 +65,15 @@ use([BarChart, CanvasRenderer, GridComponent]);
 export default defineComponent({
   components: { VChart },
   setup() {
-    const missedActivities = reactive([
+    const maxMissed = ref(10); // Maximum number of students missing an activity
+
+    const missedActivities = ref([
       { subject: "English 8 - DE1", missed: 10 },
       { subject: "Mapeh 8 - FG2", missed: 6 },
       { subject: "English 7 - ED2", missed: 3 },
     ]);
 
-    const studentStanding = reactive<
+    const studentStanding = ref<
       Record<string, { name: string; score: number }[]>
     >({
       TEST: [
@@ -82,17 +93,17 @@ export default defineComponent({
       ],
     });
 
-    const chartOptions = reactive({
+    const chartOptions = ref({
       xAxis: {
         type: "category",
-        data: Object.keys(studentStanding),
+        data: Object.keys(studentStanding.value),
       },
       yAxis: {
         type: "value",
       },
       series: [
         {
-          data: Object.values(studentStanding).map(
+          data: Object.values(studentStanding.value).map(
             (students) =>
               students.reduce((acc, student) => acc + student.score, 0) /
               students.length
@@ -104,12 +115,12 @@ export default defineComponent({
     });
 
     function getMissedColor(missed: number): string {
-      if (missed >= 10) return "red";
-      if (missed >= 5) return "orange";
-      return "green";
+      if (missed >= 10) return "red"; // High risk
+      if (missed >= 6) return "orange"; // Moderate risk
+      return "green"; // Low risk
     }
 
-    return { missedActivities, chartOptions, getMissedColor };
+    return { missedActivities, chartOptions, getMissedColor, maxMissed };
   },
 });
 </script>
