@@ -6,7 +6,7 @@
           Student Performance Evaluation
         </h2>
 
-        <v-row>
+        <v-row class="mt-8">
           <!-- Left Panel: Subject & Students List -->
           <v-col cols="12" md="5">
             <v-card class="pa-4">
