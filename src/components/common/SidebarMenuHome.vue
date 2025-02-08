@@ -39,24 +39,6 @@
         <v-list-item-title v-text="item.title"></v-list-item-title>
       </v-list-item>
     </v-list>
-
-    <h5 class="ml-5 text-yellow-darken-2">ohaha</h5>
-    <v-row align="center" class="spacer ml-16 mt-4" no-gutters>
-      <v-col
-        v-for="(user, index) in activeUsers"
-        :key="index"
-        cols="4"
-        sm="2"
-        md="1"
-      >
-        <v-avatar size="36px">
-          <v-img :src="user.src" alt="Avatar"></v-img>
-        </v-avatar>
-      </v-col>
-      <v-col cols="4" sm="2" md="1">
-        <v-avatar size="36px" color="#B49239">+70</v-avatar>
-      </v-col>
-    </v-row>
   </v-navigation-drawer>
 </template>
 
