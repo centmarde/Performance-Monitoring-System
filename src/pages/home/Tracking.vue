@@ -31,12 +31,9 @@
           <!-- Right Panel: Missed Works & Tasks -->
           <v-col cols="12" md="7">
             <v-card class="pa-4">
-              <v-select
-                v-model="selectedSubject"
-                :items="subjects"
-                label="Missed Works and Task"
-                variant="outlined"
-              ></v-select>
+              <h3 class="font-weight-bold text-center mb-4">
+                Missed Works and Tasks
+              </h3>
 
               <v-table>
                 <thead>
