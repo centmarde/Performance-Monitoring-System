@@ -44,7 +44,7 @@
         <v-col cols="12">
           <v-card class="pa-4">
             <h3 class="text-center font-weight-bold">Grade Distribution</h3>
-            <VChart :option="chartOptions" style="height: 400px"></VChart>
+            <v-chart :option="chartOptions" style="height: 400px"></v-chart>
           </v-card>
         </v-col>
       </v-row>
@@ -52,15 +52,10 @@
   </v-card>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, ref } from "vue";
-import { use } from "echarts/core";
-import { BarChart } from "echarts/charts";
-import { CanvasRenderer } from "echarts/renderers";
-import { GridComponent } from "echarts/components";
+import "echarts";
 import VChart from "vue-echarts";
-
-use([BarChart, CanvasRenderer, GridComponent]);
 
 export default defineComponent({
   components: { VChart },
@@ -73,9 +68,7 @@ export default defineComponent({
       { subject: "English 7 - ED2", missed: 3 },
     ]);
 
-    const studentStanding = ref<
-      Record<string, { name: string; score: number }[]>
-    >({
+    const studentStanding = ref({
       TEST: [
         { name: "OMLANG", score: 87 },
         { name: "BASLOT", score: 79 },
@@ -114,7 +107,7 @@ export default defineComponent({
       ],
     });
 
-    function getMissedColor(missed: number): string {
+    function getMissedColor(missed) {
       if (missed >= 10) return "red"; // High risk
       if (missed >= 6) return "orange"; // Moderate risk
       return "green"; // Low risk

@@ -29,7 +29,7 @@
               <v-col cols="auto">
                 <v-icon class="me-3" left>mdi-account</v-icon>
               </v-col>
-              <v-col> {{ userEmail }}</v-col>
+              <v-col> <!-- {{ userEmail }} --></v-col>
             </v-row>
           </v-btn>
 
@@ -59,7 +59,6 @@
 import { computed } from 'vue';
 import { useTheme } from 'vuetify';
 import { doLogout } from '@/lib/supabase';
-import { useUserInfo } from '@/composables/userInfo'; // Adjust the path as necessary
 import router from '@/router';
 
 const theme = useTheme();
@@ -74,7 +73,7 @@ function toggleTheme() {
   localStorage.setItem("theme", newTheme);
 }
 
-const { userEmail } = useUserInfo();
+
 
 function handleLogoutClick() {
   doLogout();
