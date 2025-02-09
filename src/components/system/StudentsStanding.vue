@@ -8,7 +8,7 @@
       <v-container>
         <v-row>
           <v-col cols="12" class="text-center">
-            <h2 class="font-weight-bold">Students' Standing</h2>
+            <h2 class="font-weight-bold">Student's Standing</h2>
             <v-divider class="mb-4"></v-divider>
           </v-col>
         </v-row>
