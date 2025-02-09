@@ -18,7 +18,7 @@
       >
         <v-avatar size="85">
 
-          <v-img :src="userInfo?.image_path || '/images/avatar.png'" alt="User Avatar"></v-img>
+          <v-img :src="userInfo?.image_path || avatar " alt="User Avatar"></v-img>
         </v-avatar>
       </v-progress-circular>
       <div class="mt-4">{{ userInfo?.firstname || 'User' }}</div>
@@ -50,7 +50,9 @@
 import { ref, computed, watch, onMounted } from "vue";
 import { useTheme } from "vuetify";
 import { useUserInfoStore } from "@/stores/userInfo";
+import Avatar from "@/assets/avatar.png"
 
+const avatar = Avatar;
 const theme = useTheme();
 const drawer = ref(true);
 const userInfoStore = useUserInfoStore();

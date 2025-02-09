@@ -27,7 +27,7 @@
               lg="3"
             >
               <v-card class="teacher-card">
-                <v-card-title class="text-center">
+                <v-card-title class="text-center" elevation="8">
                   <v-avatar size="80">
                     <v-img :src="teacher.avatar || '/default-avatar.png'" alt="Teacher Avatar" />
                   </v-avatar>
@@ -69,6 +69,7 @@
 import { ref, computed, onMounted } from "vue";
 import LayoutWrapper from "@/layouts/LayoutWrapper.vue";
 import { useTeacherList } from '@/stores/teachersList';
+import Avatar from "@/assets/avatar.png";
 
 interface Teacher {
   id: number;
@@ -80,6 +81,7 @@ interface Teacher {
   complete_address: string;
 }
 
+const avatar = Avatar;
 const teachers = ref<Teacher[]>([]);
 const searchQuery = ref("");
 const currentPage = ref(1);
@@ -103,7 +105,7 @@ const initializeTeachers = async () => {
       id: teacher.id,
       name: `${teacher.firstname} ${teacher.lastname}`,
       email: teacher.email,
-      avatar: teacher.image_path || "/images/avatar.png",
+      avatar: teacher.image_path || avatar,
       subjects: subjectsList[index % subjectsList.length],
       phone: teacher.phone,
       complete_address: teacher.complete_address,
