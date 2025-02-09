@@ -9,28 +9,30 @@
     </v-app-bar>
 
     <!-- Hero Section -->
-    <v-container class="hero d-flex align-center justify-space-between">
-      <div class="hero-content">
-        <h1 class="text-h3 font-weight-bold">
-          Welcome to the
-          <span class="highlight">Performance Monitoring System</span>
-        </h1>
-        <p class="text-subtitle-1 mt-2">
-          This system helps track student progress, monitor daily activities,
-          and determine pass/fail status efficiently.
-        </p>
-        <v-btn class="primary-btn mt-4" @click="showDialog = true">
-          Provide Extra Information
-        </v-btn>
-        <router-link to="/home">
-          <v-btn variant="outlined" class="outline-btn mt-4 ml-2"
-            >Skip & Continue</v-btn
-          >
-        </router-link>
-      </div>
-      <div class="hero-image">
-        <v-img :src="avatar" class="rounded-lg hero-img"></v-img>
-      </div>
+    <v-container class="hero">
+      <v-row align="center" justify="space-between">
+        <v-col cols="12" md="6" class="hero-content">
+          <h1 class="text-h3 font-weight-bold">
+            Welcome to the
+            <span class="highlight">Performance Monitoring System</span>
+          </h1>
+          <p class="text-subtitle-1 mt-2">
+            This system helps track student progress, monitor daily activities,
+            and determine pass/fail status efficiently.
+          </p>
+          <v-btn class="primary-btn mt-4" @click="showDialog = true">
+            Provide Extra Information
+          </v-btn>
+          <router-link to="/home">
+            <v-btn variant="outlined" class="outline-btn mt-4 ml-2">
+              Skip & Continue
+            </v-btn>
+          </router-link>
+        </v-col>
+        <v-col cols="12" md="5">
+  <v-img src="@/assets/Hero.png" class="floating-img" width="100%"></v-img>
+</v-col>
+      </v-row>
     </v-container>
 
     <!-- Extra Information Dialog -->
@@ -75,11 +77,8 @@
   </v-container>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
-import Avatar from "@/assets/christ.png";
-
-const avatar = Avatar;
 
 const showDialog = ref(false);
 
@@ -146,23 +145,9 @@ const saveExtraInfo = () => {
 
 /* Hero Section */
 .hero {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 40px;
   flex-grow: 1;
 }
-.hero-content {
-  max-width: 50%;
-}
-.hero-image {
-  max-width: 50%;
-}
-.hero-img {
-  width: 100%;
-  height: auto;
-  border-radius: 12px;
-}
+
 .highlight {
   color: #00bfa5;
 }
