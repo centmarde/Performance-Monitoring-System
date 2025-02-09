@@ -21,8 +21,15 @@
             md="4"
           >
             <v-card class="pa-3" outlined>
-              <h3 class="text-center font-weight-bold">{{ subject }}</h3>
-              <span>{{ sectionDescriptions[subject] }}</span>
+              <h3
+                class="text-center font-weight-bold theme--light:text-h3 theme--dark:text-white"
+              >
+                {{ subject }}
+              </h3>
+              <span
+                class="text-body-2 theme--light:text-body-1 theme--dark:text-body-2"
+                >{{ sectionDescriptions[subject] }}</span
+              >
               <v-divider class="mb-2"></v-divider>
               <v-row
                 v-for="student in students"
@@ -31,7 +38,10 @@
                 justify="space-between"
               >
                 <v-col cols="6">
-                  <span class="font-weight-bold">{{ student.name }}</span>
+                  <span
+                    class="font-weight-bold theme--light:text-body-1 theme--dark:text-body-2"
+                    >{{ student.name }}</span
+                  >
                 </v-col>
                 <v-col cols="6">
                   <v-progress-linear
@@ -147,9 +157,12 @@ export default defineComponent({
 
 <style scoped>
 h2 {
-  color: #3f51b5;
+  color: var(--v-theme-primary); /* Primary color for headings */
 }
 h3 {
-  color: #000;
+  color: var(--v-theme-on-background); /* Light theme on background color */
+}
+.theme--dark h3 {
+  color: var(--v-theme-on-surface); /* Dark theme on surface color */
 }
 </style>

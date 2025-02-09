@@ -3,7 +3,11 @@
     <v-container>
       <v-row>
         <v-col cols="12" class="text-center">
-          <h2 class="font-weight-bold">Missed Activities</h2>
+          <h2
+            class="font-weight-bold theme--light:text-h2 theme--dark:text-white"
+          >
+            Missed Activities
+          </h2>
           <v-divider class="mb-4"></v-divider>
         </v-col>
       </v-row>
@@ -33,17 +37,32 @@
                 {{ activity.missed }} Students
               </span>
             </v-progress-circular>
-            <p class="mt-2 font-weight-bold">{{ activity.subject }}</p>
+            <p
+              class="mt-2 font-weight-bold theme--light:text-body-1 theme--dark:text-body-2"
+            >
+              {{ activity.subject }}
+            </p>
           </v-card>
         </v-col>
       </v-row>
 
       <v-row justify="center" class="mt-4">
-        <v-btn @click="prevPage" :disabled="currentPage === 1"> Prev </v-btn>
-        <span class="mx-3 mt-1 font-weight-bold"
-          >Page {{ currentPage }} of {{ totalPages }}</span
+        <v-btn
+          @click="prevPage"
+          :disabled="currentPage === 1"
+          class="theme--light:bg-primary theme--dark:bg-secondary"
+          >Prev</v-btn
         >
-        <v-btn @click="nextPage" :disabled="currentPage === totalPages">
+        <span
+          class="mx-3 mt-1 font-weight-bold theme--light:text-body-1 theme--dark:text-body-2"
+        >
+          Page {{ currentPage }} of {{ totalPages }}
+        </span>
+        <v-btn
+          @click="nextPage"
+          :disabled="currentPage === totalPages"
+          class="theme--light:bg-primary theme--dark:bg-secondary"
+        >
           Next
         </v-btn>
       </v-row>
@@ -51,7 +70,11 @@
       <v-row>
         <v-col cols="12">
           <v-card class="pa-4">
-            <h3 class="text-center font-weight-bold">Grade Distribution</h3>
+            <h3
+              class="text-center font-weight-bold theme--light:text-h3 theme--dark:text-white"
+            >
+              Grade Distribution
+            </h3>
             <v-chart :option="chartOptions" style="height: 400px"></v-chart>
           </v-card>
         </v-col>
@@ -61,7 +84,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
 import "echarts";
 import VChart from "vue-echarts";
 
@@ -167,9 +190,12 @@ export default defineComponent({
 
 <style scoped>
 h2 {
-  color: #e53935;
+  color: var(--v-theme-error); /* Red color for headings */
 }
 h3 {
-  color: #000;
+  color: var(--v-theme-on-background); /* Light theme on background color */
+}
+.theme--dark h3 {
+  color: var(--v-theme-on-surface); /* Dark theme on surface color */
 }
 </style>
