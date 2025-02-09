@@ -28,6 +28,7 @@
           ></v-text-field>
           <v-text-field
             v-model="formData.password_confirmation"
+            prepend-inner-icon="mdi-lock-outline"
             label="Password Confirmation"
             :type="isPasswordConfirmVisible ? 'text' : 'password'"
             :append-inner-icon="
