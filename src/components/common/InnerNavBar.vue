@@ -29,7 +29,7 @@
               <v-col cols="auto">
                 <v-icon class="me-3">mdi-account</v-icon>
               </v-col>
-              <v-col> {{ userEmail }}</v-col>
+              <v-col> <!-- {{ userEmail }} --></v-col>
             </v-row>
           </v-btn>
 
@@ -56,11 +56,13 @@
 </template>
 
 <script lang="ts" setup>
+
 import { computed } from "vue";
 import { useTheme } from "vuetify";
 import { doLogout } from "@/lib/supabase";
 import { useUserInfo } from "@/composables/userInfo"; // Adjust path if needed
 import router from "@/router";
+
 
 const theme = useTheme();
 const isDarkTheme = computed(() => theme.global.current.value.dark);
@@ -75,6 +77,7 @@ function toggleTheme() {
   localStorage.setItem("theme", newTheme);
 }
 
+
 // Sync navbar color with sidebar
 const navbarClass = computed(() =>
   isDarkTheme.value ? "bg-dark-mode" : "bg-light-mode"
@@ -86,6 +89,7 @@ const titleClass = computed(() =>
 );
 
 const { userEmail } = useUserInfo();
+
 
 function handleLogoutClick() {
   doLogout();

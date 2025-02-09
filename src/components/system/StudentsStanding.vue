@@ -1,4 +1,9 @@
 <template>
+  <v-lazy
+  :min-height="200"
+  :options="{'threshold':0.5}"
+  transition="fade-transition"
+  >
   <v-card elevation="8" class="mb-6">
     <v-container>
       <v-row>
@@ -10,39 +15,38 @@
 
       <!-- Table Pagination -->
       <v-row>
-        <v-col cols="12">
-          <v-container>
-            <v-row>
-              <v-col
-                v-for="(students, subject) in paginatedSubjects"
-                :key="subject"
-                cols="12"
-                md="4"
-              >
-                <v-card class="pa-3" outlined>
-                  <h3 class="text-center font-weight-bold">{{ subject }}</h3>
-                  <v-divider class="mb-2"></v-divider>
-                  <v-row
-                    v-for="student in students"
-                    :key="student.name"
-                    align="center"
-                    justify="space-between"
-                  >
-                    <v-col cols="6">
-                      <span class="font-weight-bold">{{ student.name }}</span>
-                    </v-col>
-                    <v-col cols="6">
-                      <v-progress-linear
-                        :value="student.score"
-                        :color="getColor(student.score)"
-                        height="15"
-                        rounded
-                      >
-                        <strong>{{ student.score }}%</strong>
-                      </v-progress-linear>
-                    </v-col>
-                  </v-row>
-                </v-card>
+
+        <v-col
+          v-for="(students, subject) in studentStanding"
+          :key="subject"
+          cols="12"
+          md="4"
+        >
+          <v-card class="pa-3" outlined>
+            <h3 class="text-center font-weight-bold">{{ subject }}</h3>
+            <span>{{ sectionDescriptions[subject] }}</span>
+            <v-divider class="mb-2"></v-divider>
+            <v-row
+              v-for="student in students"
+              :key="student.name"
+              align="center"
+              justify="space-between"
+            >
+              <v-col cols="6">
+                <span class="font-weight-bold">{{ student.name }}</span>
+              </v-col>
+              <v-col cols="6">
+                <v-progress-linear
+                  v-if="student.score > 0"
+                  :value="student.score"
+                  :color="getColor(student.score)"
+                  height="15"
+                  rounded
+                >
+                  <strong>{{ student.score }}%</strong>
+                </v-progress-linear>
+                <span v-else>No record</span>
+
               </v-col>
             </v-row>
           </v-container>
@@ -61,10 +65,16 @@
       </v-row>
     </v-container>
   </v-card>
+</v-lazy>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, computed, ref } from "vue";
+
+import { defineComponent, reactive, ref, onMounted } from "vue";
+import { useSectionsStore } from "@/stores/sectionsStore";
+import { useStudentsStore } from "@/stores/studentsStore";
+import { useRecordsStore } from "@/stores/recordsStore";
+
 
 interface Student {
   name: string;
@@ -73,49 +83,41 @@ interface Student {
 
 export default defineComponent({
   setup() {
-    const studentStanding = reactive<Record<string, Student[]>>({
-      TEST: [
-        { name: "OMLANG", score: 87 },
-        { name: "BASLOT", score: 79 },
-        { name: "MIRAL", score: 78 },
-      ],
-      "ENGLISH - ED2": [
-        { name: "MARDE", score: 76 },
-        { name: "GABALES", score: 74 },
-        { name: "YANG", score: 73 },
-      ],
-      "ENGLISH - DE1": [
-        { name: "BASLOT", score: 85 },
-        { name: "MIRAL", score: 88 },
-        { name: "GABALES", score: 90 },
-      ],
-      "SCIENCE 8": [
-        { name: "MARK", score: 82 },
-        { name: "JANE", score: 77 },
-        { name: "KYLE", score: 80 },
-      ],
-      "MATH 7": [
-        { name: "JAMES", score: 90 },
-        { name: "LINA", score: 89 },
-        { name: "MIRA", score: 76 },
-      ],
-    });
 
-    const subjects = computed(() => Object.keys(studentStanding));
-    const currentPage = ref(1);
-    const itemsPerPage = 3;
+    const sectionsStore = useSectionsStore();
+    const studentsStore = useStudentsStore();
+    const recordsStore = useRecordsStore();
+    const studentStanding = reactive<Record<string, Student[]>>({});
+    const section = ref<string>("");
+    const sectionDescriptions = reactive<Record<string, string>>({});
 
-    const totalPages = computed(() =>
-      Math.ceil(subjects.value.length / itemsPerPage)
-    );
+    onMounted(async () => {
+      await sectionsStore.fetchSections();
+      const sections = sectionsStore.sections;
 
-    const paginatedSubjects = computed(() => {
-      const start = (currentPage.value - 1) * itemsPerPage;
-      const end = start + itemsPerPage;
-      return subjects.value.slice(start, end).reduce((obj, key) => {
-        obj[key] = studentStanding[key];
-        return obj;
-      }, {} as Record<string, Student[]>);
+      for (const sec of sections) {
+        section.value = sec.code;
+        sectionDescriptions[sec.code] = sec.description;
+        const students = await studentsStore.fetchStudentsBySection(sec.id);
+        if (students) {
+          studentStanding[sec.code] = await Promise.all(students.map(async student => {
+            try {
+              const score = await studentsStore.fetchInitialScore(student.id);
+              return {
+                name: `${student.firstname} ${student.lastname}`,
+                score: score || 0,
+              };
+            } catch (error) {
+              console.error(`Error fetching score for student ${student.id}:`, error);
+              return {
+                name: `${student.firstname} ${student.lastname}`,
+                score: 0,
+              };
+            }
+          }));
+        }
+      }
+
     });
 
     function getColor(score: number): string {
@@ -124,23 +126,9 @@ export default defineComponent({
       return "red";
     }
 
-    function prevPage() {
-      if (currentPage.value > 1) currentPage.value--;
-    }
 
-    function nextPage() {
-      if (currentPage.value < totalPages.value) currentPage.value++;
-    }
+    return { studentStanding, getColor, section, sectionDescriptions };
 
-    return {
-      studentStanding,
-      getColor,
-      currentPage,
-      totalPages,
-      paginatedSubjects,
-      prevPage,
-      nextPage,
-    };
   },
 });
 </script>

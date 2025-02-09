@@ -52,7 +52,7 @@
         <v-col cols="12">
           <v-card class="pa-4">
             <h3 class="text-center font-weight-bold">Grade Distribution</h3>
-            <VChart :option="chartOptions" style="height: 400px"></VChart>
+            <v-chart :option="chartOptions" style="height: 400px"></v-chart>
           </v-card>
         </v-col>
       </v-row>
@@ -60,15 +60,12 @@
   </v-card>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, computed } from "vue";
-import { use } from "echarts/core";
-import { BarChart } from "echarts/charts";
-import { CanvasRenderer } from "echarts/renderers";
-import { GridComponent, TooltipComponent } from "echarts/components";
+
+<script>
+import { defineComponent, ref } from "vue";
+import "echarts";
 import VChart from "vue-echarts";
 
-use([BarChart, CanvasRenderer, GridComponent, TooltipComponent]);
 
 export default defineComponent({
   components: { VChart },
@@ -83,10 +80,12 @@ export default defineComponent({
     ]);
 
     const studentStanding = ref({
-      "English 8 - DE1": [
-        { name: "Student A", score: 85 },
-        { name: "Student B", score: 78 },
-        { name: "Student C", score: 92 },
+
+      TEST: [
+        { name: "OMLANG", score: 87 },
+        { name: "BASLOT", score: 79 },
+        { name: "MIRAL", score: 78 },
+
       ],
       "Mapeh 8 - FG2": [
         { name: "Student D", score: 60 },
@@ -117,15 +116,9 @@ export default defineComponent({
       return missedActivities.value.slice(start, start + itemsPerPage);
     });
 
-    function prevPage() {
-      if (currentPage.value > 1) currentPage.value--;
-    }
 
-    function nextPage() {
-      if (currentPage.value < totalPages.value) currentPage.value++;
-    }
+    function getMissedColor(missed) {
 
-    function getMissedColor(missed: number): string {
       if (missed >= 10) return "red"; // High risk
       if (missed >= 6) return "orange"; // Moderate risk
       return "green"; // Low risk
