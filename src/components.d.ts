@@ -18,6 +18,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScrollDown: typeof import('./components/common/ScrollDown.vue')['default']
+    SearchBar: typeof import('./components/common/SearchBar.vue')['default']
     SidebarMenu: typeof import('./components/common/SidebarMenu.vue')['default']
     SidebarMenuHome: typeof import('./components/common/SidebarMenuHome.vue')['default']
     StudentsStanding: typeof import('./components/system/StudentsStanding.vue')['default']

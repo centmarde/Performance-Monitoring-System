@@ -13,6 +13,10 @@ import Toast from "vue-toastification";
 import DataTable from "datatables.net-vue3";
 import DataTablesCore from "datatables.net-dt";
 
+//@ts-ignore
+import { PerfectScrollbarPlugin } from 'vue3-perfect-scrollbar';
+import 'vue3-perfect-scrollbar/style.css';
+
 DataTable.use(DataTablesCore);
 // Components
 import App from "./App.vue";
@@ -22,7 +26,7 @@ import router from "./router"; // Import the router
 // Composables
 import { createApp } from "vue";
 
-const app = createApp(App).use(Toast); // Add the router
+const app = createApp(App).use(Toast).use(PerfectScrollbarPlugin); // Add the router
 
 // app.config.warnHandler = () => {};
 
