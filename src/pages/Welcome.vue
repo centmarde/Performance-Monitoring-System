@@ -29,10 +29,7 @@
         </router-link>
       </div>
       <div class="hero-image">
-        <v-img
-          src="/public/images/christ.png"
-          class="rounded-lg hero-img"
-        ></v-img>
+        <v-img :src="avatar" class="rounded-lg hero-img"></v-img>
       </div>
     </v-container>
 
@@ -42,16 +39,32 @@
         <v-card-title class="text-h5">Complete Your Profile</v-card-title>
         <v-card-text>
           <p>We need some extra details to personalize your experience.</p>
+
           <v-text-field
-            label="Full Name"
-            v-model="extraInfo.name"
+            label="First Name"
+            v-model="extraInfo.firstName"
             outlined
+            required
           ></v-text-field>
           <v-text-field
-            label="Contact Number"
-            v-model="extraInfo.contact"
+            label="Last Name"
+            v-model="extraInfo.lastName"
             outlined
+            required
           ></v-text-field>
+          <v-text-field
+            label="Phone Number"
+            v-model="extraInfo.phone"
+            outlined
+            type="tel"
+            required
+          ></v-text-field>
+          <v-textarea
+            label="Complete Address"
+            v-model="extraInfo.address"
+            outlined
+            required
+          ></v-textarea>
         </v-card-text>
         <v-card-actions class="justify-end">
           <v-btn class="outline-btn" @click="showDialog = false">Skip</v-btn>
@@ -64,9 +77,18 @@
 
 <script setup>
 import { ref } from "vue";
+import Avatar from "@/assets/christ.png";
+
+const avatar = Avatar;
 
 const showDialog = ref(false);
-const extraInfo = ref({ name: "", contact: "" });
+
+const extraInfo = ref({
+  firstName: "",
+  lastName: "",
+  phone: "",
+  address: "",
+});
 
 const saveExtraInfo = () => {
   console.log("Saving Extra Info:", extraInfo.value);
