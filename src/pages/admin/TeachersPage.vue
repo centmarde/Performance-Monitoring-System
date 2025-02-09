@@ -29,7 +29,7 @@
               <v-card class="teacher-card">
                 <v-card-title class="text-center">
                   <v-avatar size="80">
-                    <v-img :src="teacher.avatar" alt="Teacher Avatar" />
+                    <v-img :src="teacher.avatar || '/default-avatar.png'" alt="Teacher Avatar" />
                   </v-avatar>
                   <div class="mt-2 font-weight-bold">{{ teacher.name }}</div>
                   <div class="text-caption text-muted">{{ teacher.email }}</div>
@@ -41,6 +41,12 @@
                       {{ subject }}
                     </v-chip>
                   </v-chip-group>
+
+                  <div class="mt-3 font-weight-bold">Phone:</div>
+                  <div class="text-muted">{{ teacher.phone }}</div>
+
+                  <div class="mt-2 font-weight-bold">Address:</div>
+                  <div class="text-muted">{{ teacher.complete_address }}</div>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -54,6 +60,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import LayoutWrapper from "@/layouts/LayoutWrapper.vue";
+import { useTeacherList } from '@/stores/teachersList';
 
 // Define the type for teachers
 interface Teacher {
@@ -62,45 +69,48 @@ interface Teacher {
   email: string;
   avatar: string;
   subjects: string[];
+  phone: string;
+  complete_address: string;
 }
 
 const teachers = ref<Teacher[]>([]);
 const searchQuery = ref("");
+const currentPage = ref(1);
+const itemsPerPage = 8;
 
-// Fetch teacher data when the component mounts
-onMounted(async () => {
-  try {
-    // Fetch teachers (replace with actual API later)
-    const response = await fetch("https://jsonplaceholder.typicode.com/users");
-    const data = await response.json();
+const { fetchTeachersInfo, userInfo } = useTeacherList();
 
-    // Simulated subjects
-    const subjectsList = [
-      ["Math", "Science"],
-      ["English", "History"],
-      ["Physics", "Chemistry"],
-      ["Biology", "Geography"],
-      ["PE", "Health"],
-    ];
+const subjectsList = [
+  ["Math", "Science"],
+  ["English", "History"],
+  ["Physics", "Chemistry"],
+  ["Biology", "Geography"],
+  ["PE", "Health"],
+];
 
-    // Map data to teachers
-    teachers.value = data.map((item: any, index: number) => ({
-      id: item.id,
-      name: item.name,
-      email: item.email,
-      avatar: `https://i.pravatar.cc/150?img=${index + 1}`, // Placeholder avatar
-      subjects: subjectsList[index % subjectsList.length], // Assign subjects
+const initializeTeachers = async () => {
+  const data = await fetchTeachersInfo();
+  if (data && data.length > 0) {
+    teachers.value = data.map((teacher, index) => ({
+      id: teacher.id,
+      name: `${teacher.firstname} ${teacher.lastname}`,
+      email: teacher.email,
+      avatar: teacher.image_path || "/images/avatar.png",
+      subjects: subjectsList[index % subjectsList.length],
+      phone: teacher.phone,
+      complete_address: teacher.complete_address,
     }));
-  } catch (error) {
-    console.error("Error fetching teachers:", error);
   }
-});
+};
+
+onMounted(initializeTeachers);
 
 // Computed property to filter teachers based on the search query
 const filteredTeachers = computed(() => {
   if (!searchQuery.value) return teachers.value;
   return teachers.value.filter((teacher) =>
-    teacher.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    teacher.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    teacher.email.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
 </script>

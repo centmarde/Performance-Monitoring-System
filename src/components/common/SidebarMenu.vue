@@ -18,11 +18,12 @@
         :width="2"
       >
         <v-avatar size="85">
-          <v-img src="/images/christ.png" alt="User Avatar"></v-img>
+          <v-img :src="userInfo?.image_path || '/images/avatar.png'" alt="User Avatar"></v-img>
         </v-avatar>
       </v-progress-circular>
-      <div class="mt-4">Admin</div>
-      <span class="mb-6 text-caption">admin@superuser.com</span>
+      <div class="mt-4">{{ userInfo?.firstname || 'User' }}</div>
+      <div class="mt-4">{{ userInfo?.user_type || 'Guest' }}</div>
+      <span class="mb-6 text-caption">{{ userInfo?.email || 'user@example.com' }}</span>
     </v-sheet>
 
     <v-list>
@@ -62,11 +63,18 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useTheme } from "vuetify";
+import { useUserInfoStore } from "@/stores/userInfo";
 
 const theme = useTheme();
 const drawer = ref(true);
+const userInfoStore = useUserInfoStore();
+const userInfo = computed(() => userInfoStore.userInfo);
+
+onMounted(() => {
+  userInfoStore.fetchUserInfo();
+});
 
 // Define the menu with conditional links for Admin and Teachers
 const menu = ref([
