@@ -2,7 +2,7 @@
   <v-col cols="12" md="6">
     <v-card-text class="mt-12">
       <h4 class="text-center">Login to Your Account</h4>
-      <h6 class="text-center grey--text mt-2">
+      <h6 class="text-center text-secondary mt-2">
         Log in to your account so you can continue monitoring
         <br />and managing your users
       </h6>
@@ -13,15 +13,17 @@
               v-model="loginEmail"
               label="Email"
               prepend-inner-icon="mdi-email-outline"
+              variant="outlined"
               :rules="[requiredValidator, emailValidator]"
             ></v-text-field>
             <v-text-field
               v-model="loginPassword"
-              prepend-inner-icon="mdi-lock-outline"
               label="Password"
+              prepend-inner-icon="mdi-lock-outline"
               :type="isPasswordVisible ? 'text' : 'password'"
               :append-inner-icon="isPasswordVisible ? 'mdi-eye-off' : 'mdi-eye'"
               @click:append-inner="isPasswordVisible = !isPasswordVisible"
+              variant="outlined"
               :rules="[requiredValidator]"
             ></v-text-field>
 
@@ -29,37 +31,35 @@
               <v-col cols="12" sm="7">
                 <v-checkbox
                   label="Remember Me"
-                  class="mt-n1"
-                  color="blue"
+                  color="teal-darken-3"
                 ></v-checkbox>
               </v-col>
               <v-col cols="12" sm="5">
-                <span class="caption blue--text">Forgot password</span>
+                <span class="caption text-teal-darken-3">Forgot password?</span>
               </v-col>
             </v-row>
             <v-btn
-              class="mt-2"
+              class="mt-3 login-btn"
               type="submit"
-              color="#2E7D32"
+              color="teal-darken-3"
               prepend-icon="mdi-login"
               :disabled="formAction.formProcess"
               :loading="formAction.formProcess"
               block
-              style="border-radius: 25px"
             >
               Login
             </v-btn>
           </v-form>
-          <h5 class="text-center grey--text mt-4 mb-3">Or Log in using</h5>
-          <div class="d-flex justify-space-between align-center mx-10 mb-16">
-            <!-- Replaced FontAwesome icons with Vuetify icons -->
-            <v-btn depressed outlined color="grey">
+
+          <h5 class="text-center text-secondary mt-4 mb-3">Or log in using</h5>
+          <div class="social-buttons">
+            <v-btn variant="outlined">
               <v-icon color="red">mdi-google</v-icon>
             </v-btn>
-            <v-btn depressed outlined color="grey">
+            <v-btn variant="outlined">
               <v-icon color="blue">mdi-facebook</v-icon>
             </v-btn>
-            <v-btn depressed outlined color="grey">
+            <v-btn variant="outlined">
               <v-icon color="light-blue lighten-3">mdi-twitter</v-icon>
             </v-btn>
           </div>
@@ -70,7 +70,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { useAuthUserStore } from "@/stores/authUser";
 import { useToast } from "vue-toastification";
 import { requiredValidator, emailValidator } from "@/lib/validator";
@@ -81,11 +81,6 @@ const loginPassword = ref("");
 const isPasswordVisible = ref(false);
 const formAction = ref({ formProcess: false });
 const toast = useToast();
-const isDarkTheme = inject("isDarkTheme", ref(false));
-
-const themeClass = computed(() =>
-  isDarkTheme.value ? "light-theme" : "dark-theme"
-);
 
 const authUserStore = useAuthUserStore();
 
@@ -102,15 +97,12 @@ const onFormSubmit = async (event: SubmitEvent): Promise<void> => {
       throw new Error(typeof error === "string" ? error : error.message);
     }
 
-    toast.success("Login successful", {
-      timeout: 3000,
-      closeOnClick: true,
-    });
+    toast.success("Login successful");
     router.push("/home");
   } catch (err) {
-    const errorMessage =
-      err instanceof Error ? err.message : "An unknown error occurred";
-    toast.error(`Login error: ${errorMessage}`);
+    toast.error(
+      `Login error: ${err instanceof Error ? err.message : "An error occurred"}`
+    );
   } finally {
     formAction.value.formProcess = false;
   }
@@ -118,7 +110,19 @@ const onFormSubmit = async (event: SubmitEvent): Promise<void> => {
 </script>
 
 <style scoped>
-.v-btn {
-  margin-top: 20px;
+.text-secondary {
+  color: #8c8c8c;
+}
+
+.login-btn {
+  border-radius: 25px;
+  font-weight: bold;
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 </style>
