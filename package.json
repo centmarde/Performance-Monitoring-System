@@ -24,6 +24,7 @@
     "echarts": "^5.6.0",
     "roboto-fontface": "*",
     "vue": "^3.4.31",
+    "vue-echarts": "^7.0.3",
     "vue-sidebar-menu": "^5.2.2",
     "vue-toastification": "^2.0.0-rc.5",
     "vuetify": "^3.7.9"

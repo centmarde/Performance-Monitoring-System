@@ -44,7 +44,7 @@
         <v-col cols="12">
           <v-card class="pa-4">
             <h3 class="text-center font-weight-bold">Grade Distribution</h3>
-            <VChart :option="chartOptions" style="height: 400px"></VChart>
+            <v-chart :option="chartOptions" style="height: 400px"></v-chart>
           </v-card>
         </v-col>
       </v-row>
@@ -54,13 +54,8 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-import { use } from "echarts/core";
-import { BarChart } from "echarts/charts";
-import { CanvasRenderer } from "echarts/renderers";
-import { GridComponent } from "echarts/components";
+import "echarts";
 import VChart from "vue-echarts";
-
-use([BarChart, CanvasRenderer, GridComponent]);
 
 export default defineComponent({
   components: { VChart },
