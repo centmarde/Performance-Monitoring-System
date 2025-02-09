@@ -10,6 +10,7 @@ declare module 'vue' {
     AppFooter: typeof import('./components/common/AppFooter.vue')['default']
     DataTable: typeof import('./components/common/DataTable.vue')['default']
     InnerNavBar: typeof import('./components/common/InnerNavBar.vue')['default']
+    Loader: typeof import('./components/common/Loader.vue')['default']
     LoginForm: typeof import('./components/auth/LoginForm.vue')['default']
     MissedActivites: typeof import('./components/system/MissedActivites.vue')['default']
     NavBar: typeof import('./components/common/NavBar.vue')['default']
@@ -18,12 +19,7 @@ declare module 'vue' {
     RouterView: typeof import('vue-router')['RouterView']
     ScrollDown: typeof import('./components/common/ScrollDown.vue')['default']
     SidebarMenu: typeof import('./components/common/SidebarMenu.vue')['default']
-    SidebarMenuBadge: typeof import('./components/common/SidebarMenuBadge.vue')['default']
     SidebarMenuHome: typeof import('./components/common/SidebarMenuHome.vue')['default']
-    SidebarMenuIcon: typeof import('./components/common/SidebarMenuIcon.vue')['default']
-    SidebarMenuItem: typeof import('./components/common/SidebarMenuItem.vue')['default']
-    SidebarMenuLink: typeof import('./components/common/SidebarMenuLink.vue')['default']
-    SidebarMenuScroll: typeof import('./components/common/SidebarMenuScroll.vue')['default']
     StudentsStanding: typeof import('./components/system/StudentsStanding.vue')['default']
   }
 }

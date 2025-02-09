@@ -99,6 +99,7 @@ import { ref } from 'vue';
 import { requiredValidator, emailValidator, passwordValidator, confirmedValidator } from '@/lib/validator';
 import { useAuthUserStore } from '@/stores/authUser';
 import { useToast } from "vue-toastification";
+import { useRouter } from 'vue-router';
 
 // Define the emit function for the component
 const emit = defineEmits(["registration-success", "close-dialog"]);
@@ -118,6 +119,8 @@ const isPasswordConfirmVisible = ref(false);
 const authUserStore = useAuthUserStore();
 
 const userTypes = ['Teacher', 'Admin'];
+
+const router = useRouter();
 
 async function onFormSubmit(event: SubmitEvent): Promise<void> {
   event.preventDefault();
@@ -145,7 +148,7 @@ async function onFormSubmit(event: SubmitEvent): Promise<void> {
       closeOnClick: true,
     });
 
-   window.location.reload();
+    router.push('/welcome');
   }
 
 }

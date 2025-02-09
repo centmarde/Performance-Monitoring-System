@@ -17,11 +17,14 @@
         :width="2"
       >
         <v-avatar size="85">
-          <v-img src="/images/christ.png" alt="User Avatar"></v-img>
+
+          <v-img :src="userInfo?.image_path || avatar " alt="User Avatar"></v-img>
         </v-avatar>
       </v-progress-circular>
-      <div class="mt-4">Admin</div>
-      <span class="mb-6 text-caption">admin@superuser.com</span>
+      <div class="mt-4">{{ userInfo?.firstname || 'User' }}</div>
+      <div class="mt-4">{{ userInfo?.user_type || 'Guest' }}</div>
+      <span class="mb-6 text-caption">{{ userInfo?.email || 'user@example.com' }}</span>
+
     </v-sheet>
 
     <v-list>
@@ -39,33 +42,26 @@
         <v-list-item-title v-text="item.title"></v-list-item-title>
       </v-list-item>
     </v-list>
-
-    <h5 class="ml-5 text-yellow-darken-2">ohaha</h5>
-    <v-row align="center" class="spacer ml-16 mt-4" no-gutters>
-      <v-col
-        v-for="(user, index) in activeUsers"
-        :key="index"
-        cols="4"
-        sm="2"
-        md="1"
-      >
-        <v-avatar size="36px">
-          <v-img :src="user.src" alt="Avatar"></v-img>
-        </v-avatar>
-      </v-col>
-      <v-col cols="4" sm="2" md="1">
-        <v-avatar size="36px" color="#B49239">+70</v-avatar>
-      </v-col>
-    </v-row>
   </v-navigation-drawer>
 </template>
 
 <script setup>
-import { ref, computed, watch } from "vue";
-import { useTheme } from "vuetify";
 
+import { ref, computed, watch, onMounted } from "vue";
+import { useTheme } from "vuetify";
+import { useUserInfoStore } from "@/stores/userInfo";
+import Avatar from "@/assets/avatar.png"
+
+const avatar = Avatar;
 const theme = useTheme();
 const drawer = ref(true);
+const userInfoStore = useUserInfoStore();
+const userInfo = computed(() => userInfoStore.userInfo);
+
+onMounted(() => {
+  userInfoStore.fetchUserInfo();
+});
+
 
 // Define the menu with conditional links for Admin and Teachers
 const menu = ref([

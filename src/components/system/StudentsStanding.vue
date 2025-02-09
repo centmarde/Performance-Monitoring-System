@@ -1,40 +1,93 @@
 <template>
-   <v-card elevate="8">
-      <v-container>
-         <v-row>
-            <v-col cols="12" class="text-center pa-8">
-               <h1>Student Standing</h1>
-               <v-divider></v-divider>
-               <p>{{ description }}</p>
-            </v-col>
-         </v-row>
-         <v-row>
-            <v-col cols="12" class="text-center">
-               <v-btn color="primary" @click="showDetails">Show Details</v-btn>
-            </v-col>
-         </v-row>
-      </v-container>
-   </v-card>
+  <v-card elevation="8" class="mb-6">
+    <v-container>
+      <v-row>
+        <v-col cols="12" class="text-center">
+          <h2 class="font-weight-bold">Students' Standing</h2>
+          <v-divider class="mb-4"></v-divider>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col
+          v-for="(students, subject) in studentStanding"
+          :key="subject"
+          cols="12"
+          md="4"
+        >
+          <v-card class="pa-3" outlined>
+            <h3 class="text-center font-weight-bold">{{ subject }}</h3>
+            <v-divider class="mb-2"></v-divider>
+            <v-row
+              v-for="student in students"
+              :key="student.name"
+              align="center"
+              justify="space-between"
+            >
+              <v-col cols="6">
+                <span class="font-weight-bold">{{ student.name }}</span>
+              </v-col>
+              <v-col cols="6">
+                <v-progress-linear
+                  :value="student.score"
+                  :color="getColor(student.score)"
+                  height="15"
+                  rounded
+                >
+                  <strong>{{ student.score }}%</strong>
+                </v-progress-linear>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-card>
 </template>
 
-<script>
-export default {
-   data() {
-      return {
-         description: 'Overview of student standings in the current semester.'
-      };
-   },
-   methods: {
-      showDetails() {
-         alert('Details will be shown here.');
-      }
-   }
+<script lang="ts">
+import { defineComponent, reactive } from "vue";
+
+interface Student {
+  name: string;
+  score: number;
 }
+
+export default defineComponent({
+  setup() {
+    const studentStanding = reactive<Record<string, Student[]>>({
+      TEST: [
+        { name: "OMLANG", score: 87 },
+        { name: "BASLOT", score: 79 },
+        { name: "MIRAL", score: 78 },
+      ],
+      "ENGLISH - ED2": [
+        { name: "MARDE", score: 76 },
+        { name: "GABALES", score: 74 },
+        { name: "YANG", score: 73 },
+      ],
+      "ENGLISH - DE1": [
+        { name: "BASLOT", score: 85 },
+        { name: "MIRAL", score: 88 },
+        { name: "GABALES", score: 90 },
+      ],
+    });
+
+    function getColor(score: number): string {
+      if (score >= 80) return "green";
+      if (score >= 75) return "yellow";
+      return "red";
+    }
+
+    return { studentStanding, getColor };
+  },
+});
 </script>
 
-<style lang="scss" scoped>
-h1 {
-   font-family: 'Roboto', sans-serif;
-   color: #3f51b5;
+<style scoped>
+h2 {
+  color: #3f51b5;
+}
+h3 {
+  color: #000;
 }
 </style>
