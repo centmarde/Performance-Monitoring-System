@@ -10,14 +10,13 @@
 
       <v-row>
         <v-col
-          v-for="activity in paginatedActivities"
-          :key="activity.subject"
+          v-for="(activity, index) in paginatedActivities"
+          :key="`${activity.subject}-${index}`"
           cols="12"
           md="4"
           class="text-center"
         >
           <v-card class="pa-3" outlined>
-            <!-- Progress Circular with Dynamic Color -->
             <v-progress-circular
               :size="100"
               :width="10"
@@ -39,7 +38,6 @@
         </v-col>
       </v-row>
 
-      <!-- Pagination Controls -->
       <v-row justify="center" class="mt-4">
         <v-btn @click="prevPage" :disabled="currentPage === 1"> Prev </v-btn>
         <span class="mx-3 mt-1 font-weight-bold"
@@ -50,7 +48,6 @@
         </v-btn>
       </v-row>
 
-      <!-- Grade Distribution Graph -->
       <v-row>
         <v-col cols="12">
           <v-card class="pa-4">
@@ -76,8 +73,6 @@ use([BarChart, CanvasRenderer, GridComponent, TooltipComponent]);
 export default defineComponent({
   components: { VChart },
   setup() {
-    const maxMissed = ref(10); // Maximum number of students missing an activity
-
     const missedActivities = ref([
       { subject: "English 8 - DE1", missed: 10 },
       { subject: "Mapeh 8 - FG2", missed: 6 },
@@ -103,6 +98,10 @@ export default defineComponent({
         { name: "Student H", score: 65 },
         { name: "Student I", score: 72 },
       ],
+    });
+
+    const maxMissed = computed(() => {
+      return Math.max(...missedActivities.value.map((a) => a.missed), 1);
     });
 
     // Pagination
@@ -136,12 +135,11 @@ export default defineComponent({
     const chartOptions = computed(() => {
       const subjects = Object.keys(studentStanding.value);
       const averageScores = subjects.map((subject) => {
-        const students = studentStanding.value[subject];
-        if (!students || students.length === 0) return 0;
-        return (
-          students.reduce((acc, student) => acc + student.score, 0) /
-          students.length
-        );
+        const students = studentStanding.value[subject] || [];
+        return students.length
+          ? students.reduce((acc, student) => acc + student.score, 0) /
+              students.length
+          : 0;
       });
 
       return {
