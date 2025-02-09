@@ -69,7 +69,7 @@ import { useUserInfo } from "@/composables/userInfo";
 import router from "@/router";
 
 // Navbar color matching Sidebar
-const navbarColor = "#2C7865"; // Adjust to match your sidebar color
+const navbarColor = "#004D40"; // Adjusted to match SidebarMenu.vue
 const themeIconColor = "#B49239"; // Gold for theme toggle
 
 const theme = useTheme();
@@ -94,7 +94,7 @@ function handleLogoutClick() {
 
 <style scoped>
 .menu-card {
-  background: rgba(44, 120, 101, 0.9); /* Slight transparency for depth */
+  background: rgba(0, 77, 64, 0.9); /* Adjusted to match SidebarMenu.vue */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(6px);
   border-radius: 12px;

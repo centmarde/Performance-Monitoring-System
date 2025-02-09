@@ -1,18 +1,17 @@
 <template>
-  <!-- Navigation Drawer with Toggle Button Inside -->
   <v-navigation-drawer
     v-model="drawer"
     app
-    color="#425C5A"
+    color="#004D40"
     class="rounded-e-xl fixed-sidebar"
   >
-    <!-- Toggle Button Inside Sidebar -->
+    <!-- Toggle Button -->
     <v-btn icon @click="drawer = !drawer" class="toggle-btn">
       <v-icon>{{ drawer ? "mdi-chevron-left" : "mdi-chevron-right" }}</v-icon>
     </v-btn>
 
-    <!-- User Info Section -->
-    <v-sheet color="#3D5654" class="pa-4 rounded-te-xl text-center">
+    <!-- User Profile Section -->
+    <v-sheet color="#00695C" class="pa-4 rounded-te-xl text-center">
       <v-progress-circular
         model-value="80"
         color="#B49239"
@@ -20,15 +19,24 @@
         :width="2"
       >
         <v-avatar size="85">
-          <v-img :src="userInfo?.image_path || avatar" alt="User Avatar"></v-img>
+          <v-img
+            :src="userInfo?.image_path || avatar"
+            alt="User Avatar"
+          ></v-img>
         </v-avatar>
       </v-progress-circular>
-      <div class="mt-4">{{ userInfo?.firstname || 'User' }}</div>
-      <div class="mt-4">{{ userInfo?.user_type || 'Guest' }}</div>
-      <span class="mb-6 text-caption">{{ userInfo?.email || 'user@example.com' }}</span>
+      <div class="mt-4 font-weight-bold text-white">
+        {{ userInfo?.firstname || "User" }}
+      </div>
+      <div class="mt-1 text-caption text-teal-lighten-4">
+        {{ userInfo?.user_type || "Guest" }}
+      </div>
+      <span class="mb-6 text-caption text-teal-lighten-3">
+        {{ userInfo?.email || "user@example.com" }}
+      </span>
     </v-sheet>
 
-    <!-- Sidebar Menu -->
+    <!-- Menu Items -->
     <v-list>
       <v-list-item
         v-for="(item, i) in menu"
@@ -40,42 +48,20 @@
         <template v-slot:prepend>
           <v-icon :icon="item.icon" color="#B49239"></v-icon>
         </template>
-        <v-list-item-title v-text="item.title"></v-list-item-title>
+        <v-list-item-title
+          class="text-white"
+          v-text="item.title"
+        ></v-list-item-title>
       </v-list-item>
     </v-list>
-
-    <!-- Active Users Section Positioned at the Bottom -->
-    <div class="active-users">
-      <h5 class="ml-5 text-yellow-darken-2">ACTIVE USERS</h5>
-      <v-row align="center" class="spacer ml-16 mt-4" no-gutters>
-        <v-col
-          v-for="(user, index) in activeUsers"
-          :key="index"
-          cols="4"
-          sm="2"
-          md="1"
-        >
-          <v-avatar size="36px">
-            <v-img :src="user.src" alt="Avatar"></v-img>
-          </v-avatar>
-        </v-col>
-        <v-col cols="4" sm="2" md="1">
-          <v-avatar size="36px" color="#B49239">+70</v-avatar>
-        </v-col>
-      </v-row>
-    </div>
   </v-navigation-drawer>
 </template>
 
 <script setup>
-
-import { ref, onMounted, computed } from "vue";
-import { useTheme } from "vuetify";
+import { ref, computed, onMounted } from "vue";
 import { useUserInfoStore } from "@/stores/userInfo";
-import Avatar from "@/assets/avatar.png"
+import Avatar from "@/assets/avatar.png";
 
-
-// Sidebar State
 const avatar = Avatar;
 const drawer = ref(true);
 const userInfoStore = useUserInfoStore();
@@ -87,9 +73,9 @@ onMounted(() => {
 
 // Define the menu with conditional links for Admin and Teachers
 const menu = ref([
-  { title: "Users", icon: "mdi-account", href: "/admin" },
-  { title: "Teachers", icon: "mdi-account-tie", href: "/teachers" },
-  { title: "Settings", icon: "mdi-cog-outline", href: "/settings" },
+  { title: "Dashboard", icon: "mdi-view-dashboard", href: "/home" },
+  { title: "Data Entry", icon: "mdi-file-document-edit", href: "/data_entry" },
+  { title: "Tracking", icon: "mdi-history", href: "/tracking" },
 ]);
 
 // Active Users List
@@ -102,48 +88,44 @@ const activeUsers = ref([
 </script>
 
 <style scoped>
-/* ✅ Fixed Sidebar Position */
+/* ✅ Sidebar Toggle Button */
+.toggle-btn {
+  position: absolute;
+  top: 50%;
+  right: -20px;
+  transform: translateY(-50%);
+  background-color: #00796b;
+  color: white;
+  border-radius: 50%;
+}
+
+/* ✅ Sidebar Styling */
 .fixed-sidebar {
   position: fixed !important;
   top: 0;
   left: 0;
   height: 100vh !important;
-  overflow: visible !important; /* Ensure button is not cut off */
-  z-index: 1000; /* Keep on top */
+  overflow: visible !important;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
 }
 
-/* ✅ Toggle Button Inside Sidebar */
-.toggle-btn {
-  position: absolute;
-  top: 50%;
-  right: -24px; /* Button placed at the edge */
-  transform: translateY(-50%);
-  background-color: #3d5654;
-  border-radius: 50%;
-  z-index: 1100; /* Ensure it stays above other content */
-  transition: right 0.3s ease-in-out;
+/* ✅ Sidebar Menu Styling */
+.v-list-item {
+  transition: background 0.3s ease-in-out;
 }
-
-/* ✅ Adjust Position When Drawer Is Closed */
-.v-navigation-drawer.v-navigation-drawer--mini-variant .toggle-btn {
-  right: 0; /* Move the button when the drawer is closed */
-}
-
-/* ✅ Sidebar Content Positioning */
-.v-navigation-drawer__content {
-  padding-right: 48px; /* Prevent content overlap with button */
-  flex-grow: 1; /* Allow space for the active users to be pushed to the bottom */
+.v-list-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* ✅ Active Users Section Styling */
 .active-users {
   position: absolute;
-  bottom: 16px; /* Pin it at the bottom of the sidebar */
+  bottom: 16px;
   left: 0;
   width: 100%;
   padding: 16px;
-  background-color: #425c5a;
+  background-color: #004d40;
 }
 </style>
