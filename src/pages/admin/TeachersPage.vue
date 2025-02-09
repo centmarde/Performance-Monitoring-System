@@ -19,7 +19,7 @@
           <!-- Teacher Cards Grid -->
           <v-row>
             <v-col
-              v-for="teacher in filteredTeachers"
+              v-for="teacher in paginatedTeachers"
               :key="teacher.id"
               cols="12"
               sm="6"
@@ -51,6 +51,14 @@
               </v-card>
             </v-col>
           </v-row>
+
+          <!-- Pagination Controls -->
+          <v-pagination
+            v-model="currentPage"
+            :length="totalPages"
+            circle
+            class="mt-4"
+          ></v-pagination>
         </div>
       </v-container>
     </template>
@@ -62,7 +70,6 @@ import { ref, computed, onMounted } from "vue";
 import LayoutWrapper from "@/layouts/LayoutWrapper.vue";
 import { useTeacherList } from '@/stores/teachersList';
 
-// Define the type for teachers
 interface Teacher {
   id: number;
   name: string;
@@ -76,6 +83,7 @@ interface Teacher {
 const teachers = ref<Teacher[]>([]);
 const searchQuery = ref("");
 const currentPage = ref(1);
+
 const itemsPerPage = 8;
 
 const { fetchTeachersInfo, userInfo } = useTeacherList();
@@ -99,19 +107,28 @@ const initializeTeachers = async () => {
       subjects: subjectsList[index % subjectsList.length],
       phone: teacher.phone,
       complete_address: teacher.complete_address,
+
     }));
   }
 };
 
 onMounted(initializeTeachers);
 
-// Computed property to filter teachers based on the search query
 const filteredTeachers = computed(() => {
   if (!searchQuery.value) return teachers.value;
   return teachers.value.filter((teacher) =>
     teacher.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
     teacher.email.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
+});
+
+const totalPages = computed(() =>
+  Math.ceil(filteredTeachers.value.length / itemsPerPage)
+);
+
+const paginatedTeachers = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  return filteredTeachers.value.slice(start, start + itemsPerPage);
 });
 </script>
 

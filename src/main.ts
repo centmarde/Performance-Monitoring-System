@@ -11,7 +11,7 @@ import VueSidebarMenu from "vue-sidebar-menu";
 import "vue-sidebar-menu/dist/vue-sidebar-menu.css";
 import Toast from "vue-toastification";
 import DataTable from "datatables.net-vue3";
-import DataTablesCore from 'datatables.net-dt';
+import DataTablesCore from "datatables.net-dt";
 
 DataTable.use(DataTablesCore);
 // Components
