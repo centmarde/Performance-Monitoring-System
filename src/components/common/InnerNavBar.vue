@@ -29,7 +29,7 @@
               <v-col cols="auto">
                 <v-icon class="me-3">mdi-account</v-icon>
               </v-col>
-              <v-col> {{ userEmail }}</v-col>
+              <v-col> <!-- {{ userEmail }} --></v-col>
             </v-row>
           </v-btn>
 

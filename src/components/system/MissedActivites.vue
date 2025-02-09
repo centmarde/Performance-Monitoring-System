@@ -52,7 +52,7 @@
         <v-col cols="12">
           <v-card class="pa-4">
             <h3 class="text-center font-weight-bold">Grade Distribution</h3>
-            <VChart :option="chartOptions" style="height: 400px"></VChart>
+            <v-chart :option="chartOptions" style="height: 400px"></v-chart>
           </v-card>
         </v-col>
       </v-row>
@@ -60,15 +60,10 @@
   </v-card>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, computed } from "vue";
-import { use } from "echarts/core";
-import { BarChart } from "echarts/charts";
-import { CanvasRenderer } from "echarts/renderers";
-import { GridComponent, TooltipComponent } from "echarts/components";
+<script>
+import { defineComponent, ref } from "vue";
+import "echarts";
 import VChart from "vue-echarts";
-
-use([BarChart, CanvasRenderer, GridComponent, TooltipComponent]);
 
 export default defineComponent({
   components: { VChart },
@@ -77,16 +72,13 @@ export default defineComponent({
       { subject: "English 8 - DE1", missed: 10 },
       { subject: "Mapeh 8 - FG2", missed: 6 },
       { subject: "English 7 - ED2", missed: 3 },
-      { subject: "Science 8", missed: 7 },
-      { subject: "Math 7", missed: 5 },
-      { subject: "History 9", missed: 8 },
     ]);
 
     const studentStanding = ref({
-      "English 8 - DE1": [
-        { name: "Student A", score: 85 },
-        { name: "Student B", score: 78 },
-        { name: "Student C", score: 92 },
+      TEST: [
+        { name: "OMLANG", score: 87 },
+        { name: "BASLOT", score: 79 },
+        { name: "MIRAL", score: 78 },
       ],
       "Mapeh 8 - FG2": [
         { name: "Student D", score: 60 },
@@ -125,7 +117,7 @@ export default defineComponent({
       if (currentPage.value < totalPages.value) currentPage.value++;
     }
 
-    function getMissedColor(missed: number): string {
+    function getMissedColor(missed) {
       if (missed >= 10) return "red"; // High risk
       if (missed >= 6) return "orange"; // Moderate risk
       return "green"; // Low risk
