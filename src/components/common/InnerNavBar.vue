@@ -60,7 +60,6 @@
 import { computed } from "vue";
 import { useTheme } from "vuetify";
 import { doLogout } from "@/lib/supabase";
-import { useUserInfo } from "@/composables/userInfo"; // Adjust path if needed
 import router from "@/router";
 
 
@@ -88,7 +87,6 @@ const titleClass = computed(() =>
   isDarkTheme.value ? "text-light-title" : "text-dark-title"
 );
 
-const { userEmail } = useUserInfo();
 
 
 function handleLogoutClick() {
