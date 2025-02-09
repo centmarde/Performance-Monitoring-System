@@ -16,20 +16,12 @@
           md="4"
         >
           <v-card class="pa-3 activity-box">
-            <v-progress-circular
-              :size="80"
-              :width="8"
-              :value="(activity.missed / totalStudents) * 100"
-              :color="getMissedColor(activity.missed)"
-              class="my-2"
+            <p
+              class="font-weight-bold"
+              :style="{ color: getMissedColor(activity.missed) }"
             >
-              <span
-                class="font-weight-bold"
-                :style="{ color: getMissedColor(activity.missed) }"
-              >
-                {{ activity.missed }} Students
-              </span>
-            </v-progress-circular>
+              {{ activity.missed }} Students
+            </p>
             <p class="mt-2 font-weight-bold">{{ activity.subject }}</p>
           </v-card>
         </v-col>
