@@ -20,7 +20,7 @@
         :width="2"
       >
         <v-avatar size="85">
-          <v-img :src="userInfo?.image_path || '/images/avatar.png'" alt="User Avatar"></v-img>
+          <v-img :src="userInfo?.image_path || avatar" alt="User Avatar"></v-img>
         </v-avatar>
       </v-progress-circular>
       <div class="mt-4">{{ userInfo?.firstname || 'User' }}</div>
@@ -72,9 +72,11 @@
 import { ref, onMounted, computed } from "vue";
 import { useTheme } from "vuetify";
 import { useUserInfoStore } from "@/stores/userInfo";
+import Avatar from "@/assets/avatar.png"
 
 
 // Sidebar State
+const avatar = Avatar;
 const drawer = ref(true);
 const userInfoStore = useUserInfoStore();
 const userInfo = computed(() => userInfoStore.userInfo);
@@ -83,7 +85,7 @@ onMounted(() => {
   userInfoStore.fetchUserInfo();
 });
 
-// Menu Items
+// Define the menu with conditional links for Admin and Teachers
 const menu = ref([
   { title: "Users", icon: "mdi-account", href: "/admin" },
   { title: "Teachers", icon: "mdi-account-tie", href: "/teachers" },
