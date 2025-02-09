@@ -52,7 +52,7 @@
   </v-card>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, ref } from "vue";
 import { use } from "echarts/core";
 import { BarChart } from "echarts/charts";
@@ -73,9 +73,7 @@ export default defineComponent({
       { subject: "English 7 - ED2", missed: 3 },
     ]);
 
-    const studentStanding = ref<
-      Record<string, { name: string; score: number }[]>
-    >({
+    const studentStanding = ref({
       TEST: [
         { name: "OMLANG", score: 87 },
         { name: "BASLOT", score: 79 },
@@ -114,7 +112,7 @@ export default defineComponent({
       ],
     });
 
-    function getMissedColor(missed: number): string {
+    function getMissedColor(missed) {
       if (missed >= 10) return "red"; // High risk
       if (missed >= 6) return "orange"; // Moderate risk
       return "green"; // Low risk

@@ -54,7 +54,7 @@
                 <v-row>
                   <v-col cols="6">
                     <v-text-field
-                      label="School Name"
+                      label="Student Count"
                       v-model="classRecord.schoolName"
                       readonly
                     ></v-text-field>
@@ -67,62 +67,7 @@
                   </v-col>
                 </v-row>
 
-                <v-table>
-                  <thead>
-                    <tr>
-                      <th>Student Name</th>
-                      <th v-for="i in 5" :key="'written' + i">
-                        Written {{ i }}
-                      </th>
-                      <th>Total</th>
-                      <th v-for="i in 5" :key="'performance' + i">
-                        Performance {{ i }}
-                      </th>
-                      <th>Total</th>
-                      <th>Assessment</th>
-                      <th>Final Grade</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="(student, index) in classRecord.students"
-                      :key="index"
-                    >
-                      <td>{{ student.name }}</td>
-                      <td v-for="(score, i) in student.written" :key="'w' + i">
-                        <v-text-field
-                          v-model.number="student.written[i]"
-                          type="number"
-                          density="comfortable"
-                          class="score-input"
-                          hide-details
-                        ></v-text-field>
-                      </td>
-                      <td>{{ getTotal(student.written) }}</td>
-                      <td
-                        v-for="(score, i) in student.performance"
-                        :key="'p' + i"
-                      >
-                        <v-text-field
-                          v-model.number="student.performance[i]"
-                          type="number"
-                          density="comfortable"
-                          class="score-input"
-                        ></v-text-field>
-                      </td>
-                      <td>{{ getTotal(student.performance) }}</td>
-                      <td>
-                        <v-text-field
-                          v-model.number="student.assessment"
-                          type="number"
-                          density="comfortable"
-                          class="score-input"
-                        ></v-text-field>
-                      </td>
-                      <td>{{ getFinalGrade(student) }}</td>
-                    </tr>
-                  </tbody>
-                </v-table>
+                
               </v-container>
             </v-card-text>
             <v-card-actions class="d-flex justify-end">
