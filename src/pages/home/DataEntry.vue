@@ -66,8 +66,6 @@
                     ></v-text-field>
                   </v-col>
                 </v-row>
-
-                
               </v-container>
             </v-card-text>
             <v-card-actions class="d-flex justify-end">

@@ -4,7 +4,7 @@
     :options="{ threshold: 0.5 }"
     transition="fade-transition"
   >
-    <v-card elevation="8" class="mb-6">
+    <v-card elevation="8" class="mb-6 theme-card">
       <v-container>
         <v-row>
           <v-col cols="12" class="text-center">
@@ -20,41 +20,32 @@
             cols="12"
             md="4"
           >
-            <v-card class="pa-3" outlined>
-              <h3
-                class="text-center font-weight-bold theme--light:text-h3 theme--dark:text-white"
-              >
-                {{ subject }}
-              </h3>
-              <span
-                class="text-body-2 theme--light:text-body-1 theme--dark:text-body-2"
-                >{{ sectionDescriptions[subject] }}</span
-              >
+            <v-card class="pa-3 student-box">
+              <h3 class="text-center font-weight-bold">{{ subject }}</h3>
+              <span class="text-body-2">{{
+                sectionDescriptions[subject]
+              }}</span>
               <v-divider class="mb-2"></v-divider>
               <v-row
-                v-for="student in students"
+                v-for="(student, index) in students"
                 :key="student.name"
                 align="center"
-                justify="space-between"
+                class="student-row"
               >
-                <v-col cols="6">
-                  <span
-                    class="font-weight-bold theme--light:text-body-1 theme--dark:text-body-2"
-                    >{{ student.name }}</span
-                  >
+                <v-col cols="9" class="font-weight-bold">{{
+                  student.name
+                }}</v-col>
+                <v-col
+                  cols="3"
+                  class="text-right font-weight-bold"
+                  :class="getColorClass(student.score)"
+                >
+                  {{ student.score }}%
                 </v-col>
-                <v-col cols="6">
-                  <v-progress-linear
-                    v-if="student.score > 0"
-                    :value="student.score"
-                    :color="getColor(student.score)"
-                    height="15"
-                    rounded
-                  >
-                    <strong>{{ student.score }}%</strong>
-                  </v-progress-linear>
-                  <span v-else>No record</span>
-                </v-col>
+                <v-divider
+                  v-if="index < students.length - 1"
+                  class="my-1"
+                ></v-divider>
               </v-row>
             </v-card>
           </v-col>
@@ -137,15 +128,16 @@ export default defineComponent({
       );
     });
 
-    function getColor(score: number): string {
-      if (score >= 80) return "green";
-      if (score >= 75) return "yellow";
-      return "red";
+    function getColorClass(score: number): string {
+      if (score >= 80) return "text-green";
+      if (score >= 75) return "text-orange";
+
+      return "text-red";
     }
 
     return {
       studentStanding,
-      getColor,
+      getColorClass,
       sectionDescriptions,
       currentPage,
       totalPages,
@@ -156,13 +148,59 @@ export default defineComponent({
 </script>
 
 <style scoped>
-h2 {
-  color: var(--v-theme-primary); /* Primary color for headings */
+.theme-card {
+  background-color: var(--v-background-base);
+  color: var(--v-text-base);
+  padding: 20px;
 }
-h3 {
-  color: var(--v-theme-on-background); /* Light theme on background color */
+
+.student-box {
+  background: linear-gradient(
+    135deg,
+    var(--card-gradient-start),
+    var(--card-gradient-end)
+  );
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
-.theme--dark h3 {
-  color: var(--v-theme-on-surface); /* Dark theme on surface color */
+
+.student-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.text-green {
+  color: #4caf50;
+}
+
+.text-orange {
+  color: #ff9800;
+}
+
+.text-yellow {
+  color: #ffc107;
+}
+
+.text-red {
+  color: #f44336;
+}
+
+:root {
+  --v-background-base: #ffffff;
+  --v-text-base: #000000;
+  --card-gradient-start: #e0e0e0;
+  --card-gradient-end: #bdbdbd;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --v-background-base: #121212;
+    --v-text-base: #ffffff;
+    --card-gradient-start: #323232;
+    --card-gradient-end: #1e1e1e;
+  }
 }
 </style>
