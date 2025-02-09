@@ -10,14 +10,13 @@
 
       <v-row>
         <v-col
-          v-for="activity in missedActivities"
-          :key="activity.subject"
+          v-for="(activity, index) in paginatedActivities"
+          :key="`${activity.subject}-${index}`"
           cols="12"
           md="4"
           class="text-center"
         >
           <v-card class="pa-3" outlined>
-            <!-- Progress Circular with Dynamic Color -->
             <v-progress-circular
               :size="100"
               :width="10"
@@ -39,7 +38,16 @@
         </v-col>
       </v-row>
 
-      <!-- Grade Distribution Graph -->
+      <v-row justify="center" class="mt-4">
+        <v-btn @click="prevPage" :disabled="currentPage === 1"> Prev </v-btn>
+        <span class="mx-3 mt-1 font-weight-bold"
+          >Page {{ currentPage }} of {{ totalPages }}</span
+        >
+        <v-btn @click="nextPage" :disabled="currentPage === totalPages">
+          Next
+        </v-btn>
+      </v-row>
+
       <v-row>
         <v-col cols="12">
           <v-card class="pa-4">
@@ -60,8 +68,6 @@ import VChart from "vue-echarts";
 export default defineComponent({
   components: { VChart },
   setup() {
-    const maxMissed = ref(10); // Maximum number of students missing an activity
-
     const missedActivities = ref([
       { subject: "English 8 - DE1", missed: 10 },
       { subject: "Mapeh 8 - FG2", missed: 6 },
@@ -74,38 +80,42 @@ export default defineComponent({
         { name: "BASLOT", score: 79 },
         { name: "MIRAL", score: 78 },
       ],
-      "ENGLISH - ED2": [
-        { name: "NATOY", score: 76 },
-        { name: "AUDREY", score: 74 },
-        { name: "YANG", score: 73 },
+      "Mapeh 8 - FG2": [
+        { name: "Student D", score: 60 },
+        { name: "Student E", score: 75 },
+        { name: "Student F", score: 80 },
       ],
-      "ENGLISH - DE1": [
-        { name: "YANG", score: 85 },
-        { name: "YANG", score: 88 },
-        { name: "YANG", score: 90 },
+      "English 7 - ED2": [
+        { name: "Student G", score: 70 },
+        { name: "Student H", score: 65 },
+        { name: "Student I", score: 72 },
       ],
     });
 
-    const chartOptions = ref({
-      xAxis: {
-        type: "category",
-        data: Object.keys(studentStanding.value),
-      },
-      yAxis: {
-        type: "value",
-      },
-      series: [
-        {
-          data: Object.values(studentStanding.value).map(
-            (students) =>
-              students.reduce((acc, student) => acc + student.score, 0) /
-              students.length
-          ),
-          type: "bar",
-          color: "#3f51b5",
-        },
-      ],
+    const maxMissed = computed(() => {
+      return Math.max(...missedActivities.value.map((a) => a.missed), 1);
     });
+
+    // Pagination
+    const currentPage = ref(1);
+    const itemsPerPage = 3;
+
+    const totalPages = computed(() =>
+      Math.ceil(missedActivities.value.length / itemsPerPage)
+    );
+
+    const paginatedActivities = computed(() => {
+      const start = (currentPage.value - 1) * itemsPerPage;
+      return missedActivities.value.slice(start, start + itemsPerPage);
+    });
+
+    function prevPage() {
+      if (currentPage.value > 1) currentPage.value--;
+    }
+
+    function nextPage() {
+      if (currentPage.value < totalPages.value) currentPage.value++;
+    }
 
     function getMissedColor(missed) {
       if (missed >= 10) return "red"; // High risk
@@ -113,7 +123,44 @@ export default defineComponent({
       return "green"; // Low risk
     }
 
-    return { missedActivities, chartOptions, getMissedColor, maxMissed };
+    // Compute Grade Distribution Data
+    const chartOptions = computed(() => {
+      const subjects = Object.keys(studentStanding.value);
+      const averageScores = subjects.map((subject) => {
+        const students = studentStanding.value[subject] || [];
+        return students.length
+          ? students.reduce((acc, student) => acc + student.score, 0) /
+              students.length
+          : 0;
+      });
+
+      return {
+        tooltip: { trigger: "axis" },
+        xAxis: { type: "category", data: subjects, axisLabel: { rotate: 25 } },
+        yAxis: { type: "value", min: 50, max: 100 },
+        series: [
+          {
+            name: "Average Score",
+            data: averageScores,
+            type: "bar",
+            color: "#3f51b5",
+            label: { show: true, position: "top", fontWeight: "bold" },
+          },
+        ],
+      };
+    });
+
+    return {
+      missedActivities,
+      paginatedActivities,
+      maxMissed,
+      getMissedColor,
+      currentPage,
+      totalPages,
+      prevPage,
+      nextPage,
+      chartOptions,
+    };
   },
 });
 </script>

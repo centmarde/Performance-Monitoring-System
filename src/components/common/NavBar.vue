@@ -1,9 +1,15 @@
 <template>
-  <v-app-bar>
-    <v-toolbar-title class="text-h6 text-light-green-darken-4 font-weight-bold">
+  <v-app-bar color="#3D5654" flat>
+    <v-toolbar-title class="text-h6 font-weight-bold text-white">
       Performance Monitoring System
     </v-toolbar-title>
-    <!-- <v-icon class="me-5" @click="toggleTheme">{{ themeIcon }}</v-icon> -->
+
+    <v-spacer></v-spacer>
+
+    <!-- Theme Toggle Button -->
+    <v-btn icon @click="toggleTheme">
+      <v-icon :color="'#B49239'">{{ themeIcon }}</v-icon>
+    </v-btn>
   </v-app-bar>
 </template>
 
@@ -35,7 +41,8 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.title {
-  color: #00a4e5;
+/* Ensuring high contrast & readability */
+.v-toolbar-title {
+  letter-spacing: 0.5px;
 }
 </style>

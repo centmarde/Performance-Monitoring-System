@@ -13,6 +13,7 @@
         </v-col>
       </v-row>
       <v-row>
+
         <v-col
           v-for="(students, subject) in studentStanding"
           :key="subject"
@@ -43,6 +44,7 @@
                   <strong>{{ student.score }}%</strong>
                 </v-progress-linear>
                 <span v-else>No record</span>
+
               </v-col>
             </v-row>
           </v-card>
@@ -54,10 +56,12 @@
 </template>
 
 <script lang="ts">
+
 import { defineComponent, reactive, ref, onMounted } from "vue";
 import { useSectionsStore } from "@/stores/sectionsStore";
 import { useStudentsStore } from "@/stores/studentsStore";
 import { useRecordsStore } from "@/stores/recordsStore";
+
 
 interface Student {
   name: string;
@@ -66,6 +70,7 @@ interface Student {
 
 export default defineComponent({
   setup() {
+
     const sectionsStore = useSectionsStore();
     const studentsStore = useStudentsStore();
     const recordsStore = useRecordsStore();
@@ -99,6 +104,7 @@ export default defineComponent({
           }));
         }
       }
+
     });
 
     function getColor(score: number): string {
@@ -107,7 +113,9 @@ export default defineComponent({
       return "red";
     }
 
+
     return { studentStanding, getColor, section, sectionDescriptions };
+
   },
 });
 </script>
