@@ -10,7 +10,6 @@
         <th>Address</th>
         <th>Role</th>
         <th class="actions-header">Actions</th>
-        <!-- Added class for styling -->
       </tr>
     </thead>
     <tbody>
@@ -23,7 +22,6 @@
         <td>{{ item.complete_address }}</td>
         <td>{{ item.role }}</td>
         <td class="actions-cell">
-          <!-- Added class for styling -->
           <button @click="editUser(item)" class="edit-btn">Edit</button>
           <button @click="deleteUser(item.id)" class="delete-btn">
             Delete
@@ -54,31 +52,33 @@ const deleteUser = (id: number) => {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  background-color: #004d40; /* Teal background */
+  color: white;
 }
 
 .styled-table th,
 .styled-table td {
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #00796b; /* Darker teal border */
 }
 
 .styled-table th {
-  background: #2e7d32;
+  background: #00695c; /* Darker teal for contrast */
   color: white;
 }
 
 .actions-header {
-  text-align: center; /* Centers the header text */
+  text-align: center;
 }
 
 .actions-cell {
   display: flex;
-  justify-content: center; /* Centers the buttons horizontally */
-  gap: 10px; /* Adds space between the buttons */
+  justify-content: center;
+  gap: 10px;
 }
 
 .edit-btn {
-  background-color: #4caf50;
+  background-color: #26a69a; /* Lighter teal for edit button */
   color: white;
   border: none;
   padding: 5px 10px;
@@ -91,7 +91,6 @@ const deleteUser = (id: number) => {
   color: white;
   border: none;
   padding: 5px 10px;
-  margin-left: 5px;
   cursor: pointer;
   border-radius: 5px;
 }

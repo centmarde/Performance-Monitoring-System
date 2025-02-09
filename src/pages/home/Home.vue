@@ -2,8 +2,8 @@
   <HomeLayout>
     <template #content>
       <div>
-      <StudentsStanding/>
-       <MissedActivites/>
+        <StudentsStanding />
+        <MissedActivites />
       </div>
     </template>
   </HomeLayout>
@@ -11,6 +11,5 @@
 
 <script setup lang="ts">
 // import { supabase } from '../lib/supabase';
-import HomeLayout from '@/layouts/HomeLayout.vue';
-
+import HomeLayout from "@/layouts/HomeLayout.vue";
 </script>

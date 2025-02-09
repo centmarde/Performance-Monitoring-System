@@ -1,7 +1,7 @@
 <template>
   <v-card-text class="mt-12">
     <h4 class="text-center">Sign Up for an Account</h4>
-    <h6 class="text-center grey--text mt-2">
+    <h6 class="text-center text-teal-darken-3 mt-2">
       Log in to your account so you can continue monitoring
       <br />and managing your users
     </h6>
@@ -61,22 +61,24 @@
               ></v-checkbox>
             </v-col>
             <v-col cols="12" sm="5">
-              <span class="caption blue--text ml-n4">Terms & Conditions</span>
+              <span class="caption text-teal-darken-3 ml-n4"
+                >Terms & Conditions</span
+              >
             </v-col>
           </v-row>
-          <v-btn 
+          <v-btn
             :loading="formAction.formProcess"
-            color="#2E7D32" 
-            dark 
-            block 
-            style="border-radius: 25px" 
+            color="teal-darken-3"
+            dark
+            block
+            style="border-radius: 25px"
             type="submit"
           >
             Sign up
           </v-btn>
         </v-form>
 
-        <h5 class="text-center grey--text mt-4 mb-3">Or Sign up using</h5>
+        <h5 class="text-center mt-4 mb-3 text-teal-darken-3">Sign up with</h5>
         <div class="d-flex justify-space-between align-center mx-10 mb-11">
           <!-- Replaced FontAwesome icons with Vuetify icons -->
           <v-btn depressed outlined color="grey">
@@ -95,11 +97,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { requiredValidator, emailValidator, passwordValidator, confirmedValidator } from '@/lib/validator';
-import { useAuthUserStore } from '@/stores/authUser';
+import { ref } from "vue";
+import {
+  requiredValidator,
+  emailValidator,
+  passwordValidator,
+  confirmedValidator,
+} from "@/lib/validator";
+import { useAuthUserStore } from "@/stores/authUser";
 import { useToast } from "vue-toastification";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 // Define the emit function for the component
 const emit = defineEmits(["registration-success", "close-dialog"]);
@@ -107,10 +114,10 @@ const emit = defineEmits(["registration-success", "close-dialog"]);
 const toast = useToast();
 
 const formData = ref({
-email: '',
-password: '',
-password_confirmation: '',
-userType: 'Teacher'
+  email: "",
+  password: "",
+  password_confirmation: "",
+  userType: "Teacher",
 });
 const formAction = ref({ formProcess: false });
 const isPasswordVisible = ref(false);
@@ -118,7 +125,7 @@ const isPasswordConfirmVisible = ref(false);
 
 const authUserStore = useAuthUserStore();
 
-const userTypes = ['Teacher', 'Admin'];
+const userTypes = ["Teacher", "Admin"];
 
 const router = useRouter();
 
@@ -137,28 +144,27 @@ async function onFormSubmit(event: SubmitEvent): Promise<void> {
   formAction.value.formProcess = false;
 
   if (error) {
-    const errorMessage = typeof error === 'string' ? error : error.message;
+    const errorMessage = typeof error === "string" ? error : error.message;
     toast.error(`Registration error: ${errorMessage}`, {
       timeout: 3000,
       closeOnClick: true,
     });
   } else {
-    toast.success('Registration successful', {
+    toast.success("Registration successful", {
       timeout: 3000,
       closeOnClick: true,
     });
 
-    router.push('/welcome');
+    router.push("/welcome");
   }
-
 }
 </script>
 
 <style scoped>
 .close-icon {
-position: absolute;
-top: 10px;
-right: 10px;
-cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
 }
 </style>

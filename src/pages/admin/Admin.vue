@@ -5,7 +5,7 @@
         <div class="p-8 bg-gray-100 min-h-screen">
           <v-row align="center" justify="space-between">
             <v-col cols="auto">
-              <v-btn @click="showAddUserForm = true" color="#2E7D32">
+              <v-btn @click="showAddUserForm = true" color="teal-darken-3">
                 Add User
               </v-btn>
             </v-col>
@@ -268,11 +268,11 @@ const prevPage = () => {
 
 onMounted(async () => {
   try {
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-    const { data: profiles, error } = await supabase
-      .from("users")
-      .select("*");
+    const { data: profiles, error } = await supabase.from("users").select("*");
     if (error) {
       throw error;
     }
@@ -309,7 +309,17 @@ const addUser = async () => {
       throw error;
     }
     items.value.push({ ...newUser.value, id: data[0].id });
-    newUser.value = { id: 0, name: "", email: "", password: "", firstname: "", lastname: "", phone: "", complete_address: "", role: "" };
+    newUser.value = {
+      id: 0,
+      name: "",
+      email: "",
+      password: "",
+      firstname: "",
+      lastname: "",
+      phone: "",
+      complete_address: "",
+      role: "",
+    };
     showAddUserForm.value = false;
   } catch (error) {
     console.error("Error adding user:", error);
@@ -352,7 +362,9 @@ const confirmDeleteUser = async () => {
       if (error) {
         throw error;
       }
-      items.value = items.value.filter((user) => user.id !== userToDelete.value);
+      items.value = items.value.filter(
+        (user) => user.id !== userToDelete.value
+      );
       userToDelete.value = null;
     }
     showDeleteConfirmation.value = false;
