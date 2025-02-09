@@ -30,7 +30,9 @@
                 class="search-box"
                 hide-details
                 style="max-width: 100%"
+                prepend-inner-icon="mdi-magnify"
               ></v-text-field>
+
               <span class="text-body-2">{{
                 sectionDescriptions[subject]
               }}</span>
@@ -192,10 +194,10 @@ export default defineComponent({
   flex-direction: column;
 }
 .search-box {
-  width: 100%; /* Ensures consistent width */
-  max-width: 250px; /* Prevents unwanted expansion */
-  min-width: 250px; /* Keeps size fixed */
-  flex-shrink: 0; /* Prevents shrinking */
+  width: 100%; /* Fix width */
+  max-width: 250px; /* Prevent expansion */
+  min-width: 250px; /* Keep size fixed */
+  flex: none; /* Prevents stretching */
 }
 
 .scrollable-content {
