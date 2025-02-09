@@ -13,7 +13,7 @@
               <v-container
                 class="d-flex flex-column align-center justify-center fill-height"
               >
-                <v-icon size="80" color="primary">mdi-plus</v-icon>
+                <v-icon size="80" color="#004D40">mdi-plus</v-icon>
                 <h3 class="font-weight-bold">Add New</h3>
               </v-container>
             </v-card>
@@ -66,8 +66,6 @@
                     ></v-text-field>
                   </v-col>
                 </v-row>
-
-                
               </v-container>
             </v-card-text>
             <v-card-actions class="d-flex justify-end">
@@ -226,7 +224,7 @@ const saveClassRecord = () => {
   text-align: center;
 }
 .add-new-card {
-  border: 2px dashed #1976d2;
+  border: 2px dashed #004D40;
   background-color: #f5f5f5;
   cursor: pointer;
   text-align: center;
