@@ -1,61 +1,58 @@
 <template>
-  <v-app-bar :color="navbarColor" flat>
-    <v-toolbar-title class="text-h6 font-weight-bold text-white">
-      Performance Monitoring System
-    </v-toolbar-title>
-
-    <v-spacer></v-spacer>
-
-    <!-- Theme Toggle Button -->
-    <v-btn icon @click="toggleTheme">
-      <v-icon :color="themeIconColor">{{ themeIcon }}</v-icon>
-    </v-btn>
-
-    <!-- User Menu -->
+  <v-app-bar class="bg-card">
+    <v-toolbar-title class="text-h6 text-light-green-darken-4 font-weight-bold"
+      >Performance Monitoring System</v-toolbar-title
+    >
+    <v-icon class="me-5" @click="toggleTheme">{{ themeIcon }}</v-icon>
     <v-menu transition="slide-y-transition">
       <template v-slot:activator="{ props }">
         <v-btn rounded="xl" size="large" variant="tonal" v-bind="props">
-          <v-avatar size="32" class="mr-2">
-            <v-img src="#" alt="User Avatar"></v-img>
+          <v-avatar size="25" class="mr-2">
+            <v-img src="#"></v-img>
           </v-avatar>
           <v-icon color="white">mdi-cog</v-icon>
         </v-btn>
       </template>
 
-      <v-sheet class="pa-0 mt-2 me-1 menu-card rounded-border">
-        <v-btn
-          class="justify-start"
-          rounded="0"
-          variant="text"
-          size="large"
-          block
-          to="/profiles"
-        >
-          <v-row align="center" no-gutters>
-            <v-col cols="auto">
-              <v-icon class="me-3">mdi-account</v-icon>
-            </v-col>
-            <v-col>{{ userEmail }}</v-col>
-          </v-row>
-        </v-btn>
+      <v-sheet
+        class="pa-0 mt-2 me-1 menu-card rounded-border"
+        color="grey-darken-3"
+      >
+        <div>
+          <v-btn
+            class="justify-start"
+            rounded="0"
+            variant="text"
+            size="large"
+            block
+            to="/profiles"
+            style="text-transform: none"
+          >
+            <v-row align="center" no-gutters>
+              <v-col cols="auto">
+                <v-icon class="me-3" left>mdi-account</v-icon>
+              </v-col>
+              <v-col> {{ userEmail }}</v-col>
+            </v-row>
+          </v-btn>
 
-        <v-divider></v-divider>
-
-        <v-btn
-          class="justify-start logout-btn"
-          rounded="0"
-          variant="text"
-          size="large"
-          block
-          @click="handleLogoutClick"
-        >
-          <v-row align="center" no-gutters>
-            <v-col cols="auto">
-              <v-icon class="me-3">mdi-logout</v-icon>
-            </v-col>
-            <v-col> Logout </v-col>
-          </v-row>
-        </v-btn>
+          <v-btn
+            class="justify-start"
+            rounded="0"
+            variant="text"
+            size="large"
+            block
+            @click="handleLogoutClick"
+            style="text-transform: none"
+          >
+            <v-row align="center" no-gutters>
+              <v-col cols="auto">
+                <v-icon class="me-3" left>mdi-logout</v-icon>
+              </v-col>
+              <v-col> Logout </v-col>
+            </v-row>
+          </v-btn>
+        </div>
       </v-sheet>
     </v-menu>
   </v-app-bar>
@@ -65,12 +62,8 @@
 import { computed } from "vue";
 import { useTheme } from "vuetify";
 import { doLogout } from "@/lib/supabase";
-import { useUserInfo } from "@/composables/userInfo";
+import { useUserInfo } from "@/composables/userInfo"; // Adjust the path as necessary
 import router from "@/router";
-
-// Navbar color matching Sidebar
-const navbarColor = "#004D40"; // Adjusted to match SidebarMenu.vue
-const themeIconColor = "#B49239"; // Gold for theme toggle
 
 const theme = useTheme();
 const isDarkTheme = computed(() => theme.global.current.value.dark);
@@ -93,19 +86,14 @@ function handleLogoutClick() {
 </script>
 
 <style scoped>
-.menu-card {
-  background: rgba(0, 77, 64, 0.9); /* Adjusted to match SidebarMenu.vue */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(6px);
-  border-radius: 12px;
+.bg-card {
+  background: rgba(161, 205, 247, 0.15);
+  box-shadow: 0 4px 10px rgba(254, 79, 90, 0.3);
+  backdrop-filter: blur(5px);
 }
 
 .rounded-border {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.logout-btn {
-  color: #ff5252;
-  font-weight: bold;
+  border-radius: 10px;
+  border: 1px solid #ccc;
 }
 </style>

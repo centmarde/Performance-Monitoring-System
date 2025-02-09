@@ -1,16 +1,17 @@
 <template>
+  <!-- Navigation Drawer with Toggle Button Inside -->
   <v-navigation-drawer
     v-model="drawer"
     app
     color="#004D40"
     class="rounded-e-xl fixed-sidebar"
   >
-    <!-- Toggle Button -->
+    <!-- Toggle Button Inside Sidebar -->
     <v-btn icon @click="drawer = !drawer" class="toggle-btn">
       <v-icon>{{ drawer ? "mdi-chevron-left" : "mdi-chevron-right" }}</v-icon>
     </v-btn>
 
-    <!-- User Profile Section -->
+    <!-- User Info Section -->
     <v-sheet color="#00695C" class="pa-4 rounded-te-xl text-center">
       <v-progress-circular
         model-value="80"
@@ -36,7 +37,7 @@
       </span>
     </v-sheet>
 
-    <!-- Menu Items -->
+    <!-- Sidebar Menu -->
     <v-list>
       <v-list-item
         v-for="(item, i) in menu"
@@ -58,10 +59,11 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useUserInfoStore } from "@/stores/userInfo";
 import Avatar from "@/assets/avatar.png";
 
+// Sidebar State
 const avatar = Avatar;
 const drawer = ref(true);
 const userInfoStore = useUserInfoStore();
@@ -73,9 +75,9 @@ onMounted(() => {
 
 // Define the menu with conditional links for Admin and Teachers
 const menu = ref([
-  { title: "Dashboard", icon: "mdi-view-dashboard", href: "/home" },
-  { title: "Data Entry", icon: "mdi-file-document-edit", href: "/data_entry" },
-  { title: "Tracking", icon: "mdi-history", href: "/tracking" },
+  { title: "Users", icon: "mdi-account", href: "/admin" },
+  { title: "Teachers", icon: "mdi-account-tie", href: "/teachers" },
+  { title: "Settings", icon: "mdi-cog-outline", href: "/settings" },
 ]);
 
 // Active Users List
@@ -88,18 +90,7 @@ const activeUsers = ref([
 </script>
 
 <style scoped>
-/* ✅ Sidebar Toggle Button */
-.toggle-btn {
-  position: absolute;
-  top: 50%;
-  right: -20px;
-  transform: translateY(-50%);
-  background-color: #00796b;
-  color: white;
-  border-radius: 50%;
-}
-
-/* ✅ Sidebar Styling */
+/* ✅ Fixed Sidebar Position */
 .fixed-sidebar {
   position: fixed !important;
   top: 0;
@@ -109,14 +100,31 @@ const activeUsers = ref([
   z-index: 1000;
   display: flex;
   flex-direction: column;
+  background-color: #004d40;
 }
 
-/* ✅ Sidebar Menu Styling */
-.v-list-item {
-  transition: background 0.3s ease-in-out;
+/* ✅ Toggle Button Inside Sidebar */
+.toggle-btn {
+  position: absolute;
+  top: 50%;
+  right: -20px;
+  transform: translateY(-50%);
+  background-color: #00796b;
+  border-radius: 50%;
+  z-index: 1100;
+  transition: right 0.3s ease-in-out;
+  color: white;
 }
-.v-list-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+
+/* ✅ Adjust Position When Drawer Is Closed */
+.v-navigation-drawer.v-navigation-drawer--mini-variant .toggle-btn {
+  right: 0;
+}
+
+/* ✅ Sidebar Content Positioning */
+.v-navigation-drawer__content {
+  padding-right: 48px;
+  flex-grow: 1;
 }
 
 /* ✅ Active Users Section Styling */
@@ -127,5 +135,6 @@ const activeUsers = ref([
   width: 100%;
   padding: 16px;
   background-color: #004d40;
+  color: white;
 }
 </style>

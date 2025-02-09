@@ -3,7 +3,7 @@
     v-model="drawer"
     app
     color="#004D40"
-    class="rounded-e-xl"
+    class="rounded-e-xl fixed-sidebar"
   >
     <!-- Toggle Button -->
     <v-btn icon @click="drawer = !drawer" class="toggle-btn">
@@ -31,9 +31,9 @@
       <div class="mt-1 text-caption text-teal-lighten-4">
         {{ userInfo?.user_type || "Guest" }}
       </div>
-      <span class="mb-6 text-caption text-teal-lighten-3">{{
-        userInfo?.email || "user@example.com"
-      }}</span>
+      <span class="mb-6 text-caption text-teal-lighten-3">
+        {{ userInfo?.email || "user@example.com" }}
+      </span>
     </v-sheet>
 
     <!-- Menu Items -->
@@ -80,7 +80,7 @@ const menu = ref([
 </script>
 
 <style scoped>
-/* Sidebar Toggle Button */
+/* ✅ Sidebar Toggle Button */
 .toggle-btn {
   position: absolute;
   top: 50%;
@@ -91,11 +91,33 @@ const menu = ref([
   border-radius: 50%;
 }
 
-/* Sidebar Menu Styling */
+/* ✅ Sidebar Styling */
+.fixed-sidebar {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  height: 100vh !important;
+  overflow: visible !important;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ✅ Sidebar Menu Styling */
 .v-list-item {
   transition: background 0.3s ease-in-out;
 }
 .v-list-item:hover {
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* ✅ Active Users Section Styling */
+.active-users {
+  position: absolute;
+  bottom: 16px;
+  left: 0;
+  width: 100%;
+  padding: 16px;
+  background-color: #004d40;
 }
 </style>
