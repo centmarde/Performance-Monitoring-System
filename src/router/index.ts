@@ -15,8 +15,9 @@ import Profiles from "@/pages/home/Profiles.vue";
 import TeacherAccount from "@/pages/admin/TeacherAccount.vue";
 import DataEntry from "@/pages/home/DataEntry.vue";
 import Tracking from "@/pages/home/Tracking.vue";
-//@ts-ignore
 import Welcome from "@/pages/Welcome.vue";
+//@ts-ignore
+import Records from "@/pages/home/Records.vue";
 
 
 const toast = useToast();
@@ -24,6 +25,7 @@ const toast = useToast();
 const routes = setupLayouts([
 
   { path: "/", component: Hero },
+  { path: "/records", component: Records, meta: { requiresAuth: true } },
   { path: "/welcome", component: Welcome, meta: { requiresAuth: true } },
   {
     path: "/home",
@@ -126,7 +128,7 @@ router.onError((err, to) => {
   }
 });
 
-router.isReady().then(() => {
+router.isReady().then(() => {   
   localStorage.removeItem("vuetify:dynamic-reload");
 });
 

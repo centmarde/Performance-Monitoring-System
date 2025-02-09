@@ -42,7 +42,7 @@
         <v-col cols="12">
           <v-card class="pa-4 grade-chart">
             <h3 class="text-center font-weight-bold">Grade Distribution</h3>
-            <v-chart :option="chartOptions" style="height: 300px"></v-chart>
+            <v-chart :option="chartOptions" style="height: 300px;"></v-chart>
           </v-card>
         </v-col>
       </v-row>
@@ -102,7 +102,7 @@ export default defineComponent({
             name: "Missed Percentage",
             type: "bar",
             data: missedPercentages,
-            color: "#8BC34A",
+            color: "#004D40",
             label: {
               show: true,
               position: "top",

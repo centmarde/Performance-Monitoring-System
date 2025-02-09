@@ -16,6 +16,9 @@ import DataTablesCore from "datatables.net-dt";
 //@ts-ignore
 import { PerfectScrollbarPlugin } from 'vue3-perfect-scrollbar';
 import 'vue3-perfect-scrollbar/style.css';
+//@ts-ignore
+import VueExcelEditor from 'vue3-excel-editor'
+
 
 DataTable.use(DataTablesCore);
 // Components
@@ -26,7 +29,10 @@ import router from "./router"; // Import the router
 // Composables
 import { createApp } from "vue";
 
-const app = createApp(App).use(Toast).use(PerfectScrollbarPlugin); // Add the router
+const app = createApp(App)
+.use(Toast)
+.use(PerfectScrollbarPlugin)
+.use(VueExcelEditor); 
 
 // app.config.warnHandler = () => {};
 

@@ -33,6 +33,21 @@ export const useStudentsStore = defineStore('studentsStore', () => {
     return students.value;
   }
 
+  async function fetchAllStudents() {
+    const { data, error } = await supabase
+      .from('students')
+      .select('*');
+
+    if (error) {
+      console.error('Error fetching all students:', error);
+      students.value = [];
+      return null;
+    }
+
+    students.value = data as Student[];
+    return students.value;
+  }
+
   async function fetchInitialScore(studentId: number) {
     const { data, error } = await supabase
       .from('records')
@@ -52,5 +67,6 @@ export const useStudentsStore = defineStore('studentsStore', () => {
     students,
     fetchStudentsBySection,
     fetchInitialScore,
+    fetchAllStudents,
   };
 });
