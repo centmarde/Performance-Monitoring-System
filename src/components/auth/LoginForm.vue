@@ -51,7 +51,7 @@
             </v-btn>
           </v-form>
 
-          <h5 class="text-center text-secondary mt-4 mb-3">Or log in using</h5>
+          <h5 class="text-center text-secondary mt-4 mb-3">Login with</h5>
           <div class="social-buttons">
             <v-btn variant="outlined">
               <v-icon color="red">mdi-google</v-icon>
