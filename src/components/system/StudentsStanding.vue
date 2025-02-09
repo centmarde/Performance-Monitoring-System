@@ -20,33 +20,44 @@
             cols="12"
             md="4"
           >
-            <v-card class="pa-3 student-box">
+            <v-card class="pa-3 student-box fixed-card">
               <h3 class="text-center font-weight-bold">{{ subject }}</h3>
+              <v-text-field
+                v-model="searchQuery[subject]"
+                label="Search student"
+                dense
+                outlined
+                class="search-box"
+                hide-details
+                style="max-width: 100%"
+              ></v-text-field>
               <span class="text-body-2">{{
                 sectionDescriptions[subject]
               }}</span>
               <v-divider class="mb-2"></v-divider>
-              <v-row
-                v-for="(student, index) in students"
-                :key="student.name"
-                align="center"
-                class="student-row"
-              >
-                <v-col cols="9" class="font-weight-bold">{{
-                  student.name
-                }}</v-col>
-                <v-col
-                  cols="3"
-                  class="text-right font-weight-bold"
-                  :class="getColorClass(student.score)"
+              <div class="scrollable-content">
+                <v-row
+                  v-for="(student, index) in filteredStudents(subject)"
+                  :key="student.name"
+                  align="center"
+                  class="student-row"
                 >
-                  {{ student.score }}%
-                </v-col>
-                <v-divider
-                  v-if="index < students.length - 1"
-                  class="my-1"
-                ></v-divider>
-              </v-row>
+                  <v-col cols="9" class="font-weight-bold">{{
+                    student.name
+                  }}</v-col>
+                  <v-col
+                    cols="3"
+                    class="text-right font-weight-bold"
+                    :class="getColorClass(student.score)"
+                  >
+                    {{ student.score }}%
+                  </v-col>
+                  <v-divider
+                    v-if="index < students.length - 1"
+                    class="my-1"
+                  ></v-divider>
+                </v-row>
+              </div>
             </v-card>
           </v-col>
         </v-row>
@@ -78,6 +89,7 @@ export default defineComponent({
     const studentsStore = useStudentsStore();
     const studentStanding = reactive<Record<string, Student[]>>({});
     const sectionDescriptions = reactive<Record<string, string>>({});
+    const searchQuery = reactive<Record<string, string>>({});
     const currentPage = ref<number>(1);
     const subjectsPerPage = 3;
 
@@ -87,6 +99,7 @@ export default defineComponent({
 
       for (const sec of sections) {
         sectionDescriptions[sec.code] = sec.description;
+        searchQuery[sec.code] = "";
         const students = await studentsStore.fetchStudentsBySection(sec.id);
         if (students) {
           studentStanding[sec.code] = await Promise.all(
@@ -128,10 +141,15 @@ export default defineComponent({
       );
     });
 
+    function filteredStudents(subject: string) {
+      return studentStanding[subject].filter((student) =>
+        student.name.toLowerCase().includes(searchQuery[subject].toLowerCase())
+      );
+    }
+
     function getColorClass(score: number): string {
       if (score >= 80) return "text-green";
       if (score >= 75) return "text-orange";
-
       return "text-red";
     }
 
@@ -142,6 +160,8 @@ export default defineComponent({
       currentPage,
       totalPages,
       paginatedSubjects,
+      searchQuery,
+      filteredStudents,
     };
   },
 });
@@ -165,42 +185,30 @@ export default defineComponent({
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
+.fixed-card {
+  height: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.search-box {
+  width: 100%; /* Ensures consistent width */
+  max-width: 250px; /* Prevents unwanted expansion */
+  min-width: 250px; /* Keeps size fixed */
+  flex-shrink: 0; /* Prevents shrinking */
+}
+
+.scrollable-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: 250px;
+  padding-right: 8px;
+}
+
 .student-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 8px 0;
-}
-
-.text-green {
-  color: #4caf50;
-}
-
-.text-orange {
-  color: #ff9800;
-}
-
-.text-yellow {
-  color: #ffc107;
-}
-
-.text-red {
-  color: #f44336;
-}
-
-:root {
-  --v-background-base: #ffffff;
-  --v-text-base: #000000;
-  --card-gradient-start: #e0e0e0;
-  --card-gradient-end: #bdbdbd;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --v-background-base: #121212;
-    --v-text-base: #ffffff;
-    --card-gradient-start: #323232;
-    --card-gradient-end: #1e1e1e;
-  }
 }
 </style>
