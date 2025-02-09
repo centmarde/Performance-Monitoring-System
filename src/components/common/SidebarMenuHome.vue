@@ -17,12 +17,14 @@
         :width="2"
       >
         <v-avatar size="85">
+
           <v-img :src="userInfo?.image_path || '/images/avatar.png'" alt="User Avatar"></v-img>
         </v-avatar>
       </v-progress-circular>
       <div class="mt-4">{{ userInfo?.firstname || 'User' }}</div>
       <div class="mt-4">{{ userInfo?.user_type || 'Guest' }}</div>
       <span class="mb-6 text-caption">{{ userInfo?.email || 'user@example.com' }}</span>
+
     </v-sheet>
 
     <v-list>
@@ -44,6 +46,7 @@
 </template>
 
 <script setup>
+
 import { ref, computed, watch, onMounted } from "vue";
 import { useTheme } from "vuetify";
 import { useUserInfoStore } from "@/stores/userInfo";
@@ -56,6 +59,7 @@ const userInfo = computed(() => userInfoStore.userInfo);
 onMounted(() => {
   userInfoStore.fetchUserInfo();
 });
+
 
 // Define the menu with conditional links for Admin and Teachers
 const menu = ref([

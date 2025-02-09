@@ -83,6 +83,7 @@ interface Teacher {
 const teachers = ref<Teacher[]>([]);
 const searchQuery = ref("");
 const currentPage = ref(1);
+
 const itemsPerPage = 8;
 
 const { fetchTeachersInfo, userInfo } = useTeacherList();
@@ -106,6 +107,7 @@ const initializeTeachers = async () => {
       subjects: subjectsList[index % subjectsList.length],
       phone: teacher.phone,
       complete_address: teacher.complete_address,
+
     }));
   }
 };
