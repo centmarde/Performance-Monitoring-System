@@ -30,8 +30,8 @@
       </div>
       <div class="hero-image">
         <v-img
-          src="https://source.unsplash.com/500x350/?technology,students"
-          class="rounded-lg"
+          src="/public/images/christ.png"
+          class="rounded-lg hero-img"
         ></v-img>
       </div>
     </v-container>
@@ -77,14 +77,12 @@ const saveExtraInfo = () => {
 <style lang="scss" scoped>
 /* Background - Full Page */
 .welcome-container {
-  background: linear-gradient(
-    to bottom,
-    #004d40,
-    #00695c
-  ); /* teal-darken-4 to teal-darken-3 */
-  color: #e0f2f1; /* teal-lighten-5 */
+  background: linear-gradient(to bottom, #004d40, #00695c);
+  color: #e0f2f1;
   min-height: 100vh;
   padding-top: 80px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Navigation */
@@ -95,31 +93,31 @@ const saveExtraInfo = () => {
 .logo {
   font-size: 24px;
   font-weight: bold;
-  color: #e0f2f1; /* teal-lighten-5 */
+  color: #e0f2f1;
 }
 
 /* Buttons */
 .primary-btn {
-  background-color: #009688; /* teal */
+  background-color: #009688;
   color: white;
   font-weight: bold;
   &:hover {
-    background-color: #00897b; /* teal-darken-1 */
+    background-color: #00897b;
   }
 }
 .outline-btn {
-  border-color: #00bfa5; /* teal-accent-4 */
+  border-color: #00bfa5;
   color: #00bfa5;
   &:hover {
-    border-color: #26a69a; /* teal-lighten-1 */
+    border-color: #26a69a;
     color: #26a69a;
   }
 }
 .contact-btn {
-  border-color: #b2dfdb; /* teal-lighten-4 */
+  border-color: #b2dfdb;
   color: #b2dfdb;
   &:hover {
-    border-color: #80cbc4; /* teal-lighten-3 */
+    border-color: #80cbc4;
     color: #80cbc4;
   }
 }
@@ -130,6 +128,7 @@ const saveExtraInfo = () => {
   align-items: center;
   justify-content: space-between;
   padding: 40px;
+  flex-grow: 1;
 }
 .hero-content {
   max-width: 50%;
@@ -137,13 +136,18 @@ const saveExtraInfo = () => {
 .hero-image {
   max-width: 50%;
 }
+.hero-img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
 .highlight {
-  color: #00bfa5; /* teal-accent-4 */
+  color: #00bfa5;
 }
 
 /* Dialog Box */
 .dialog-box {
-  background-color: #004d40; /* teal-darken-4 */
-  color: #e0f2f1; /* teal-lighten-5 */
+  background-color: #004d40;
+  color: #e0f2f1;
 }
 </style>
