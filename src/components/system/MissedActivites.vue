@@ -42,7 +42,7 @@
       <!-- Pagination Controls -->
       <v-row justify="center" class="mt-4">
         <v-btn @click="prevPage" :disabled="currentPage === 1"> Prev </v-btn>
-        <span class="mx-3 font-weight-bold"
+        <span class="mx-3 mt-1 font-weight-bold"
           >Page {{ currentPage }} of {{ totalPages }}</span
         >
         <v-btn @click="nextPage" :disabled="currentPage === totalPages">
