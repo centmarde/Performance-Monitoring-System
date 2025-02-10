@@ -224,7 +224,7 @@ const saveClassRecord = () => {
   text-align: center;
 }
 .add-new-card {
-  border: 2px dashed #004D40;
+  border: 2px dashed #004d40;
   background-color: #f5f5f5;
   cursor: pointer;
   text-align: center;
@@ -235,6 +235,12 @@ const saveClassRecord = () => {
 }
 
 .subject-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
+  backdrop-filter: blur(10px); /* Blur effect for glass background */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  box-shadow: 0 0 10px #004d40; /* Glowing effect */
   cursor: pointer;
   height: 250px;
   display: flex;

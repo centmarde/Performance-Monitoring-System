@@ -2,9 +2,16 @@
   <HomeLayout>
     <template #content>
       <v-container>
-        <h2 class="text-center font-weight-bold">
-          Student Performance Evaluation
-        </h2>
+        <v-row justify="center">
+          <v-col cols="auto">
+            <v-card class="pa-3 rounded-card glass-card">
+              <h2 class="font-weight-bold text-end">
+                <span class="mdi mdi-account-school"></span> Student's
+                Performance Evaluation
+              </h2>
+            </v-card>
+          </v-col>
+        </v-row>
 
         <v-row class="mt-8">
           <!-- Left Panel: Subject & Students List -->
@@ -112,5 +119,11 @@ const filteredStudents = computed(() =>
 /* Optional Styling */
 .v-card {
   border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
+  backdrop-filter: blur(10px); /* Blur effect for glass background */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  box-shadow: 0 0 10px #004d40; /* Glowing effect */
 }
 </style>
