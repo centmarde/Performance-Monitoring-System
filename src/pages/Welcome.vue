@@ -144,7 +144,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+
 import { supabase } from "@/lib/supabase";
+
 const showDialog = ref(false);
 const errorMessage = ref("");
 const successMessage = ref("");
@@ -185,6 +187,8 @@ const saveExtraInfo = async () => {
   successMessage.value = "Your information has been saved successfully!";
   showDialog.value = false;
 };
+
+
 
 onMounted(() => {
   showDialog.value = true;

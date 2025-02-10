@@ -2,12 +2,12 @@
   <HomeLayout>
     <template #content>
       <v-container>
-        <v-row justify="center">
+        <v-row justify="end">
           <v-col cols="auto">
             <v-card class="pa-3 rounded-card glass-card">
-              <h2 class="font-weight-bold text-end">
+              <h4 class="font-weight-bold text-end">
                 <span class="mdi mdi-account-school"></span> Subject Management
-              </h2>
+              </h4>
             </v-card>
           </v-col>
         </v-row>

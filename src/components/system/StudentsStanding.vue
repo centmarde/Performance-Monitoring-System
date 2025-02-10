@@ -5,7 +5,7 @@
     transition="fade-transition"
   >
     <v-container>
-      <v-row justify="center">
+      <v-row justify="end">
         <v-col cols="auto">
           <v-card class="pa-3 rounded-card glass-card">
             <h4 class="font-weight-bold text-end">
@@ -17,18 +17,23 @@
 
       <v-scale-transition mode="out-in">
         <v-row :key="currentPage">
+          <v-col v-if="loading" cols="12" class="text-center">
+            <v-progress-circular indeterminate color="primary"></v-progress-circular>
+          </v-col>
           <v-col
+            v-else
             v-for="(students, subject) in paginatedSubjects"
             :key="subject"
             cols="12"
             md="4"
           >
-            <v-card class="pa-3 student-box fixed-card">
+            <v-card class="pa-8 student-box fixed-card">
               <h3 class="text-center font-weight-bold">{{ subject }}</h3>
               <SearchBar class="my-2" v-model="searchQuery[subject]" />
-              <span class="text-body-2 my-4 text-center">{{
-                sectionDescriptions[subject]
-              }}</span>
+              <span class="text-body-2 my-2 text-center">
+                {{ sectionDescriptions[subject] }}<br>
+                <small>Teacher: {{ teacherEmails[subject] }}</small>
+              </span>
               <v-divider class="mb-2"></v-divider>
               <PerfectScrollbar :options="{ suppressScrollX: true }">
                 <div>
@@ -39,12 +44,12 @@
                     :key="student.name"
                     align="center"
                   >
-                    <v-col cols="9" class="font-weight-bold">{{
+                    <v-col cols="9">{{
                       student.name
                     }}</v-col>
                     <v-col
                       cols="3"
-                      class="text-right font-weight-bold"
+                      class="text-right"
                       :class="getColorClass(student.score)"
                     >
                       {{ student.score }}%
@@ -75,6 +80,7 @@
 import { defineComponent, reactive, ref, computed, onMounted } from "vue";
 import { useSectionsStore } from "@/stores/sectionsStore";
 import { useStudentsStore } from "@/stores/studentsStore";
+import { useTeacherList } from "@/stores/teachersList";
 //@ts-ignore
 import SearchBar from "@/components/common/SearchBar.vue";
 
@@ -90,19 +96,26 @@ export default defineComponent({
   setup() {
     const sectionsStore = useSectionsStore();
     const studentsStore = useStudentsStore();
+    const teacherList = useTeacherList();
     const studentStanding = reactive<Record<string, Student[]>>({});
     const sectionDescriptions = reactive<Record<string, string>>({});
+    const teacherEmails = reactive<Record<string, string>>({});
     const searchQuery = reactive<Record<string, string>>({});
     const currentPage = ref<number>(1);
     const subjectsPerPage = 3;
+    const loading = ref<boolean>(true);
 
     onMounted(async () => {
       await sectionsStore.fetchSections();
+      await teacherList.fetchTeachersInfo();
       const sections = sectionsStore.sections;
+      const teachers = teacherList.userInfo;
 
       for (const sec of sections) {
         sectionDescriptions[sec.code] = sec.description;
         searchQuery[sec.code] = "";
+        const teacher = teachers.find((teacher) => teacher.id === sec.teacher_id);
+        teacherEmails[sec.code] = teacher ? teacher.email : "N/A";
         const students = await studentsStore.fetchStudentsBySection(sec.id);
         if (students) {
           studentStanding[sec.code] = await Promise.all(
@@ -127,6 +140,7 @@ export default defineComponent({
           );
         }
       }
+      loading.value = false;
     });
 
     const totalPages = computed(() =>
@@ -162,21 +176,19 @@ export default defineComponent({
       studentStanding,
       getColorClass,
       sectionDescriptions,
+      teacherEmails,
       currentPage,
       totalPages,
       paginatedSubjects,
       searchQuery,
       filteredStudents,
+      loading,
     };
   },
 });
 </script>
 
 <style scoped>
-.theme-card {
-  padding: 20px;
-}
-
 .student-box {
   border-radius: 12px;
   padding: 16px;
