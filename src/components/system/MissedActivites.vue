@@ -10,25 +10,29 @@
       </v-col>
     </v-row>
 
-    <v-row>
-      <v-col
-        v-for="(activity, index) in paginatedActivities"
-        :key="index"
-        cols="12"
-        md="4"
-      >
-        <v-card class="pa-3 activity-box">
-          <p
-            class="font-weight-bold"
-            :style="{ color: getMissedColor(activity.missed) }"
-          >
-            {{ activity.missed }} Students
-          </p>
-          <p class="mt-2 font-weight-bold">{{ activity.subject }}</p>
-        </v-card>
-      </v-col>
-    </v-row>
+    <!-- Apply Transition to the Entire v-row -->
+    <v-scale-transition mode="out-in">
+      <v-row :key="currentPage">
+        <v-col
+          v-for="(activity, index) in paginatedActivities"
+          :key="index"
+          cols="12"
+          md="4"
+        >
+          <v-card class="pa-3 activity-box">
+            <p
+              class="font-weight-bold"
+              :style="{ color: getMissedColor(activity.missed) }"
+            >
+              {{ activity.missed }} Students
+            </p>
+            <p class="mt-2 font-weight-bold">{{ activity.subject }}</p>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-scale-transition>
 
+    <!-- Pagination -->
     <v-pagination
       v-model="currentPage"
       :length="totalPages"
@@ -62,6 +66,9 @@ export default defineComponent({
       { subject: "English 8 - DE1", missed: 45 },
       { subject: "Mapeh 8 - FG2", missed: 30 },
       { subject: "English 7 - ED2", missed: 20 },
+      { subject: "English 9 - ED3", missed: 15 },
+      { subject: "Math 3 - ED6", missed: 4 },
+      { subject: "Programming 9 - FG1", missed: 3 },
     ]);
 
     const currentPage = ref(1);
