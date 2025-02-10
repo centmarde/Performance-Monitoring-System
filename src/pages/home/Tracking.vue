@@ -22,6 +22,7 @@
                 :items="subjects"
                 label="Subject and Section"
                 variant="outlined"
+                class="bold-label"
               ></v-select>
 
               <v-list>
@@ -130,5 +131,8 @@ const filteredStudents = computed(() =>
   background: rgba(0, 105, 92, 0.5);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+}
+.bold-label {
+  font-weight: bold;
 }
 </style>
