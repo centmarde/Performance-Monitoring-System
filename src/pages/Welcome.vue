@@ -78,8 +78,6 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <!-- Feature Section -->
     <v-container class="feature-section">
       <v-row>
         <v-col cols="12" md="4" class="feature-card">
@@ -181,13 +179,17 @@ onMounted(() => {
 .hero {
   flex-grow: 1;
 }
+
 .highlight {
   color: #00bfa5;
 }
 
-/* Feature Section */
+/* Dialog Box */
+.dialog-box {
+  background-color: #004d40;
+  color: #e0f2f1;
+}
 .feature-section {
-  background: linear-gradient(to bottom, #004d40, #00695c);
   padding: 50px 0;
   text-align: center;
 }
@@ -197,6 +199,7 @@ onMounted(() => {
 }
 .feature-icon {
   width: 80px;
-  margin-bottom: 10px;
+  margin: 0 auto 10px; /* Centers the icon horizontally */
+  display: block;
 }
 </style>
