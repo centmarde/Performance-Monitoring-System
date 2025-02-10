@@ -145,21 +145,51 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 
+import { supabase } from "@/lib/supabase";
+
 const showDialog = ref(false);
+const errorMessage = ref("");
+const successMessage = ref("");
 
 const extraInfo = ref({
   firstName: "",
   lastName: "",
   phone: "",
-  address: "",
+  complete_address: "",
 });
 
-const saveExtraInfo = () => {
-  console.log("Saving Extra Info:", extraInfo.value);
+const saveExtraInfo = async () => {
+  errorMessage.value = "";
+  successMessage.value = "";
+
+  const { data: authData, error: authError } = await supabase.auth.getUser();
+
+  if (authError || !authData?.user) {
+    errorMessage.value = "Authentication failed. Please log in again.";
+    return;
+  }
+
+  const { error } = await supabase.from("users").insert([
+    {
+      user_id: authData.user.id,
+      firstname: extraInfo.value.firstName,
+      lastname: extraInfo.value.lastName,
+      phone: extraInfo.value.phone,
+      complete_address: extraInfo.value.complete_address,
+    },
+  ]);
+
+  if (error) {
+    errorMessage.value = "Failed to save information. Please try again.";
+    return;
+  }
+
+  successMessage.value = "Your information has been saved successfully!";
   showDialog.value = false;
 };
 
-// Open dialog automatically when the page loads
+
+
 onMounted(() => {
   showDialog.value = true;
 });
