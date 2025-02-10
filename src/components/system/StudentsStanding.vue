@@ -5,17 +5,18 @@
     transition="fade-transition"
   >
     <v-container>
-      <v-row justify="end">
+      <v-row justify="center">
         <v-col cols="auto">
           <v-card class="pa-3 rounded-card glass-card">
-            
-            <h4 class="font-weight-bold text-end"><span class="mdi mdi-account-school"></span>
-              Student's Standing</h4>
+            <h4 class="font-weight-bold text-end">
+              <span class="mdi mdi-account-school"></span> Student's Standing
+            </h4>
           </v-card>
         </v-col>
       </v-row>
 
-        <v-row>
+      <v-scale-transition mode="out-in">
+        <v-row :key="currentPage">
           <v-col
             v-for="(students, subject) in paginatedSubjects"
             :key="subject"
@@ -26,46 +27,47 @@
               <h3 class="text-center font-weight-bold">{{ subject }}</h3>
               <SearchBar class="my-2" v-model="searchQuery[subject]" />
               <span class="text-body-2 my-4 text-center">{{
-                teacherEmails[subject]
+                sectionDescriptions[subject]
               }}</span>
               <v-divider class="mb-2"></v-divider>
               <PerfectScrollbar :options="{ suppressScrollX: true }">
-                <div >
-                <v-row
-                  v-for="(student, index) in filteredStudents(String(subject))"
-                  :key="student.name"
-                  align="center"
-                 
-                >
-                  <v-col cols="9" class="font-weight-bold">{{
-                    student.name
-                  }}</v-col>
-                  <v-col
-                    cols="3"
-                    class="text-right font-weight-bold"
-                    :class="getColorClass(student.score)"
+                <div>
+                  <v-row
+                    v-for="(student, index) in filteredStudents(
+                      String(subject)
+                    )"
+                    :key="student.name"
+                    align="center"
                   >
-                    {{ student.score }}%
-                  </v-col>
-                  <v-divider
-                    v-if="index < students.length - 1"
-                    class="my-1"
-                  ></v-divider>
-                </v-row>
-              </div>
-                </PerfectScrollbar>
+                    <v-col cols="9" class="font-weight-bold">{{
+                      student.name
+                    }}</v-col>
+                    <v-col
+                      cols="3"
+                      class="text-right font-weight-bold"
+                      :class="getColorClass(student.score)"
+                    >
+                      {{ student.score }}%
+                    </v-col>
+                    <v-divider
+                      v-if="index < students.length - 1"
+                      class="my-1"
+                    ></v-divider>
+                  </v-row>
+                </div>
+              </PerfectScrollbar>
             </v-card>
           </v-col>
         </v-row>
+      </v-scale-transition>
 
-        <v-pagination
-          v-model="currentPage"
-          :length="totalPages"
-          :total-visible="5"
-          class="mt-4"
-        ></v-pagination>
-      </v-container>
-   
+      <v-pagination
+        v-model="currentPage"
+        :length="totalPages"
+        :total-visible="5"
+        class="mt-4"
+      ></v-pagination>
+    </v-container>
   </v-lazy>
 </template>
 
@@ -73,7 +75,6 @@
 import { defineComponent, reactive, ref, computed, onMounted } from "vue";
 import { useSectionsStore } from "@/stores/sectionsStore";
 import { useStudentsStore } from "@/stores/studentsStore";
-import { useTeacherList } from "@/stores/teachersList";
 //@ts-ignore
 import SearchBar from "@/components/common/SearchBar.vue";
 
@@ -89,22 +90,18 @@ export default defineComponent({
   setup() {
     const sectionsStore = useSectionsStore();
     const studentsStore = useStudentsStore();
-    const teacherListStore = useTeacherList();
     const studentStanding = reactive<Record<string, Student[]>>({});
-    const teacherEmails = reactive<Record<string, string>>({});
+    const sectionDescriptions = reactive<Record<string, string>>({});
     const searchQuery = reactive<Record<string, string>>({});
     const currentPage = ref<number>(1);
     const subjectsPerPage = 3;
 
     onMounted(async () => {
       await sectionsStore.fetchSections();
-      await teacherListStore.fetchTeachersInfo();
       const sections = sectionsStore.sections;
-      const teachers = teacherListStore.userInfo;
 
       for (const sec of sections) {
-        const teacher = teachers.find(t => t.id === sec.teacher_id);
-        teacherEmails[sec.code] = teacher ? teacher.email : "N/A";
+        sectionDescriptions[sec.code] = sec.description;
         searchQuery[sec.code] = "";
         const students = await studentsStore.fetchStudentsBySection(sec.id);
         if (students) {
@@ -149,7 +146,9 @@ export default defineComponent({
 
     function filteredStudents(subject: string) {
       return studentStanding[subject].filter((student) =>
-        student.name.toLowerCase().includes(String(searchQuery[subject]).toLowerCase())
+        student.name
+          .toLowerCase()
+          .includes(String(searchQuery[subject]).toLowerCase())
       );
     }
 
@@ -162,7 +161,7 @@ export default defineComponent({
     return {
       studentStanding,
       getColorClass,
-      teacherEmails,
+      sectionDescriptions,
       currentPage,
       totalPages,
       paginatedSubjects,
@@ -175,20 +174,17 @@ export default defineComponent({
 
 <style scoped>
 .theme-card {
-
- 
   padding: 20px;
 }
 
 .student-box {
-  
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
   backdrop-filter: blur(10px); /* Blur effect for glass background */
   -webkit-backdrop-filter: blur(10px); /* Safari support */
-  box-shadow: 0 0 10px #004D40; /* Glowing effect */
+  box-shadow: 0 0 10px #004d40; /* Glowing effect */
 }
 
 .fixed-card {
@@ -204,7 +200,7 @@ export default defineComponent({
 
 .glass-card {
   background: rgba(0, 105, 92, 0.5);
-  backdrop-filter: blur(10px); 
-  -webkit-backdrop-filter: blur(10px); 
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 </style>
