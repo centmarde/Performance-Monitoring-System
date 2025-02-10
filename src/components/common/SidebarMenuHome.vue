@@ -73,6 +73,7 @@ onMounted(() => {
 
 // Define the menu with conditional links for Admin and Teachers
 const menu = ref([
+{ title: "Account", icon: "mdi-account", href: "/profiles" },
   { title: "Dashboard", icon: "mdi-view-dashboard", href: "/home" },
   { title: "Data Entry", icon: "mdi-file-document-edit", href: "/data_entry" },
   { title: "Tracking", icon: "mdi-history", href: "/tracking" },
