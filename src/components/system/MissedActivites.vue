@@ -133,22 +133,24 @@ export default defineComponent({
 }
 
 .activity-box {
-  background: linear-gradient(
-    135deg,
-    var(--card-gradient-start),
-    var(--card-gradient-end)
-  );
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
+  backdrop-filter: blur(10px); /* Blur effect for glass background */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  box-shadow: 0 0 10px #004d40; /* Glowing effect */
   text-align: center;
 }
 
 .grade-chart {
-  background-color: var(--v-background-base);
-  padding: 20px;
   border-radius: 12px;
+  padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
+  backdrop-filter: blur(10px); /* Blur effect for glass background */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  box-shadow: 0 0 10px #004d40; /* Glowing effect */
 }
 
 :root {

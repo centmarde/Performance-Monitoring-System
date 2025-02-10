@@ -15,47 +15,51 @@
         </v-col>
       </v-row>
 
-      <v-row>
-        <v-col
-          v-for="(students, subject) in paginatedSubjects"
-          :key="subject"
-          cols="12"
-          md="4"
-        >
-          <v-card class="pa-3 student-box fixed-card">
-            <h3 class="text-center font-weight-bold">{{ subject }}</h3>
-            <SearchBar class="my-2" v-model="searchQuery[subject]" />
-            <span class="text-body-2 my-4 text-center">{{
-              sectionDescriptions[subject]
-            }}</span>
-            <v-divider class="mb-2"></v-divider>
-            <PerfectScrollbar :options="{ suppressScrollX: true }">
-              <div>
-                <v-row
-                  v-for="(student, index) in filteredStudents(String(subject))"
-                  :key="student.name"
-                  align="center"
-                >
-                  <v-col cols="9" class="font-weight-bold">{{
-                    student.name
-                  }}</v-col>
-                  <v-col
-                    cols="3"
-                    class="text-right font-weight-bold"
-                    :class="getColorClass(student.score)"
+      <v-scale-transition mode="out-in">
+        <v-row :key="currentPage">
+          <v-col
+            v-for="(students, subject) in paginatedSubjects"
+            :key="subject"
+            cols="12"
+            md="4"
+          >
+            <v-card class="pa-3 student-box fixed-card">
+              <h3 class="text-center font-weight-bold">{{ subject }}</h3>
+              <SearchBar class="my-2" v-model="searchQuery[subject]" />
+              <span class="text-body-2 my-4 text-center">{{
+                sectionDescriptions[subject]
+              }}</span>
+              <v-divider class="mb-2"></v-divider>
+              <PerfectScrollbar :options="{ suppressScrollX: true }">
+                <div>
+                  <v-row
+                    v-for="(student, index) in filteredStudents(
+                      String(subject)
+                    )"
+                    :key="student.name"
+                    align="center"
                   >
-                    {{ student.score }}%
-                  </v-col>
-                  <v-divider
-                    v-if="index < students.length - 1"
-                    class="my-1"
-                  ></v-divider>
-                </v-row>
-              </div>
-            </PerfectScrollbar>
-          </v-card>
-        </v-col>
-      </v-row>
+                    <v-col cols="9" class="font-weight-bold">{{
+                      student.name
+                    }}</v-col>
+                    <v-col
+                      cols="3"
+                      class="text-right font-weight-bold"
+                      :class="getColorClass(student.score)"
+                    >
+                      {{ student.score }}%
+                    </v-col>
+                    <v-divider
+                      v-if="index < students.length - 1"
+                      class="my-1"
+                    ></v-divider>
+                  </v-row>
+                </div>
+              </PerfectScrollbar>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-scale-transition>
 
       <v-pagination
         v-model="currentPage"
