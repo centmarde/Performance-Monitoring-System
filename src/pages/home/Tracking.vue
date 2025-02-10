@@ -6,8 +6,8 @@
           <v-col cols="auto">
             <v-card class="pa-3 rounded-card glass-card">
               <h2 class="font-weight-bold text-end">
-                <span class="mdi mdi-account-school"></span> Student's
-                Performance Evaluation
+                <span class="mdi mdi-account-school"></span> Student's Missed
+                Activities Tracking
               </h2>
             </v-card>
           </v-col>
@@ -125,5 +125,10 @@ const filteredStudents = computed(() =>
   backdrop-filter: blur(10px); /* Blur effect for glass background */
   -webkit-backdrop-filter: blur(10px); /* Safari support */
   box-shadow: 0 0 10px #004d40; /* Glowing effect */
+}
+.glass-card {
+  background: rgba(0, 105, 92, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 </style>

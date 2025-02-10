@@ -2,9 +2,15 @@
   <HomeLayout>
     <template #content>
       <v-container>
-        <h2 class="text-center font-weight-bold">
-          Student Performance Evaluation
-        </h2>
+        <v-row justify="center">
+          <v-col cols="auto">
+            <v-card class="pa-3 rounded-card glass-card">
+              <h2 class="font-weight-bold text-end">
+                <span class="mdi mdi-account-school"></span> Subject Management
+              </h2>
+            </v-card>
+          </v-col>
+        </v-row>
 
         <v-row>
           <!-- "Add New" Card -->
@@ -250,5 +256,13 @@ const saveClassRecord = () => {
 }
 .subject-card:hover {
   transform: scale(1.05);
+}
+.glass-card {
+  background: rgba(0, 105, 92, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.rounded-card {
+  border-radius: 12px;
 }
 </style>
