@@ -3,71 +3,76 @@
     <template #content>
       <v-container>
         <v-row justify="end">
-          <v-col cols="4">
+          <v-col cols="4" class="mb-3">
             <SearchBar v-model="searchQuery" />
           </v-col>
         </v-row>
-        <table class="styled-table">
+
+        <v-table>
           <thead>
             <tr>
-              <th rowspan="2">Student ID</th>
-              <th rowspan="2">Name</th>
-              <th colspan="10">Written Works</th>
-              <th rowspan="2">Total</th>
-              <th rowspan="2">PS</th>
-              <th rowspan="2">WS</th>
-              <th colspan="10">Performance Task</th>
-              <th rowspan="2">Total</th>
-              <th rowspan="2">PS</th>
-              <th rowspan="2">WS</th>
-              <th colspan="3">Quarterly Assessment</th> <!-- Parent Column -->
-              <th rowspan="2">Initial Grade</th>
-              <th rowspan="2">Quarterly Grade</th>
-              <th rowspan="2">Actions</th>
+              <th rowspan="3" style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">Student ID</th>
+              <th rowspan="3" style="width: 100px; background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">Name</th>
+              <th colspan="10" style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">Written Works</th>
+              <th colspan="3" rowspan="2" style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">Summary</th>
+              <th colspan="10" style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">Performance Task</th>
+              <th colspan="3" rowspan="2" style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">Summary</th>
+              <th colspan="3" rowspan="2" style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">Quarterly Assessment</th>
+              <th rowspan="3" style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">Initial Grade</th>
+              <th rowspan="3" style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">Quarterly Grade</th>
+              <th rowspan="3" style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">Actions</th>
             </tr>
             <tr>
-              <th v-for="header in wwHeaders" :key="header.value">{{ header.text }}</th>
-              <th v-for="header in ptHeaders" :key="header.value">{{ header.text }}</th>
-              <th>1</th> <!-- Quarterly Assessment Score -->
-              <th>PS</th> 
-              <th>WS</th> 
+              <th v-for="header in wwHeaders" :key="header.value" style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">{{ header.text }}</th>
+              <th v-for="header in ptHeaders" :key="header.value" style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">{{ header.text }}</th>
+            </tr>
+            <tr>
+              <th v-for="header in wwHeaders" :key="header.value" style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">{{ header.points }}</th>
+              <th style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">Total</th>
+              <th style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">PS</th>
+              <th style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">WS</th>
+              <th v-for="header in ptHeaders" :key="header.value" style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">{{ header.points }}</th>
+              <th style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">Total</th>
+              <th style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">PS</th>
+              <th style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">WS</th>
+              <th style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">1</th>
+              <th style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">PS</th>
+              <th style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">WS</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in paginatedData" :key="item.id">
-              <td><input v-model="item.id" disabled /></td>
-              <td><input v-model="item.name" style="width: 100px;" /></td>
+              <td><input v-model="item.id" disabled style="width: 30px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" /></td>
+              <td><input v-model="item.name" style="width: 100px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" /></td>
               <td v-for="n in 10" :key="'ww' + n">
-                <input v-model="item['ww' + n]" />
+                <input v-model="item['ww' + n]" type="number" style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" />
               </td>
-              <td><input v-model="item.wwTotal" disabled /></td>
-              <td><input v-model="item.wwps" disabled /></td>
-              <td><input v-model="item.wwws" disabled /></td>
+              <td><input v-model="item.wwTotal" disabled style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" /></td>
+              <td><input v-model="item.wwps" disabled style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" /></td>
+              <td><input v-model="item.wwws" disabled style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" /></td>
               <td v-for="n in 10" :key="'pt' + n">
-                <input v-model="item['pt' + n]" />
+                <input v-model="item['pt' + n]" type="number" style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" />
               </td>
-              <td><input v-model="item.ptTotal" disabled /></td>
-              <td><input v-model="item.ptps" disabled /></td>
-              <td><input v-model="item.ptws" disabled /></td>
-              <td><input v-model="item.qa1" /></td> <!-- Quarterly Assessment Score -->
-              <td><input v-model="item.qaps" disabled /></td>
-              <td><input v-model="item.qaws" disabled /></td>
-              <td><input v-model="item.initial_grade" /></td>
-              <td><input v-model="item.quarterly_grade" /></td>
-              <td><v-btn @click="saveChanges(item)">Save</v-btn></td>
+              <td><input v-model="item.ptTotal" disabled style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" /></td>
+              <td><input v-model="item.ptps" disabled style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" /></td>
+              <td><input v-model="item.ptws" disabled style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" /></td>
+              <td><input v-model="item.qa1" type="number" style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" /></td>
+              <td><input v-model="item.qaps" disabled style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" /></td>
+              <td><input v-model="item.qaws" disabled style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" /></td>
+              <td><input v-model="item.initial_grade" disabled style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" /></td>
+              <td><input v-model="item.quarterly_grade" disabled style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" /></td>
+              <td><button class="save-btn" @click="saveChanges(item)">Save</button></td>
             </tr>
           </tbody>
-        </table>
-        <v-pagination
-          v-model="page"
-          :length="pageCount"
-          :total-visible="5"
-          class="mt-4"
-        ></v-pagination>
+        </v-table>
+
+        <v-pagination v-model="page" :length="pageCount" :total-visible="5" class="mt-4"></v-pagination>
       </v-container>
     </template>
   </HomeLayout>
 </template>
+
+
 
 
 
@@ -89,29 +94,29 @@ const page = ref(1);
 const itemsPerPage = 5;
 
 const wwHeaders = [
-  { text: '1', value: 'ww1' },
-  { text: '2', value: 'ww2' },
-  { text: '3', value: 'ww3' },
-  { text: '4', value: 'ww4' },
-  { text: '5', value: 'ww5' },
-  { text: '6', value: 'ww6' },
-  { text: '7', value: 'ww7' },
-  { text: '8', value: 'ww8' },
-  { text: '9', value: 'ww9' },
-  { text: '10', value: 'ww10' },
+  { text: '1', value: 'ww1', points: '100%' },
+  { text: '2', value: 'ww2', points: '100%' },
+  { text: '3', value: 'ww3', points: '100%' },
+  { text: '4', value: 'ww4', points: '100%' },
+  { text: '5', value: 'ww5', points: '100%' },
+  { text: '6', value: 'ww6', points: '100%' },
+  { text: '7', value: 'ww7', points: '100%' },
+  { text: '8', value: 'ww8', points: '100%' },
+  { text: '9', value: 'ww9', points: '100%' },
+  { text: '10', value: 'ww10', points: '100%' },
 ];
 
 const ptHeaders = [
-  { text: '1', value: 'pt1' },
-  { text: '2', value: 'pt2' },
-  { text: '3', value: 'pt3' },
-  { text: '4', value: 'pt4' },
-  { text: '5', value: 'pt5' },
-  { text: '6', value: 'pt6' },
-  { text: '7', value: 'pt7' },
-  { text: '8', value: 'pt8' },
-  { text: '9', value: 'pt9' },
-  { text: '10', value: 'pt10' },
+  { text: '1', value: 'pt1', points: '100%' },
+  { text: '2', value: 'pt2', points: '100%' },
+  { text: '3', value: 'pt3', points: '100%' },
+  { text: '4', value: 'pt4', points: '100%' },
+  { text: '5', value: 'pt5', points: '100%' },
+  { text: '6', value: 'pt6', points: '100%' },
+  { text: '7', value: 'pt7', points: '100%' },
+  { text: '8', value: 'pt8', points: '100%' },
+  { text: '9', value: 'pt9', points: '100%' },
+  { text: '10', value: 'pt10', points: '100%' },
 ];
 
 const filteredData = computed(() => {
@@ -200,21 +205,53 @@ onMounted(async () => {
   display: block;
   overflow-x: auto; /* Enable horizontal scrolling */
   white-space: nowrap; /* Prevent table cells from wrapping */
+ 
 }
 
-.styled-table th,
+/* Table Headers */
+.styled-table th {
+  background: #004d40; /* Deep teal for contrast */
+  color: white;
+  padding: 14px;
+  border: 1px solid #00796b;
+  text-align: center;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+/* Table Body */
 .styled-table td {
   padding: 12px;
-  border: 1px solid #00796b; /* Darker teal border */
+  border: 1px solid #00796b;
+  text-align: center;
 }
 
-.styled-table th {
-  background: #00695c; /* Darker teal for contrast */
-  color: white;
+/* Alternate row colors for better readability */
+.styled-table tbody tr:nth-child(even) {
+  background-color: #f1f8e9; /* Light green */
 }
 
+/* Input Fields */
 .styled-table input {
-  width: 50px; /* Smaller input size */
-  padding:1px; /* Adjust padding for smaller input */
+  width: 50px; /* Increased width for better usability */
+  height: 36px; /* Increased height for better readability */
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 6px;
+  font-size: 16px; /* Bigger font for readability */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .styled-table input {
+    width: 100px; /* Slightly smaller for mobile */
+    height: 32px;
+    font-size: 14px;
+  }
 }
 </style>
+
+
