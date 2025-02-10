@@ -3,15 +3,15 @@
     v-model="drawer"
     app
     color="#004D40"
-    class="rounded-e-xl fixed-sidebar"
+    class="fixed-sidebar"
   >
     <!-- Toggle Button -->
-    <v-btn icon @click="drawer = !drawer" class="toggle-btn">
+    <v-btn icon @click="drawer = !drawer" class="toggle-btn dominant">
       <v-icon>{{ drawer ? "mdi-chevron-left" : "mdi-chevron-right" }}</v-icon>
     </v-btn>
 
     <!-- User Profile Section -->
-    <v-sheet color="#00695C" class="pa-4 rounded-te-xl text-center">
+    <v-sheet color="#00695C" class="pa-4 text-center">
       <v-progress-circular
         model-value="80"
         color="#B49239"
@@ -89,6 +89,17 @@ const menu = ref([
   background-color: #00796b;
   color: white;
   border-radius: 50%;
+  z-index: 1100; /* Ensure it covers other components */
+  width: 60px; /* Increase size for dominance */
+  height: 60px; /* Increase size for dominance */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-btn.dominant {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for prominence */
+  border: 2px solid white; /* Add border for prominence */
 }
 
 /* ✅ Sidebar Styling */

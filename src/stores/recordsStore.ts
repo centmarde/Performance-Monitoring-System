@@ -29,8 +29,24 @@ export const useRecordsStore = defineStore('recordsStore', () => {
     return records.value;
   }
 
+  async function fetchAllRecords() {
+    const { data, error } = await supabase
+      .from('records')
+      .select('*');
+
+    if (error) {
+      console.error('Error fetching records:', error);
+      records.value = [];
+      return null;
+    }
+
+    records.value = data as Record[];
+    return records.value;
+  }
+
   return {
     records,
     fetchRecordsBySection,
+    fetchAllRecords,
   };
 });

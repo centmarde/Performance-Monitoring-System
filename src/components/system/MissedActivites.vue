@@ -1,102 +1,82 @@
 <template>
-  <v-card elevation="8">
-    <v-container>
-      <v-row>
-        <v-col cols="12" class="text-center">
-          <h2 class="font-weight-bold">Missed Activities</h2>
-          <v-divider class="mb-4"></v-divider>
-        </v-col>
-      </v-row>
+  <v-container>
+    <v-row justify="center">
+      <v-col cols="auto">
+        <v-card class="pa-3 rounded-card glass-card">
+          <h4 class="font-weight-bold text-end">
+            <span class="mdi mdi-account-school"></span> Missed Activities
+          </h4>
+        </v-card>
+      </v-col>
+    </v-row>
 
-      <v-row>
+    <!-- Apply Transition to the Entire v-row -->
+    <v-scale-transition mode="out-in">
+      <v-row :key="currentPage">
         <v-col
           v-for="(activity, index) in paginatedActivities"
-          :key="`${activity.subject}-${index}`"
+          :key="index"
           cols="12"
           md="4"
-          class="text-center"
         >
-          <v-card class="pa-3" outlined>
-            <v-progress-circular
-              :size="100"
-              :width="10"
-              :value="(activity.missed / maxMissed) * 100"
-              :color="getMissedColor(activity.missed)"
-              class="my-2"
+          <v-card class="pa-3 activity-box">
+            <p
+              class="font-weight-bold"
+              :style="{ color: getMissedColor(activity.missed) }"
             >
-              <span
-                :style="{
-                  color: getMissedColor(activity.missed),
-                  fontWeight: 'bold',
-                }"
-              >
-                {{ activity.missed }} Students
-              </span>
-            </v-progress-circular>
+              {{ activity.missed }} Students
+            </p>
             <p class="mt-2 font-weight-bold">{{ activity.subject }}</p>
           </v-card>
         </v-col>
       </v-row>
+    </v-scale-transition>
 
-      <v-row justify="center" class="mt-4">
-        <v-btn @click="prevPage" :disabled="currentPage === 1"> Prev </v-btn>
-        <span class="mx-3 mt-1 font-weight-bold"
-          >Page {{ currentPage }} of {{ totalPages }}</span
-        >
-        <v-btn @click="nextPage" :disabled="currentPage === totalPages">
-          Next
-        </v-btn>
-      </v-row>
+    <!-- Pagination -->
+    <v-pagination
+      v-model="currentPage"
+      :length="totalPages"
+      :total-visible="5"
+      class="mt-4"
+    ></v-pagination>
 
-      <v-row>
-        <v-col cols="12">
-          <v-card class="pa-4">
-            <h3 class="text-center font-weight-bold">Grade Distribution</h3>
-            <v-chart :option="chartOptions" style="height: 400px"></v-chart>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-card>
+    <!-- Grade Distribution Section -->
+    <v-row>
+      <v-col cols="12">
+        <v-card class="pa-4 grade-chart mt-5">
+          <h3 class="text-center font-weight-bold">
+            Missed Activities Overview
+          </h3>
+          <v-chart
+            :option="chartOptions"
+            style="height: 300px"
+            key="currentPage"
+          ></v-chart>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, computed } from "vue";
 import "echarts";
 import VChart from "vue-echarts";
 
 export default defineComponent({
   components: { VChart },
   setup() {
+    const totalStudents = 100; // Example total student count
+
     const missedActivities = ref([
-      { subject: "English 8 - DE1", missed: 10 },
-      { subject: "Mapeh 8 - FG2", missed: 6 },
-      { subject: "English 7 - ED2", missed: 3 },
+      { subject: "English 8 - DE1", missed: 45 },
+      { subject: "Mapeh 8 - FG2", missed: 30 },
+      { subject: "English 7 - ED2", missed: 20 },
+      { subject: "English 9 - ED3", missed: 15 },
+      { subject: "Math 3 - ED6", missed: 4 },
+      { subject: "Programming 9 - FG1", missed: 3 },
     ]);
 
-    const studentStanding = ref({
-      TEST: [
-        { name: "OMLANG", score: 87 },
-        { name: "BASLOT", score: 79 },
-        { name: "MIRAL", score: 78 },
-      ],
-      "Mapeh 8 - FG2": [
-        { name: "Student D", score: 60 },
-        { name: "Student E", score: 75 },
-        { name: "Student F", score: 80 },
-      ],
-      "English 7 - ED2": [
-        { name: "Student G", score: 70 },
-        { name: "Student H", score: 65 },
-        { name: "Student I", score: 72 },
-      ],
-    });
-
-    const maxMissed = computed(() => {
-      return Math.max(...missedActivities.value.map((a) => a.missed), 1);
-    });
-
-    // Pagination
     const currentPage = ref(1);
     const itemsPerPage = 3;
 
@@ -109,42 +89,37 @@ export default defineComponent({
       return missedActivities.value.slice(start, start + itemsPerPage);
     });
 
-    function prevPage() {
-      if (currentPage.value > 1) currentPage.value--;
-    }
-
-    function nextPage() {
-      if (currentPage.value < totalPages.value) currentPage.value++;
-    }
-
     function getMissedColor(missed) {
-      if (missed >= 10) return "red"; // High risk
-      if (missed >= 6) return "orange"; // Moderate risk
-      return "green"; // Low risk
+      if (missed >= 40) return "#F44336";
+      if (missed >= 20) return "#FFC107";
+      return "#4CAF50";
     }
 
-    // Compute Grade Distribution Data
+    // Grade Distribution Chart Data
     const chartOptions = computed(() => {
-      const subjects = Object.keys(studentStanding.value);
-      const averageScores = subjects.map((subject) => {
-        const students = studentStanding.value[subject] || [];
-        return students.length
-          ? students.reduce((acc, student) => acc + student.score, 0) /
-              students.length
-          : 0;
-      });
+      const subjects = paginatedActivities.value.map(
+        (activity) => activity.subject
+      );
+      const missedPercentages = paginatedActivities.value.map(
+        (activity) => ((activity.missed / totalStudents) * 100).toFixed(2) // Keep 2 decimal places
+      );
 
       return {
         tooltip: { trigger: "axis" },
-        xAxis: { type: "category", data: subjects, axisLabel: { rotate: 25 } },
-        yAxis: { type: "value", min: 50, max: 100 },
+        xAxis: { type: "category", data: subjects },
+        yAxis: { type: "value", axisLabel: { formatter: "{value}%" } },
         series: [
           {
-            name: "Average Score",
-            data: averageScores,
+            name: "Missed Percentage",
             type: "bar",
-            color: "#3f51b5",
-            label: { show: true, position: "top", fontWeight: "bold" },
+            data: missedPercentages,
+            color: "#004D40",
+            label: {
+              show: true,
+              position: "top",
+              fontWeight: "bold",
+              formatter: "{c}%", // Ensures correct percentage formatting
+            },
           },
         ],
       };
@@ -153,23 +128,67 @@ export default defineComponent({
     return {
       missedActivities,
       paginatedActivities,
-      maxMissed,
       getMissedColor,
       currentPage,
       totalPages,
-      prevPage,
-      nextPage,
       chartOptions,
+      totalStudents,
     };
   },
 });
 </script>
 
 <style scoped>
-h2 {
-  color: #e53935;
+.theme-card {
+  background-color: var(--v-background-base);
+  color: var(--v-text-base);
+  padding: 20px;
 }
-h3 {
-  color: #000;
+
+.activity-box {
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
+  backdrop-filter: blur(10px); /* Blur effect for glass background */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  box-shadow: 0 0 10px #004d40; /* Glowing effect */
+  text-align: center;
+}
+
+.grade-chart {
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
+  backdrop-filter: blur(10px); /* Blur effect for glass background */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  box-shadow: 0 0 10px #004d40; /* Glowing effect */
+}
+
+:root {
+  --v-background-base: #ffffff;
+  --v-text-base: #000000;
+  --card-gradient-start: #e0e0e0;
+  --card-gradient-end: #bdbdbd;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --v-background-base: #121212;
+    --v-text-base: #ffffff;
+    --card-gradient-start: #323232;
+    --card-gradient-end: #1e1e1e;
+  }
+}
+
+.rounded-card {
+  border-radius: 12px;
+}
+
+.glass-card {
+  background: rgba(0, 105, 92, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 </style>

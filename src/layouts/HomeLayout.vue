@@ -1,13 +1,13 @@
 <template>
-   <v-app>
+  <v-app>
     <v-main>
       <v-container fluid>
         <v-row>
           <v-col cols="12">
-           <SidebarMenuHome/>
+            <SidebarMenuHome />
           </v-col>
+          <InnerNavBar />
           <v-col cols="12">
-            <InnerNavBar />
             <slot name="content"></slot>
             <ScrollDown />
           </v-col>
@@ -19,5 +19,5 @@
 </template>
 
 <script lang="ts" setup>
-  //
+//
 </script>

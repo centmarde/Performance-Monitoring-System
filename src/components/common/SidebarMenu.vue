@@ -4,7 +4,7 @@
     v-model="drawer"
     app
     color="#004D40"
-    class="rounded-e-xl fixed-sidebar"
+    class="fixed-sidebar"
   >
     <!-- Toggle Button Inside Sidebar -->
     <v-btn icon @click="drawer = !drawer" class="toggle-btn">
@@ -12,7 +12,7 @@
     </v-btn>
 
     <!-- User Info Section -->
-    <v-sheet color="#00695C" class="pa-4 rounded-te-xl text-center">
+    <v-sheet color="#00695C" class="pa-4 text-center">
       <v-progress-circular
         model-value="80"
         color="#B49239"
