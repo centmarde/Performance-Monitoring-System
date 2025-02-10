@@ -30,8 +30,12 @@
           </router-link>
         </v-col>
         <v-col cols="12" md="5">
-  <v-img src="@/assets/Hero.png" class="floating-img" width="100%"></v-img>
-</v-col>
+          <v-img
+            src="@/assets/Hero.png"
+            class="floating-img"
+            width="100%"
+          ></v-img>
+        </v-col>
       </v-row>
     </v-container>
 
@@ -78,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 
 const showDialog = ref(false);
 
@@ -93,6 +97,11 @@ const saveExtraInfo = () => {
   console.log("Saving Extra Info:", extraInfo.value);
   showDialog.value = false;
 };
+
+// Open dialog automatically when the page loads
+onMounted(() => {
+  showDialog.value = true;
+});
 </script>
 
 <style lang="scss" scoped>
