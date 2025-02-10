@@ -1,53 +1,51 @@
 <template>
- 
-    <v-container>
-      <v-row justify="end">
-        <v-col cols="auto">
-          <v-card class="pa-3 rounded-card glass-card">
-            
-            <h4 class="font-weight-bold text-end"><span class="mdi mdi-account-school"></span>
-              Missed Activities</h4>
-          </v-card>
-        </v-col>
-      </v-row>
+  <v-container>
+    <v-row justify="center">
+      <v-col cols="auto">
+        <v-card class="pa-3 rounded-card glass-card">
+          <h4 class="font-weight-bold text-end">
+            <span class="mdi mdi-account-school"></span> Missed Activities
+          </h4>
+        </v-card>
+      </v-col>
+    </v-row>
 
-      <v-row>
-        <v-col
-          v-for="(activity, index) in paginatedActivities"
-          :key="index"
-          cols="12"
-          md="4"
-        >
-          <v-card class="pa-3 activity-box">
-            <p
-              class="font-weight-bold"
-              :style="{ color: getMissedColor(activity.missed) }"
-            >
-              {{ activity.missed }} Students
-            </p>
-            <p class="mt-2 font-weight-bold">{{ activity.subject }}</p>
-          </v-card>
-        </v-col>
-      </v-row>
+    <v-row>
+      <v-col
+        v-for="(activity, index) in paginatedActivities"
+        :key="index"
+        cols="12"
+        md="4"
+      >
+        <v-card class="pa-3 activity-box">
+          <p
+            class="font-weight-bold"
+            :style="{ color: getMissedColor(activity.missed) }"
+          >
+            {{ activity.missed }} Students
+          </p>
+          <p class="mt-2 font-weight-bold">{{ activity.subject }}</p>
+        </v-card>
+      </v-col>
+    </v-row>
 
-      <v-pagination
-        v-model="currentPage"
-        :length="totalPages"
-        :total-visible="5"
-        class="mt-4"
-      ></v-pagination>
+    <v-pagination
+      v-model="currentPage"
+      :length="totalPages"
+      :total-visible="5"
+      class="mt-4"
+    ></v-pagination>
 
-      <!-- Grade Distribution Section -->
-      <v-row>
-        <v-col cols="12">
-          <v-card class="pa-4 grade-chart">
-            <h3 class="text-center font-weight-bold">Grade Distribution</h3>
-            <v-chart :option="chartOptions" style="height: 300px;"></v-chart>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-
+    <!-- Grade Distribution Section -->
+    <v-row>
+      <v-col cols="12">
+        <v-card class="pa-4 grade-chart">
+          <h3 class="text-center font-weight-bold">Grade Distribution</h3>
+          <v-chart :option="chartOptions" style="height: 300px"></v-chart>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -175,7 +173,7 @@ export default defineComponent({
 
 .glass-card {
   background: rgba(0, 105, 92, 0.5);
-  backdrop-filter: blur(10px); 
-  -webkit-backdrop-filter: blur(10px); 
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 </style>

@@ -5,37 +5,36 @@
     transition="fade-transition"
   >
     <v-container>
-      <v-row justify="end">
+      <v-row justify="center">
         <v-col cols="auto">
           <v-card class="pa-3 rounded-card glass-card">
-            
-            <h4 class="font-weight-bold text-end"><span class="mdi mdi-account-school"></span>
-              Student's Standing</h4>
+            <h4 class="font-weight-bold text-end">
+              <span class="mdi mdi-account-school"></span> Student's Standing
+            </h4>
           </v-card>
         </v-col>
       </v-row>
 
-        <v-row>
-          <v-col
-            v-for="(students, subject) in paginatedSubjects"
-            :key="subject"
-            cols="12"
-            md="4"
-          >
-            <v-card class="pa-3 student-box fixed-card">
-              <h3 class="text-center font-weight-bold">{{ subject }}</h3>
-              <SearchBar class="my-2" v-model="searchQuery[subject]" />
-              <span class="text-body-2 my-4 text-center">{{
-                sectionDescriptions[subject]
-              }}</span>
-              <v-divider class="mb-2"></v-divider>
-              <PerfectScrollbar :options="{ suppressScrollX: true }">
-                <div >
+      <v-row>
+        <v-col
+          v-for="(students, subject) in paginatedSubjects"
+          :key="subject"
+          cols="12"
+          md="4"
+        >
+          <v-card class="pa-3 student-box fixed-card">
+            <h3 class="text-center font-weight-bold">{{ subject }}</h3>
+            <SearchBar class="my-2" v-model="searchQuery[subject]" />
+            <span class="text-body-2 my-4 text-center">{{
+              sectionDescriptions[subject]
+            }}</span>
+            <v-divider class="mb-2"></v-divider>
+            <PerfectScrollbar :options="{ suppressScrollX: true }">
+              <div>
                 <v-row
                   v-for="(student, index) in filteredStudents(String(subject))"
                   :key="student.name"
                   align="center"
-                 
                 >
                   <v-col cols="9" class="font-weight-bold">{{
                     student.name
@@ -53,19 +52,18 @@
                   ></v-divider>
                 </v-row>
               </div>
-                </PerfectScrollbar>
-            </v-card>
-          </v-col>
-        </v-row>
+            </PerfectScrollbar>
+          </v-card>
+        </v-col>
+      </v-row>
 
-        <v-pagination
-          v-model="currentPage"
-          :length="totalPages"
-          :total-visible="5"
-          class="mt-4"
-        ></v-pagination>
-      </v-container>
-   
+      <v-pagination
+        v-model="currentPage"
+        :length="totalPages"
+        :total-visible="5"
+        class="mt-4"
+      ></v-pagination>
+    </v-container>
   </v-lazy>
 </template>
 
@@ -143,10 +141,12 @@ export default defineComponent({
     });
 
     function filteredStudents(subject: string) {
-  return studentStanding[subject].filter((student) =>
-  student.name.toLowerCase().includes(String(searchQuery[subject]).toLowerCase())
-  );
-}
+      return studentStanding[subject].filter((student) =>
+        student.name
+          .toLowerCase()
+          .includes(String(searchQuery[subject]).toLowerCase())
+      );
+    }
 
     function getColorClass(score: number): string {
       if (score >= 80) return "text-green";
@@ -170,20 +170,17 @@ export default defineComponent({
 
 <style scoped>
 .theme-card {
-
- 
   padding: 20px;
 }
 
 .student-box {
-  
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
   backdrop-filter: blur(10px); /* Blur effect for glass background */
   -webkit-backdrop-filter: blur(10px); /* Safari support */
-  box-shadow: 0 0 10px #004D40; /* Glowing effect */
+  box-shadow: 0 0 10px #004d40; /* Glowing effect */
 }
 
 .fixed-card {
@@ -199,7 +196,7 @@ export default defineComponent({
 
 .glass-card {
   background: rgba(0, 105, 92, 0.5);
-  backdrop-filter: blur(10px); 
-  -webkit-backdrop-filter: blur(10px); 
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 </style>
