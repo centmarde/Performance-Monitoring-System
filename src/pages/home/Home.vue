@@ -2,14 +2,20 @@
   <HomeLayout>
     <template #content>
       <div>
-        <StudentsStanding />
-        <MissedActivites />
+        <KeepAlive>
+          <StudentsStanding :is="activeComponent" />
+        </KeepAlive>
+        <KeepAlive>
+          <MissedActivites :is="activeComponent" />
+        </KeepAlive>
       </div>
     </template>
   </HomeLayout>
 </template>
 
 <script setup lang="ts">
-// import { supabase } from '../lib/supabase';
+import { ref } from 'vue';
 import HomeLayout from "@/layouts/HomeLayout.vue";
+
+const activeComponent = ref('StudentsStanding'); 
 </script>
