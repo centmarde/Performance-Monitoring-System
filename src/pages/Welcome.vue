@@ -105,7 +105,7 @@
           ></v-text-field>
           <v-textarea
             label="Complete Address"
-            v-model="extraInfo.address"
+            v-model="extraInfo.complete_address"
             outlined
             required
           ></v-textarea>
