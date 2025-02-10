@@ -4,14 +4,16 @@
     :options="{ threshold: 0.5 }"
     transition="fade-transition"
   >
-    <v-card elevation="8" class="mb-6 theme-card">
-      <v-container>
-        <v-row>
-          <v-col cols="12" class="text-center">
-            <h2 class="font-weight-bold">Student's Standing</h2>
-            <v-divider class="mb-4"></v-divider>
-          </v-col>
-        </v-row>
+    <v-container>
+      <v-row justify="end">
+        <v-col cols="auto">
+          <v-card class="pa-3 rounded-card glass-card">
+            
+            <h4 class="font-weight-bold text-end"><span class="mdi mdi-account-school"></span>
+              Student's Standing</h4>
+          </v-card>
+        </v-col>
+      </v-row>
 
         <v-row>
           <v-col
@@ -22,27 +24,18 @@
           >
             <v-card class="pa-3 student-box fixed-card">
               <h3 class="text-center font-weight-bold">{{ subject }}</h3>
-              <v-text-field
-                v-model="searchQuery[subject]"
-                label="Search student"
-                dense
-                outlined
-                class="search-box"
-                hide-details
-                style="max-width: 100%"
-                prepend-inner-icon="mdi-magnify"
-              ></v-text-field>
-
-              <span class="text-body-2">{{
+              <SearchBar class="my-2" v-model="searchQuery[subject]" />
+              <span class="text-body-2 my-4 text-center">{{
                 sectionDescriptions[subject]
               }}</span>
               <v-divider class="mb-2"></v-divider>
-              <div class="scrollable-content">
+              <PerfectScrollbar :options="{ suppressScrollX: true }">
+                <div >
                 <v-row
-                  v-for="(student, index) in filteredStudents(subject)"
+                  v-for="(student, index) in filteredStudents(String(subject))"
                   :key="student.name"
                   align="center"
-                  class="student-row"
+                 
                 >
                   <v-col cols="9" class="font-weight-bold">{{
                     student.name
@@ -60,6 +53,7 @@
                   ></v-divider>
                 </v-row>
               </div>
+                </PerfectScrollbar>
             </v-card>
           </v-col>
         </v-row>
@@ -71,7 +65,7 @@
           class="mt-4"
         ></v-pagination>
       </v-container>
-    </v-card>
+   
   </v-lazy>
 </template>
 
@@ -79,6 +73,8 @@
 import { defineComponent, reactive, ref, computed, onMounted } from "vue";
 import { useSectionsStore } from "@/stores/sectionsStore";
 import { useStudentsStore } from "@/stores/studentsStore";
+//@ts-ignore
+import SearchBar from "@/components/common/SearchBar.vue";
 
 interface Student {
   name: string;
@@ -86,6 +82,9 @@ interface Student {
 }
 
 export default defineComponent({
+  components: {
+    SearchBar,
+  },
   setup() {
     const sectionsStore = useSectionsStore();
     const studentsStore = useStudentsStore();
@@ -144,10 +143,10 @@ export default defineComponent({
     });
 
     function filteredStudents(subject: string) {
-      return studentStanding[subject].filter((student) =>
-        student.name.toLowerCase().includes(searchQuery[subject].toLowerCase())
-      );
-    }
+  return studentStanding[subject].filter((student) =>
+  student.name.toLowerCase().includes(String(searchQuery[subject]).toLowerCase())
+  );
+}
 
     function getColorClass(score: number): string {
       if (score >= 80) return "text-green";
@@ -171,20 +170,20 @@ export default defineComponent({
 
 <style scoped>
 .theme-card {
-  background-color: var(--v-background-base);
-  color: var(--v-text-base);
+
+ 
   padding: 20px;
 }
 
 .student-box {
-  background: linear-gradient(
-    135deg,
-    var(--card-gradient-start),
-    var(--card-gradient-end)
-  );
+  
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
+  backdrop-filter: blur(10px); /* Blur effect for glass background */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  box-shadow: 0 0 10px #004D40; /* Glowing effect */
 }
 
 .fixed-card {
@@ -193,24 +192,14 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
 }
-.search-box {
-  width: 100%; /* Fix width */
-  max-width: 250px; /* Prevent expansion */
-  min-width: 250px; /* Keep size fixed */
-  flex: none; /* Prevents stretching */
+
+.rounded-card {
+  border-radius: 12px;
 }
 
-.scrollable-content {
-  flex-grow: 1;
-  overflow-y: auto;
-  max-height: 250px;
-  padding-right: 8px;
-}
-
-.student-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 0;
+.glass-card {
+  background: rgba(0, 105, 92, 0.5);
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px); 
 }
 </style>

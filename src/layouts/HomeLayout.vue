@@ -6,8 +6,8 @@
           <v-col cols="12">
            <SidebarMenuHome/>
           </v-col>
-          <v-col cols="12">
             <InnerNavBar />
+          <v-col cols="12">
             <slot name="content"></slot>
             <ScrollDown />
           </v-col>

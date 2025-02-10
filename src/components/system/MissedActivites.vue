@@ -1,10 +1,13 @@
 <template>
-  <v-card elevation="8" class="theme-card">
+ 
     <v-container>
-      <v-row>
-        <v-col cols="12" class="text-center">
-          <h2 class="font-weight-bold">Missed Activities</h2>
-          <v-divider class="mb-4"></v-divider>
+      <v-row justify="end">
+        <v-col cols="auto">
+          <v-card class="pa-3 rounded-card glass-card">
+            
+            <h4 class="font-weight-bold text-end"><span class="mdi mdi-account-school"></span>
+              Missed Activities</h4>
+          </v-card>
         </v-col>
       </v-row>
 
@@ -39,12 +42,12 @@
         <v-col cols="12">
           <v-card class="pa-4 grade-chart">
             <h3 class="text-center font-weight-bold">Grade Distribution</h3>
-            <v-chart :option="chartOptions" style="height: 300px"></v-chart>
+            <v-chart :option="chartOptions" style="height: 300px;"></v-chart>
           </v-card>
         </v-col>
       </v-row>
     </v-container>
-  </v-card>
+
 </template>
 
 <script>
@@ -99,7 +102,7 @@ export default defineComponent({
             name: "Missed Percentage",
             type: "bar",
             data: missedPercentages,
-            color: "#8BC34A",
+            color: "#004D40",
             label: {
               show: true,
               position: "top",
@@ -164,5 +167,15 @@ export default defineComponent({
     --card-gradient-start: #323232;
     --card-gradient-end: #1e1e1e;
   }
+}
+
+.rounded-card {
+  border-radius: 12px;
+}
+
+.glass-card {
+  background: rgba(0, 105, 92, 0.5);
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px); 
 }
 </style>
