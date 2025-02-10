@@ -173,7 +173,7 @@ const saveExtraInfo = async () => {
       firstname: extraInfo.value.firstName,
       lastname: extraInfo.value.lastName,
       phone: extraInfo.value.phone,
-      complete_address: extraInfo.value.address,
+      complete_address: extraInfo.value.complete_address,
     },
   ]);
 
