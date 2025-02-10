@@ -44,7 +44,9 @@
     <v-row>
       <v-col cols="12">
         <v-card class="pa-4 grade-chart">
-          <h3 class="text-center font-weight-bold">Grade Distribution</h3>
+          <h3 class="text-center font-weight-bold">
+            Missed Activities Overview
+          </h3>
           <v-chart
             :option="chartOptions"
             style="height: 300px"

@@ -230,8 +230,9 @@ const saveClassRecord = () => {
   text-align: center;
 }
 .add-new-card {
-  border: 2px dashed #004d40;
-  background-color: #f5f5f5;
+  border: 2px dashed var(--v-primary-base);
+  background-color: var(--v-background-base);
+  color: var(--v-text-base);
   cursor: pointer;
   text-align: center;
   height: 200px;
