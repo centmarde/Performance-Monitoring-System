@@ -45,7 +45,11 @@
       <v-col cols="12">
         <v-card class="pa-4 grade-chart">
           <h3 class="text-center font-weight-bold">Grade Distribution</h3>
-          <v-chart :option="chartOptions" style="height: 300px"></v-chart>
+          <v-chart
+            :option="chartOptions"
+            style="height: 300px"
+            key="currentPage"
+          ></v-chart>
         </v-card>
       </v-col>
     </v-row>
@@ -91,11 +95,11 @@ export default defineComponent({
 
     // Grade Distribution Chart Data
     const chartOptions = computed(() => {
-      const subjects = missedActivities.value.map(
+      const subjects = paginatedActivities.value.map(
         (activity) => activity.subject
       );
-      const missedPercentages = missedActivities.value.map(
-        (activity) => (activity.missed / totalStudents) * 100
+      const missedPercentages = paginatedActivities.value.map(
+        (activity) => ((activity.missed / totalStudents) * 100).toFixed(2) // Keep 2 decimal places
       );
 
       return {
@@ -112,7 +116,7 @@ export default defineComponent({
               show: true,
               position: "top",
               fontWeight: "bold",
-              formatter: "{c}%",
+              formatter: "{c}%", // Ensures correct percentage formatting
             },
           },
         ],
