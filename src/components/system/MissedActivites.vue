@@ -1,17 +1,18 @@
 <template>
- 
-    <v-container>
-      <v-row justify="end">
-        <v-col cols="auto">
-          <v-card class="pa-3 rounded-card glass-card">
-            
-            <h4 class="font-weight-bold text-end"><span class="mdi mdi-account-school"></span>
-              Missed Activities</h4>
-          </v-card>
-        </v-col>
-      </v-row>
+  <v-container>
+    <v-row justify="center">
+      <v-col cols="auto">
+        <v-card class="pa-3 rounded-card glass-card">
+          <h4 class="font-weight-bold text-end">
+            <span class="mdi mdi-account-school"></span> Missed Activities
+          </h4>
+        </v-card>
+      </v-col>
+    </v-row>
 
-      <v-row>
+    <!-- Apply Transition to the Entire v-row -->
+    <v-scale-transition mode="out-in">
+      <v-row :key="currentPage">
         <v-col
           v-for="(activity, index) in paginatedActivities"
           :key="index"
@@ -29,25 +30,32 @@
           </v-card>
         </v-col>
       </v-row>
+    </v-scale-transition>
 
-      <v-pagination
-        v-model="currentPage"
-        :length="totalPages"
-        :total-visible="5"
-        class="mt-4"
-      ></v-pagination>
+    <!-- Pagination -->
+    <v-pagination
+      v-model="currentPage"
+      :length="totalPages"
+      :total-visible="5"
+      class="mt-4"
+    ></v-pagination>
 
-      <!-- Grade Distribution Section -->
-      <v-row>
-        <v-col cols="12">
-          <v-card class="pa-4 grade-chart">
-            <h3 class="text-center font-weight-bold">Grade Distribution</h3>
-            <v-chart :option="chartOptions" style="height: 300px;"></v-chart>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-
+    <!-- Grade Distribution Section -->
+    <v-row>
+      <v-col cols="12">
+        <v-card class="pa-4 grade-chart mt-5">
+          <h3 class="text-center font-weight-bold">
+            Missed Activities Overview
+          </h3>
+          <v-chart
+            :option="chartOptions"
+            style="height: 300px"
+            key="currentPage"
+          ></v-chart>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -64,6 +72,9 @@ export default defineComponent({
       { subject: "English 8 - DE1", missed: 45 },
       { subject: "Mapeh 8 - FG2", missed: 30 },
       { subject: "English 7 - ED2", missed: 20 },
+      { subject: "English 9 - ED3", missed: 15 },
+      { subject: "Math 3 - ED6", missed: 4 },
+      { subject: "Programming 9 - FG1", missed: 3 },
     ]);
 
     const currentPage = ref(1);
@@ -86,11 +97,11 @@ export default defineComponent({
 
     // Grade Distribution Chart Data
     const chartOptions = computed(() => {
-      const subjects = missedActivities.value.map(
+      const subjects = paginatedActivities.value.map(
         (activity) => activity.subject
       );
-      const missedPercentages = missedActivities.value.map(
-        (activity) => (activity.missed / totalStudents) * 100
+      const missedPercentages = paginatedActivities.value.map(
+        (activity) => ((activity.missed / totalStudents) * 100).toFixed(2) // Keep 2 decimal places
       );
 
       return {
@@ -107,7 +118,7 @@ export default defineComponent({
               show: true,
               position: "top",
               fontWeight: "bold",
-              formatter: "{c}%",
+              formatter: "{c}%", // Ensures correct percentage formatting
             },
           },
         ],
@@ -135,22 +146,24 @@ export default defineComponent({
 }
 
 .activity-box {
-  background: linear-gradient(
-    135deg,
-    var(--card-gradient-start),
-    var(--card-gradient-end)
-  );
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
+  backdrop-filter: blur(10px); /* Blur effect for glass background */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  box-shadow: 0 0 10px #004d40; /* Glowing effect */
   text-align: center;
 }
 
 .grade-chart {
-  background-color: var(--v-background-base);
-  padding: 20px;
   border-radius: 12px;
+  padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
+  backdrop-filter: blur(10px); /* Blur effect for glass background */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  box-shadow: 0 0 10px #004d40; /* Glowing effect */
 }
 
 :root {
@@ -175,7 +188,7 @@ export default defineComponent({
 
 .glass-card {
   background: rgba(0, 105, 92, 0.5);
-  backdrop-filter: blur(10px); 
-  -webkit-backdrop-filter: blur(10px); 
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 </style>

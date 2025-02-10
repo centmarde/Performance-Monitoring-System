@@ -2,9 +2,15 @@
   <HomeLayout>
     <template #content>
       <v-container>
-        <h2 class="text-center font-weight-bold">
-          Student Performance Evaluation
-        </h2>
+        <v-row justify="center">
+          <v-col cols="auto">
+            <v-card class="pa-3 rounded-card glass-card">
+              <h2 class="font-weight-bold text-end">
+                <span class="mdi mdi-account-school"></span> Subject Management
+              </h2>
+            </v-card>
+          </v-col>
+        </v-row>
 
         <v-row>
           <!-- "Add New" Card -->
@@ -224,8 +230,9 @@ const saveClassRecord = () => {
   text-align: center;
 }
 .add-new-card {
-  border: 2px dashed #004D40;
-  background-color: #f5f5f5;
+  border: 2px dashed var(--v-primary-base);
+  background-color: var(--v-background-base);
+  color: var(--v-text-base);
   cursor: pointer;
   text-align: center;
   height: 200px;
@@ -235,6 +242,12 @@ const saveClassRecord = () => {
 }
 
 .subject-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
+  backdrop-filter: blur(10px); /* Blur effect for glass background */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  box-shadow: 0 0 10px #004d40; /* Glowing effect */
   cursor: pointer;
   height: 250px;
   display: flex;
@@ -244,5 +257,13 @@ const saveClassRecord = () => {
 }
 .subject-card:hover {
   transform: scale(1.05);
+}
+.glass-card {
+  background: rgba(0, 105, 92, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.rounded-card {
+  border-radius: 12px;
 }
 </style>

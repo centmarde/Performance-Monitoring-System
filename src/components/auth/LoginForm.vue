@@ -2,7 +2,7 @@
   <v-col cols="12" md="6">
     <v-card-text class="mt-12">
       <h4 class="text-center">Login to Your Account</h4>
-      <h6 class="text-center text-secondary mt-2">
+      <h6 class="text-center text-teal-darken-3 mt-2">
         Log in to your account so you can continue monitoring
         <br />and managing your users
       </h6>
