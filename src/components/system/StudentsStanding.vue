@@ -26,7 +26,7 @@
               <h3 class="text-center font-weight-bold">{{ subject }}</h3>
               <SearchBar class="my-2" v-model="searchQuery[subject]" />
               <span class="text-body-2 my-4 text-center">{{
-                sectionDescriptions[subject]
+                teacherEmails[subject]
               }}</span>
               <v-divider class="mb-2"></v-divider>
               <PerfectScrollbar :options="{ suppressScrollX: true }">
@@ -73,6 +73,7 @@
 import { defineComponent, reactive, ref, computed, onMounted } from "vue";
 import { useSectionsStore } from "@/stores/sectionsStore";
 import { useStudentsStore } from "@/stores/studentsStore";
+import { useTeacherList } from "@/stores/teachersList";
 //@ts-ignore
 import SearchBar from "@/components/common/SearchBar.vue";
 
@@ -88,18 +89,22 @@ export default defineComponent({
   setup() {
     const sectionsStore = useSectionsStore();
     const studentsStore = useStudentsStore();
+    const teacherListStore = useTeacherList();
     const studentStanding = reactive<Record<string, Student[]>>({});
-    const sectionDescriptions = reactive<Record<string, string>>({});
+    const teacherEmails = reactive<Record<string, string>>({});
     const searchQuery = reactive<Record<string, string>>({});
     const currentPage = ref<number>(1);
     const subjectsPerPage = 3;
 
     onMounted(async () => {
       await sectionsStore.fetchSections();
+      await teacherListStore.fetchTeachersInfo();
       const sections = sectionsStore.sections;
+      const teachers = teacherListStore.userInfo;
 
       for (const sec of sections) {
-        sectionDescriptions[sec.code] = sec.description;
+        const teacher = teachers.find(t => t.id === sec.teacher_id);
+        teacherEmails[sec.code] = teacher ? teacher.email : "N/A";
         searchQuery[sec.code] = "";
         const students = await studentsStore.fetchStudentsBySection(sec.id);
         if (students) {
@@ -143,10 +148,10 @@ export default defineComponent({
     });
 
     function filteredStudents(subject: string) {
-  return studentStanding[subject].filter((student) =>
-  student.name.toLowerCase().includes(String(searchQuery[subject]).toLowerCase())
-  );
-}
+      return studentStanding[subject].filter((student) =>
+        student.name.toLowerCase().includes(String(searchQuery[subject]).toLowerCase())
+      );
+    }
 
     function getColorClass(score: number): string {
       if (score >= 80) return "text-green";
@@ -157,7 +162,7 @@ export default defineComponent({
     return {
       studentStanding,
       getColorClass,
-      sectionDescriptions,
+      teacherEmails,
       currentPage,
       totalPages,
       paginatedSubjects,
