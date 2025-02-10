@@ -78,6 +78,31 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Feature Section -->
+    <v-container class="feature-section">
+      <v-row>
+        <v-col cols="12" md="4" class="feature-card">
+          <v-img src="@/assets/Hero.png" class="feature-icon"></v-img>
+          <h3>Track Progress</h3>
+          <p>Monitor student achievements and academic growth in real-time.</p>
+        </v-col>
+        <v-col cols="12" md="4" class="feature-card">
+          <v-img src="@/assets/Hero.png" class="feature-icon"></v-img>
+          <h3>Monitor Activities</h3>
+          <p>
+            Keep an eye on daily tasks, attendance, and overall participation.
+          </p>
+        </v-col>
+        <v-col cols="12" md="4" class="feature-card">
+          <v-img src="@/assets/Hero.png" class="feature-icon"></v-img>
+          <h3>Evaluate Performance</h3>
+          <p>
+            Assess student pass/fail status based on comprehensive criteria.
+          </p>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-container>
 </template>
 
@@ -156,14 +181,22 @@ onMounted(() => {
 .hero {
   flex-grow: 1;
 }
-
 .highlight {
   color: #00bfa5;
 }
 
-/* Dialog Box */
-.dialog-box {
-  background-color: #004d40;
-  color: #e0f2f1;
+/* Feature Section */
+.feature-section {
+  background: linear-gradient(to bottom, #004d40, #00695c);
+  padding: 50px 0;
+  text-align: center;
+}
+.feature-card {
+  text-align: center;
+  padding: 20px;
+}
+.feature-icon {
+  width: 80px;
+  margin-bottom: 10px;
 }
 </style>
