@@ -4,7 +4,13 @@
     <v-app-bar flat class="nav-bar">
       <v-container class="d-flex align-center justify-space-between">
         <h2 class="logo">Performance Monitoring System</h2>
-        <v-btn variant="outlined" class="contact-btn">Contact Us</v-btn>
+        <v-btn
+          variant="outlined"
+          class="contact-btn"
+          @click="showContactDialog = true"
+        >
+          Contact Us
+        </v-btn>
       </v-container>
     </v-app-bar>
 
@@ -38,6 +44,38 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-dialog v-model="showContactDialog" max-width="450">
+      <v-card class="dialog-box">
+        <v-card-title class="text-h5">Contact Us</v-card-title>
+        <v-card-text>
+          <p>We'd love to hear from you! Please fill out the form below.</p>
+          <v-text-field
+            label="Your Name"
+            v-model="contactInfo.name"
+            outlined
+            required
+          ></v-text-field>
+          <v-text-field
+            label="Your Email"
+            v-model="contactInfo.email"
+            outlined
+            required
+          ></v-text-field>
+          <v-textarea
+            label="Your Message"
+            v-model="contactInfo.message"
+            outlined
+            required
+          ></v-textarea>
+        </v-card-text>
+        <v-card-actions class="justify-end">
+          <v-btn class="outline-btn" @click="showContactDialog = false"
+            >Cancel</v-btn
+          >
+          <v-btn class="primary-btn" @click="submitContactForm">Send</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <!-- Extra Information Dialog -->
     <v-dialog v-model="showDialog" max-width="500">
@@ -125,6 +163,18 @@ const saveExtraInfo = () => {
 onMounted(() => {
   showDialog.value = true;
 });
+const showContactDialog = ref(false);
+
+const contactInfo = ref({
+  name: "",
+  email: "",
+  message: "",
+});
+
+const submitContactForm = () => {
+  console.log("Contact Form Submitted:", contactInfo.value);
+  showContactDialog.value = false;
+};
 </script>
 
 <style lang="scss" scoped>
