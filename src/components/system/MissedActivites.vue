@@ -43,7 +43,7 @@
     <!-- Grade Distribution Section -->
     <v-row>
       <v-col cols="12">
-        <v-card class="pa-4 grade-chart">
+        <v-card class="pa-4 grade-chart mt-5">
           <h3 class="text-center font-weight-bold">
             Missed Activities Overview
           </h3>
