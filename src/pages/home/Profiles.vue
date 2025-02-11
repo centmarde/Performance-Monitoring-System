@@ -146,8 +146,10 @@ const uploadImage = async () => {
     if (!file) return;
 
     const filePath = `profile_images/${Date.now()}-${file.name}`;
+
+    // ✅ Use the correct bucket name: "profiles"
     const { data, error } = await supabase.storage
-      .from("avatars")
+      .from("profiles")
       .upload(filePath, file);
 
     if (error) {
@@ -155,12 +157,14 @@ const uploadImage = async () => {
       return;
     }
 
-    // Get public URL
+    // ✅ Fetch the Public URL of the uploaded image
     const { data: publicUrlData } = await supabase.storage
-      .from("avatars")
+      .from("profiles")
       .getPublicUrl(filePath);
+
     if (publicUrlData?.publicUrl) {
       profileImage.value = publicUrlData.publicUrl;
+      console.log("Profile image updated:", profileImage.value);
     }
   };
   input.click();
