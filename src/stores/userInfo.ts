@@ -38,7 +38,6 @@ export const useUserInfoStore = defineStore("userInfo", () => {
     return data;
   }
 
-  // ✅ New function to update image path in real time
   function setProfileImage(newImagePath: string) {
     if (userInfo.value) {
       userInfo.value.image_path = newImagePath;
@@ -48,6 +47,6 @@ export const useUserInfoStore = defineStore("userInfo", () => {
   return {
     userInfo,
     fetchUserInfo,
-    setProfileImage, // ✅ Make it available for real-time updates
+    setProfileImage,
   };
 });
