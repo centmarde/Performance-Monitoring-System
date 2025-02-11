@@ -20,7 +20,7 @@
       >
         <v-avatar size="85">
           <v-img
-            :src="userInfo?.image_path || avatar"
+            :src="userInfoStore.userInfo?.image_path || '/default-avatar.png'"
             alt="User Avatar"
           ></v-img>
         </v-avatar>
@@ -73,7 +73,7 @@ onMounted(() => {
 
 // Define the menu with conditional links for Admin and Teachers
 const menu = ref([
-{ title: "Account", icon: "mdi-account", href: "/profiles" },
+  { title: "Account", icon: "mdi-account", href: "/profiles" },
   { title: "Dashboard", icon: "mdi-view-dashboard", href: "/home" },
   { title: "Data Entry", icon: "mdi-file-document-edit", href: "/data_entry" },
   { title: "Tracking", icon: "mdi-history", href: "/tracking" },

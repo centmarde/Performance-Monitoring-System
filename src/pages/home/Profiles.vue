@@ -74,8 +74,10 @@
 import { ref, onMounted } from "vue";
 import HomeLayout from "@/layouts/HomeLayout.vue";
 import { supabase } from "@/lib/supabase"; // Ensure Supabase client is set up
-
+import { useUserInfoStore } from "@/stores/userInfo";
 // User profile state
+
+const userStore = useUserInfoStore();
 const firstName = ref("");
 const lastName = ref("");
 const phoneNumber = ref("");
@@ -146,9 +148,7 @@ const uploadImage = async () => {
     if (!file) return;
 
     const filePath = `profile_images/${Date.now()}-${file.name}`;
-
-    // ✅ Use the correct bucket name: "profiles"
-    const { data, error } = await supabase.storage
+    const { error } = await supabase.storage
       .from("profiles")
       .upload(filePath, file);
 
@@ -157,14 +157,13 @@ const uploadImage = async () => {
       return;
     }
 
-    // ✅ Fetch the Public URL of the uploaded image
-    const { data: publicUrlData } = await supabase.storage
-      .from("profiles")
-      .getPublicUrl(filePath);
+    const publicUrl = supabase.storage.from("profiles").getPublicUrl(filePath)
+      .data.publicUrl;
 
-    if (publicUrlData?.publicUrl) {
-      profileImage.value = publicUrlData.publicUrl;
-      console.log("Profile image updated:", profileImage.value);
+    if (publicUrl) {
+      profileImage.value = publicUrl; // Update profile page
+      userStore.setProfileImage(publicUrl); // ✅ Update sidebar in real time
+      console.log("Profile image updated:", publicUrl);
     }
   };
   input.click();
