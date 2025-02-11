@@ -5,8 +5,8 @@ import { supabase } from '@/lib/supabase';
 interface Record {
   id: number;
   student_id: number;
-  subject_id: number;
   initial_grade: number;
+  class_record_id: number;
 }
 
 export const useRecordsStore = defineStore('recordsStore', () => {
