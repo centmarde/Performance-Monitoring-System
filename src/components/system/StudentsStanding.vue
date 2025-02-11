@@ -29,10 +29,13 @@
           >
             <v-card class="pa-8 student-box fixed-card">
               <h3 class="text-center font-weight-bold">{{ subject }}</h3>
-              <SearchBar class="my-2" v-model="searchQuery[subject]" />
+              <div class="search-bar-container">
+                <SearchBar class="my-2" v-model="searchQuery[subject]" />
+              </div>
               <span class="text-body-2 my-2 text-center">
                 {{ sectionDescriptions[subject] }}<br>
-                <small>Teacher: {{ teacherEmails[subject] }}</small>
+                <small>Teacher: {{ teacherEmails[subject] }}</small><br>
+                <small>Quarter: {{ classRecordQuarters[subject] }}</small>
               </span>
               <v-divider class="mb-2"></v-divider>
               <PerfectScrollbar :options="{ suppressScrollX: true }">
@@ -81,6 +84,7 @@ import { defineComponent, reactive, ref, computed, onMounted } from "vue";
 import { useSectionsStore } from "@/stores/sectionsStore";
 import { useStudentsStore } from "@/stores/studentsStore";
 import { useTeacherList } from "@/stores/teachersList";
+import { useClassRecordStore } from "@/stores/classRecord"; // Import the new store
 //@ts-ignore
 import SearchBar from "@/components/common/SearchBar.vue";
 
@@ -97,9 +101,11 @@ export default defineComponent({
     const sectionsStore = useSectionsStore();
     const studentsStore = useStudentsStore();
     const teacherList = useTeacherList();
+    const classRecordStore = useClassRecordStore(); // Initialize the new store
     const studentStanding = reactive<Record<string, Student[]>>({});
     const sectionDescriptions = reactive<Record<string, string>>({});
     const teacherEmails = reactive<Record<string, string>>({});
+    const classRecordQuarters = reactive<Record<string, string>>({});
     const searchQuery = reactive<Record<string, string>>({});
     const currentPage = ref<number>(1);
     const subjectsPerPage = 3;
@@ -108,36 +114,43 @@ export default defineComponent({
     onMounted(async () => {
       await sectionsStore.fetchSections();
       await teacherList.fetchTeachersInfo();
+      await classRecordStore.fetchClassRecords(); // Fetch class records
       const sections = sectionsStore.sections;
       const teachers = teacherList.userInfo;
+      const classRecords = classRecordStore.classRecords; // Get class records
 
-      for (const sec of sections) {
-        sectionDescriptions[sec.code] = sec.description;
-        searchQuery[sec.code] = "";
-        const teacher = teachers.find((teacher) => teacher.id === sec.teacher_id);
-        teacherEmails[sec.code] = teacher ? teacher.email : "N/A";
-        const students = await studentsStore.fetchStudentsBySection(sec.id);
-        if (students) {
-          studentStanding[sec.code] = await Promise.all(
-            students.map(async (student) => {
-              try {
-                const score = await studentsStore.fetchInitialScore(student.id);
-                return {
-                  name: `${student.firstname} ${student.lastname}`,
-                  score: score || 0,
-                };
-              } catch (error) {
-                console.error(
-                  `Error fetching score for student ${student.id}:`,
-                  error
-                );
-                return {
-                  name: `${student.firstname} ${student.lastname}`,
-                  score: 0,
-                };
-              }
-            })
-          );
+      for (const record of classRecords) {
+        const section = sections.find(sec => sec.id === record.section_id);
+        const teacher = teachers.find(teacher => teacher.id === record.teacher_id);
+        if (section && teacher) {
+          sectionDescriptions[section.code] = section.description;
+          searchQuery[section.code] = "";
+          teacherEmails[section.code] = teacher.email;
+          classRecordQuarters[section.code] = record.quarter; // Add quarter to the record
+          await classRecordStore.fetchStudentsByClassRecord(record.id); // Fetch students by class record
+          const students = classRecordStore.students;
+          if (students) {
+            studentStanding[section.code] = await Promise.all(
+              students.map(async (student) => {
+                try {
+                  const score = await studentsStore.fetchInitialScore(student.id);
+                  return {
+                    name: `${student.firstname} ${student.lastname}`,
+                    score: typeof score === 'number' ? score : 0,
+                  };
+                } catch (error) {
+                  console.error(
+                    `Error fetching score for student ${student.id}:`,
+                    error
+                  );
+                  return {
+                    name: `${student.firstname} ${student.lastname}`,
+                    score: 0,
+                  };
+                }
+              })
+            );
+          }
         }
       }
       loading.value = false;
@@ -177,6 +190,7 @@ export default defineComponent({
       getColorClass,
       sectionDescriptions,
       teacherEmails,
+      classRecordQuarters,
       currentPage,
       totalPages,
       paginatedSubjects,
@@ -204,6 +218,10 @@ export default defineComponent({
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.search-bar-container {
+  margin-bottom: -23px;
 }
 
 .rounded-card {

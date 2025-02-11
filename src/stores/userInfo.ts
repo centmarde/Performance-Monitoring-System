@@ -33,7 +33,7 @@ export const useUserInfoStore = defineStore('userInfo', () => {
     }
 
     userInfo.value = data;
-    console.log('Fetched user info:', data);
+   /*  console.log('Fetched user info:', data); */
     return data;
   }
 
