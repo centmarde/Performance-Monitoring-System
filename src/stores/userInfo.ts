@@ -1,8 +1,8 @@
-import { ref } from 'vue';
-import { defineStore } from 'pinia';
-import { supabase } from '@/lib/supabase';
+import { ref } from "vue";
+import { defineStore } from "pinia";
+import { supabase } from "@/lib/supabase";
 
-export const useUserInfoStore = defineStore('userInfo', () => {
+export const useUserInfoStore = defineStore("userInfo", () => {
   const userInfo = ref<{
     firstname: string;
     lastname: string;
@@ -14,31 +14,39 @@ export const useUserInfoStore = defineStore('userInfo', () => {
   } | null>(null);
 
   async function fetchUserInfo() {
-    const userId = localStorage.getItem('user_id');
+    const userId = localStorage.getItem("user_id");
     if (!userId) {
-      console.error('No user ID found in localStorage');
+      console.error("No user ID found in localStorage");
       return null;
     }
 
     const { data, error } = await supabase
-      .from('users')
-      .select('firstname, lastname, email, phone, complete_address, user_type, image_path')
-      .eq('id', userId)
+      .from("users")
+      .select(
+        "firstname, lastname, email, phone, complete_address, user_type, image_path"
+      )
+      .eq("id", userId)
       .single();
 
     if (error) {
-      console.error('Error fetching user info:', error);
+      console.error("Error fetching user info:", error);
       userInfo.value = null;
       return null;
     }
 
     userInfo.value = data;
-    console.log('Fetched user info:', data);
     return data;
+  }
+
+  function setProfileImage(newImagePath: string) {
+    if (userInfo.value) {
+      userInfo.value.image_path = newImagePath;
+    }
   }
 
   return {
     userInfo,
     fetchUserInfo,
+    setProfileImage,
   };
 });

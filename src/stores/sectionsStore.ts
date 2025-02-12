@@ -2,13 +2,14 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { supabase } from '@/lib/supabase';
 
-interface Section {
+export interface Section { // Export the Section interface
   id: number;
   created_at: string;
   subject_id: number;
   teacher_id: number;
   code: string;
   description: string;
+  subject_title: string;
 }
 
 export const useSectionsStore = defineStore('sectionsStore', () => {
@@ -17,7 +18,7 @@ export const useSectionsStore = defineStore('sectionsStore', () => {
   async function fetchSections() {
     const { data, error } = await supabase
       .from('sections')
-      .select('*');
+      .select('*, subjects(title), users(email)');
 
     if (error) {
       console.error('Error fetching sections:', error);
@@ -25,7 +26,10 @@ export const useSectionsStore = defineStore('sectionsStore', () => {
       return null;
     }
 
-    sections.value = data as Section[];
+    sections.value = data.map((section: any) => ({
+      ...section,
+      subject_title: section.subjects.title,
+    })) as Section[];
     return sections.value;
   }
 
