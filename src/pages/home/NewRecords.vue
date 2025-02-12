@@ -2,13 +2,15 @@
   <HomeLayout>
     <template #content>
       <v-container>
+         
         <v-row justify="end">
           <v-col>
-                <router-link to="/data_entry">
-              <v-btn color="#004D40"><v-icon>mdi-arrow-left</v-icon>Back</v-btn>
-            </router-link>
-            </v-col>
+              <router-link to="/data_entry">
+            <v-btn color="#004D40"><v-icon>mdi-arrow-left</v-icon>Back</v-btn>
+          </router-link>
+          </v-col>
           <v-col cols="4" class="mb-3">
+              
             <SearchBar v-model="searchQuery" />
           </v-col>
         </v-row>
@@ -43,9 +45,7 @@
               <th rowspan="3"
                 style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">
                 Quarterly Grade</th>
-              <th rowspan="3"
-                style="background: #004d40; color: white; padding: 14px; border: 1px solid #00796b; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 2;">
-                Actions</th>
+              
             </tr>
             <tr>
               <th v-for="header in wwHeaders" :key="header.value"
@@ -105,7 +105,7 @@
                   style="width: 100px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" />
               </td>
               <td v-for="n in 10" :key="'ww' + n">
-                <input v-model="item['ww' + n]" type="number"
+                <input v-model="item['ww' + n]" type="number" min="0" max="100"
                   style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" />
               </td>
               <td><input v-model="item.wwTotal" disabled
@@ -118,7 +118,7 @@
                   style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" />
               </td>
               <td v-for="n in 10" :key="'pt' + n">
-                <input v-model="item['pt' + n]" type="number"
+                <input v-model="item['pt' + n]" type="number" min="0" max="100"
                   style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" />
               </td>
               <td><input v-model="item.ptTotal" disabled
@@ -130,7 +130,7 @@
               <td><input v-model="item.ptws" disabled
                   style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" />
               </td>
-              <td><input v-model="item.qa1" type="number"
+              <td><input v-model="item.qa1" type="number" min="0" max="100"
                   style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" />
               </td>
               <td><input v-model="item.qaps" disabled
@@ -145,7 +145,7 @@
               <td><input v-model="item.quarterly_grade" disabled
                   style="width: 50px; height: 24px; text-align: center; border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-size: 14px;" />
               </td>
-              <td><button class="save-btn" @click="saveChanges(item)">Save</button></td>
+              <button class="save-btn" @click="saveChanges(item)" style="display: none;">Save</button>
             </tr>
           </tbody>
         </v-table>
@@ -162,6 +162,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useRecordsStore } from '@/stores/recordsStore';
 import { useStudentsStore } from '@/stores/studentsStore';
 import SearchBar from '@/components/common/SearchBar.vue';
+import { supabase } from '@/lib/supabase';
 
 const jsondata = ref([]);
 const recordsStore = useRecordsStore();
@@ -213,7 +214,63 @@ const pageCount = computed(() => {
 });
 
 const saveChanges = async (item) => {
-  console.log("save changes");
+  try {
+    const { error } = await supabase
+      .from('records')
+      .update({
+        ww1: item.ww1,
+        ww2: item.ww2,
+        ww3: item.ww3,
+        ww4: item.ww4,
+        ww5: item.ww5,
+        ww6: item.ww6,
+        ww7: item.ww7,
+        ww8: item.ww8,
+        ww9: item.ww9,
+        ww10: item.ww10,
+        pt1: item.pt1,
+        pt2: item.pt2,
+        pt3: item.pt3,
+        pt4: item.pt4,
+        pt5: item.pt5,
+        pt6: item.pt6,
+        pt7: item.pt7,
+        pt8: item.pt8,
+        pt9: item.pt9,
+        pt10: item.pt10,
+        qa1: item.qa1,
+      })
+      .eq('student_id', item.id);
+
+    if (error) {
+      console.error("Error updating record:", error);
+    } else {
+      console.log("Record updated successfully");
+    }
+  } catch (error) {
+    console.error("Error saving changes:", error);
+  }
+};
+
+const fetchGradeCalculations = async (classRecordId) => {
+  const { data: records, error } = await supabase
+    .from('calculate_initial_grade')
+    .select('*')
+    .eq('class_record_id', Number(classRecordId));
+
+  if (error) {
+    console.error("Error fetching grade calculations:", error);
+    return [];
+  }
+
+  return records.map(record => ({
+    student_id: record.id,
+    ww_weighted_score: record.ww_weighted_score,
+    pt_weighted_score: record.pt_weighted_score,
+    qa_weighted_score: record.qa_weighted_score,
+    initial_grade: record.initial_grade,
+    quarterly_grade: record.initial_grade,
+  }));
 };
 
 const fetchRecords = async () => {
@@ -224,7 +281,9 @@ const fetchRecords = async () => {
     if (!records || records.length === 0) {
       console.log("This class record has no records yet.");
     } else {
+      const gradeCalculations = await fetchGradeCalculations(classRecordId);
       jsondata.value = records.map(record => {
+        const gradeCalculation = gradeCalculations.find(gc => gc.student_id === record.id) || {};
         const item = {
           id: record.student_id,
           name: `${record.students.firstname} ${record.students.lastname}`,
@@ -252,13 +311,13 @@ const fetchRecords = async () => {
           wwTotal: record.ww1 + record.ww2 + record.ww3 + record.ww4 + record.ww5 + record.ww6 + record.ww7 + record.ww8 + record.ww9 + record.ww10,
           ptTotal: record.pt1 + record.pt2 + record.pt3 + record.pt4 + record.pt5 + record.pt6 + record.pt7 + record.pt8 + record.pt9 + record.pt10,
           qaTotal: record.qa1,
-          wwps: 0,
-          ptps: 0,
-          ptws: 0,
-          qaps: 0,
-          qaws: 0,
-          initial_grade: 0,
-          quarterly_grade: 0,
+          wwps: gradeCalculation.ww_weighted_score || 0,
+          ptps: gradeCalculation.pt_weighted_score || 0,
+          ptws: gradeCalculation.pt_weighted_score || 0,
+          qaps: gradeCalculation.qa_weighted_score || 0,
+          qaws: gradeCalculation.qa_weighted_score || 0,
+          initial_grade: gradeCalculation.initial_grade || 0,
+          quarterly_grade: gradeCalculation.initial_grade || 0,
         };
         return item;
       });
@@ -268,9 +327,24 @@ const fetchRecords = async () => {
   }
 };
 
+const clickSaveButtons = () => {
+  document.querySelectorAll('.save-btn').forEach(button => button.click());
+};
+
+const startAutoSave = () => {
+  setInterval(async () => {
+    await fetchRecords();
+  }, 10000);
+
+  setInterval(() => {
+    clickSaveButtons();
+  }, 5000);
+};
+
 onMounted(async () => {
   await fetchRecords();
   await studentsStore.fetchAllStudents();
+  startAutoSave();
 });
 </script>
 

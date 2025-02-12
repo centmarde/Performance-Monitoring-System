@@ -73,37 +73,13 @@ export const useClassRecordStore = defineStore('classRecord', {
         return;
       }
 
-      // Fetch subject ID based on the selected subject title
-      const { data: subjectData, error: subjectError } = await supabase
-        .from('subjects')
-        .select('id')
-        .eq('title', selectedSubject)
-        .single();
-
-      if (subjectError || !subjectData) {
-        this.error = subjectError ? subjectError.message : "Subject not found.";
-        this.loading = false;
-        return;
-      }
-
-      // Fetch section ID based on the selected section code
-      const { data: sectionData, error: sectionError } = await supabase
-        .from('sections')
-        .select('id')
-        .eq('code', selectedSection)
-        .single();
-
-      if (sectionError || !sectionData) {
-        this.error = sectionError ? sectionError.message : "Section not found.";
-        this.loading = false;
-        return;
-      }
+     
 
       const { data, error } = await supabase.from('class_record').insert([{
         quarter: selectedQuarter,
-        subject_id: subjectData.id,
+        subject_id: selectedSubject,
         teacher_id: teacherId,
-        section_id: sectionData.id,
+        section_id: selectedSection,
       }]).single();
 
       if (error) {
