@@ -124,6 +124,7 @@ import HomeLayout from "@/layouts/HomeLayout.vue";
 import { useClassRecordStore } from "@/stores/classRecord";
 import { useSubjectsStore } from "@/stores/subjectsStore";
 import { useSectionsStore } from "@/stores/sectionsStore";
+import { useRecordsStore } from "@/stores/recordsStore";
 
 const classRecordDialog = ref(false);
 const activeSubject = ref("");
@@ -131,6 +132,7 @@ const currentPage = ref(1);
 const itemsPerPage = 6;
 
 const classRecordStore = useClassRecordStore();
+const recordsStore = useRecordsStore();
 const subjects = ref<any[]>([]);
 
 const subjectsStore = useSubjectsStore();
@@ -161,11 +163,35 @@ const paginatedSubjects = computed(() => {
 const subjectRecords = ref<{ [key: string]: any }>({});
 
 const saveClassRecord = async () => {
+  const parsedQuarter = parseInt(selectedQuarter.value, 10);
+
+  if (isNaN(parsedQuarter)) {
+    console.error('Invalid quarter value');
+    return;
+  }
+  console.log(selectedSubject.value);
+  const subjectId = await subjectsStore.fetchSubjectIdByTitle(selectedSubject.value);
+  const sectionId = await sectionsStore.fetchSectionIdByCode(selectedSection.value);
+  console.log(subjectId, sectionId);
+  if (subjectId === null || sectionId === null) {
+    console.error('Invalid subject or section value');
+    return;
+  }
+
   await classRecordStore.addClassRecord(
-    selectedQuarter.value,
-    selectedSubject.value,
-    selectedSection.value
+    parsedQuarter.toString(),
+    subjectId.toString(),
+    sectionId.toString()
   );
+
+  const addedClassRecordId = localStorage.getItem("addedClassrecord");
+  const classRecordId = parseInt(addedClassRecordId ?? '0', 10);
+
+  if (!isNaN(sectionId) && !isNaN(classRecordId)) {
+    await recordsStore.addRecordsForSection(sectionId, classRecordId);
+  } else {
+    console.error('Invalid section or class record ID');
+  }
   classRecordDialog.value = false;
 };
 
@@ -183,7 +209,12 @@ const selectedQuarter = ref('');
 const router = useRouter();
 
 const handleCardClick = (classRecordId: number) => {
-  localStorage.setItem("classRecordId", classRecordId.toString());
+  const parsedClassRecordId = parseInt(classRecordId.toString(), 10);
+  if (isNaN(parsedClassRecordId)) {
+    console.error('Invalid class record ID');
+    return;
+  }
+  localStorage.setItem("classRecordId", parsedClassRecordId.toString());
   router.push('/recentrecords');
 };
 </script>
