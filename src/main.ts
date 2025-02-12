@@ -31,7 +31,7 @@ const app = createApp(App)
 .use(Toast)
 .use(PerfectScrollbarPlugin)
 
-// app.config.warnHandler = () => {};
+app.config.warnHandler = () => {};
 
 app.use(VueSidebarMenu);
 

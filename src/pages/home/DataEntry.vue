@@ -4,6 +4,7 @@
       <v-container>
         <v-row justify="end">
           <v-col cols="auto">
+           
             <v-card class="pa-3 rounded-card glass-card">
               <h4 class="font-weight-bold text-end">
                 <span class="mdi mdi-account-school"></span> Subject Management
@@ -15,7 +16,7 @@
         <v-row>
           <!-- "Add New" Card -->
           <v-col v-if="currentPage === 1" cols="12" sm="6" md="4">
-            <v-card class="subject-card add-new-card" @click="openNewClass">
+            <v-card class="subject-card add-new-card" @click="showAddNewDialog">
               <v-container
                 class="d-flex flex-column align-center justify-center fill-height"
               >
@@ -33,11 +34,19 @@
             sm="6"
             md="4"
           >
-            <v-card class="subject-card" @click="openClassRecord(subject)">
-              <v-img :src="subject.image" class="subject-image"></v-img>
-              <v-card-title class="text-center font-weight-bold">
-                {{ subject.name }}
-              </v-card-title>
+            <v-card class="subject-card" @click="handleCardClick(subject.id)">
+              <v-card-title>{{ subject.subjectName }}</v-card-title>
+              <v-card-subtitle>Quarter: {{ subject.quarter }}</v-card-subtitle>
+              <v-card-subtitle>Section: {{ subject.section }}</v-card-subtitle>
+              <v-card-subtitle>Student Count: {{ subject.student_count }}</v-card-subtitle>
+              <v-card-subtitle>Handled by: {{ subject.handled_by }}</v-card-subtitle>
+              <v-card-text>
+                <ul>
+                  <li v-for="student in subject.students" :key="student.id">
+                    {{ student.name }}
+                  </li>
+                </ul>
+              </v-card-text>
             </v-card>
           </v-col>
         </v-row>
@@ -58,18 +67,28 @@
             <v-card-text>
               <v-container>
                 <v-row>
-                  <v-col cols="6">
-                    <v-text-field
-                      label="Student Count"
-                      v-model="classRecord.schoolName"
-                      readonly
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="6">
-                    <v-text-field
+                  <v-col cols="12">
+                    <v-select
                       label="Subject"
-                      v-model="classRecord.subject"
-                    ></v-text-field>
+                      :items="subjectOptions"
+                      v-model="selectedSubject"
+                    ></v-select>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12">
+                    <v-select
+                      label="Section"
+                      :items="sectionOptions"
+                      v-model="selectedSection"
+                    ></v-select>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-select
+                      label="Quarter"
+                      :items="quarterOptions"
+                      v-model="selectedQuarter"
+                    ></v-select>
                   </v-col>
                 </v-row>
               </v-container>
@@ -78,13 +97,13 @@
               <v-btn
                 v-if="!activeSubject"
                 color="success"
-                @click="addNewSubject"
+               @click="saveClassRecord"
                 >Add</v-btn
               >
               <v-btn
                 v-if="activeSubject"
                 color="primary"
-                @click="saveClassRecord"
+             
                 >Save</v-btn
               >
               <v-btn color="error" @click="classRecordDialog = false"
@@ -99,118 +118,73 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { useRouter } from 'vue-router';
 import HomeLayout from "@/layouts/HomeLayout.vue";
+import { useClassRecordStore } from "@/stores/classRecord";
+import { useSubjectsStore } from "@/stores/subjectsStore";
+import { useSectionsStore } from "@/stores/sectionsStore";
 
 const classRecordDialog = ref(false);
 const activeSubject = ref("");
 const currentPage = ref(1);
 const itemsPerPage = 6;
 
-const subjects = ref([
-  { name: "English 8 - FG2", image: "/src/assets/class_record.png" },
-  { name: "Science 7 - DE1", image: "/src/assets/class_record.png" },
-  { name: "Math 9 - FG1", image: "/src/assets/class_record.png" },
-  { name: "History 10 - FG2", image: "/src/assets/class_record.png" },
-  { name: "Physics 11 - FG3", image: "/src/assets/class_record.png" },
-  { name: "Chemistry 12 - FG1", image: "/src/assets/class_record.png" },
-  { name: "Biology 10 - FG2", image: "/src/assets/class_record.png" },
-]);
+const classRecordStore = useClassRecordStore();
+const subjects = ref<any[]>([]);
+
+const subjectsStore = useSubjectsStore();
+const sectionsStore = useSectionsStore();
+
+const subjectOptions = computed(() => subjectsStore.subjects.map(subject => subject.title));
+const sectionOptions = computed(() => sectionsStore.sections.map(section => section.code));
+
+onMounted(async () => {
+  await classRecordStore.fetchAllClassRecordsWithDetails();
+  subjects.value = classRecordStore.classRecords;
+  await subjectsStore.fetchSubjects();
+  await sectionsStore.fetchSections();
+});
 
 const totalPages = computed(() => {
-  const remainingSubjects = subjects.value.length - 5; // First page has 5 subjects
+  const remainingSubjects = subjects.value.length - 5; 
   return 1 + Math.ceil(remainingSubjects / itemsPerPage);
 });
 const paginatedSubjects = computed(() => {
   if (currentPage.value === 1) {
-    return subjects.value.slice(0, 5); // First page only has 5 subjects
+    return subjects.value.slice(0, 5); 
   }
   const start = 5 + (currentPage.value - 2) * itemsPerPage;
   return subjects.value.slice(start, start + itemsPerPage);
 });
 
-// Default template for new class records
-const defaultClassRecord = () => ({
-  schoolName: "Los Angeles National High School",
-  subject: "",
-  students: [
-    {
-      name: "Centmarde",
-      written: [0, 0, 0, 0, 0],
-      performance: [0, 0, 0, 0, 0],
-      assessment: 0,
-    },
-    {
-      name: "Christ",
-      written: [0, 0, 0, 0, 0],
-      performance: [0, 0, 0, 0, 0],
-      assessment: 0,
-    },
-  ],
-});
-
 const subjectRecords = ref<{ [key: string]: any }>({});
-const classRecord = ref(defaultClassRecord());
 
-const openClassRecord = (subject: { name: string }) => {
-  activeSubject.value = subject.name;
-  if (!subjectRecords.value[subject.name]) {
-    subjectRecords.value[subject.name] = defaultClassRecord();
-    subjectRecords.value[subject.name].subject = subject.name;
-  }
-  classRecord.value = JSON.parse(
-    JSON.stringify(subjectRecords.value[subject.name])
+const saveClassRecord = async () => {
+  await classRecordStore.addClassRecord(
+    selectedQuarter.value,
+    selectedSubject.value,
+    selectedSection.value
   );
-  classRecordDialog.value = true;
+  classRecordDialog.value = false;
 };
 
-const openNewClass = () => {
+const showAddNewDialog = () => {
   activeSubject.value = "";
-  classRecord.value = defaultClassRecord();
   classRecordDialog.value = true;
 };
 
-const addNewSubject = () => {
-  if (!classRecord.value.subject.trim()) {
-    alert("Please enter a subject name.");
-    return;
-  }
-  subjects.value.push({
-    name: classRecord.value.subject,
-    image: "/src/assets/class_record.png",
-  });
-  subjectRecords.value[classRecord.value.subject] = { ...classRecord.value };
-  classRecordDialog.value = false;
-};
+const quarterOptions = ref(['1', '2', '3', '4']); 
 
-const getTotal = (scores: number[]) => scores.reduce((a, b) => a + b, 0);
-const getFinalGrade = (student: any) =>
-  Math.round(
-    getTotal(student.written) * 0.2 +
-      getTotal(student.performance) * 0.6 +
-      student.assessment * 0.2
-  );
+const selectedSubject = ref('');
+const selectedSection = ref('');
+const selectedQuarter = ref('');
 
-const saveClassRecord = () => {
-  const previousName = activeSubject.value;
-  const newName = classRecord.value.subject.trim();
-  if (!newName) {
-    alert("Subject name cannot be empty.");
-    return;
-  }
-  if (previousName && previousName !== newName) {
-    const subjectIndex = subjects.value.findIndex(
-      (subject) => subject.name === previousName
-    );
-    if (subjectIndex !== -1) {
-      subjects.value[subjectIndex].name = newName;
-    }
-    subjectRecords.value[newName] = { ...subjectRecords.value[previousName] };
-    delete subjectRecords.value[previousName];
-    activeSubject.value = newName;
-  }
-  subjectRecords.value[newName] = { ...classRecord.value };
-  classRecordDialog.value = false;
+const router = useRouter();
+
+const handleCardClick = (classRecordId: number) => {
+  localStorage.setItem("classRecordId", classRecordId.toString());
+  router.push('/recentrecords');
 };
 </script>
 

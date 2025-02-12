@@ -28,14 +28,16 @@
             md="4"
           >
             <v-card class="pa-8 student-box fixed-card">
-              <h3 class="text-center font-weight-bold">{{ subject }}</h3>
+              <h3 class="text-center font-weight-bold">Section: {{ subject }}</h3>
+              <span class="text-center">{{ sectionsStore.sections.find(sec => sec.code === subject)?.subject_title }}</span>
               <div class="search-bar-container">
                 <SearchBar class="my-2" v-model="searchQuery[subject]" />
               </div>
               <span class="text-body-2 my-2 text-center">
                 {{ sectionDescriptions[subject] }}<br>
                 <small>Teacher: {{ teacherEmails[subject] }}</small><br>
-                <small>Quarter: {{ classRecordQuarters[subject] }}</small>
+                <small>Quarter: {{ classRecordQuarters[subject] }}</small><br>
+                <small>Total Students: {{ students.length }}</small>
               </span>
               <v-divider class="mb-2"></v-divider>
               <PerfectScrollbar :options="{ suppressScrollX: true }">
@@ -75,6 +77,7 @@
         :total-visible="5"
         class="mt-4"
       ></v-pagination>
+     
     </v-container>
   </v-lazy>
 </template>
@@ -171,6 +174,10 @@ export default defineComponent({
       );
     });
 
+    const totalStudents = computed(() => {
+      return Object.values(studentStanding).reduce((acc, students) => acc + students.length, 0);
+    });
+
     function filteredStudents(subject: string) {
       return studentStanding[subject].filter((student) =>
         student.name
@@ -197,6 +204,8 @@ export default defineComponent({
       searchQuery,
       filteredStudents,
       loading,
+      sectionsStore, // Add sectionsStore to the return object
+      totalStudents,
     };
   },
 });

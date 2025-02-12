@@ -7,7 +7,10 @@
           <v-row align="center">
             <v-col cols="12" md="3" class="text-center">
               <v-avatar size="100">
-                <v-img :src="profileImage" alt="Profile Image"></v-img>
+                <v-img
+                  :src="userStore.userInfo?.image_path || avatar"
+                  alt="User Avatar"
+                ></v-img>
               </v-avatar>
             </v-col>
             <v-col cols="12" md="9">
@@ -75,15 +78,17 @@ import { ref, onMounted } from "vue";
 import HomeLayout from "@/layouts/HomeLayout.vue";
 import { supabase } from "@/lib/supabase"; // Ensure Supabase client is set up
 import { useUserInfoStore } from "@/stores/userInfo";
+import Avatar from "@/assets/avatar.png";
 // User profile state
 
+const avatar = Avatar;
 const userStore = useUserInfoStore();
 const firstName = ref("");
 const lastName = ref("");
 const phoneNumber = ref("");
 const email = ref("");
 const completeAddress = ref("");
-const profileImage = ref("/default-avatar.png"); // Default image
+const profileImage = ref(Avatar); // Default image
 
 // Fetch user profile from Supabase
 const fetchProfile = async () => {
@@ -107,7 +112,7 @@ const fetchProfile = async () => {
     phoneNumber.value = data.phone || "";
     email.value = data.email || "";
     completeAddress.value = data.complete_address || "";
-    profileImage.value = data.image_path || "/default-avatar.png";
+    profileImage.value = data.image_path || Avatar;
   }
 };
 

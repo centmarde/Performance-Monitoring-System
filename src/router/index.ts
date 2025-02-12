@@ -17,7 +17,9 @@ import DataEntry from "@/pages/home/DataEntry.vue";
 import Tracking from "@/pages/home/Tracking.vue";
 import Welcome from "@/pages/Welcome.vue";
 //@ts-ignore
-import Records from "@/pages/home/Records.vue";
+import NewRecords from "@/pages/home/NewRecords.vue";
+//@ts-ignore
+import RecentRecords from "@/pages/home/RecentRecords.vue";
 
 
 const toast = useToast();
@@ -25,7 +27,8 @@ const toast = useToast();
 const routes = setupLayouts([
 
   { path: "/", component: Hero },
-  { path: "/records", component: Records, meta: { requiresAuth: true } },
+  { path: "/newrecords", component: NewRecords, meta: { requiresAuth: true } },
+  { path: "/recentrecords", component: RecentRecords, meta: { requiresAuth: true } },
   { path: "/welcome", component: Welcome, meta: { requiresAuth: true } },
   {
     path: "/home",

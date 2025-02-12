@@ -44,9 +44,26 @@ export const useRecordsStore = defineStore('recordsStore', () => {
     return records.value;
   }
 
+  async function fetchRecordsByClassRecordId(classRecordId: number) {
+    const { data, error } = await supabase
+      .from('records')
+      .select('*,students(firstname, lastname)')
+      .eq('class_record_id', classRecordId);
+
+    if (error) {
+      console.error('Error fetching records:', error);
+      records.value = [];
+      return null;
+    }
+
+    records.value = data as Record[];
+    return records.value;
+  }
+
   return {
     records,
     fetchRecordsBySection,
     fetchAllRecords,
+    fetchRecordsByClassRecordId,
   };
 });

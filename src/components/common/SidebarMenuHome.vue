@@ -20,7 +20,7 @@
       >
         <v-avatar size="85">
           <v-img
-            :src="userInfoStore.userInfo?.image_path || '/default-avatar.png'"
+            :src="userInfoStore.userInfo?.image_path || avatar"
             alt="User Avatar"
           ></v-img>
         </v-avatar>
