@@ -5,7 +5,7 @@
     transition="fade-transition"
   >
     <v-container>
-      <v-row justify="end">
+      <v-row justify="center">
         <v-col cols="auto">
           <v-card class="pa-3 rounded-card glass-card">
             <h4 class="font-weight-bold text-end">
@@ -18,7 +18,10 @@
       <v-scale-transition mode="out-in">
         <v-row :key="currentPage">
           <v-col v-if="loading" cols="12" class="text-center">
-            <v-progress-circular indeterminate color="primary"></v-progress-circular>
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
           </v-col>
           <v-col
             v-else
@@ -33,8 +36,9 @@
                 <SearchBar class="my-2" v-model="searchQuery[subject]" />
               </div>
               <span class="text-body-2 my-2 text-center">
-                {{ sectionDescriptions[subject] }}<br>
-                <small>Teacher: {{ teacherEmails[subject] }}</small><br>
+                {{ sectionDescriptions[subject] }}<br />
+                <small>Teacher: {{ teacherEmails[subject] }}</small
+                ><br />
                 <small>Quarter: {{ classRecordQuarters[subject] }}</small>
               </span>
               <v-divider class="mb-2"></v-divider>
@@ -47,9 +51,7 @@
                     :key="student.name"
                     align="center"
                   >
-                    <v-col cols="9">{{
-                      student.name
-                    }}</v-col>
+                    <v-col cols="9">{{ student.name }}</v-col>
                     <v-col
                       cols="3"
                       class="text-right"
@@ -120,8 +122,10 @@ export default defineComponent({
       const classRecords = classRecordStore.classRecords; // Get class records
 
       for (const record of classRecords) {
-        const section = sections.find(sec => sec.id === record.section_id);
-        const teacher = teachers.find(teacher => teacher.id === record.teacher_id);
+        const section = sections.find((sec) => sec.id === record.section_id);
+        const teacher = teachers.find(
+          (teacher) => teacher.id === record.teacher_id
+        );
         if (section && teacher) {
           sectionDescriptions[section.code] = section.description;
           searchQuery[section.code] = "";
@@ -133,10 +137,12 @@ export default defineComponent({
             studentStanding[section.code] = await Promise.all(
               students.map(async (student) => {
                 try {
-                  const score = await studentsStore.fetchInitialScore(student.id);
+                  const score = await studentsStore.fetchInitialScore(
+                    student.id
+                  );
                   return {
                     name: `${student.firstname} ${student.lastname}`,
-                    score: typeof score === 'number' ? score : 0,
+                    score: typeof score === "number" ? score : 0,
                   };
                 } catch (error) {
                   console.error(
