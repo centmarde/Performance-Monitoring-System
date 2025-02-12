@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row justify="end">
+    <v-row justify="center">
       <v-col cols="auto">
         <v-card class="pa-3 rounded-card glass-card">
           <h4 class="font-weight-bold text-end">
