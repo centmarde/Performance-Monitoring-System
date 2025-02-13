@@ -47,7 +47,7 @@
               :loading="formAction.formProcess"
               block
             >
-              Logi
+              Login
             </v-btn>
           </v-form>
 
