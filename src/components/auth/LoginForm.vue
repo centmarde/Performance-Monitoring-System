@@ -51,7 +51,7 @@
             </v-btn>
           </v-form>
 
-          <h5 class="text-center text-teal-darken-3 mt-4 mb-3">Login wit</h5>
+          <h5 class="text-center text-teal-darken-3 mt-4 mb-3">Login with</h5>
           <div class="social-buttons">
             <v-btn depressed outlined color="grey">
               <v-icon color="red">mdi-google</v-icon>
