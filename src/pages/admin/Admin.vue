@@ -107,10 +107,11 @@
                     v-model="editedUser.password"
                     label="Password"
                     :type="passwordVisible ? 'text' : 'password'"
-                    :append-icon="passwordVisible ? 'mdi-eye' : 'mdi-eye-off'"
-                    @click:append="togglePasswordVisibility"
                     :rules="[requiredValidator, passwordValidator]"
+                    append-inner-icon="mdi-eye"
+                    @click:append-inner="togglePasswordVisibility"
                   />
+
                   <v-text-field
                     v-model="editedUser.phone"
                     label="Phone"
@@ -250,6 +251,7 @@ const editedUser = ref<User>({
 
 // Password visibility toggle
 const passwordVisible = ref(false);
+
 const togglePasswordVisibility = () => {
   passwordVisible.value = !passwordVisible.value;
 };
