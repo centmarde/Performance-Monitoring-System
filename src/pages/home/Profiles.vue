@@ -2,15 +2,24 @@
   <HomeLayout>
     <template #content>
       <v-container>
-        <v-card class="profile-card">
-          <!-- Profile Photo Upload -->
+        <v-row>
+          <v-col cols="12" md="3">
+            <v-btn-toggle v-model="activeTab" mandatory>
+              <v-btn value="account">
+                <v-icon>mdi-account</v-icon> Account
+              </v-btn>
+              <v-btn value="security" color="primary">
+                <v-icon>mdi-lock</v-icon> Security
+              </v-btn>
+            </v-btn-toggle>
+          </v-col>
+        </v-row>
+
+        <v-card class="profile-card" v-if="activeTab === 'account'">
           <v-row align="center">
             <v-col cols="12" md="3" class="text-center">
               <v-avatar size="100">
-                <v-img
-                  :src="userStore.userInfo?.image_path || avatar"
-                  alt="User Avatar"
-                ></v-img>
+                <v-img :src="profileImage" alt="User Avatar"></v-img>
               </v-avatar>
             </v-col>
             <v-col cols="12" md="9">
@@ -20,9 +29,6 @@
               <v-btn class="ml-2" color="grey" @click="resetProfile"
                 >Reset</v-btn
               >
-              <p class="mt-2 text-caption">
-                Allowed JPG, GIF, or PNG. Max size of 800K
-              </p>
             </v-col>
           </v-row>
           <v-row>
@@ -30,7 +36,6 @@
               <h3>Personal Information</h3>
             </v-col>
           </v-row>
-          <!-- Profile Form -->
           <v-row>
             <v-col cols="12" md="6">
               <v-text-field
@@ -63,8 +68,6 @@
               ></v-text-field>
             </v-col>
           </v-row>
-
-          <!-- Save Button -->
           <v-row justify="center">
             <v-col cols="auto">
               <v-btn color="primary" class="save-btn" @click="updateProfile"
@@ -72,84 +75,82 @@
               >
             </v-col>
           </v-row>
+        </v-card>
 
-          <!-- Change Password Section -->
-          <v-divider class="my-4"></v-divider>
+        <v-card class="profile-card" v-if="activeTab === 'security'">
           <v-row>
             <v-col cols="12">
               <h3>Change Password</h3>
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="6">
               <v-text-field
                 v-model="oldPassword"
-                label="Old Password"
+                label="Current Password"
                 :type="showOldPassword ? 'text' : 'password'"
                 variant="outlined"
               >
-                <template v-slot:prepend-inner>
-                  <v-icon>mdi-lock</v-icon>
-                </template>
                 <template v-slot:append-inner>
-                  <v-icon
-                    @click="showOldPassword = !showOldPassword"
-                    class="cursor-pointer"
-                  >
-                    {{ showOldPassword ? "mdi-eye" : "mdi-eye-off" }}
-                  </v-icon>
+                  <v-icon @click="showOldPassword = !showOldPassword">{{
+                    showOldPassword ? "mdi-eye" : "mdi-eye-off"
+                  }}</v-icon>
                 </template>
               </v-text-field>
             </v-col>
-
-            <v-col cols="12" md="4">
+          </v-row>
+          <v-row>
+            <v-col cols="12" md="6">
               <v-text-field
                 v-model="newPassword"
                 label="New Password"
                 :type="showNewPassword ? 'text' : 'password'"
                 variant="outlined"
               >
-                <template v-slot:prepend-inner>
-                  <v-icon>mdi-lock</v-icon>
-                </template>
                 <template v-slot:append-inner>
-                  <v-icon
-                    @click="showNewPassword = !showNewPassword"
-                    class="cursor-pointer"
-                  >
-                    {{ showNewPassword ? "mdi-eye" : "mdi-eye-off" }}
-                  </v-icon>
+                  <v-icon @click="showNewPassword = !showNewPassword">{{
+                    showNewPassword ? "mdi-eye" : "mdi-eye-off"
+                  }}</v-icon>
                 </template>
               </v-text-field>
             </v-col>
-
-            <v-col cols="12" md="4">
+            <v-col cols="12" md="6">
               <v-text-field
                 v-model="confirmNewPassword"
                 label="Confirm New Password"
                 :type="showConfirmNewPassword ? 'text' : 'password'"
                 variant="outlined"
               >
-                <template v-slot:prepend-inner>
-                  <v-icon>mdi-lock</v-icon>
-                </template>
                 <template v-slot:append-inner>
                   <v-icon
                     @click="showConfirmNewPassword = !showConfirmNewPassword"
-                    class="cursor-pointer"
+                    >{{
+                      showConfirmNewPassword ? "mdi-eye" : "mdi-eye-off"
+                    }}</v-icon
                   >
-                    {{ showConfirmNewPassword ? "mdi-eye" : "mdi-eye-off" }}
-                  </v-icon>
                 </template>
               </v-text-field>
             </v-col>
           </v-row>
+          <v-row>
+            <v-col cols="12">
+              <p class="password-requirements">Password Requirements:</p>
+              <ul class="password-list">
+                <li>Minimum 8 characters long - the more, the better</li>
+                <li>At least one lowercase character</li>
+                <li>At least one number, symbol, or whitespace character</li>
+              </ul>
+            </v-col>
+          </v-row>
 
-          <v-row justify="center">
+          <v-row justify="start">
             <v-col cols="auto">
               <v-btn color="primary" @click="updatePassword"
-                >Update Password</v-btn
+                >Save Changes</v-btn
               >
+            </v-col>
+            <v-col cols="auto">
+              <v-btn color="grey" outlined>Reset</v-btn>
             </v-col>
           </v-row>
         </v-card>
@@ -162,14 +163,12 @@
 import { ref, onMounted } from "vue";
 import HomeLayout from "@/layouts/HomeLayout.vue";
 import { supabase } from "@/lib/supabase";
-import { useUserInfoStore } from "@/stores/userInfo";
-import Avatar from "@/assets/avatar.png";
 import { useToast } from "vue-toastification";
+import Avatar from "@/assets/avatar.png";
 
-const avatar = Avatar;
 const toast = useToast();
+const activeTab = ref("account");
 
-const userStore = useUserInfoStore();
 const firstName = ref("");
 const lastName = ref("");
 const phoneNumber = ref("");
@@ -185,17 +184,16 @@ const showOldPassword = ref(false);
 const showNewPassword = ref(false);
 const showConfirmNewPassword = ref(false);
 
+// Fetch user profile
 const fetchProfile = async () => {
-  const { data: user, error } = await supabase.auth.getUser();
-  if (error || !user?.user?.id) return;
-
-  const { data, error: profileError } = await supabase
+  const { data: user } = await supabase.auth.getUser();
+  if (!user?.user?.id) return;
+  const { data } = await supabase
     .from("users")
     .select("firstname, lastname, phone, email, complete_address, image_path")
     .eq("user_id", user.user.id)
     .single();
-
-  if (!profileError && data) {
+  if (data) {
     firstName.value = data.firstname || "";
     lastName.value = data.lastname || "";
     phoneNumber.value = data.phone || "";
@@ -205,85 +203,68 @@ const fetchProfile = async () => {
   }
 };
 
+// Update Profile with toast notification
 const updateProfile = async () => {
-  const { data: user, error } = await supabase.auth.getUser();
-  if (error || !user?.user?.id) {
-    toast.error("Failed to retrieve user data.");
+  if (
+    !firstName.value ||
+    !lastName.value ||
+    !phoneNumber.value ||
+    !completeAddress.value
+  ) {
+    toast.error("All fields are required!");
     return;
   }
 
-  const { error: updateError } = await supabase
-    .from("users")
-    .update({
-      firstname: firstName.value,
-      lastname: lastName.value,
-      phone: phoneNumber.value,
-      email: email.value,
-      complete_address: completeAddress.value,
-      image_path: profileImage.value,
-    })
-    .eq("user_id", user.user.id);
+  try {
+    const { error } = await supabase
+      .from("users")
+      .update({
+        firstname: firstName.value,
+        lastname: lastName.value,
+        phone: phoneNumber.value,
+        complete_address: completeAddress.value,
+      })
+      .eq("email", email.value);
 
-  if (updateError) {
-    toast.error("Failed to update profile. Please try again.");
-  } else {
+    if (error) throw error;
+
     toast.success("Profile updated successfully!");
+  } catch (err) {
+    toast.error("Failed to update profile. Please try again.");
   }
 };
 
+// Update Password with validation and toast
 const updatePassword = async () => {
   if (!oldPassword.value || !newPassword.value || !confirmNewPassword.value) {
-    toast.warning("Please fill out all password fields.");
+    toast.error("All fields are required!");
     return;
   }
 
   if (newPassword.value !== confirmNewPassword.value) {
-    toast.error("New passwords do not match.");
+    toast.error("New password and confirmation do not match.");
     return;
   }
 
-  const { error: signInError } = await supabase.auth.signInWithPassword({
-    email: email.value,
-    password: oldPassword.value,
-  });
-
-  if (signInError) {
-    toast.error("Incorrect old password.");
+  if (newPassword.value.length < 8) {
+    toast.error("Password must be at least 8 characters long.");
     return;
   }
 
-  const { error: updateError } = await supabase.auth.updateUser({
-    password: newPassword.value,
-  });
+  try {
+    const { data, error } = await supabase.auth.updateUser({
+      password: newPassword.value,
+    });
 
-  if (updateError) {
-    toast.error("Failed to update password. Please try again.");
-  } else {
+    if (error) throw error;
+
     toast.success("Password updated successfully!");
     oldPassword.value = "";
     newPassword.value = "";
     confirmNewPassword.value = "";
+  } catch (err) {
+    toast.error("Failed to update password. Please try again.");
   }
-};
-
-const uploadImage = async () => {
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = "image/*";
-  input.onchange = async (event: Event) => {
-    const file = (event.target as HTMLInputElement)?.files?.[0];
-    if (!file) return;
-    const filePath = `profile_images/${Date.now()}-${file.name}`;
-    await supabase.storage.from("profiles").upload(filePath, file);
-    const publicUrl = supabase.storage.from("profiles").getPublicUrl(filePath)
-      .data.publicUrl;
-    if (publicUrl) profileImage.value = publicUrl;
-  };
-  input.click();
-};
-
-const resetProfile = async () => {
-  await fetchProfile();
 };
 
 onMounted(fetchProfile);
@@ -293,13 +274,21 @@ onMounted(fetchProfile);
 .profile-card {
   border-radius: 12px;
   padding: 16px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(0, 77, 64, 0.5);
-  backdrop-filter: blur(10px);
   box-shadow: 0 0 10px #004d40;
+  border: 1px solid rgba(0, 77, 64, 0.5);
 }
-.save-btn {
+.password-requirements {
   font-weight: bold;
-  padding: 10px 20px;
+  margin-bottom: 8px;
+}
+
+.password-list {
+  padding-left: 20px; /* Ensures proper indentation */
+  margin: 0;
+  list-style-type: disc; /* Fix bullet style */
+}
+
+.password-list li {
+  margin-bottom: 4px; /* Adds spacing between list items */
 }
 </style>
