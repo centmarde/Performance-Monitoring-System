@@ -43,11 +43,11 @@
               <v-divider></v-divider>
 
               <!-- Details Section -->
-              <v-card-text>
+              <v-card-text class="details-container pa-2">
                 <v-container>
-                  <v-row class="justify-center">
-                    <v-col cols="12" class="text-center">
-                      <div class="subject-info">
+                  <v-row class="fill-height">
+                    <v-col cols="12">
+                      <div class="subject-info d-flex align-center">
                         <v-icon size="20" color="teal-darken-4"
                           >mdi-calendar-range</v-icon
                         >
@@ -56,8 +56,8 @@
                         >
                       </div>
                     </v-col>
-                    <v-col cols="12" class="text-center">
-                      <div class="subject-info">
+                    <v-col cols="12">
+                      <div class="subject-info d-flex align-center">
                         <v-icon size="20" color="teal-darken-4"
                           >mdi-google-classroom</v-icon
                         >
@@ -66,8 +66,8 @@
                         >
                       </div>
                     </v-col>
-                    <v-col cols="12" class="text-center">
-                      <div class="subject-info">
+                    <v-col cols="12">
+                      <div class="subject-info d-flex align-center">
                         <v-icon size="20" color="teal-darken-4"
                           >mdi-account-group</v-icon
                         >
@@ -77,8 +77,8 @@
                         >
                       </div>
                     </v-col>
-                    <v-col cols="12" class="text-center">
-                      <div class="subject-info">
+                    <v-col cols="12">
+                      <div class="subject-info d-flex align-center">
                         <v-icon size="20" color="teal-darken-4"
                           >mdi-account-tie</v-icon
                         >
@@ -328,12 +328,17 @@ const handleCardClick = (classRecordId: number) => {
 .subject-info {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: 8px; /* Adjust spacing between icon and text */
   font-size: 16px;
   color: #333;
 }
+
 .rounded-card {
   border-radius: 12px;
+}
+.glass-card {
+  background: rgba(0, 105, 92, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 </style>
