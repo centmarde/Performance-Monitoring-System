@@ -85,27 +85,66 @@
               <v-text-field
                 v-model="oldPassword"
                 label="Old Password"
-                type="password"
+                :type="showOldPassword ? 'text' : 'password'"
                 variant="outlined"
-              ></v-text-field>
+              >
+                <template v-slot:prepend-inner>
+                  <v-icon>mdi-lock</v-icon>
+                </template>
+                <template v-slot:append-inner>
+                  <v-icon
+                    @click="showOldPassword = !showOldPassword"
+                    class="cursor-pointer"
+                  >
+                    {{ showOldPassword ? "mdi-eye" : "mdi-eye-off" }}
+                  </v-icon>
+                </template>
+              </v-text-field>
             </v-col>
+
             <v-col cols="12" md="4">
               <v-text-field
                 v-model="newPassword"
                 label="New Password"
-                type="password"
+                :type="showNewPassword ? 'text' : 'password'"
                 variant="outlined"
-              ></v-text-field>
+              >
+                <template v-slot:prepend-inner>
+                  <v-icon>mdi-lock</v-icon>
+                </template>
+                <template v-slot:append-inner>
+                  <v-icon
+                    @click="showNewPassword = !showNewPassword"
+                    class="cursor-pointer"
+                  >
+                    {{ showNewPassword ? "mdi-eye" : "mdi-eye-off" }}
+                  </v-icon>
+                </template>
+              </v-text-field>
             </v-col>
+
             <v-col cols="12" md="4">
               <v-text-field
                 v-model="confirmNewPassword"
                 label="Confirm New Password"
-                type="password"
+                :type="showConfirmNewPassword ? 'text' : 'password'"
                 variant="outlined"
-              ></v-text-field>
+              >
+                <template v-slot:prepend-inner>
+                  <v-icon>mdi-lock</v-icon>
+                </template>
+                <template v-slot:append-inner>
+                  <v-icon
+                    @click="showConfirmNewPassword = !showConfirmNewPassword"
+                    class="cursor-pointer"
+                  >
+                    {{ showConfirmNewPassword ? "mdi-eye" : "mdi-eye-off" }}
+                  </v-icon>
+                </template>
+              </v-text-field>
             </v-col>
           </v-row>
+
           <v-row justify="center">
             <v-col cols="auto">
               <v-btn color="primary" @click="updatePassword"
@@ -138,6 +177,10 @@ const profileImage = ref(Avatar);
 const oldPassword = ref("");
 const newPassword = ref("");
 const confirmNewPassword = ref("");
+
+const showOldPassword = ref(false);
+const showNewPassword = ref(false);
+const showConfirmNewPassword = ref(false);
 
 const fetchProfile = async () => {
   const { data: user, error } = await supabase.auth.getUser();

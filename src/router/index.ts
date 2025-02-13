@@ -1,4 +1,3 @@
-
 import { createRouter, createWebHistory } from "vue-router/auto";
 import { setupLayouts } from "virtual:generated-layouts";
 import { useAuthUserStore } from "../stores/authUser";
@@ -21,14 +20,16 @@ import NewRecords from "@/pages/home/NewRecords.vue";
 //@ts-ignore
 import RecentRecords from "@/pages/home/RecentRecords.vue";
 
-
 const toast = useToast();
 
 const routes = setupLayouts([
-
   { path: "/", component: Hero },
   { path: "/newrecords", component: NewRecords, meta: { requiresAuth: true } },
-  { path: "/recentrecords", component: RecentRecords, meta: { requiresAuth: true } },
+  {
+    path: "/recentrecords",
+    component: RecentRecords,
+    meta: { requiresAuth: true },
+  },
   { path: "/welcome", component: Welcome, meta: { requiresAuth: true } },
   {
     path: "/home",
@@ -72,9 +73,8 @@ const routes = setupLayouts([
     name: "tracking",
     meta: { requiresAuth: true, role: "teacher" },
   },
-  
-  { path: "/:pathMatch(.*)*", component: NotFound, name: "NotFound" },
 
+  { path: "/:pathMatch(.*)*", component: NotFound, name: "NotFound" },
 ]);
 
 const router = createRouter({
@@ -82,40 +82,38 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const isLoggedIn = localStorage.getItem("access_token") !== null;
-  const userRole = localStorage.getItem("Role");
-  const publicPages = ["/", "/login"];
+// router.beforeEach((to, from, next) => {
+//   const isLoggedIn = localStorage.getItem("access_token") !== null;
+//   const userRole = localStorage.getItem("Role");
+//   const publicPages = ["/", "/login"];
 
-  const adminPages = ["/admin", "/teachers", "/teacher_account"];
-  // const protectedPages = ["/home", "/profiles", "/admin", "/teachers", "/teacher_account"];
+//   const adminPages = ["/admin", "/teachers", "/teacher_account"];
+//   // const protectedPages = ["/home", "/profiles", "/admin", "/teachers", "/teacher_account"];
 
+//   if (to.meta.requiresAuth && !isLoggedIn) {
+//     toast.error("Authentication is required to access this page.");
+//     return next("/");
+//   }
 
-  if (to.meta.requiresAuth && !isLoggedIn) {
-    toast.error("Authentication is required to access this page.");
-    return next("/");
-  }
+//   if (publicPages.includes(to.path) && isLoggedIn) {
+//     return next(userRole === "admin" ? "/admin" : "/home");
+//   }
 
-  if (publicPages.includes(to.path) && isLoggedIn) {
-    return next(userRole === "admin" ? "/admin" : "/home");
-  }
+//   if (to.meta.role && to.meta.role !== userRole) {
+//     return next(userRole === "admin" ? "/admin" : "/home");
+//   }
 
-  if (to.meta.role && to.meta.role !== userRole) {
-    return next(userRole === "admin" ? "/admin" : "/home");
-  }
+//   if (userRole === "admin" && !adminPages.includes(to.path)) {
+//     return next("/admin");
+//   }
 
+//   if (userRole !== "admin" && adminPages.includes(to.path)) {
+//     return next("/home");
 
-  if (userRole === "admin" && !adminPages.includes(to.path)) {
-    return next("/admin");
-  }
+//   }
 
-  if (userRole !== "admin" && adminPages.includes(to.path)) {
-    return next("/home");
-
-  }
-
-  next();
-});
+//   next();
+// });
 
 router.onError((err, to) => {
   if (err?.message?.includes?.("Failed to fetch dynamically imported module")) {
@@ -131,7 +129,7 @@ router.onError((err, to) => {
   }
 });
 
-router.isReady().then(() => {   
+router.isReady().then(() => {
   localStorage.removeItem("vuetify:dynamic-reload");
 });
 
