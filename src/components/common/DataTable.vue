@@ -9,14 +9,14 @@
         <v-table class="styled-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Email</th>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Phone</th>
-              <th>Address</th>
-              <th>Role</th>
-              <th class="actions-header">Actions</th>
+              <th class="text-left">ID</th>
+              <th class="text-left">Email</th>
+              <th class="text-left">First Name</th>
+              <th class="text-left">Last Name</th>
+              <th class="text-left">Phone</th>
+              <th class="text-left">Address</th>
+              <th class="text-left">Role</th>
+              <th class="text-center actions-header">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -29,18 +29,10 @@
               <td>{{ item.complete_address }}</td>
               <td>{{ item.role }}</td>
               <td class="actions-cell">
-                <v-btn
-                  @click="editUser(item)"
-                  class="edit-btn"
-                  small
-                  color="primary"
+                <v-btn @click="editUser(item)" small color="primary"
                   >Edit</v-btn
                 >
-                <v-btn
-                  @click="deleteUser(item.id)"
-                  class="delete-btn"
-                  small
-                  color="red"
+                <v-btn @click="deleteUser(item.id)" small color="red"
                   >Delete</v-btn
                 >
               </td>
@@ -88,6 +80,8 @@ const deleteUser = (id: number) => {
 .styled-table td {
   padding: 12px;
   border-bottom: 1px solid #ddd;
+  text-align: left;
+  vertical-align: middle;
 }
 
 .styled-table th {
@@ -97,7 +91,9 @@ const deleteUser = (id: number) => {
 
 .actions-cell {
   display: flex;
+  align-items: center;
   justify-content: center;
   gap: 8px;
+  vertical-align: middle;
 }
 </style>
