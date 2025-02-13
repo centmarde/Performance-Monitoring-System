@@ -4,6 +4,7 @@
       <v-card-title class="d-flex justify-space-between align-center">
         <span class="text-h6">User List</span>
       </v-card-title>
+
       <v-divider></v-divider>
       <v-card-text>
         <v-table class="styled-table">
