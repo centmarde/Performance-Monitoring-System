@@ -74,7 +74,7 @@ export const useRecordsStore = defineStore('recordsStore', () => {
     const records = students.map((student: any) => ({
       student_id: student.id,
       class_record_id: classRecordId,
-      initial_grade: 0, // Default initial grade
+      initial_grade: 0,
     }));
   
     const { error: insertError } = await supabase
@@ -89,11 +89,28 @@ export const useRecordsStore = defineStore('recordsStore', () => {
     return records;
   }
 
+  async function fetchInitialGradeByStudentId(studentId: number, classRecordId: number) {
+    const { data, error } = await supabase
+      .from('records')
+      .select('initial_grade')
+      .eq('student_id', studentId)
+      .eq('class_record_id', classRecordId);
+    
+
+    if (error) {
+      console.error('Error fetching initial grade:', error);
+      return null;
+    }
+    console.log(data);
+    return data?.[0]?.initial_grade || 0; // Return the initial grade from the first index
+  }
+
   return {
     records,
     fetchRecordsBySection,
     fetchAllRecords,
     fetchRecordsByClassRecordId,
     addRecordsForSection,
+    fetchInitialGradeByStudentId,
   };
 });
