@@ -247,7 +247,6 @@ const saveClassRecord = async () => {
   // Show success toast notification
   toast.success("Subject added successfully!", {
     timeout: 3000,
-    position: "top-right",
   });
 };
 
