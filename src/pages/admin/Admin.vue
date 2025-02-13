@@ -20,8 +20,6 @@
             </v-col>
           </v-row>
 
-          <!-- Items per page selector -->
-
           <!-- Add User Dialog -->
           <v-dialog v-model="showAddUserForm" max-width="500px">
             <v-card>
@@ -56,7 +54,7 @@
                     :rules="[requiredValidator, passwordValidator]"
                   />
                   <v-text-field
-                    v-model="newUser.role"
+                    v-model="newUser.user_type"
                     label="Role"
                     :rules="[requiredValidator]"
                   />
@@ -110,7 +108,7 @@
                     :rules="[requiredValidator, passwordValidator]"
                   />
                   <v-text-field
-                    v-model="editedUser.role"
+                    v-model="editedUser.user_type"
                     label="Role"
                     :rules="[requiredValidator]"
                   />
@@ -166,7 +164,6 @@
 
             <!-- Items per page dropdown aligned to the right -->
             <v-spacer></v-spacer>
-            <!-- This will push the next items to the right -->
             <v-col cols="auto" class="d-flex">
               <v-select
                 v-model="itemsPerPage"
@@ -205,7 +202,7 @@ interface User {
   lastname: string;
   phone: string;
   complete_address: string;
-  role: string;
+  user_type: string; // Updated field name
 }
 
 const items = ref<User[]>([]);
@@ -223,7 +220,7 @@ const newUser = ref<User>({
   password: "",
   phone: "",
   complete_address: "",
-  role: "",
+  user_type: "", // Updated field name
 });
 const editedUser = ref<User>({
   id: 0,
@@ -234,7 +231,7 @@ const editedUser = ref<User>({
   password: "",
   phone: "",
   complete_address: "",
-  role: "",
+  user_type: "", // Updated field name
 });
 
 // Pagination related state
@@ -247,7 +244,7 @@ const isAddUserValid = computed(() => {
     newUser.value.lastname.trim() !== "" &&
     emailValidator(newUser.value.email) === true &&
     passwordValidator(newUser.value.password) === true &&
-    newUser.value.role.trim() !== ""
+    newUser.value.user_type.trim() !== "" // Updated field name
   );
 });
 
@@ -260,14 +257,14 @@ const isEditUserValid = computed(() => {
     (editedUser.value.lastname?.trim() || "").length > 0 &&
     emailValidator(editedUser.value.email || "") === true &&
     isValidPassword && // Check password only if it's not empty
-    (editedUser.value.role?.trim() || "").length > 0
+    (editedUser.value.user_type?.trim() || "").length > 0 // Updated field name
   );
 });
 
 const filteredItems = computed(() => {
   if (!searchQuery.value) return items.value;
   return items.value.filter((user) =>
-    [user.name, user.email, user.role].some((field) =>
+    [user.name, user.email, user.user_type].some((field) =>
       field.toLowerCase().includes(searchQuery.value.toLowerCase())
     )
   );
@@ -313,7 +310,7 @@ onMounted(async () => {
       phone: profile.phone,
       password: profile.password,
       complete_address: profile.complete_address,
-      role: profile.user_type,
+      user_type: profile.user_type, // Updated field name
     }));
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -331,7 +328,7 @@ const openEditDialog = (user: User) => {
     password: "",
     phone: "",
     complete_address: "",
-    role: "",
+    user_type: "", // Updated field name
   };
   console.log("Opening Edit Dialog:", editedUser.value); // Log the data
   showEditUserForm.value = true;
@@ -356,7 +353,7 @@ const addUser = async () => {
       lastname: "",
       phone: "",
       complete_address: "",
-      role: "",
+      user_type: "", // Updated field name
     };
     showAddUserForm.value = false;
   } catch (error) {
