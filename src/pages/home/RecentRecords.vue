@@ -725,6 +725,7 @@ const saveChanges = async (item) => {
         pt9: item.pt9,
         pt10: item.pt10,
         qa1: item.qa1,
+        initial_grade: item.initial_grade,
       })
       .eq("student_id", item.id);
 
@@ -820,11 +821,12 @@ const fetchRecords = async () => {
             record.pt9 +
             record.pt10,
           qaTotal: record.qa1,
+          wwws: "40%",
           wwps: gradeCalculation.ww_weighted_score || 0,
           ptps: gradeCalculation.pt_weighted_score || 0,
-          ptws: gradeCalculation.pt_weighted_score || 0,
+          ptws: "40%",
           qaps: gradeCalculation.qa_weighted_score || 0,
-          qaws: gradeCalculation.qa_weighted_score || 0,
+          qaws: "20%",
           initial_grade: gradeCalculation.initial_grade || 0,
           quarterly_grade: gradeCalculation.initial_grade || 0,
         };

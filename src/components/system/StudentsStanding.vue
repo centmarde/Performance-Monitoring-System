@@ -5,7 +5,7 @@
     transition="fade-transition"
   >
     <v-container>
-      <v-row justify="center">
+      <v-row justify="start">
         <v-col cols="auto">
           <v-card class="pa-3 rounded-card glass-card">
             <h4 class="font-weight-bold text-end">
@@ -30,7 +30,7 @@
             cols="12"
             md="4"
           >
-            <v-card class="pa-8 student-box fixed-card">
+            <v-card class="pa-8 student-box fixed-card" color="#E8F5E9">
               <h3 class="text-center font-weight-bold">Section: {{ subject }}</h3>
               <span class="text-center">{{ sectionsStore.sections.find(sec => sec.code === subject)?.subject_title }}</span>
               <div class="search-bar-container">
@@ -236,7 +236,7 @@ export default defineComponent({
 }
 
 .fixed-card {
-  height: 400px;
+  height: 35rem;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -251,7 +251,7 @@ export default defineComponent({
 }
 
 .glass-card {
-  background: rgba(0, 105, 92, 0.5);
+ 
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
