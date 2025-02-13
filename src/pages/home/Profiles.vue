@@ -192,7 +192,7 @@ const showConfirmNewPassword = ref(false);
 // Image Upload Function
 const tempImage = ref<string | null>(null); // Temporary image preview
 
-const uploadImage = () => {
+const uploadImage = async () => {
   const input = document.createElement("input");
   input.type = "file";
   input.accept = "image/*";
@@ -200,16 +200,24 @@ const uploadImage = () => {
     const file = (event.target as HTMLInputElement)?.files?.[0];
     if (!file) return;
 
-    // Read and show the preview
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      tempImage.value = reader.result as string; // Preview image
-      toast.info("Image selected! Click 'Save Information' to update.");
-    };
+    const filePath = `profile_images/${Date.now()}-${file.name}`;
+    const { error } = await supabase.storage
+      .from("profiles")
+      .upload(filePath, file);
 
-    // Store the file in a hidden variable (so we can upload it later)
-    selectedFile.value = file;
+    if (error) {
+      console.error("Error uploading image:", error.message);
+      return;
+    }
+
+    const publicUrl = supabase.storage.from("profiles").getPublicUrl(filePath)
+      .data.publicUrl;
+
+    if (publicUrl) {
+      profileImage.value = publicUrl; // Update profile page
+      userStore.setProfileImage(publicUrl); // ✅ Update sidebar in real time
+      console.log("Profile image updated:", publicUrl);
+    }
   };
   input.click();
 };
@@ -217,17 +225,27 @@ const uploadImage = () => {
 // Reset Profile Fields
 const resetProfile = async () => {
   await fetchProfile();
+  tempImage.value = null; // Clear preview
+  selectedFile.value = null; // Remove selected file
 };
-// Fetch user profile
+
+// Fetch user profile from Supabase
 const fetchProfile = async () => {
-  const { data: user } = await supabase.auth.getUser();
-  if (!user?.user?.id) return;
-  const { data } = await supabase
-    .from("users")
+  const { data: user, error } = await supabase.auth.getUser();
+  if (error || !user?.user?.id) {
+    console.error("Error fetching user:", error?.message);
+    return;
+  }
+
+  const { data, error: profileError } = await supabase
+    .from("users") // Corrected to match your table
     .select("firstname, lastname, phone, email, complete_address, image_path")
-    .eq("user_id", user.user.id)
+    .eq("user_id", user.user.id) // Ensure correct filtering
     .single();
-  if (data) {
+
+  if (profileError) {
+    console.error("Error fetching profile:", profileError.message);
+  } else {
     firstName.value = data.firstname || "";
     lastName.value = data.lastname || "";
     phoneNumber.value = data.phone || "";
