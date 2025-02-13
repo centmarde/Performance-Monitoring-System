@@ -13,7 +13,7 @@
                     <v-card-text class="white--text">
                       <v-img
                         class="mx-auto rounded-circle"
-                        src="/images/school-logo.png"
+                        src="/images/Logo-school.png"
                         width="50%"
                       ></v-img>
                       <h2 class="text-center mt-3">
@@ -41,7 +41,7 @@
                     <v-card-text class="white--text">
                       <v-img
                         class="mx-auto rounded-circle"
-                        src="/images/school-logo.png"
+                        src="/images/Logo-school.png"
                         width="50%"
                       ></v-img>
                       <h2 class="text-center mt-3">

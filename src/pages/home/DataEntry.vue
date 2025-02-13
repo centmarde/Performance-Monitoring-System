@@ -164,7 +164,9 @@ import { useClassRecordStore } from "@/stores/classRecord";
 import { useSubjectsStore } from "@/stores/subjectsStore";
 import { useSectionsStore } from "@/stores/sectionsStore";
 import { useRecordsStore } from "@/stores/recordsStore";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const classRecordDialog = ref(false);
 const activeSubject = ref("");
 const currentPage = ref(1);
@@ -212,14 +214,14 @@ const saveClassRecord = async () => {
     console.error("Invalid quarter value");
     return;
   }
-  console.log(selectedSubject.value);
+
   const subjectId = await subjectsStore.fetchSubjectIdByTitle(
     selectedSubject.value
   );
   const sectionId = await sectionsStore.fetchSectionIdByCode(
     selectedSection.value
   );
-  console.log(subjectId, sectionId);
+
   if (subjectId === null || sectionId === null) {
     console.error("Invalid subject or section value");
     return;
@@ -239,7 +241,13 @@ const saveClassRecord = async () => {
   } else {
     console.error("Invalid section or class record ID");
   }
+
   classRecordDialog.value = false;
+
+  // Show success toast notification
+  toast.success("Subject added successfully!", {
+    timeout: 3000,
+  });
 };
 
 const showAddNewDialog = () => {
