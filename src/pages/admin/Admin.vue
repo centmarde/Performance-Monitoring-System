@@ -20,47 +20,74 @@
             </v-col>
           </v-row>
 
-          <!-- Items per page selector -->
-
           <!-- Add User Dialog -->
           <v-dialog v-model="showAddUserForm" max-width="500px">
             <v-card>
               <v-card-title>Add User</v-card-title>
               <v-card-text>
                 <v-form @submit.prevent="addUser">
-                  <v-text-field
-                    v-model="newUser.name"
-                    label="Name"
-                    :rules="[requiredValidator]"
-                  />
+                  <v-row>
+                    <v-col cols="6">
+                      <v-text-field
+                        v-model="newUser.firstname"
+                        label="First Name"
+                        :rules="[requiredValidator]"
+                        outlined
+                      />
+                    </v-col>
+                    <v-col cols="6">
+                      <v-text-field
+                        v-model="newUser.lastname"
+                        label="Last Name"
+                        :rules="[requiredValidator]"
+                        outlined
+                      />
+                    </v-col>
+                  </v-row>
                   <v-text-field
                     v-model="newUser.email"
                     label="Email"
                     :rules="[requiredValidator, emailValidator]"
+                    outlined
                   />
                   <v-text-field
                     v-model="newUser.password"
                     label="Password"
                     type="password"
                     :rules="[requiredValidator, passwordValidator]"
+                    outlined
                   />
                   <v-text-field
-                    v-model="newUser.role"
+                    v-model="newUser.phone"
+                    label="Phone"
+                    :rules="[requiredValidator]"
+                    outlined
+                  />
+                  <v-text-field
+                    v-model="newUser.complete_address"
+                    label="Address"
+                    :rules="[requiredValidator]"
+                    outlined
+                  />
+                  <v-text-field
+                    v-model="newUser.user_type"
                     label="Role"
                     :rules="[requiredValidator]"
+                    outlined
                   />
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn @click="showAddUserForm = false" color="grey darken-1"
-                  >Cancel</v-btn
-                >
+                <v-btn @click="showAddUserForm = false" color="grey darken-1">
+                  Cancel
+                </v-btn>
                 <v-btn
                   @click="addUser"
-                  color="#2E7D32"
+                  color="teal darken-3"
                   :disabled="!isAddUserValid"
-                  >Add User</v-btn
                 >
+                  Add User
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -71,39 +98,70 @@
               <v-card-title>Edit User</v-card-title>
               <v-card-text>
                 <v-form @submit.prevent="updateUser">
-                  <v-text-field
-                    v-model="editedUser.name"
-                    label="Name"
-                    :rules="[requiredValidator]"
-                  />
+                  <v-row>
+                    <v-col cols="6">
+                      <v-text-field
+                        v-model="editedUser.firstname"
+                        label="First Name"
+                        :rules="[requiredValidator]"
+                        outlined
+                      />
+                    </v-col>
+                    <v-col cols="6">
+                      <v-text-field
+                        v-model="editedUser.lastname"
+                        label="Last Name"
+                        :rules="[requiredValidator]"
+                        outlined
+                      />
+                    </v-col>
+                  </v-row>
                   <v-text-field
                     v-model="editedUser.email"
                     label="Email"
                     :rules="[requiredValidator, emailValidator]"
+                    outlined
                   />
                   <v-text-field
                     v-model="editedUser.password"
                     label="Password"
-                    type="password"
-                    :rules="[requiredValidator, passwordValidator]"
+                    :type="passwordVisible ? 'text' : 'password'"
+                    :rules="[passwordValidator]"
+                    append-inner-icon="mdi-eye"
+                    @click:append-inner="togglePasswordVisibility"
+                    outlined
                   />
                   <v-text-field
-                    v-model="editedUser.role"
+                    v-model="editedUser.phone"
+                    label="Phone"
+                    :rules="[requiredValidator]"
+                    outlined
+                  />
+                  <v-text-field
+                    v-model="editedUser.complete_address"
+                    label="Address"
+                    :rules="[requiredValidator]"
+                    outlined
+                  />
+                  <v-text-field
+                    v-model="editedUser.user_type"
                     label="Role"
                     :rules="[requiredValidator]"
+                    outlined
                   />
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn @click="showEditUserForm = false" color="grey darken-1"
-                  >Cancel</v-btn
-                >
+                <v-btn @click="showEditUserForm = false" color="grey darken-1">
+                  Cancel
+                </v-btn>
                 <v-btn
                   @click="updateUser"
-                  color="blue"
+                  color="teal darken-3"
                   :disabled="!isEditUserValid"
-                  >Save Changes</v-btn
                 >
+                  Update User
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -144,7 +202,6 @@
 
             <!-- Items per page dropdown aligned to the right -->
             <v-spacer></v-spacer>
-            <!-- This will push the next items to the right -->
             <v-col cols="auto" class="d-flex">
               <v-select
                 v-model="itemsPerPage"
@@ -183,7 +240,7 @@ interface User {
   lastname: string;
   phone: string;
   complete_address: string;
-  role: string;
+  user_type: string; // Updated field name
 }
 
 const items = ref<User[]>([]);
@@ -201,7 +258,7 @@ const newUser = ref<User>({
   password: "",
   phone: "",
   complete_address: "",
-  role: "",
+  user_type: "", // Updated field name
 });
 const editedUser = ref<User>({
   id: 0,
@@ -212,8 +269,15 @@ const editedUser = ref<User>({
   password: "",
   phone: "",
   complete_address: "",
-  role: "",
+  user_type: "", // Updated field name
 });
+
+// Password visibility toggle
+const passwordVisible = ref(false);
+
+const togglePasswordVisibility = () => {
+  passwordVisible.value = !passwordVisible.value;
+};
 
 // Pagination related state
 const currentPage = ref(1);
@@ -221,27 +285,44 @@ const itemsPerPage = ref(10); // Default to 10, but can be changed
 
 const isAddUserValid = computed(() => {
   return (
-    newUser.value.name.trim() !== "" &&
+    newUser.value.firstname.trim() !== "" &&
+    newUser.value.lastname.trim() !== "" &&
     emailValidator(newUser.value.email) === true &&
     passwordValidator(newUser.value.password) === true &&
-    newUser.value.role.trim() !== ""
+    newUser.value.phone.trim() !== "" && // Ensure phone is not empty
+    newUser.value.complete_address.trim() !== "" && // Ensure address is not empty
+    newUser.value.user_type.trim() !== "" // Role field must not be empty
   );
 });
 
 const isEditUserValid = computed(() => {
+  const isValidPassword =
+    !editedUser.value.password || passwordValidator(editedUser.value.password);
+
   return (
-    editedUser.value.name.trim() !== "" &&
-    emailValidator(editedUser.value.email) === true &&
-    passwordValidator(editedUser.value.password) === true &&
-    editedUser.value.role.trim() !== ""
+    (editedUser.value.firstname?.trim() || "").length > 0 &&
+    (editedUser.value.lastname?.trim() || "").length > 0 &&
+    emailValidator(editedUser.value.email || "") === true &&
+    isValidPassword && // Check password only if it's not empty
+    (editedUser.value.user_type?.trim() || "").length > 0 && // Updated field name
+    (editedUser.value.phone?.trim() || "").length > 0 &&
+    (editedUser.value.complete_address?.trim() || "").length > 0
   );
 });
 
 const filteredItems = computed(() => {
   if (!searchQuery.value) return items.value;
   return items.value.filter((user) =>
-    [user.name, user.email, user.role].some((field) =>
-      field.toLowerCase().includes(searchQuery.value.toLowerCase())
+    [
+      user.id.toString(),
+      user.email,
+      user.firstname,
+      user.lastname,
+      user.phone,
+      user.complete_address,
+      user.user_type, // Updated field name
+    ].some((field) =>
+      field?.toLowerCase().includes(searchQuery.value.toLowerCase())
     )
   );
 });
@@ -271,12 +352,8 @@ onMounted(async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-
     const { data: profiles, error } = await supabase.from("users").select("*");
-    if (error) {
-      throw error;
-    }
-
+    if (error) throw error;
     items.value = profiles.map((profile: any) => ({
       id: profile.id,
       name: profile.name,
@@ -286,7 +363,7 @@ onMounted(async () => {
       phone: profile.phone,
       password: profile.password,
       complete_address: profile.complete_address,
-      role: profile.user_type,
+      user_type: profile.user_type,
     }));
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -305,9 +382,7 @@ const addUser = async () => {
       .from("users")
       .insert([newUser.value])
       .select();
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
     items.value.push({ ...newUser.value, id: data[0].id });
     newUser.value = {
       id: 0,
@@ -318,7 +393,7 @@ const addUser = async () => {
       lastname: "",
       phone: "",
       complete_address: "",
-      role: "",
+      user_type: "",
     };
     showAddUserForm.value = false;
   } catch (error) {
@@ -332,9 +407,7 @@ const updateUser = async () => {
       .from("users")
       .update(editedUser.value)
       .eq("id", editedUser.value.id);
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
     const index = items.value.findIndex(
       (user) => user.id === editedUser.value.id
     );
@@ -355,19 +428,46 @@ const promptDeleteUser = (id: number) => {
 const confirmDeleteUser = async () => {
   try {
     if (userToDelete.value !== null) {
+      console.log(
+        "Checking related class records for user ID:",
+        userToDelete.value
+      );
+
+      // Check if related records exist
+      const { data: classRecords, error: checkError } = await supabase
+        .from("class_record")
+        .select("id")
+        .eq("teacher_id", userToDelete.value);
+
+      if (checkError) {
+        console.error("Error checking related class records:", checkError);
+        return;
+      }
+
+      if (classRecords.length > 0) {
+        alert("Cannot delete user. They have related class records.");
+        return;
+      }
+
+      // Proceed with deletion
       const { error } = await supabase
         .from("users")
         .delete()
         .eq("id", userToDelete.value);
+
       if (error) {
-        throw error;
+        console.error("Error deleting user:", error);
+        return;
       }
+
       items.value = items.value.filter(
         (user) => user.id !== userToDelete.value
       );
+      console.log("User deleted successfully!");
+
       userToDelete.value = null;
+      showDeleteConfirmation.value = false;
     }
-    showDeleteConfirmation.value = false;
   } catch (error) {
     console.error("Error deleting user:", error);
   }
