@@ -74,7 +74,7 @@
           <v-row justify="center">
             <v-col cols="auto">
               <v-btn color="primary" class="save-btn" @click="updateProfile"
-                >Save Information</v-btn
+                >Save Changes</v-btn
               >
             </v-col>
           </v-row>
