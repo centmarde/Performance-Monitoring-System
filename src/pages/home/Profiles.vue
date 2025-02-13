@@ -29,7 +29,6 @@
               <v-btn :color="primaryColor" @click="uploadImage"
                 >Upload New Photo</v-btn
               >
-              >
               <v-btn class="ml-2" color="grey" @click="resetProfile"
                 >Reset</v-btn
               >
