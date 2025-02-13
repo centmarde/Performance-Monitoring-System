@@ -164,8 +164,11 @@ import HomeLayout from "@/layouts/HomeLayout.vue";
 import { supabase } from "@/lib/supabase";
 import { useUserInfoStore } from "@/stores/userInfo";
 import Avatar from "@/assets/avatar.png";
+import { useToast } from "vue-toastification";
 
 const avatar = Avatar;
+const toast = useToast();
+
 const userStore = useUserInfoStore();
 const firstName = ref("");
 const lastName = ref("");
@@ -204,9 +207,12 @@ const fetchProfile = async () => {
 
 const updateProfile = async () => {
   const { data: user, error } = await supabase.auth.getUser();
-  if (error || !user?.user?.id) return;
+  if (error || !user?.user?.id) {
+    toast.error("Failed to retrieve user data.");
+    return;
+  }
 
-  await supabase
+  const { error: updateError } = await supabase
     .from("users")
     .update({
       firstname: firstName.value,
@@ -217,23 +223,47 @@ const updateProfile = async () => {
       image_path: profileImage.value,
     })
     .eq("user_id", user.user.id);
+
+  if (updateError) {
+    toast.error("Failed to update profile. Please try again.");
+  } else {
+    toast.success("Profile updated successfully!");
+  }
 };
 
 const updatePassword = async () => {
-  if (!oldPassword.value || !newPassword.value || !confirmNewPassword.value)
+  if (!oldPassword.value || !newPassword.value || !confirmNewPassword.value) {
+    toast.warning("Please fill out all password fields.");
     return;
-  if (newPassword.value !== confirmNewPassword.value) return;
+  }
+
+  if (newPassword.value !== confirmNewPassword.value) {
+    toast.error("New passwords do not match.");
+    return;
+  }
 
   const { error: signInError } = await supabase.auth.signInWithPassword({
     email: email.value,
     password: oldPassword.value,
   });
-  if (signInError) return;
 
-  await supabase.auth.updateUser({ password: newPassword.value });
-  oldPassword.value = "";
-  newPassword.value = "";
-  confirmNewPassword.value = "";
+  if (signInError) {
+    toast.error("Incorrect old password.");
+    return;
+  }
+
+  const { error: updateError } = await supabase.auth.updateUser({
+    password: newPassword.value,
+  });
+
+  if (updateError) {
+    toast.error("Failed to update password. Please try again.");
+  } else {
+    toast.success("Password updated successfully!");
+    oldPassword.value = "";
+    newPassword.value = "";
+    confirmNewPassword.value = "";
+  }
 };
 
 const uploadImage = async () => {
