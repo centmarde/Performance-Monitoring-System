@@ -21,15 +21,15 @@
           </v-row>
 
           <!-- Add User Dialog -->
-          <v-dialog v-model="showAddUserForm" max-width="500px">
+          <v-dialog v-model="showEditUserForm" max-width="500px">
             <v-card>
-              <v-card-title>Add User</v-card-title>
+              <v-card-title>Edit User</v-card-title>
               <v-card-text>
-                <v-form @submit.prevent="addUser">
+                <v-form @submit.prevent="updateUser">
                   <v-row>
                     <v-col cols="6">
                       <v-text-field
-                        v-model="newUser.firstname"
+                        v-model="editedUser.firstname"
                         label="First Name"
                         :rules="[requiredValidator]"
                         outlined
@@ -37,7 +37,7 @@
                     </v-col>
                     <v-col cols="6">
                       <v-text-field
-                        v-model="newUser.lastname"
+                        v-model="editedUser.lastname"
                         label="Last Name"
                         :rules="[requiredValidator]"
                         outlined
@@ -45,32 +45,25 @@
                     </v-col>
                   </v-row>
                   <v-text-field
-                    v-model="newUser.email"
+                    v-model="editedUser.email"
                     label="Email"
                     :rules="[requiredValidator, emailValidator]"
                     outlined
                   />
                   <v-text-field
-                    v-model="newUser.password"
-                    label="Password"
-                    type="password"
-                    :rules="[requiredValidator, passwordValidator]"
-                    outlined
-                  />
-                  <v-text-field
-                    v-model="newUser.phone"
+                    v-model="editedUser.phone"
                     label="Phone"
                     :rules="[requiredValidator]"
                     outlined
                   />
                   <v-text-field
-                    v-model="newUser.complete_address"
+                    v-model="editedUser.complete_address"
                     label="Address"
                     :rules="[requiredValidator]"
                     outlined
                   />
                   <v-text-field
-                    v-model="newUser.user_type"
+                    v-model="editedUser.user_type"
                     label="Role"
                     :rules="[requiredValidator]"
                     outlined
@@ -78,15 +71,15 @@
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn @click="showAddUserForm = false" color="grey darken-1"
+                <v-btn @click="showEditUserForm = false" color="grey darken-1"
                   >Cancel</v-btn
                 >
                 <v-btn
-                  @click="addUser"
+                  @click="updateUser"
                   color="teal darken-3"
-                  :disabled="!isAddUserValid"
+                  :disabled="!isEditUserValid"
                 >
-                  Add User
+                  Save Changes
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -377,19 +370,22 @@ onMounted(async () => {
 });
 
 // Methods for managing users
-const openEditDialog = (user: User) => {
-  editedUser.value = { ...user } || {
-    id: 0,
-    name: "",
-    email: "",
-    firstname: "",
-    lastname: "",
-    password: "",
-    phone: "",
-    complete_address: "",
-    user_type: "", // Updated field name
-  };
-  console.log("Opening Edit Dialog:", editedUser.value); // Log the data
+const openEditDialog = (user?: User) => {
+  editedUser.value = user
+    ? { ...user }
+    : {
+        id: 0,
+        name: "",
+        email: "",
+        firstname: "",
+        lastname: "",
+        password: "",
+        phone: "",
+        complete_address: "",
+        user_type: "",
+      };
+
+  console.log("Opening Edit Dialog:", editedUser.value); // Debugging log
   showEditUserForm.value = true;
 };
 
