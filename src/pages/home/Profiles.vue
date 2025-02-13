@@ -5,7 +5,7 @@
         <v-row>
           <v-col cols="12" md="3">
             <v-btn-toggle v-model="activeTab" mandatory>
-              <v-btn value="account">
+              <v-btn value="account" color="primary">
                 <v-icon>mdi-account</v-icon> Account
               </v-btn>
               <v-btn value="security" color="primary">
