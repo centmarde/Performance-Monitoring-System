@@ -28,11 +28,22 @@
               <v-card-title>Add User</v-card-title>
               <v-card-text>
                 <v-form @submit.prevent="addUser">
-                  <v-text-field
-                    v-model="newUser.name"
-                    label="Name"
-                    :rules="[requiredValidator]"
-                  />
+                  <v-row>
+                    <v-col cols="6">
+                      <v-text-field
+                        v-model="newUser.firstname"
+                        label="First Name"
+                        :rules="[requiredValidator]"
+                      />
+                    </v-col>
+                    <v-col cols="6">
+                      <v-text-field
+                        v-model="newUser.lastname"
+                        label="Last Name"
+                        :rules="[requiredValidator]"
+                      />
+                    </v-col>
+                  </v-row>
                   <v-text-field
                     v-model="newUser.email"
                     label="Email"
@@ -71,11 +82,22 @@
               <v-card-title>Edit User</v-card-title>
               <v-card-text>
                 <v-form @submit.prevent="updateUser">
-                  <v-text-field
-                    v-model="editedUser.name"
-                    label="Name"
-                    :rules="[requiredValidator]"
-                  />
+                  <v-row>
+                    <v-col cols="6">
+                      <v-text-field
+                        v-model="editedUser.firstname"
+                        label="First Name"
+                        :rules="[requiredValidator]"
+                      />
+                    </v-col>
+                    <v-col cols="6">
+                      <v-text-field
+                        v-model="editedUser.lastname"
+                        label="Last Name"
+                        :rules="[requiredValidator]"
+                      />
+                    </v-col>
+                  </v-row>
                   <v-text-field
                     v-model="editedUser.email"
                     label="Email"
@@ -221,7 +243,8 @@ const itemsPerPage = ref(10); // Default to 10, but can be changed
 
 const isAddUserValid = computed(() => {
   return (
-    newUser.value.name.trim() !== "" &&
+    newUser.value.firstname.trim() !== "" &&
+    newUser.value.lastname.trim() !== "" &&
     emailValidator(newUser.value.email) === true &&
     passwordValidator(newUser.value.password) === true &&
     newUser.value.role.trim() !== ""
@@ -230,7 +253,8 @@ const isAddUserValid = computed(() => {
 
 const isEditUserValid = computed(() => {
   return (
-    editedUser.value.name.trim() !== "" &&
+    editedUser.value.firstname.trim() !== "" &&
+    editedUser.value.lastname.trim() !== "" &&
     emailValidator(editedUser.value.email) === true &&
     passwordValidator(editedUser.value.password) === true &&
     editedUser.value.role.trim() !== ""
