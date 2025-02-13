@@ -78,9 +78,9 @@
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn @click="showAddUserForm = false" color="grey darken-1">
-                  Cancel
-                </v-btn>
+                <v-btn @click="showAddUserForm = false" color="grey darken-1"
+                  >Cancel</v-btn
+                >
                 <v-btn
                   @click="addUser"
                   color="teal darken-3"
@@ -93,15 +93,15 @@
           </v-dialog>
 
           <!-- Edit User Dialog -->
-          <v-dialog v-model="showEditUserForm" max-width="500px">
+          <v-dialog v-model="showAddUserForm" max-width="500px">
             <v-card>
-              <v-card-title>Edit User</v-card-title>
+              <v-card-title>Add User</v-card-title>
               <v-card-text>
-                <v-form @submit.prevent="updateUser">
+                <v-form @submit.prevent="addUser">
                   <v-row>
                     <v-col cols="6">
                       <v-text-field
-                        v-model="editedUser.firstname"
+                        v-model="newUser.firstname"
                         label="First Name"
                         :rules="[requiredValidator]"
                         outlined
@@ -109,7 +109,7 @@
                     </v-col>
                     <v-col cols="6">
                       <v-text-field
-                        v-model="editedUser.lastname"
+                        v-model="newUser.lastname"
                         label="Last Name"
                         :rules="[requiredValidator]"
                         outlined
@@ -117,34 +117,34 @@
                     </v-col>
                   </v-row>
                   <v-text-field
-                    v-model="editedUser.email"
+                    v-model="newUser.email"
                     label="Email"
                     :rules="[requiredValidator, emailValidator]"
                     outlined
                   />
                   <v-text-field
-                    v-model="editedUser.password"
+                    v-model="newUser.password"
                     label="Password"
                     :type="passwordVisible ? 'text' : 'password'"
-                    :rules="[passwordValidator]"
+                    :rules="[requiredValidator, passwordValidator]"
                     append-inner-icon="mdi-eye"
                     @click:append-inner="togglePasswordVisibility"
                     outlined
                   />
                   <v-text-field
-                    v-model="editedUser.phone"
+                    v-model="newUser.phone"
                     label="Phone"
                     :rules="[requiredValidator]"
                     outlined
                   />
                   <v-text-field
-                    v-model="editedUser.complete_address"
+                    v-model="newUser.complete_address"
                     label="Address"
                     :rules="[requiredValidator]"
                     outlined
                   />
                   <v-text-field
-                    v-model="editedUser.user_type"
+                    v-model="newUser.user_type"
                     label="Role"
                     :rules="[requiredValidator]"
                     outlined
@@ -152,15 +152,15 @@
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn @click="showEditUserForm = false" color="grey darken-1">
-                  Cancel
-                </v-btn>
-                <v-btn
-                  @click="updateUser"
-                  color="teal darken-3"
-                  :disabled="!isEditUserValid"
+                <v-btn @click="showAddUserForm = false" color="grey darken-1"
+                  >Cancel</v-btn
                 >
-                  Update User
+                <v-btn
+                  @click="addUser"
+                  color="teal darken-3"
+                  :disabled="!isAddUserValid"
+                >
+                  Add User
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -273,6 +273,7 @@ const editedUser = ref<User>({
 });
 
 // Password visibility toggle
+// Password visibility toggle
 const passwordVisible = ref(false);
 
 const togglePasswordVisibility = () => {
@@ -311,6 +312,7 @@ const isEditUserValid = computed(() => {
 });
 
 const filteredItems = computed(() => {
+  console.log("Search Query:", searchQuery.value); // Debugging search query
   if (!searchQuery.value) return items.value;
   return items.value.filter((user) =>
     [
@@ -352,8 +354,12 @@ onMounted(async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
+
     const { data: profiles, error } = await supabase.from("users").select("*");
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
+
     items.value = profiles.map((profile: any) => ({
       id: profile.id,
       name: profile.name,
@@ -363,7 +369,7 @@ onMounted(async () => {
       phone: profile.phone,
       password: profile.password,
       complete_address: profile.complete_address,
-      user_type: profile.user_type,
+      user_type: profile.user_type, // Updated field name
     }));
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -372,7 +378,18 @@ onMounted(async () => {
 
 // Methods for managing users
 const openEditDialog = (user: User) => {
-  editedUser.value = { ...user };
+  editedUser.value = { ...user } || {
+    id: 0,
+    name: "",
+    email: "",
+    firstname: "",
+    lastname: "",
+    password: "",
+    phone: "",
+    complete_address: "",
+    user_type: "", // Updated field name
+  };
+  console.log("Opening Edit Dialog:", editedUser.value); // Log the data
   showEditUserForm.value = true;
 };
 
@@ -382,8 +399,12 @@ const addUser = async () => {
       .from("users")
       .insert([newUser.value])
       .select();
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
+    // Add the new user to the list
     items.value.push({ ...newUser.value, id: data[0].id });
+    // Reset form fields after successful addition
     newUser.value = {
       id: 0,
       name: "",
@@ -393,7 +414,7 @@ const addUser = async () => {
       lastname: "",
       phone: "",
       complete_address: "",
-      user_type: "",
+      user_type: "", // Updated field name
     };
     showAddUserForm.value = false;
   } catch (error) {
@@ -402,12 +423,15 @@ const addUser = async () => {
 };
 
 const updateUser = async () => {
+  console.log("Edited User:", editedUser.value); // Log the user data
   try {
     const { error } = await supabase
       .from("users")
       .update(editedUser.value)
       .eq("id", editedUser.value.id);
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
     const index = items.value.findIndex(
       (user) => user.id === editedUser.value.id
     );
@@ -428,46 +452,19 @@ const promptDeleteUser = (id: number) => {
 const confirmDeleteUser = async () => {
   try {
     if (userToDelete.value !== null) {
-      console.log(
-        "Checking related class records for user ID:",
-        userToDelete.value
-      );
-
-      // Check if related records exist
-      const { data: classRecords, error: checkError } = await supabase
-        .from("class_record")
-        .select("id")
-        .eq("teacher_id", userToDelete.value);
-
-      if (checkError) {
-        console.error("Error checking related class records:", checkError);
-        return;
-      }
-
-      if (classRecords.length > 0) {
-        alert("Cannot delete user. They have related class records.");
-        return;
-      }
-
-      // Proceed with deletion
       const { error } = await supabase
         .from("users")
         .delete()
         .eq("id", userToDelete.value);
-
       if (error) {
-        console.error("Error deleting user:", error);
-        return;
+        throw error;
       }
-
       items.value = items.value.filter(
         (user) => user.id !== userToDelete.value
       );
-      console.log("User deleted successfully!");
-
       userToDelete.value = null;
-      showDeleteConfirmation.value = false;
     }
+    showDeleteConfirmation.value = false;
   } catch (error) {
     console.error("Error deleting user:", error);
   }

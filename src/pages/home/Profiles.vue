@@ -25,7 +25,11 @@
               </p>
             </v-col>
           </v-row>
-
+          <v-row>
+            <v-col cols="12">
+              <h3>Personal Information</h3>
+            </v-col>
+          </v-row>
           <!-- Profile Form -->
           <v-row>
             <v-col cols="12" md="6">
@@ -55,6 +59,7 @@
                 v-model="email"
                 label="E-mail"
                 variant="outlined"
+                disabled
               ></v-text-field>
             </v-col>
           </v-row>
@@ -67,6 +72,47 @@
               >
             </v-col>
           </v-row>
+
+          <!-- Change Password Section -->
+          <v-divider class="my-4"></v-divider>
+          <v-row>
+            <v-col cols="12">
+              <h3>Change Password</h3>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" md="4">
+              <v-text-field
+                v-model="oldPassword"
+                label="Old Password"
+                type="password"
+                variant="outlined"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" md="4">
+              <v-text-field
+                v-model="newPassword"
+                label="New Password"
+                type="password"
+                variant="outlined"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" md="4">
+              <v-text-field
+                v-model="confirmNewPassword"
+                label="Confirm New Password"
+                type="password"
+                variant="outlined"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row justify="center">
+            <v-col cols="auto">
+              <v-btn color="primary" @click="updatePassword"
+                >Update Password</v-btn
+              >
+            </v-col>
+          </v-row>
         </v-card>
       </v-container>
     </template>
@@ -76,10 +122,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import HomeLayout from "@/layouts/HomeLayout.vue";
-import { supabase } from "@/lib/supabase"; // Ensure Supabase client is set up
+import { supabase } from "@/lib/supabase";
 import { useUserInfoStore } from "@/stores/userInfo";
 import Avatar from "@/assets/avatar.png";
-// User profile state
 
 const avatar = Avatar;
 const userStore = useUserInfoStore();
@@ -88,25 +133,23 @@ const lastName = ref("");
 const phoneNumber = ref("");
 const email = ref("");
 const completeAddress = ref("");
-const profileImage = ref(Avatar); // Default image
+const profileImage = ref(Avatar);
 
-// Fetch user profile from Supabase
+const oldPassword = ref("");
+const newPassword = ref("");
+const confirmNewPassword = ref("");
+
 const fetchProfile = async () => {
   const { data: user, error } = await supabase.auth.getUser();
-  if (error || !user?.user?.id) {
-    console.error("Error fetching user:", error?.message);
-    return;
-  }
+  if (error || !user?.user?.id) return;
 
   const { data, error: profileError } = await supabase
-    .from("users") // Corrected to match your table
+    .from("users")
     .select("firstname, lastname, phone, email, complete_address, image_path")
-    .eq("user_id", user.user.id) // Ensure correct filtering
+    .eq("user_id", user.user.id)
     .single();
 
-  if (profileError) {
-    console.error("Error fetching profile:", profileError.message);
-  } else {
+  if (!profileError && data) {
     firstName.value = data.firstname || "";
     lastName.value = data.lastname || "";
     phoneNumber.value = data.phone || "";
@@ -116,15 +159,11 @@ const fetchProfile = async () => {
   }
 };
 
-// Update profile in Supabase
 const updateProfile = async () => {
   const { data: user, error } = await supabase.auth.getUser();
-  if (error || !user?.user?.id) {
-    console.error("Error fetching user:", error?.message);
-    return;
-  }
+  if (error || !user?.user?.id) return;
 
-  const { error: updateError } = await supabase
+  await supabase
     .from("users")
     .update({
       firstname: firstName.value,
@@ -132,18 +171,28 @@ const updateProfile = async () => {
       phone: phoneNumber.value,
       email: email.value,
       complete_address: completeAddress.value,
-      image_path: profileImage.value, // Ensure image updates if changed
+      image_path: profileImage.value,
     })
     .eq("user_id", user.user.id);
-
-  if (updateError) {
-    console.error("Error updating profile:", updateError.message);
-  } else {
-    console.log("Profile updated successfully!");
-  }
 };
 
-// Image Upload Function
+const updatePassword = async () => {
+  if (!oldPassword.value || !newPassword.value || !confirmNewPassword.value)
+    return;
+  if (newPassword.value !== confirmNewPassword.value) return;
+
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: email.value,
+    password: oldPassword.value,
+  });
+  if (signInError) return;
+
+  await supabase.auth.updateUser({ password: newPassword.value });
+  oldPassword.value = "";
+  newPassword.value = "";
+  confirmNewPassword.value = "";
+};
+
 const uploadImage = async () => {
   const input = document.createElement("input");
   input.type = "file";
@@ -151,35 +200,19 @@ const uploadImage = async () => {
   input.onchange = async (event: Event) => {
     const file = (event.target as HTMLInputElement)?.files?.[0];
     if (!file) return;
-
     const filePath = `profile_images/${Date.now()}-${file.name}`;
-    const { error } = await supabase.storage
-      .from("profiles")
-      .upload(filePath, file);
-
-    if (error) {
-      console.error("Error uploading image:", error.message);
-      return;
-    }
-
+    await supabase.storage.from("profiles").upload(filePath, file);
     const publicUrl = supabase.storage.from("profiles").getPublicUrl(filePath)
       .data.publicUrl;
-
-    if (publicUrl) {
-      profileImage.value = publicUrl; // Update profile page
-      userStore.setProfileImage(publicUrl); // ✅ Update sidebar in real time
-      console.log("Profile image updated:", publicUrl);
-    }
+    if (publicUrl) profileImage.value = publicUrl;
   };
   input.click();
 };
 
-// Reset Profile Fields
 const resetProfile = async () => {
   await fetchProfile();
 };
 
-// Fetch profile on component mount
 onMounted(fetchProfile);
 </script>
 
@@ -190,10 +223,8 @@ onMounted(fetchProfile);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(0, 77, 64, 0.5);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   box-shadow: 0 0 10px #004d40;
 }
-
 .save-btn {
   font-weight: bold;
   padding: 10px 20px;
