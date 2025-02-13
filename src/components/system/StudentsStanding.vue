@@ -5,7 +5,7 @@
     transition="fade-transition"
   >
     <v-container>
-      <v-row justify="center">
+      <v-row justify="start">
         <v-col cols="auto">
           <v-card class="pa-3 rounded-card glass-card">
             <h4 class="font-weight-bold text-end">
@@ -30,7 +30,7 @@
             cols="12"
             md="4"
           >
-            <v-card class="pa-8 student-box fixed-card">
+            <v-card class="pa-8 student-box fixed-card" color="#E8F5E9">
               <h3 class="text-center font-weight-bold">Section: {{ subject }}</h3>
               <span class="text-center">{{ sectionsStore.sections.find(sec => sec.code === subject)?.subject_title }}</span>
               <div class="search-bar-container">
@@ -60,7 +60,7 @@
                       class="text-right"
                       :class="getColorClass(student.score)"
                     >
-                      {{ student.score }}%
+                      <span class="smallFont">{{ student.initialGrade }}%</span>
                     </v-col>
                     <v-divider
                       v-if="index < students.length - 1"
@@ -91,12 +91,14 @@ import { useSectionsStore } from "@/stores/sectionsStore";
 import { useStudentsStore } from "@/stores/studentsStore";
 import { useTeacherList } from "@/stores/teachersList";
 import { useClassRecordStore } from "@/stores/classRecord"; // Import the new store
+import { useRecordsStore } from "@/stores/recordsStore"; // Import the records store
 //@ts-ignore
 import SearchBar from "@/components/common/SearchBar.vue";
 
 interface Student {
   name: string;
   score: number;
+  initialGrade: number; // Add initial grade to the interface
 }
 
 export default defineComponent({
@@ -108,6 +110,7 @@ export default defineComponent({
     const studentsStore = useStudentsStore();
     const teacherList = useTeacherList();
     const classRecordStore = useClassRecordStore(); // Initialize the new store
+    const recordsStore = useRecordsStore(); // Initialize the records store
     const studentStanding = reactive<Record<string, Student[]>>({});
     const sectionDescriptions = reactive<Record<string, string>>({});
     const teacherEmails = reactive<Record<string, string>>({});
@@ -144,9 +147,11 @@ export default defineComponent({
                   const score = await studentsStore.fetchInitialScore(
                     student.id
                   );
+                  const initialGrade = await recordsStore.fetchInitialGradeByStudentId(student.id, record.id); // Fetch initial grade with classRecordId
                   return {
                     name: `${student.firstname} ${student.lastname}`,
                     score: typeof score === "number" ? score : 0,
+                    initialGrade: typeof initialGrade === "number" ? initialGrade : 0, // Add initial grade
                   };
                 } catch (error) {
                   console.error(
@@ -156,6 +161,7 @@ export default defineComponent({
                   return {
                     name: `${student.firstname} ${student.lastname}`,
                     score: 0,
+                    initialGrade: 0, // Default initial grade
                   };
                 }
               })
@@ -230,7 +236,7 @@ export default defineComponent({
 }
 
 .fixed-card {
-  height: 400px;
+  height: 35rem;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -245,8 +251,11 @@ export default defineComponent({
 }
 
 .glass-card {
-  background: rgba(0, 105, 92, 0.5);
+ 
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+}
+.smallFont{
+  font-size: 10px;
 }
 </style>

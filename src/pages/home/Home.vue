@@ -3,10 +3,10 @@
     <template #content>
       <div>
         <KeepAlive>
-          <StudentsStanding :is="activeComponent" />
+          <WelcomeToDashboard :is="activeComponent" />
         </KeepAlive>
         <KeepAlive>
-          <MissedActivites :is="activeComponent" />
+          <StudentsStanding :is="activeComponent" />
         </KeepAlive>
       </div>
     </template>

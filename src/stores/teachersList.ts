@@ -21,6 +21,7 @@ interface Teacher {
 
 export const useTeacherList = defineStore('teacherList', () => {
   const userInfo = ref<Teacher[]>([]);
+  const teacherCount = ref(0);
 
   async function fetchTeachersInfo() {
     const { data, error } = await supabase
@@ -33,6 +34,8 @@ export const useTeacherList = defineStore('teacherList', () => {
       userInfo.value = [];
       return null;
     }
+
+    teacherCount.value = data.length;
 
     const teacherIds = data.map((teacher: any) => teacher.id);
     const { data: subjectsData, error: subjectsError } = await supabase
@@ -66,5 +69,6 @@ export const useTeacherList = defineStore('teacherList', () => {
   return {
     userInfo,
     fetchTeachersInfo,
+    teacherCount,
   };
 });
