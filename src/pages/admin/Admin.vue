@@ -32,6 +32,7 @@
                         v-model="newUser.firstname"
                         label="First Name"
                         :rules="[requiredValidator]"
+                        outlined
                       />
                     </v-col>
                     <v-col cols="6">
@@ -39,6 +40,7 @@
                         v-model="newUser.lastname"
                         label="Last Name"
                         :rules="[requiredValidator]"
+                        outlined
                       />
                     </v-col>
                   </v-row>
@@ -46,30 +48,46 @@
                     v-model="newUser.email"
                     label="Email"
                     :rules="[requiredValidator, emailValidator]"
+                    outlined
                   />
                   <v-text-field
                     v-model="newUser.password"
                     label="Password"
                     type="password"
                     :rules="[requiredValidator, passwordValidator]"
+                    outlined
+                  />
+                  <v-text-field
+                    v-model="newUser.phone"
+                    label="Phone"
+                    :rules="[requiredValidator]"
+                    outlined
+                  />
+                  <v-text-field
+                    v-model="newUser.complete_address"
+                    label="Address"
+                    :rules="[requiredValidator]"
+                    outlined
                   />
                   <v-text-field
                     v-model="newUser.user_type"
                     label="Role"
                     :rules="[requiredValidator]"
+                    outlined
                   />
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn @click="showAddUserForm = false" color="grey darken-1"
-                  >Cancel</v-btn
-                >
+                <v-btn @click="showAddUserForm = false" color="grey darken-1">
+                  Cancel
+                </v-btn>
                 <v-btn
                   @click="addUser"
-                  color="#2E7D32"
+                  color="teal darken-3"
                   :disabled="!isAddUserValid"
-                  >Add User</v-btn
                 >
+                  Add User
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -86,6 +104,7 @@
                         v-model="editedUser.firstname"
                         label="First Name"
                         :rules="[requiredValidator]"
+                        outlined
                       />
                     </v-col>
                     <v-col cols="6">
@@ -93,52 +112,56 @@
                         v-model="editedUser.lastname"
                         label="Last Name"
                         :rules="[requiredValidator]"
+                        outlined
                       />
                     </v-col>
                   </v-row>
-                  <!-- Email field is non-editable -->
                   <v-text-field
                     v-model="editedUser.email"
                     label="Email"
                     :rules="[requiredValidator, emailValidator]"
-                    readonly
+                    outlined
                   />
                   <v-text-field
                     v-model="editedUser.password"
                     label="Password"
                     :type="passwordVisible ? 'text' : 'password'"
-                    :rules="[requiredValidator, passwordValidator]"
+                    :rules="[passwordValidator]"
                     append-inner-icon="mdi-eye"
                     @click:append-inner="togglePasswordVisibility"
+                    outlined
                   />
-
                   <v-text-field
                     v-model="editedUser.phone"
                     label="Phone"
                     :rules="[requiredValidator]"
+                    outlined
                   />
                   <v-text-field
                     v-model="editedUser.complete_address"
                     label="Address"
                     :rules="[requiredValidator]"
+                    outlined
                   />
                   <v-text-field
                     v-model="editedUser.user_type"
                     label="Role"
                     :rules="[requiredValidator]"
+                    outlined
                   />
                 </v-form>
               </v-card-text>
               <v-card-actions>
-                <v-btn @click="showEditUserForm = false" color="grey darken-1"
-                  >Cancel</v-btn
-                >
+                <v-btn @click="showEditUserForm = false" color="grey darken-1">
+                  Cancel
+                </v-btn>
                 <v-btn
                   @click="updateUser"
-                  color="blue"
+                  color="teal darken-3"
                   :disabled="!isEditUserValid"
-                  >Save Changes</v-btn
                 >
+                  Update User
+                </v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -266,7 +289,9 @@ const isAddUserValid = computed(() => {
     newUser.value.lastname.trim() !== "" &&
     emailValidator(newUser.value.email) === true &&
     passwordValidator(newUser.value.password) === true &&
-    newUser.value.user_type.trim() !== "" // Updated field name
+    newUser.value.phone.trim() !== "" && // Ensure phone is not empty
+    newUser.value.complete_address.trim() !== "" && // Ensure address is not empty
+    newUser.value.user_type.trim() !== "" // Role field must not be empty
   );
 });
 
@@ -286,7 +311,6 @@ const isEditUserValid = computed(() => {
 });
 
 const filteredItems = computed(() => {
-  console.log("Search Query:", searchQuery.value); // Debugging search query
   if (!searchQuery.value) return items.value;
   return items.value.filter((user) =>
     [
@@ -328,12 +352,8 @@ onMounted(async () => {
     const {
       data: { user },
     } = await supabase.auth.getUser();
-
     const { data: profiles, error } = await supabase.from("users").select("*");
-    if (error) {
-      throw error;
-    }
-
+    if (error) throw error;
     items.value = profiles.map((profile: any) => ({
       id: profile.id,
       name: profile.name,
@@ -343,7 +363,7 @@ onMounted(async () => {
       phone: profile.phone,
       password: profile.password,
       complete_address: profile.complete_address,
-      user_type: profile.user_type, // Updated field name
+      user_type: profile.user_type,
     }));
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -352,18 +372,7 @@ onMounted(async () => {
 
 // Methods for managing users
 const openEditDialog = (user: User) => {
-  editedUser.value = { ...user } || {
-    id: 0,
-    name: "",
-    email: "",
-    firstname: "",
-    lastname: "",
-    password: "",
-    phone: "",
-    complete_address: "",
-    user_type: "", // Updated field name
-  };
-  console.log("Opening Edit Dialog:", editedUser.value); // Log the data
+  editedUser.value = { ...user };
   showEditUserForm.value = true;
 };
 
@@ -373,9 +382,7 @@ const addUser = async () => {
       .from("users")
       .insert([newUser.value])
       .select();
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
     items.value.push({ ...newUser.value, id: data[0].id });
     newUser.value = {
       id: 0,
@@ -386,7 +393,7 @@ const addUser = async () => {
       lastname: "",
       phone: "",
       complete_address: "",
-      user_type: "", // Updated field name
+      user_type: "",
     };
     showAddUserForm.value = false;
   } catch (error) {
@@ -395,15 +402,12 @@ const addUser = async () => {
 };
 
 const updateUser = async () => {
-  console.log("Edited User:", editedUser.value); // Log the user data
   try {
     const { error } = await supabase
       .from("users")
       .update(editedUser.value)
       .eq("id", editedUser.value.id);
-    if (error) {
-      throw error;
-    }
+    if (error) throw error;
     const index = items.value.findIndex(
       (user) => user.id === editedUser.value.id
     );
@@ -428,9 +432,7 @@ const confirmDeleteUser = async () => {
         .from("users")
         .delete()
         .eq("id", userToDelete.value);
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
       items.value = items.value.filter(
         (user) => user.id !== userToDelete.value
       );
