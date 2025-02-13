@@ -5,10 +5,10 @@
         <v-row>
           <v-col cols="12" md="3">
             <v-btn-toggle v-model="activeTab" mandatory>
-              <v-btn value="account" color="primary">
+              <v-btn value="account" :color="primaryColor">
                 <v-icon>mdi-account</v-icon> Account
               </v-btn>
-              <v-btn value="security" color="primary">
+              <v-btn value="security" :color="primaryColor">
                 <v-icon>mdi-lock</v-icon> Security
               </v-btn>
             </v-btn-toggle>
@@ -26,8 +26,9 @@
               </v-avatar>
             </v-col>
             <v-col cols="12" md="9">
-              <v-btn color="primary" @click="uploadImage"
+              <v-btn :color="primaryColor" @click="uploadImage"
                 >Upload New Photo</v-btn
+              >
               >
               <v-btn class="ml-2" color="grey" @click="resetProfile"
                 >Reset</v-btn
@@ -73,7 +74,10 @@
           </v-row>
           <v-row justify="center">
             <v-col cols="auto">
-              <v-btn color="primary" class="save-btn" @click="updateProfile"
+              <v-btn
+                :color="primaryColor"
+                class="save-btn"
+                @click="updateProfile"
                 >Save Changes</v-btn
               >
             </v-col>
@@ -148,7 +152,10 @@
 
           <v-row justify="start">
             <v-col cols="auto">
-              <v-btn color="primary" @click="updatePassword"
+              <v-btn
+                :color="primaryColor"
+                class="save-btn"
+                @click="updatePassword"
                 >Save Changes</v-btn
               >
             </v-col>
@@ -173,6 +180,7 @@ import Avatar from "@/assets/avatar.png";
 const toast = useToast();
 const activeTab = ref("account");
 const userStore = useUserInfoStore();
+const primaryColor = computed(() => "#004D40");
 
 const firstName = ref("");
 const lastName = ref("");
