@@ -262,10 +262,11 @@ const isEditUserValid = computed(() => {
 });
 
 const filteredItems = computed(() => {
+  console.log("Search Query:", searchQuery.value); // Debugging search query
   if (!searchQuery.value) return items.value;
   return items.value.filter((user) =>
     [user.name, user.email, user.user_type].some((field) =>
-      field.toLowerCase().includes(searchQuery.value.toLowerCase())
+      field?.toLowerCase().includes(searchQuery.value.toLowerCase())
     )
   );
 });
