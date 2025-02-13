@@ -20,7 +20,7 @@
             <v-col cols="12" md="3" class="text-center">
               <v-avatar size="100">
                 <v-img
-                  :src="userStore.userInfo?.image_path || avatar"
+                  :src="tempImage || profileImage"
                   alt="User Avatar"
                 ></v-img>
               </v-avatar>
@@ -200,13 +200,16 @@ const uploadImage = () => {
     const file = (event.target as HTMLInputElement)?.files?.[0];
     if (!file) return;
 
+    // Read and show the preview
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
-      tempImage.value = reader.result as string; // Show preview only
+      tempImage.value = reader.result as string; // Preview image
+      toast.info("Image selected! Click 'Save Information' to update.");
     };
 
-    toast.info("Image selected! Click 'Save Information' to update.");
+    // Store the file in a hidden variable (so we can upload it later)
+    selectedFile.value = file;
   };
   input.click();
 };
@@ -235,6 +238,8 @@ const fetchProfile = async () => {
 };
 
 // Update Profile with toast notification
+const selectedFile = ref<File | null>(null); // Store selected image file
+
 const updateProfile = async () => {
   if (
     !firstName.value ||
@@ -248,7 +253,7 @@ const updateProfile = async () => {
 
   let imageUrl = profileImage.value; // Keep the existing image if no new one is uploaded
 
-  if (tempImage.value) {
+  if (selectedFile.value) {
     const { data: user } = await supabase.auth.getUser();
     if (!user?.user?.id) {
       toast.error("User not authenticated!");
@@ -256,15 +261,14 @@ const updateProfile = async () => {
     }
 
     // Generate unique filename
-    const filePath = `profile_images/${user.user.id}-${Date.now()}.png`;
-
-    // Convert base64 to Blob
-    const blob = await fetch(tempImage.value).then((res) => res.blob());
+    const filePath = `profile_images/${user.user.id}-${Date.now()}-${
+      selectedFile.value.name
+    }`;
 
     // Upload the image to Supabase
     const { error: uploadError } = await supabase.storage
       .from("profiles")
-      .upload(filePath, blob, { upsert: true });
+      .upload(filePath, selectedFile.value, { upsert: true });
 
     if (uploadError) {
       console.error("Error uploading image:", uploadError.message);
@@ -286,7 +290,7 @@ const updateProfile = async () => {
         lastname: lastName.value,
         phone: phoneNumber.value,
         complete_address: completeAddress.value,
-        image_path: imageUrl, // Save new image only when Save is clicked
+        image_path: imageUrl, // Save the new image only when "Save Information" is clicked
       })
       .eq("email", email.value);
 
@@ -294,6 +298,7 @@ const updateProfile = async () => {
 
     profileImage.value = imageUrl; // Update UI
     tempImage.value = null; // Reset temporary image
+    selectedFile.value = null; // Clear selected file
     toast.success("Profile updated successfully!");
   } catch (err) {
     toast.error("Failed to update profile. Please try again.");
