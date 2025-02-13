@@ -108,6 +108,16 @@
                     :rules="[requiredValidator, passwordValidator]"
                   />
                   <v-text-field
+                    v-model="editedUser.phone"
+                    label="Phone"
+                    :rules="[requiredValidator]"
+                  />
+                  <v-text-field
+                    v-model="editedUser.complete_address"
+                    label="Address"
+                    :rules="[requiredValidator]"
+                  />
+                  <v-text-field
                     v-model="editedUser.user_type"
                     label="Role"
                     :rules="[requiredValidator]"
@@ -257,7 +267,9 @@ const isEditUserValid = computed(() => {
     (editedUser.value.lastname?.trim() || "").length > 0 &&
     emailValidator(editedUser.value.email || "") === true &&
     isValidPassword && // Check password only if it's not empty
-    (editedUser.value.user_type?.trim() || "").length > 0 // Updated field name
+    (editedUser.value.user_type?.trim() || "").length > 0 && // Updated field name
+    (editedUser.value.phone?.trim() || "").length > 0 &&
+    (editedUser.value.complete_address?.trim() || "").length > 0
   );
 });
 
@@ -265,7 +277,15 @@ const filteredItems = computed(() => {
   console.log("Search Query:", searchQuery.value); // Debugging search query
   if (!searchQuery.value) return items.value;
   return items.value.filter((user) =>
-    [user.name, user.email, user.user_type].some((field) =>
+    [
+      user.id.toString(),
+      user.email,
+      user.firstname,
+      user.lastname,
+      user.phone,
+      user.complete_address,
+      user.user_type, // Updated field name
+    ].some((field) =>
       field?.toLowerCase().includes(searchQuery.value.toLowerCase())
     )
   );
