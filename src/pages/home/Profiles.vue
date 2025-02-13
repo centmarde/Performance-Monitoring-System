@@ -259,67 +259,28 @@ const fetchProfile = async () => {
 const selectedFile = ref<File | null>(null); // Store selected image file
 
 const updateProfile = async () => {
-  if (
-    !firstName.value ||
-    !lastName.value ||
-    !phoneNumber.value ||
-    !completeAddress.value
-  ) {
-    toast.error("All fields are required!");
+  const { data: user, error } = await supabase.auth.getUser();
+  if (error || !user?.user?.id) {
+    console.error("Error fetching user:", error?.message);
     return;
   }
 
-  let imageUrl = profileImage.value; // Keep the existing image if no new one is uploaded
+  const { error: updateError } = await supabase
+    .from("users")
+    .update({
+      firstname: firstName.value,
+      lastname: lastName.value,
+      phone: phoneNumber.value,
+      email: email.value,
+      complete_address: completeAddress.value,
+      image_path: profileImage.value, // Ensure image updates if changed
+    })
+    .eq("user_id", user.user.id);
 
-  if (selectedFile.value) {
-    const { data: user } = await supabase.auth.getUser();
-    if (!user?.user?.id) {
-      toast.error("User not authenticated!");
-      return;
-    }
-
-    // Generate unique filename
-    const filePath = `profile_images/${user.user.id}-${Date.now()}-${
-      selectedFile.value.name
-    }`;
-
-    // Upload the image to Supabase
-    const { error: uploadError } = await supabase.storage
-      .from("profiles")
-      .upload(filePath, selectedFile.value, { upsert: true });
-
-    if (uploadError) {
-      console.error("Error uploading image:", uploadError.message);
-      toast.error("Image upload failed!");
-      return;
-    }
-
-    // Get public URL
-    const { data } = supabase.storage.from("profiles").getPublicUrl(filePath);
-    imageUrl = data.publicUrl;
-  }
-
-  // Save profile updates in Supabase
-  try {
-    const { error } = await supabase
-      .from("users")
-      .update({
-        firstname: firstName.value,
-        lastname: lastName.value,
-        phone: phoneNumber.value,
-        complete_address: completeAddress.value,
-        image_path: imageUrl, // Save the new image only when "Save Information" is clicked
-      })
-      .eq("email", email.value);
-
-    if (error) throw error;
-
-    profileImage.value = imageUrl; // Update UI
-    tempImage.value = null; // Reset temporary image
-    selectedFile.value = null; // Clear selected file
-    toast.success("Profile updated successfully!");
-  } catch (err) {
-    toast.error("Failed to update profile. Please try again.");
+  if (updateError) {
+    console.error("Error updating profile:", updateError.message);
+  } else {
+    console.log("Profile updated successfully!");
   }
 };
 
@@ -341,7 +302,7 @@ const updatePassword = async () => {
   }
 
   try {
-    const { data, error } = await supabase.auth.updateUser({
+    const { error } = await supabase.auth.updateUser({
       password: newPassword.value,
     });
 
