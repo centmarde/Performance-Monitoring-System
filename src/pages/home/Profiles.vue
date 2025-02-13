@@ -190,7 +190,9 @@ const showNewPassword = ref(false);
 const showConfirmNewPassword = ref(false);
 
 // Image Upload Function
-const uploadImage = async () => {
+const tempImage = ref<string | null>(null); // Temporary image preview
+
+const uploadImage = () => {
   const input = document.createElement("input");
   input.type = "file";
   input.accept = "image/*";
@@ -198,50 +200,13 @@ const uploadImage = async () => {
     const file = (event.target as HTMLInputElement)?.files?.[0];
     if (!file) return;
 
-    const { data: user } = await supabase.auth.getUser();
-    if (!user?.user?.id) {
-      toast.error("User not authenticated!");
-      return;
-    }
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      tempImage.value = reader.result as string; // Show preview only
+    };
 
-    const filePath = `profile_images/${user.user.id}-${Date.now()}-${
-      file.name
-    }`;
-    const { error: uploadError } = await supabase.storage
-      .from("profiles")
-      .upload(filePath, file, { upsert: true });
-
-    if (uploadError) {
-      console.error("Error uploading image:", uploadError.message);
-      toast.error("Image upload failed!");
-      return;
-    }
-
-    // Get the public URL of the uploaded image
-    const { data } = supabase.storage.from("profiles").getPublicUrl(filePath);
-    const publicUrl = data.publicUrl;
-
-    if (!publicUrl) {
-      toast.error("Failed to retrieve uploaded image URL!");
-      return;
-    }
-
-    // Update the user's profile in Supabase
-    const { error: updateError } = await supabase
-      .from("users")
-      .update({ image_path: publicUrl })
-      .eq("user_id", user.user.id);
-
-    if (updateError) {
-      console.error("Error updating user profile:", updateError.message);
-      toast.error("Failed to update profile image!");
-      return;
-    }
-
-    // Update the profile image on the page and store
-    profileImage.value = publicUrl;
-    userStore.setProfileImage(publicUrl);
-    toast.success("Profile image updated successfully!");
+    toast.info("Image selected! Click 'Save Information' to update.");
   };
   input.click();
 };
@@ -281,6 +246,38 @@ const updateProfile = async () => {
     return;
   }
 
+  let imageUrl = profileImage.value; // Keep the existing image if no new one is uploaded
+
+  if (tempImage.value) {
+    const { data: user } = await supabase.auth.getUser();
+    if (!user?.user?.id) {
+      toast.error("User not authenticated!");
+      return;
+    }
+
+    // Generate unique filename
+    const filePath = `profile_images/${user.user.id}-${Date.now()}.png`;
+
+    // Convert base64 to Blob
+    const blob = await fetch(tempImage.value).then((res) => res.blob());
+
+    // Upload the image to Supabase
+    const { error: uploadError } = await supabase.storage
+      .from("profiles")
+      .upload(filePath, blob, { upsert: true });
+
+    if (uploadError) {
+      console.error("Error uploading image:", uploadError.message);
+      toast.error("Image upload failed!");
+      return;
+    }
+
+    // Get public URL
+    const { data } = supabase.storage.from("profiles").getPublicUrl(filePath);
+    imageUrl = data.publicUrl;
+  }
+
+  // Save profile updates in Supabase
   try {
     const { error } = await supabase
       .from("users")
@@ -289,11 +286,14 @@ const updateProfile = async () => {
         lastname: lastName.value,
         phone: phoneNumber.value,
         complete_address: completeAddress.value,
+        image_path: imageUrl, // Save new image only when Save is clicked
       })
       .eq("email", email.value);
 
     if (error) throw error;
 
+    profileImage.value = imageUrl; // Update UI
+    tempImage.value = null; // Reset temporary image
     toast.success("Profile updated successfully!");
   } catch (err) {
     toast.error("Failed to update profile. Please try again.");
