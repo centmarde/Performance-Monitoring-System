@@ -16,6 +16,7 @@ interface Student {
 
 export const useStudentsStore = defineStore('studentsStore', () => {
   const students = ref<Student[]>([]);
+  const studentCount = ref(0);
 
   async function fetchAllStudents() {
     const { data, error } = await supabase
@@ -29,6 +30,7 @@ export const useStudentsStore = defineStore('studentsStore', () => {
     }
 
     students.value = data as Student[];
+    studentCount.value = data.length;
     return students.value;
   }
 
@@ -41,5 +43,6 @@ export const useStudentsStore = defineStore('studentsStore', () => {
     students,
     fetchInitialScore,
     fetchAllStudents,
+    studentCount,
   };
 });

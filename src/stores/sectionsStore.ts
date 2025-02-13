@@ -14,6 +14,7 @@ export interface Section { // Export the Section interface
 
 export const useSectionsStore = defineStore('sectionsStore', () => {
   const sections = ref<Section[]>([]);
+  const sectionCount = ref(0);
 
   async function fetchSections() {
     const { data, error } = await supabase
@@ -30,6 +31,7 @@ export const useSectionsStore = defineStore('sectionsStore', () => {
       ...section,
       subject_title: section.subjects.title,
     })) as Section[];
+    sectionCount.value = data.length;
     return sections.value;
   }
 
@@ -70,6 +72,7 @@ export const useSectionsStore = defineStore('sectionsStore', () => {
     sections,
     fetchSections,
     fetchSectionsWithStudents,
-    fetchSectionIdByCode, // Add this line
+    fetchSectionIdByCode,
+    sectionCount,
   };
 });
