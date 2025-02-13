@@ -428,17 +428,46 @@ const promptDeleteUser = (id: number) => {
 const confirmDeleteUser = async () => {
   try {
     if (userToDelete.value !== null) {
+      console.log(
+        "Checking related class records for user ID:",
+        userToDelete.value
+      );
+
+      // Check if related records exist
+      const { data: classRecords, error: checkError } = await supabase
+        .from("class_record")
+        .select("id")
+        .eq("teacher_id", userToDelete.value);
+
+      if (checkError) {
+        console.error("Error checking related class records:", checkError);
+        return;
+      }
+
+      if (classRecords.length > 0) {
+        alert("Cannot delete user. They have related class records.");
+        return;
+      }
+
+      // Proceed with deletion
       const { error } = await supabase
         .from("users")
         .delete()
         .eq("id", userToDelete.value);
-      if (error) throw error;
+
+      if (error) {
+        console.error("Error deleting user:", error);
+        return;
+      }
+
       items.value = items.value.filter(
         (user) => user.id !== userToDelete.value
       );
+      console.log("User deleted successfully!");
+
       userToDelete.value = null;
+      showDeleteConfirmation.value = false;
     }
-    showDeleteConfirmation.value = false;
   } catch (error) {
     console.error("Error deleting user:", error);
   }

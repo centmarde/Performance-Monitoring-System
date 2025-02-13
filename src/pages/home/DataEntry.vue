@@ -318,19 +318,20 @@ const handleCardClick = (classRecordId: number) => {
   font-weight: bold;
   font-size: 22px;
   padding-bottom: 8px;
+  color: var(--v-theme-on-surface);
 }
 
 .subject-icon {
   margin-right: 8px;
-  color: #004d40;
+  color: var(--v-theme-primary);
 }
 
 .subject-info {
   display: flex;
   align-items: center;
-  gap: 8px; /* Adjust spacing between icon and text */
+  gap: 8px;
   font-size: 16px;
-  color: #333;
+  color: var(--v-theme-on-surface);
 }
 
 .rounded-card {
