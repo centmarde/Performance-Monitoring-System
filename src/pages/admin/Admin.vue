@@ -96,15 +96,19 @@
                       />
                     </v-col>
                   </v-row>
+                  <!-- Email field is non-editable -->
                   <v-text-field
                     v-model="editedUser.email"
                     label="Email"
                     :rules="[requiredValidator, emailValidator]"
+                    readonly
                   />
                   <v-text-field
                     v-model="editedUser.password"
                     label="Password"
-                    type="password"
+                    :type="passwordVisible ? 'text' : 'password'"
+                    :append-icon="passwordVisible ? 'mdi-eye' : 'mdi-eye-off'"
+                    @click:append="togglePasswordVisibility"
                     :rules="[requiredValidator, passwordValidator]"
                   />
                   <v-text-field
@@ -243,6 +247,12 @@ const editedUser = ref<User>({
   complete_address: "",
   user_type: "", // Updated field name
 });
+
+// Password visibility toggle
+const passwordVisible = ref(false);
+const togglePasswordVisibility = () => {
+  passwordVisible.value = !passwordVisible.value;
+};
 
 // Pagination related state
 const currentPage = ref(1);
