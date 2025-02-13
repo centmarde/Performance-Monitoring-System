@@ -689,6 +689,9 @@ const paginatedData = computed(() => {
 const pageCount = computed(() => {
   return Math.ceil(filteredData.value.length / itemsPerPage);
 });
+watch(searchQuery, () => {
+  page.value = 1;
+});
 
 const saveChanges = async (item) => {
   try {
