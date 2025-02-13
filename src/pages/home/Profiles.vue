@@ -305,11 +305,35 @@ const updatePassword = async () => {
   }
 
   try {
-    const { error } = await supabase.auth.updateUser({
+    // Get current user session
+    const {
+      data: { session },
+      error: sessionError,
+    } = await supabase.auth.getSession();
+
+    if (sessionError || !session) {
+      toast.error("Session expired. Please log in again.");
+      return;
+    }
+
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: email.value,
+      password: oldPassword.value,
+    });
+
+    if (signInError) {
+      toast.error("Current password is incorrect.");
+      return;
+    }
+
+    // Proceed with password update
+    const { error: updateError } = await supabase.auth.updateUser({
       password: newPassword.value,
     });
 
-    if (error) throw error;
+    if (updateError) {
+      throw updateError;
+    }
 
     toast.success("Password updated successfully!");
     oldPassword.value = "";
@@ -317,6 +341,7 @@ const updatePassword = async () => {
     confirmNewPassword.value = "";
   } catch (err) {
     toast.error("Failed to update password. Please try again.");
+    console.error("Error updating password:", err);
   }
 };
 
