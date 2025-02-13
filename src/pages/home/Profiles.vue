@@ -19,7 +19,10 @@
           <v-row align="center">
             <v-col cols="12" md="3" class="text-center">
               <v-avatar size="100">
-                <v-img :src="profileImage" alt="User Avatar"></v-img>
+                <v-img
+                  :src="userStore.userInfo?.image_path || avatar"
+                  alt="User Avatar"
+                ></v-img>
               </v-avatar>
             </v-col>
             <v-col cols="12" md="9">
@@ -164,10 +167,12 @@ import { ref, onMounted } from "vue";
 import HomeLayout from "@/layouts/HomeLayout.vue";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "vue-toastification";
+import { useUserInfoStore } from "@/stores/userInfo";
 import Avatar from "@/assets/avatar.png";
 
 const toast = useToast();
 const activeTab = ref("account");
+const userStore = useUserInfoStore();
 
 const firstName = ref("");
 const lastName = ref("");
@@ -184,6 +189,67 @@ const showOldPassword = ref(false);
 const showNewPassword = ref(false);
 const showConfirmNewPassword = ref(false);
 
+// Image Upload Function
+const uploadImage = async () => {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
+  input.onchange = async (event: Event) => {
+    const file = (event.target as HTMLInputElement)?.files?.[0];
+    if (!file) return;
+
+    const { data: user } = await supabase.auth.getUser();
+    if (!user?.user?.id) {
+      toast.error("User not authenticated!");
+      return;
+    }
+
+    const filePath = `profile_images/${user.user.id}-${Date.now()}-${
+      file.name
+    }`;
+    const { error: uploadError } = await supabase.storage
+      .from("profiles")
+      .upload(filePath, file, { upsert: true });
+
+    if (uploadError) {
+      console.error("Error uploading image:", uploadError.message);
+      toast.error("Image upload failed!");
+      return;
+    }
+
+    // Get the public URL of the uploaded image
+    const { data } = supabase.storage.from("profiles").getPublicUrl(filePath);
+    const publicUrl = data.publicUrl;
+
+    if (!publicUrl) {
+      toast.error("Failed to retrieve uploaded image URL!");
+      return;
+    }
+
+    // Update the user's profile in Supabase
+    const { error: updateError } = await supabase
+      .from("users")
+      .update({ image_path: publicUrl })
+      .eq("user_id", user.user.id);
+
+    if (updateError) {
+      console.error("Error updating user profile:", updateError.message);
+      toast.error("Failed to update profile image!");
+      return;
+    }
+
+    // Update the profile image on the page and store
+    profileImage.value = publicUrl;
+    userStore.setProfileImage(publicUrl);
+    toast.success("Profile image updated successfully!");
+  };
+  input.click();
+};
+
+// Reset Profile Fields
+const resetProfile = async () => {
+  await fetchProfile();
+};
 // Fetch user profile
 const fetchProfile = async () => {
   const { data: user } = await supabase.auth.getUser();
