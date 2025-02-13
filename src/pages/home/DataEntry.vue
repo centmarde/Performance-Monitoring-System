@@ -2,9 +2,8 @@
   <HomeLayout>
     <template #content>
       <v-container>
-        <v-row justify="end">
+        <v-row justify="center">
           <v-col cols="auto">
-           
             <v-card class="pa-3 rounded-card glass-card">
               <h4 class="font-weight-bold text-end">
                 <span class="mdi mdi-account-school"></span> Subject Management
@@ -35,17 +34,62 @@
             md="4"
           >
             <v-card class="subject-card" @click="handleCardClick(subject.id)">
-              <v-card-title>{{ subject.subjectName }}</v-card-title>
-              <v-card-subtitle>Quarter: {{ subject.quarter }}</v-card-subtitle>
-              <v-card-subtitle>Section: {{ subject.section }}</v-card-subtitle>
-              <v-card-subtitle>Student Count: {{ subject.student_count }}</v-card-subtitle>
-              <v-card-subtitle>Handled by: {{ subject.handled_by }}</v-card-subtitle>
-              <v-card-text>
-                <ul>
-                  <li v-for="student in subject.students" :key="student.id">
-                    {{ student.name }}
-                  </li>
-                </ul>
+              <!-- Subject Title (Centered) -->
+              <v-card-title class="subject-title">
+                <v-icon class="subject-icon" size="24">mdi-book-open</v-icon>
+                {{ subject.subjectName }}
+              </v-card-title>
+
+              <v-divider></v-divider>
+
+              <!-- Details Section -->
+              <v-card-text class="details-container pa-2">
+                <v-container>
+                  <v-row class="fill-height">
+                    <v-col cols="12">
+                      <div class="subject-info d-flex align-center">
+                        <v-icon size="20" color="teal-darken-4"
+                          >mdi-calendar-range</v-icon
+                        >
+                        <span
+                          >Quarter: <strong>{{ subject.quarter }}</strong></span
+                        >
+                      </div>
+                    </v-col>
+                    <v-col cols="12">
+                      <div class="subject-info d-flex align-center">
+                        <v-icon size="20" color="teal-darken-4"
+                          >mdi-google-classroom</v-icon
+                        >
+                        <span
+                          >Section: <strong>{{ subject.section }}</strong></span
+                        >
+                      </div>
+                    </v-col>
+                    <v-col cols="12">
+                      <div class="subject-info d-flex align-center">
+                        <v-icon size="20" color="teal-darken-4"
+                          >mdi-account-group</v-icon
+                        >
+                        <span
+                          >Student Count:
+                          <strong>{{ subject.student_count }}</strong></span
+                        >
+                      </div>
+                    </v-col>
+                    <v-col cols="12">
+                      <div class="subject-info d-flex align-center">
+                        <v-icon size="20" color="teal-darken-4"
+                          >mdi-account-tie</v-icon
+                        >
+                        <span
+                          >Handled by:
+                          <strong>{{ subject.handled_by }}</strong></span
+                        >
+                      </div>
+                    </v-col>
+                  </v-row>
+                </v-container>
               </v-card-text>
             </v-card>
           </v-col>
@@ -97,15 +141,10 @@
               <v-btn
                 v-if="!activeSubject"
                 color="success"
-               @click="saveClassRecord"
+                @click="saveClassRecord"
                 >Add</v-btn
               >
-              <v-btn
-                v-if="activeSubject"
-                color="primary"
-             
-                >Save</v-btn
-              >
+              <v-btn v-if="activeSubject" color="primary">Save</v-btn>
               <v-btn color="error" @click="classRecordDialog = false"
                 >Close</v-btn
               >
@@ -119,7 +158,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 import HomeLayout from "@/layouts/HomeLayout.vue";
 import { useClassRecordStore } from "@/stores/classRecord";
 import { useSubjectsStore } from "@/stores/subjectsStore";
@@ -138,8 +177,12 @@ const subjects = ref<any[]>([]);
 const subjectsStore = useSubjectsStore();
 const sectionsStore = useSectionsStore();
 
-const subjectOptions = computed(() => subjectsStore.subjects.map(subject => subject.title));
-const sectionOptions = computed(() => sectionsStore.sections.map(section => section.code));
+const subjectOptions = computed(() =>
+  subjectsStore.subjects.map((subject) => subject.title)
+);
+const sectionOptions = computed(() =>
+  sectionsStore.sections.map((section) => section.code)
+);
 
 onMounted(async () => {
   await classRecordStore.fetchAllClassRecordsWithDetails();
@@ -149,12 +192,12 @@ onMounted(async () => {
 });
 
 const totalPages = computed(() => {
-  const remainingSubjects = subjects.value.length - 5; 
+  const remainingSubjects = subjects.value.length - 5;
   return 1 + Math.ceil(remainingSubjects / itemsPerPage);
 });
 const paginatedSubjects = computed(() => {
   if (currentPage.value === 1) {
-    return subjects.value.slice(0, 5); 
+    return subjects.value.slice(0, 5);
   }
   const start = 5 + (currentPage.value - 2) * itemsPerPage;
   return subjects.value.slice(start, start + itemsPerPage);
@@ -166,15 +209,19 @@ const saveClassRecord = async () => {
   const parsedQuarter = parseInt(selectedQuarter.value, 10);
 
   if (isNaN(parsedQuarter)) {
-    console.error('Invalid quarter value');
+    console.error("Invalid quarter value");
     return;
   }
   console.log(selectedSubject.value);
-  const subjectId = await subjectsStore.fetchSubjectIdByTitle(selectedSubject.value);
-  const sectionId = await sectionsStore.fetchSectionIdByCode(selectedSection.value);
+  const subjectId = await subjectsStore.fetchSubjectIdByTitle(
+    selectedSubject.value
+  );
+  const sectionId = await sectionsStore.fetchSectionIdByCode(
+    selectedSection.value
+  );
   console.log(subjectId, sectionId);
   if (subjectId === null || sectionId === null) {
-    console.error('Invalid subject or section value');
+    console.error("Invalid subject or section value");
     return;
   }
 
@@ -185,12 +232,12 @@ const saveClassRecord = async () => {
   );
 
   const addedClassRecordId = localStorage.getItem("addedClassrecord");
-  const classRecordId = parseInt(addedClassRecordId ?? '0', 10);
+  const classRecordId = parseInt(addedClassRecordId ?? "0", 10);
 
   if (!isNaN(sectionId) && !isNaN(classRecordId)) {
     await recordsStore.addRecordsForSection(sectionId, classRecordId);
   } else {
-    console.error('Invalid section or class record ID');
+    console.error("Invalid section or class record ID");
   }
   classRecordDialog.value = false;
 };
@@ -200,22 +247,22 @@ const showAddNewDialog = () => {
   classRecordDialog.value = true;
 };
 
-const quarterOptions = ref(['1', '2', '3', '4']); 
+const quarterOptions = ref(["1", "2", "3", "4"]);
 
-const selectedSubject = ref('');
-const selectedSection = ref('');
-const selectedQuarter = ref('');
+const selectedSubject = ref("");
+const selectedSection = ref("");
+const selectedQuarter = ref("");
 
 const router = useRouter();
 
 const handleCardClick = (classRecordId: number) => {
   const parsedClassRecordId = parseInt(classRecordId.toString(), 10);
   if (isNaN(parsedClassRecordId)) {
-    console.error('Invalid class record ID');
+    console.error("Invalid class record ID");
     return;
   }
   localStorage.setItem("classRecordId", parsedClassRecordId.toString());
-  router.push('/recentrecords');
+  router.push("/recentrecords");
 };
 </script>
 
@@ -261,14 +308,38 @@ const handleCardClick = (classRecordId: number) => {
   transition: 0.3s;
 }
 .subject-card:hover {
-  transform: scale(1.05);
+  transform: scale(1.03);
+}
+
+.subject-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 22px;
+  padding-bottom: 8px;
+  color: var(--v-theme-on-surface);
+}
+
+.subject-icon {
+  margin-right: 8px;
+  color: var(--v-theme-primary);
+}
+
+.subject-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  color: var(--v-theme-on-surface);
+}
+
+.rounded-card {
+  border-radius: 12px;
 }
 .glass-card {
   background: rgba(0, 105, 92, 0.5);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-}
-.rounded-card {
-  border-radius: 12px;
 }
 </style>

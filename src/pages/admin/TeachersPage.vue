@@ -29,7 +29,10 @@
               <v-card class="teacher-card">
                 <v-card-title class="text-center" elevation="8">
                   <v-avatar size="80">
-                    <v-img :src="teacher.avatar || '/default-avatar.png'" alt="Teacher Avatar" />
+                    <v-img
+                      :src="teacher.avatar || '/default-avatar.png'"
+                      alt="Teacher Avatar"
+                    />
                   </v-avatar>
                   <div class="mt-2 font-weight-bold">{{ teacher.name }}</div>
                   <div class="text-caption text-muted">{{ teacher.email }}</div>
@@ -68,7 +71,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import LayoutWrapper from "@/layouts/LayoutWrapper.vue";
-import { useTeacherList } from '@/stores/teachersList';
+import { useTeacherList } from "@/stores/teachersList";
 import Avatar from "@/assets/avatar.png";
 
 interface Teacher {
@@ -109,7 +112,6 @@ const initializeTeachers = async () => {
       subjects: subjectsList[index % subjectsList.length],
       phone: teacher.phone,
       complete_address: teacher.complete_address,
-
     }));
   }
 };
@@ -118,9 +120,10 @@ onMounted(initializeTeachers);
 
 const filteredTeachers = computed(() => {
   if (!searchQuery.value) return teachers.value;
-  return teachers.value.filter((teacher) =>
-    teacher.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    teacher.email.toLowerCase().includes(searchQuery.value.toLowerCase())
+  return teachers.value.filter(
+    (teacher) =>
+      teacher.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      teacher.email.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
 
@@ -136,14 +139,46 @@ const paginatedTeachers = computed(() => {
 
 <style scoped>
 .teacher-card {
+  min-height: 280px; /* Ensures all cards are the same height */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Spreads content evenly */
   border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
+  padding: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 77, 64, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 0 10px #004d40;
 }
-.teacher-card:hover {
-  transform: translateY(-5px);
+
+.teacher-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Distribute content evenly */
+  align-items: center;
+  height: 100%; /* Make all cards the same height */
+  min-height: 350px; /* Ensures uniformity */
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 77, 64, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 0 10px #004d40;
 }
-.text-muted {
-  color: gray;
+
+.teacher-card .v-card-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  width: 100%;
+}
+
+.teacher-card .v-card-text {
+  flex-grow: 1; /* Makes sure the content stretches */
+  width: 100%;
+  text-align: center;
 }
 </style>
