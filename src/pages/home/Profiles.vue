@@ -262,6 +262,7 @@ const updateProfile = async () => {
   const { data: user, error } = await supabase.auth.getUser();
   if (error || !user?.user?.id) {
     console.error("Error fetching user:", error?.message);
+    toast.error("Failed to fetch user data.");
     return;
   }
 
@@ -279,7 +280,9 @@ const updateProfile = async () => {
 
   if (updateError) {
     console.error("Error updating profile:", updateError.message);
+    toast.error("Failed to update profile. Please try again.");
   } else {
+    toast.success("Profile updated successfully!");
     console.log("Profile updated successfully!");
   }
 };
