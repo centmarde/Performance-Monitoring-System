@@ -11,6 +11,7 @@ interface Record {
 
 export const useRecordsStore = defineStore('recordsStore', () => {
   const records = ref<Record[]>([]);
+  const recordCount = ref(0);
 
   async function fetchRecordsBySection(sectionId: number) {
     const { data, error } = await supabase
@@ -41,6 +42,7 @@ export const useRecordsStore = defineStore('recordsStore', () => {
     }
 
     records.value = data as Record[];
+    recordCount.value = data.length;
     return records.value;
   }
 
@@ -105,6 +107,38 @@ export const useRecordsStore = defineStore('recordsStore', () => {
     return data?.[0]?.initial_grade || 0; // Return the initial grade from the first index
   }
 
+  async function countMissedActivities() {
+    const { data, error } = await supabase
+      .from('records')
+      .select('*')
+     
+
+    if (error) {
+      console.error('Error fetching records:', error);
+      return null;
+    }
+
+    const columnsToCheck = [
+      'ww1', 'ww2', 'ww3', 'ww4', 'ww5', 'ww6', 'ww7', 'ww8', 'ww9', 'ww10',
+      'pt1', 'pt2', 'pt3', 'pt4', 'pt5', 'pt6', 'pt7', 'pt8', 'pt9', 'pt10',
+      'qa1'
+    ];
+
+    const missedActivities = data.reduce((acc, record) => {
+      const missedCount = columnsToCheck.reduce((count, column) => {
+        if (record[column] === null) {
+          count++;
+        }
+        return count;
+      }, 0);
+      acc.push({ student_id: record.student_id, missedCount });
+      return acc;
+    }, []);
+
+    console.log(missedActivities);
+    return missedActivities;
+  }
+
   return {
     records,
     fetchRecordsBySection,
@@ -112,5 +146,7 @@ export const useRecordsStore = defineStore('recordsStore', () => {
     fetchRecordsByClassRecordId,
     addRecordsForSection,
     fetchInitialGradeByStudentId,
+    countMissedActivities,
+    recordCount,
   };
 });

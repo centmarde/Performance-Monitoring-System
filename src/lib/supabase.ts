@@ -3,7 +3,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { useToast } from 'vue-toastification';
 
-
 const toast = useToast();
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -22,8 +21,6 @@ export async function doLogout() {
     
     // Supabase Logout
     await supabase.auth.signOut();
-
-    // Delete all data in the rooms table
 
     toast("Logout Successfully!"); // Notify successful logout
     localStorage.clear(); // Clear local storage

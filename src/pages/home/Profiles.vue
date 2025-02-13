@@ -4,7 +4,7 @@
       <v-container>
         <v-card class="profile-card">
           <!-- Profile Photo Upload -->
-          <v-row align="center">
+          <v-row align="start">
             <v-col cols="12" md="3" class="text-center">
               <v-avatar size="100">
                 <v-img

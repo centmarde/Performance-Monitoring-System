@@ -12,6 +12,7 @@ export const useSubjectsStore = defineStore('subjectsStore', () => {
   const subjects = ref<Subject[]>([]);
   const loading = ref(false);
   const error = ref<string | null>(null);
+  const subjectCount = ref(0);
 
   async function fetchSubjects() {
     loading.value = true;
@@ -25,6 +26,7 @@ export const useSubjectsStore = defineStore('subjectsStore', () => {
       subjects.value = [];
     } else {
       subjects.value = data as Subject[];
+      subjectCount.value = data.length;
     }
     loading.value = false;
   }
@@ -57,5 +59,6 @@ export const useSubjectsStore = defineStore('subjectsStore', () => {
     error,
     fetchSubjects,
     fetchSubjectIdByTitle,
+    subjectCount,
   };
 });
