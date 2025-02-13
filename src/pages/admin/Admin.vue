@@ -252,12 +252,15 @@ const isAddUserValid = computed(() => {
 });
 
 const isEditUserValid = computed(() => {
+  const isValidPassword =
+    !editedUser.value.password || passwordValidator(editedUser.value.password);
+
   return (
-    editedUser.value.firstname.trim() !== "" &&
-    editedUser.value.lastname.trim() !== "" &&
-    emailValidator(editedUser.value.email) === true &&
-    passwordValidator(editedUser.value.password) === true &&
-    editedUser.value.role.trim() !== ""
+    (editedUser.value.firstname?.trim() || "").length > 0 &&
+    (editedUser.value.lastname?.trim() || "").length > 0 &&
+    emailValidator(editedUser.value.email || "") === true &&
+    isValidPassword && // Check password only if it's not empty
+    (editedUser.value.role?.trim() || "").length > 0
   );
 });
 
@@ -319,7 +322,18 @@ onMounted(async () => {
 
 // Methods for managing users
 const openEditDialog = (user: User) => {
-  editedUser.value = { ...user };
+  editedUser.value = { ...user } || {
+    id: 0,
+    name: "",
+    email: "",
+    firstname: "",
+    lastname: "",
+    password: "",
+    phone: "",
+    complete_address: "",
+    role: "",
+  };
+  console.log("Opening Edit Dialog:", editedUser.value); // Log the data
   showEditUserForm.value = true;
 };
 
@@ -351,6 +365,7 @@ const addUser = async () => {
 };
 
 const updateUser = async () => {
+  console.log("Edited User:", editedUser.value); // Log the user data
   try {
     const { error } = await supabase
       .from("users")
