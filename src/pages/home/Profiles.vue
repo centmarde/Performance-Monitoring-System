@@ -363,6 +363,7 @@ const updatePassword = async () => {
   }
 
   try {
+    // Get current session first
     const {
       data: { session },
       error: sessionError,
@@ -373,12 +374,16 @@ const updatePassword = async () => {
       return;
     }
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: profileData.value.email,
+    // Use the email from the current session instead of profile data
+    const {
+      data: { user },
+      error: signInError,
+    } = await supabase.auth.signInWithPassword({
+      email: session.user.email!, // Use session email
       password: oldPassword,
     });
 
-    if (signInError) {
+    if (signInError || !user) {
       toast.error("Current password is incorrect.");
       return;
     }
