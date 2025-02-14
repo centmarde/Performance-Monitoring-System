@@ -2,6 +2,7 @@
   <HomeLayout>
     <template #content>
       <v-container>
+
         <v-row>
           <v-col cols="12" md="3">
             <v-btn-toggle v-model="activeTab" mandatory>
@@ -17,6 +18,7 @@
 
         <v-card class="profile-card" v-if="activeTab === 'account'">
           <v-row align="center">
+
             <v-col cols="12" md="3" class="text-center">
               <v-avatar size="100">
                 <v-img

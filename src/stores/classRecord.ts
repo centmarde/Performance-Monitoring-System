@@ -8,6 +8,7 @@ export const useClassRecordStore = defineStore('classRecord', {
     students: [] as any[],
     loading: false,
     error: null as string | null,
+    classRecordCount: 0,
   }),
   actions: {
     async fetchClassRecords() {
@@ -20,6 +21,7 @@ export const useClassRecordStore = defineStore('classRecord', {
         this.error = error.message;
       } else {
         this.classRecords = data;
+        this.classRecordCount = data.length;
       }
       this.loading = false;
     },
