@@ -33,8 +33,11 @@
             sm="6"
             md="4"
           >
-            <v-card class="subject-card" @click="handleCardClick(subject.id)">
-              <!-- Subject Title (Centered) -->
+            <v-card
+              :class="['subject-card', getColorClass(index)]"
+              @click="handleCardClick(subject.id)"
+            >
+              <!-- Subject Title -->
               <v-card-title class="subject-title">
                 <v-icon class="subject-icon" size="24">mdi-book-open</v-icon>
                 {{ subject.subjectName }}
@@ -197,6 +200,7 @@ const totalPages = computed(() => {
   const remainingSubjects = subjects.value.length - 5;
   return 1 + Math.ceil(remainingSubjects / itemsPerPage);
 });
+
 const paginatedSubjects = computed(() => {
   if (currentPage.value === 1) {
     return subjects.value.slice(0, 5);
@@ -204,6 +208,16 @@ const paginatedSubjects = computed(() => {
   const start = 5 + (currentPage.value - 2) * itemsPerPage;
   return subjects.value.slice(start, start + itemsPerPage);
 });
+
+const getColorClass = (index: number) => {
+  const colorClasses = [
+    "bg-blue-light",
+    "bg-green-light",
+    "bg-yellow-light",
+    "bg-red-light",
+  ];
+  return colorClasses[index % colorClasses.length];
+};
 
 const subjectRecords = ref<{ [key: string]: any }>({});
 
@@ -244,7 +258,6 @@ const saveClassRecord = async () => {
 
   classRecordDialog.value = false;
 
-  // Show success toast notification
   toast.success("Subject added successfully!", {
     timeout: 3000,
   });
@@ -275,63 +288,21 @@ const handleCardClick = (classRecordId: number) => {
 </script>
 
 <style scoped>
-.score-input {
-  max-width: 90px; /* Increased width */
-  min-width: 80px;
-  height: 40px; /* Increased height */
-  font-size: 20px; /* Larger font size */
-  text-align: center;
-  padding: 8px; /* More padding for better spacing */
-}
-
-.score-input input {
-  color: #000 !important;
-  font-weight: bold;
-  text-align: center;
-}
-.add-new-card {
-  border: 2px dashed var(--v-primary-base);
-  background-color: var(--v-background-base);
-  color: var(--v-text-base);
-  cursor: pointer;
-  text-align: center;
-  height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .subject-card {
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
-  backdrop-filter: blur(10px); /* Blur effect for glass background */
-  -webkit-backdrop-filter: blur(10px); /* Safari support */
-  box-shadow: 0 0 10px #004d40; /* Glowing effect */
-  cursor: pointer;
-  height: 250px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   transition: 0.3s;
+  height: 250px;
+  cursor: pointer;
 }
+
 .subject-card:hover {
   transform: scale(1.03);
 }
 
 .subject-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   font-weight: bold;
   font-size: 22px;
-  padding-bottom: 8px;
-  color: var(--v-theme-on-surface);
-}
-
-.subject-icon {
-  margin-right: 8px;
-  color: var(--v-theme-primary);
+  text-align: center;
 }
 
 .subject-info {
@@ -339,15 +310,47 @@ const handleCardClick = (classRecordId: number) => {
   align-items: center;
   gap: 8px;
   font-size: 16px;
-  color: var(--v-theme-on-surface);
 }
 
-.rounded-card {
-  border-radius: 12px;
+/* Light Mode Colors */
+.bg-blue-light {
+  background: #dceeff;
+  color: #000;
 }
-.glass-card {
-  background: rgba(0, 105, 92, 0.5);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+
+.bg-green-light {
+  background: #e8f5e9;
+  color: #000;
+}
+
+.bg-yellow-light {
+  background: #fff3e0;
+  color: #000;
+}
+
+.bg-red-light {
+  background: #ffebee;
+  color: #000;
+}
+
+/* Dark Mode Colors */
+.dark-mode .bg-blue-light {
+  background: #1e3a5f;
+  color: #fff;
+}
+
+.dark-mode .bg-green-light {
+  background: #1b5e20;
+  color: #fff;
+}
+
+.dark-mode .bg-yellow-light {
+  background: #795548;
+  color: #fff;
+}
+
+.dark-mode .bg-red-light {
+  background: #b71c1c;
+  color: #fff;
 }
 </style>
