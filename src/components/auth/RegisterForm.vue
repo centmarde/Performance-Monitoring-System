@@ -80,7 +80,7 @@
         </v-form>
 
         <h5 class="text-center mt-4 mb-3 text-teal-darken-3">Sign up with</h5>
-        <div class="d-flex justify-space-between align-center mx-10 mb-11">
+        <div class="social-buttons">
           <!-- Replaced FontAwesome icons with Vuetify icons -->
           <v-btn depressed outlined color="grey">
             <v-icon color="red">mdi-google</v-icon>
@@ -167,5 +167,11 @@ async function onFormSubmit(event: SubmitEvent): Promise<void> {
   top: 10px;
   right: 10px;
   cursor: pointer;
+}
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 </style>
