@@ -152,6 +152,10 @@ const isDark = computed(() => theme.global.current.value.dark);
   align-items: center;
   padding: 30px;
 }
+.panel-content {
+  text-align: center;
+  padding: 20px 0;
+}
 
 /* Light Mode Side Panel */
 .light-panel {
