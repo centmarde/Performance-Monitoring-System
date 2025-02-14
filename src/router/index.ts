@@ -82,38 +82,37 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   const isLoggedIn = localStorage.getItem("access_token") !== null;
-//   const userRole = localStorage.getItem("Role");
-//   const publicPages = ["/", "/login"];
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = localStorage.getItem("access_token") !== null;
+  const userRole = localStorage.getItem("Role");
+  const publicPages = ["/", "/login"];
 
-//   const adminPages = ["/admin", "/teachers", "/teacher_account"];
-//   // const protectedPages = ["/home", "/profiles", "/admin", "/teachers", "/teacher_account"];
+  const adminPages = ["/admin", "/teachers", "/teacher_account"];
+  // const protectedPages = ["/home", "/profiles", "/admin", "/teachers", "/teacher_account"];
 
-//   if (to.meta.requiresAuth && !isLoggedIn) {
-//     toast.error("Authentication is required to access this page.");
-//     return next("/");
-//   }
+  if (to.meta.requiresAuth && !isLoggedIn) {
+    toast.error("Authentication is required to access this page.");
+    return next("/");
+  }
 
-//   if (publicPages.includes(to.path) && isLoggedIn) {
-//     return next(userRole === "admin" ? "/admin" : "/home");
-//   }
+  if (publicPages.includes(to.path) && isLoggedIn) {
+    return next(userRole === "admin" ? "/admin" : "/home");
+  }
 
-//   if (to.meta.role && to.meta.role !== userRole) {
-//     return next(userRole === "admin" ? "/admin" : "/home");
-//   }
+  if (to.meta.role && to.meta.role !== userRole) {
+    return next(userRole === "admin" ? "/admin" : "/home");
+  }
 
-//   if (userRole === "admin" && !adminPages.includes(to.path)) {
-//     return next("/admin");
-//   }
+  if (userRole === "admin" && !adminPages.includes(to.path)) {
+    return next("/admin");
+  }
 
-//   if (userRole !== "admin" && adminPages.includes(to.path)) {
-//     return next("/home");
+  if (userRole !== "admin" && adminPages.includes(to.path)) {
+    return next("/home");
+  }
 
-//   }
-
-//   next();
-// });
+  next();
+});
 
 router.onError((err, to) => {
   if (err?.message?.includes?.("Failed to fetch dynamically imported module")) {

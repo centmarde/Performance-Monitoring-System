@@ -14,30 +14,24 @@ export const useUserInfoStore = defineStore("userInfo", () => {
   } | null>(null);
 
   async function fetchUserInfo() {
-    const userId = localStorage.getItem("user_id");
+    const { data: authData, error: authError } = await supabase.auth.getUser();
 
-    if (!userId) {
-      console.error("No user ID found in localStorage");
+    if (authError || !authData?.user) {
+      console.error("Authentication failed:", authError);
+      userInfo.value = null;
       return null;
     }
 
-    console.log("Fetching user info for user ID:", userId);
-
-    // Debugging: Check if the userId actually exists in Supabase
-    const { data: debugData, error: debugError } = await supabase
-      .from("users")
-      .select("id")
-      .eq("id", userId);
-
-    console.log("Debug user query result:", debugData, debugError);
+    const userId = authData.user.id;
+    console.log("Fetching data for user ID:", userId); // Debugging
 
     const { data, error } = await supabase
       .from("users")
       .select(
         "firstname, lastname, email, phone, complete_address, user_type, image_path"
       )
-      .eq("id", userId)
-      .maybeSingle(); // Avoids hard failure
+      .eq("user_id", userId)
+      .maybeSingle();
 
     if (error) {
       console.error("Error fetching user info:", error);

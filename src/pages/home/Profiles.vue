@@ -2,7 +2,6 @@
   <HomeLayout>
     <template #content>
       <v-container>
-
         <v-row>
           <v-col cols="12" md="3">
             <v-btn-toggle v-model="activeTab" mandatory>
@@ -18,7 +17,6 @@
 
         <v-card class="profile-card" v-if="activeTab === 'account'">
           <v-row align="center">
-
             <v-col cols="12" md="3" class="text-center">
               <v-avatar size="100">
                 <v-img
@@ -28,12 +26,19 @@
               </v-avatar>
             </v-col>
             <v-col cols="12" md="9">
-              <v-btn :color="primaryColor" @click="uploadImage"
-                >Upload New Photo</v-btn
-              >
-              <v-btn class="ml-2" color="grey" @click="resetProfile"
-                >Reset</v-btn
-              >
+              <input
+                type="file"
+                ref="fileInput"
+                accept="image/*"
+                style="display: none"
+                @change="handleImageChange"
+              />
+              <v-btn :color="primaryColor" @click="triggerFileInput">
+                Upload New Photo
+              </v-btn>
+              <v-btn class="ml-2" color="grey" @click="resetProfile">
+                Reset
+              </v-btn>
             </v-col>
           </v-row>
           <v-row>
@@ -44,29 +49,29 @@
           <v-row>
             <v-col cols="12" md="6">
               <v-text-field
-                v-model="firstName"
+                v-model="profileData.firstName"
                 label="First Name"
                 variant="outlined"
               ></v-text-field>
               <v-text-field
-                v-model="phoneNumber"
+                v-model="profileData.phoneNumber"
                 label="Phone Number"
                 variant="outlined"
               ></v-text-field>
               <v-text-field
-                v-model="completeAddress"
+                v-model="profileData.completeAddress"
                 label="Complete Address"
                 variant="outlined"
               ></v-text-field>
             </v-col>
             <v-col cols="12" md="6">
               <v-text-field
-                v-model="lastName"
+                v-model="profileData.lastName"
                 label="Last Name"
                 variant="outlined"
               ></v-text-field>
               <v-text-field
-                v-model="email"
+                v-model="profileData.email"
                 label="E-mail"
                 variant="outlined"
                 disabled
@@ -79,8 +84,9 @@
                 :color="primaryColor"
                 class="save-btn"
                 @click="updateProfile"
-                >Save Changes</v-btn
               >
+                Save Changes
+              </v-btn>
             </v-col>
           </v-row>
         </v-card>
@@ -94,15 +100,15 @@
           <v-row>
             <v-col cols="12" md="6">
               <v-text-field
-                v-model="oldPassword"
+                v-model="passwordData.oldPassword"
                 label="Current Password"
                 :type="showOldPassword ? 'text' : 'password'"
                 variant="outlined"
               >
                 <template v-slot:append-inner>
-                  <v-icon @click="showOldPassword = !showOldPassword">{{
-                    showOldPassword ? "mdi-eye" : "mdi-eye-off"
-                  }}</v-icon>
+                  <v-icon @click="showOldPassword = !showOldPassword">
+                    {{ showOldPassword ? "mdi-eye" : "mdi-eye-off" }}
+                  </v-icon>
                 </template>
               </v-text-field>
             </v-col>
@@ -110,21 +116,21 @@
           <v-row>
             <v-col cols="12" md="6">
               <v-text-field
-                v-model="newPassword"
+                v-model="passwordData.newPassword"
                 label="New Password"
                 :type="showNewPassword ? 'text' : 'password'"
                 variant="outlined"
               >
                 <template v-slot:append-inner>
-                  <v-icon @click="showNewPassword = !showNewPassword">{{
-                    showNewPassword ? "mdi-eye" : "mdi-eye-off"
-                  }}</v-icon>
+                  <v-icon @click="showNewPassword = !showNewPassword">
+                    {{ showNewPassword ? "mdi-eye" : "mdi-eye-off" }}
+                  </v-icon>
                 </template>
               </v-text-field>
             </v-col>
             <v-col cols="12" md="6">
               <v-text-field
-                v-model="confirmNewPassword"
+                v-model="passwordData.confirmNewPassword"
                 label="Confirm New Password"
                 :type="showConfirmNewPassword ? 'text' : 'password'"
                 variant="outlined"
@@ -132,10 +138,9 @@
                 <template v-slot:append-inner>
                   <v-icon
                     @click="showConfirmNewPassword = !showConfirmNewPassword"
-                    >{{
-                      showConfirmNewPassword ? "mdi-eye" : "mdi-eye-off"
-                    }}</v-icon
                   >
+                    {{ showConfirmNewPassword ? "mdi-eye" : "mdi-eye-off" }}
+                  </v-icon>
                 </template>
               </v-text-field>
             </v-col>
@@ -150,18 +155,18 @@
               </ul>
             </v-col>
           </v-row>
-
           <v-row justify="start">
             <v-col cols="auto">
               <v-btn
                 :color="primaryColor"
                 class="save-btn"
                 @click="updatePassword"
-                >Save Changes</v-btn
               >
+                Save Changes
+              </v-btn>
             </v-col>
             <v-col cols="auto">
-              <v-btn color="grey" outlined>Reset</v-btn>
+              <v-btn color="grey" outlined @click="resetPassword">Reset</v-btn>
             </v-col>
           </v-row>
         </v-card>
@@ -171,7 +176,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import HomeLayout from "@/layouts/HomeLayout.vue";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "vue-toastification";
@@ -182,63 +187,43 @@ const toast = useToast();
 const activeTab = ref("account");
 const userStore = useUserInfoStore();
 const primaryColor = computed(() => "#004D40");
+const fileInput = ref<HTMLInputElement | null>(null);
 
-const firstName = ref("");
-const lastName = ref("");
-const phoneNumber = ref("");
-const email = ref("");
-const completeAddress = ref("");
+// Profile Data
+const profileData = ref({
+  firstName: "",
+  lastName: "",
+  phoneNumber: "",
+  email: "",
+  completeAddress: "",
+});
+
+const originalProfileData = ref({
+  firstName: "",
+  lastName: "",
+  phoneNumber: "",
+  email: "",
+  completeAddress: "",
+});
+
+// Password Data
+const passwordData = ref({
+  oldPassword: "",
+  newPassword: "",
+  confirmNewPassword: "",
+});
+
+// Image handling
 const profileImage = ref(Avatar);
+const tempImage = ref<string | null>(null);
+const selectedFile = ref<File | null>(null);
 
-const oldPassword = ref("");
-const newPassword = ref("");
-const confirmNewPassword = ref("");
-
+// Password visibility toggles
 const showOldPassword = ref(false);
 const showNewPassword = ref(false);
 const showConfirmNewPassword = ref(false);
 
-// Image Upload Function
-const tempImage = ref<string | null>(null); // Temporary image preview
-
-const uploadImage = async () => {
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = "image/*";
-  input.onchange = async (event: Event) => {
-    const file = (event.target as HTMLInputElement)?.files?.[0];
-    if (!file) return;
-
-    const filePath = `profile_images/${Date.now()}-${file.name}`;
-    const { error } = await supabase.storage
-      .from("profiles")
-      .upload(filePath, file);
-
-    if (error) {
-      console.error("Error uploading image:", error.message);
-      return;
-    }
-
-    const publicUrl = supabase.storage.from("profiles").getPublicUrl(filePath)
-      .data.publicUrl;
-
-    if (publicUrl) {
-      profileImage.value = publicUrl; // Update profile page
-      userStore.setProfileImage(publicUrl); // ✅ Update sidebar in real time
-      console.log("Profile image updated:", publicUrl);
-    }
-  };
-  input.click();
-};
-
-// Reset Profile Fields
-const resetProfile = async () => {
-  await fetchProfile();
-  tempImage.value = null; // Clear preview
-  selectedFile.value = null; // Remove selected file
-};
-
-// Fetch user profile from Supabase
+// Fetch Profile
 const fetchProfile = async () => {
   const { data: user, error } = await supabase.auth.getUser();
   if (error || !user?.user?.id) {
@@ -247,74 +232,138 @@ const fetchProfile = async () => {
   }
 
   const { data, error: profileError } = await supabase
-    .from("users") // Corrected to match your table
+    .from("users")
     .select("firstname, lastname, phone, email, complete_address, image_path")
-    .eq("user_id", user.user.id) // Ensure correct filtering
+    .eq("user_id", user.user.id)
     .single();
 
   if (profileError) {
     console.error("Error fetching profile:", profileError.message);
   } else {
-    firstName.value = data.firstname || "";
-    lastName.value = data.lastname || "";
-    phoneNumber.value = data.phone || "";
-    email.value = data.email || "";
-    completeAddress.value = data.complete_address || "";
+    profileData.value = {
+      firstName: data.firstname || "",
+      lastName: data.lastname || "",
+      phoneNumber: data.phone || "",
+      email: data.email || "",
+      completeAddress: data.complete_address || "",
+    };
+
+    // Store original data for reset functionality
+    originalProfileData.value = { ...profileData.value };
     profileImage.value = data.image_path || Avatar;
   }
 };
 
-// Update Profile with toast notification
-const selectedFile = ref<File | null>(null); // Store selected image file
+// Image handling functions
+const triggerFileInput = () => {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "image/*";
+  input.onchange = handleImageChange;
+  input.click();
+};
 
+const handleImageChange = async (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+
+  if (!file) return;
+
+  selectedFile.value = file;
+  tempImage.value = URL.createObjectURL(file);
+};
+
+// Update Profile
 const updateProfile = async () => {
   const { data: user, error } = await supabase.auth.getUser();
   if (error || !user?.user?.id) {
-    console.error("Error fetching user:", error?.message);
     toast.error("Failed to fetch user data.");
     return;
+  }
+
+  let newImagePath = profileImage.value;
+
+  // Upload new image if selected
+  if (selectedFile.value) {
+    const filePath = `profile_images/${Date.now()}-${selectedFile.value.name}`;
+    const { error: uploadError } = await supabase.storage
+      .from("profiles")
+      .upload(filePath, selectedFile.value);
+
+    if (uploadError) {
+      toast.error("Failed to upload image.");
+      return;
+    }
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("profiles").getPublicUrl(filePath);
+
+    newImagePath = publicUrl;
   }
 
   const { error: updateError } = await supabase
     .from("users")
     .update({
-      firstname: firstName.value,
-      lastname: lastName.value,
-      phone: phoneNumber.value,
-      email: email.value,
-      complete_address: completeAddress.value,
-      image_path: profileImage.value, // Ensure image updates if changed
+      firstname: profileData.value.firstName,
+      lastname: profileData.value.lastName,
+      phone: profileData.value.phoneNumber,
+      email: profileData.value.email,
+      complete_address: profileData.value.completeAddress,
+      image_path: newImagePath,
     })
     .eq("user_id", user.user.id);
 
   if (updateError) {
-    console.error("Error updating profile:", updateError.message);
-    toast.error("Failed to update profile. Please try again.");
+    toast.error("Failed to update profile.");
   } else {
+    if (newImagePath !== profileImage.value) {
+      profileImage.value = newImagePath;
+      userStore.setProfileImage(newImagePath);
+    }
     toast.success("Profile updated successfully!");
-    console.log("Profile updated successfully!");
+    tempImage.value = null;
+    selectedFile.value = null;
   }
 };
 
-// Update Password with validation and toast
+// Reset Profile
+const resetProfile = () => {
+  profileData.value = { ...originalProfileData.value };
+  tempImage.value = null;
+  selectedFile.value = null;
+};
+
+// Reset Password
+const resetPassword = () => {
+  passwordData.value = {
+    oldPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
+  };
+};
+
+// Update Password
 const updatePassword = async () => {
-  if (!oldPassword.value || !newPassword.value || !confirmNewPassword.value) {
+  const { oldPassword, newPassword, confirmNewPassword } = passwordData.value;
+
+  if (!oldPassword || !newPassword || !confirmNewPassword) {
     toast.error("All fields are required!");
     return;
   }
 
-  if (newPassword.value !== confirmNewPassword.value) {
+  if (newPassword !== confirmNewPassword) {
     toast.error("New password and confirmation do not match.");
     return;
   }
 
-  if (newPassword.value.length < 8) {
+  if (newPassword.length < 8) {
     toast.error("Password must be at least 8 characters long.");
     return;
   }
 
   try {
-    // Get current user session
+    // Get current session first
     const {
       data: { session },
       error: sessionError,
@@ -325,19 +374,22 @@ const updatePassword = async () => {
       return;
     }
 
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email: email.value,
-      password: oldPassword.value,
+    // Use the email from the current session instead of profile data
+    const {
+      data: { user },
+      error: signInError,
+    } = await supabase.auth.signInWithPassword({
+      email: session.user.email!, // Use session email
+      password: oldPassword,
     });
 
-    if (signInError) {
+    if (signInError || !user) {
       toast.error("Current password is incorrect.");
       return;
     }
 
-    // Proceed with password update
     const { error: updateError } = await supabase.auth.updateUser({
-      password: newPassword.value,
+      password: newPassword,
     });
 
     if (updateError) {
@@ -345,9 +397,7 @@ const updatePassword = async () => {
     }
 
     toast.success("Password updated successfully!");
-    oldPassword.value = "";
-    newPassword.value = "";
-    confirmNewPassword.value = "";
+    resetPassword();
   } catch (err) {
     toast.error("Failed to update password. Please try again.");
     console.error("Error updating password:", err);
@@ -363,19 +413,21 @@ onMounted(fetchProfile);
   padding: 16px;
   box-shadow: 0 0 10px #004d40;
   border: 1px solid rgba(0, 77, 64, 0.5);
+  margin-top: 20px;
 }
+
 .password-requirements {
   font-weight: bold;
   margin-bottom: 8px;
 }
 
 .password-list {
-  padding-left: 20px; /* Ensures proper indentation */
+  padding-left: 20px;
   margin: 0;
-  list-style-type: disc; /* Fix bullet style */
+  list-style-type: disc;
 }
 
 .password-list li {
-  margin-bottom: 4px; /* Adds spacing between list items */
+  margin-bottom: 4px;
 }
 </style>
