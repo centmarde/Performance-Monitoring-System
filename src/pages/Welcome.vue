@@ -76,7 +76,6 @@
             v-model="extraInfo.complete_address"
             outlined
             required
-            auto-grow="false"
             clearable
           ></v-textarea>
         </v-card-text>
@@ -115,12 +114,12 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useUserInfoStore } from "@/stores/userInfo"; // Import Pinia store
+
 import { supabase } from "@/lib/supabase";
 
 const showDialog = ref(false);
 const showContactDialog = ref(false);
-const userStore = useUserInfoStore();
+
 const errorMessage = ref("");
 const successMessage = ref("");
 
