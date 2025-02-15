@@ -216,6 +216,7 @@ import { useSubjectsStore } from "@/stores/subjectsStore";
 import { useSectionsStore } from "@/stores/sectionsStore";
 import { useRecordsStore } from "@/stores/recordsStore";
 import { useToast } from "vue-toastification";
+import { supabase } from '@/lib/supabase';
 
 const toast = useToast();
 const classRecordDialog = ref(false);
@@ -233,16 +234,30 @@ const sectionsStore = useSectionsStore();
 const subjectOptions = computed(() =>
   subjectsStore.subjects.map((subject) => subject.title)
 );
-const sectionOptions = computed(() =>
-  sectionsStore.sections.map((section) => section.code)
-);
+
+const excludedSections = ref<string[]>([]);
 
 onMounted(async () => {
   await classRecordStore.fetchAllClassRecordsWithDetails();
   subjects.value = classRecordStore.classRecords;
   await subjectsStore.fetchSubjects();
   await sectionsStore.fetchSections();
+
+  // Fetch class records and exclude sections already present
+  const { data: classRecords } = await supabase
+    .from('class_record')
+    .select('section_id');
+  
+  if (classRecords) {
+    excludedSections.value = classRecords.map(record => record.section_id);
+  }
 });
+
+const sectionOptions = computed(() => 
+  sectionsStore.sections
+    .filter(section => !excludedSections.value.includes(section.id))
+    .map(section => section.code)
+);
 
 const totalPages = computed(() => {
   const remainingSubjects = subjects.value.length - 5;

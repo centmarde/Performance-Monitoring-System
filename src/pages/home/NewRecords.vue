@@ -151,6 +151,7 @@
         </v-table>
 
         <v-pagination v-model="page" :length="pageCount" :total-visible="5" class="mt-4"></v-pagination>
+        <v-btn class="save-btn" @click="saveAllChanges" style="display: none;">Save</v-btn>
       </v-container>
     </template>
   </HomeLayout>
@@ -253,6 +254,12 @@ const saveChanges = async (item) => {
   }
 };
 
+const saveAllChanges = async () => {
+  for (const item of jsondata.value) {
+    await saveChanges(item);
+  }
+};
+
 const fetchGradeCalculations = async (classRecordId) => {
   const { data: records, error } = await supabase
     .from('calculate_initial_grade')
@@ -338,11 +345,11 @@ const clickSaveButtons = () => {
 const startAutoSave = () => {
   setInterval(async () => {
     await fetchRecords();
-  }, 10000);
+  }, 5000);
 
   setInterval(() => {
-    clickSaveButtons();
-  }, 5000);
+    document.querySelectorAll('.save-btn').forEach(button => button.click());
+  }, 8000);
 };
 
 onMounted(async () => {
