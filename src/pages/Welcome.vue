@@ -266,4 +266,11 @@ onMounted(() => {
   background-color: #004d40;
   color: #e0f2f1;
 }
+
+.feature-icon {
+  width: 80px; /* Adjust size */
+  height: auto; /* Maintain aspect ratio */
+  display: block;
+  margin: 0 auto 10px; /* Center image & add spacing */
+}
 </style>
