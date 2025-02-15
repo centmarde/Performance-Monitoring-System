@@ -3,17 +3,16 @@
     <v-toolbar-title :class="titleClass">
       Performance Monitoring System
     </v-toolbar-title>
-    <v-icon class="me-5" @click="toggleTheme">{{ themeIcon }}</v-icon>
-    <v-menu transition="slide-y-transition">
-      <template v-slot:activator="{ props }">
-        <v-btn rounded="xl" size="large" variant="tonal" v-bind="props">
-          <v-avatar size="25" class="mr-2">
-            <v-img src="#"></v-img>
-          </v-avatar>
-          <v-icon>mdi-cog</v-icon>
-        </v-btn>
-      </template>
 
+    <v-spacer></v-spacer>
+
+    <!-- Move Dark Mode Icon & Clock to the End -->
+    <v-container class="d-flex align-center justify-end" style="width: auto">
+      <v-icon class="me-3" @click="toggleTheme">{{ themeIcon }}</v-icon>
+      <v-toolbar-title class="clock">{{ currentTime }}</v-toolbar-title>
+    </v-container>
+
+    <v-menu transition="slide-y-transition">
       <v-sheet class="pa-0 mt-2 me-1 menu-card rounded-border">
         <div>
           <v-btn
@@ -32,23 +31,6 @@
               <v-col> {{ userEmail }} </v-col>
             </v-row>
           </v-btn>
-
-          <v-btn
-            class="justify-start"
-            rounded="0"
-            variant="text"
-            size="large"
-            block
-            @click="handleLogoutClick"
-            style="text-transform: none"
-          >
-            <v-row align="center" no-gutters>
-              <v-col cols="auto">
-                <v-icon class="me-3">mdi-logout</v-icon>
-              </v-col>
-              <v-col> Logout </v-col>
-            </v-row>
-          </v-btn>
         </div>
       </v-sheet>
     </v-menu>
@@ -56,10 +38,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useTheme } from "vuetify";
-import { doLogout } from "@/lib/supabase";
-import router from "@/router";
 import { useUserInfoStore } from "@/stores/userInfo";
 
 const theme = useTheme();
@@ -90,10 +70,24 @@ userInfoStore.fetchUserInfo();
 
 const userEmail = computed(() => userInfoStore.userInfo?.email || "");
 
-function handleLogoutClick() {
-  doLogout();
-  router.push("/");
-}
+// Realtime Clock
+const currentTime = ref(new Date().toLocaleTimeString());
+
+const updateTime = () => {
+  currentTime.value = new Date().toLocaleTimeString();
+};
+
+let clockInterval: ReturnType<typeof setInterval> | undefined;
+
+onMounted(() => {
+  clockInterval = setInterval(updateTime, 1000);
+});
+
+onUnmounted(() => {
+  if (clockInterval) {
+    clearInterval(clockInterval);
+  }
+});
 </script>
 
 <style scoped>
@@ -132,5 +126,13 @@ function handleLogoutClick() {
 .rounded-border {
   border-radius: 10px;
   border: 1px solid #ccc;
+}
+
+/* Clock Styling */
+.clock {
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  margin-right: 16px;
 }
 </style>
