@@ -2,7 +2,9 @@
   <HomeLayout>
     <template #content>
       <v-container>
-        <v-row justify="start">
+
+        <v-row justify="center">
+
           <v-col cols="auto">
             <v-card class="pa-3 rounded-card glass-card">
               <h4 class="font-weight-bold text-end">
@@ -120,11 +122,11 @@ const filteredStudents = computed(() =>
 /* Optional Styling */
 .v-card {
   border-radius: 12px;
-  padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
   backdrop-filter: blur(10px); /* Blur effect for glass background */
   -webkit-backdrop-filter: blur(10px); /* Safari support */
-
+  box-shadow: 0 0 10px #004d40; /* Glowing effect */
 }
 .glass-card {
   background: rgba(0, 105, 92, 0.5);

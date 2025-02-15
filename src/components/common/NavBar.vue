@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar color="#3D5654" flat>
+  <v-app-bar :color="isDarkTheme ? '#1E2A29' : '#3D5654'" flat>
     <v-toolbar-title class="text-h6 font-weight-bold text-white">
       Performance Monitoring System
     </v-toolbar-title>
@@ -8,7 +8,9 @@
 
     <!-- Theme Toggle Button -->
     <v-btn icon @click="toggleTheme">
-      <v-icon :color="'#B49239'">{{ themeIcon }}</v-icon>
+      <v-icon :color="isDarkTheme ? 'white' : '#B49239'">{{
+        themeIcon
+      }}</v-icon>
     </v-btn>
   </v-app-bar>
 </template>
@@ -23,7 +25,7 @@ const isDarkTheme = computed(() => theme.global.current.value.dark);
 provide("isDarkTheme", isDarkTheme);
 
 const themeIcon = computed(() =>
-  isDarkTheme.value ? "mdi-weather-sunny" : "mdi-weather-night"
+  isDarkTheme.value ? "mdi-weather-night" : "mdi-weather-sunny"
 );
 
 function toggleTheme() {
