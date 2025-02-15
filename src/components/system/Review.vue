@@ -1,9 +1,8 @@
 <template>
   <v-container>
-
-    <v-row>
+  <v-card>
+      <v-row>
       <v-col cols="4">
-        <v-card class="pa-3 rounded-card" elevation="2">
         <v-select
           :items="sections"
           item-title="code"
@@ -11,10 +10,8 @@
           label="Select Section"
           v-model="selectedSection"
         ></v-select>
-        </v-card>
       </v-col>
       <v-col cols="4">
-        <v-card class="pa-3 rounded-card" elevation="2">
         <v-select
           :items="students"
           item-title="fullName"
@@ -23,13 +20,12 @@
           v-model="selectedStudent"
           :disabled="!selectedSection"
         ></v-select>
-        </v-card>
       </v-col>
       <v-col cols="4">
         <v-card class="fixed-width-card">s</v-card>
       </v-col>
     </v-row>
- 
+  </v-card>
   </v-container>
 </template>
 
