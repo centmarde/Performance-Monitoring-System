@@ -11,6 +11,7 @@ declare module 'vue' {
     DataTable: typeof import('./components/common/DataTable.vue')['default']
     InnerNavBar: typeof import('./components/common/InnerNavBar.vue')['default']
     LoginForm: typeof import('./components/auth/LoginForm.vue')['default']
+    LogoutConfirmationDialog: typeof import('./components/LogoutConfirmationDialog.vue')['default']
     NavBar: typeof import('./components/common/NavBar.vue')['default']
     RegisterForm: typeof import('./components/auth/RegisterForm.vue')['default']
     Review: typeof import('./components/system/Review.vue')['default']
