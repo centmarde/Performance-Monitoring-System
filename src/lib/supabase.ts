@@ -11,7 +11,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function doLogout() {
   try {
-    // Show SweetAlert2 confirmation dialog with loading effect in title
     const result = await Swal.fire({
       title: "Confirm Logout",
       text: "Are you sure you want to log out? You will need to log in again to continue.",
@@ -23,9 +22,9 @@ export async function doLogout() {
       cancelButtonColor: "#6c757d",
       reverseButtons: true,
       allowOutsideClick: false,
-      background: "rgba(255, 255, 255, 0.1)", // Soft glass effect
+      background: "rgba(255, 255, 255, 0.1)",
       color: "#fff",
-      backdrop: "rgba(0, 0, 0, 0.6)", // Removed GIF
+      backdrop: "rgba(0, 0, 0, 0.6)",
       customClass: {
         popup: "glass-popup",
         title: "glass-title",
