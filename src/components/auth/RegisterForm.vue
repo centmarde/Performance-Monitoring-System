@@ -82,7 +82,7 @@
         <h5 class="text-center mt-4 mb-3 text-teal-darken-3">Sign up with</h5>
         <div class="social-buttons">
           <!-- Replaced FontAwesome icons with Vuetify icons -->
-          <v-btn depressed outlined color="grey">
+          <v-btn depressed outlined color="teal-darken-3">
             <v-icon color="red">mdi-google</v-icon>
           </v-btn>
           <v-btn depressed outlined color="grey">
