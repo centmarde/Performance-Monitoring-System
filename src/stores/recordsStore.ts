@@ -3,9 +3,28 @@ import { defineStore } from 'pinia';
 import { supabase } from '@/lib/supabase';
 
 interface Record {
-  id: number;
   student_id: number;
-  initial_grade: number;
+  ww1: number;
+  ww2: number;
+  ww3: number;
+  ww4: number;
+  ww5: number;
+  ww6: number;
+  ww7: number;
+  ww8: number;
+  ww9: number;
+  ww10: number;
+  pt1: number;
+  pt2: number;
+  pt3: number;
+  pt4: number;
+  pt5: number;
+  pt6: number;
+  pt7: number;
+  pt8: number;
+  pt9: number;
+  pt10: number;
+  qa1: number;
   class_record_id: number;
 }
 
@@ -65,7 +84,7 @@ export const useRecordsStore = defineStore('recordsStore', () => {
   async function addRecordsForSection(sectionId: number, classRecordId: number) {
     const { data: students, error } = await supabase
       .from('students')
-      .select('id')
+      .select('*')
       .eq('section_id', sectionId);
   
     if (error) {
@@ -73,10 +92,32 @@ export const useRecordsStore = defineStore('recordsStore', () => {
       return null;
     }
   
-    const records = students.map((student: any) => ({
+    const getRandomScore = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    const records: Record[] = students.map((student: any) => ({
       student_id: student.id,
+      ww1: getRandomScore(50, 100),
+      ww2: getRandomScore(50, 100),
+      ww3: getRandomScore(70, 100),
+      ww4: getRandomScore(70, 100),
+      ww5: getRandomScore(40, 100),
+      ww6: getRandomScore(70, 100),
+      ww7: getRandomScore(70, 100),
+      ww8: getRandomScore(50, 100),
+      ww9: getRandomScore(50, 100),
+      ww10: getRandomScore(70, 100),
+      pt1: getRandomScore(50, 100),
+      pt2: getRandomScore(50, 100),
+      pt3: getRandomScore(70, 100),
+      pt4: getRandomScore(50, 100),
+      pt5: getRandomScore(70, 100),
+      pt6: getRandomScore(20, 100),
+      pt7: getRandomScore(70, 100),
+      pt8: getRandomScore(70, 100),
+      pt9: getRandomScore(50, 100),
+      pt10: getRandomScore(50, 100),
+      qa1: getRandomScore(50, 100),
       class_record_id: classRecordId,
-      initial_grade: 0,
     }));
   
     const { error: insertError } = await supabase

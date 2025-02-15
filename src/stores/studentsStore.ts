@@ -39,10 +39,25 @@ export const useStudentsStore = defineStore('studentsStore', () => {
     console.log("pending", studentId);
   }
 
+  async function fetchStudentsBySection(sectionId: number) {
+    const { data, error } = await supabase
+      .from('students')
+      .select('*')
+      .eq('section_id', sectionId);
+
+    if (error) {
+      console.error('Error fetching students by section:', error);
+      return [];
+    }
+
+    return data as Student[];
+  }
+
   return {
     students,
     fetchInitialScore,
     fetchAllStudents,
+    fetchStudentsBySection,
     studentCount,
   };
 });
