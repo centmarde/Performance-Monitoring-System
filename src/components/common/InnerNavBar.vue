@@ -3,6 +3,12 @@
     <v-toolbar-title :class="titleClass">
       Performance Monitoring System
     </v-toolbar-title>
+
+    <v-spacer></v-spacer>
+
+    <!-- Realtime Clock -->
+    <v-toolbar-title class="clock">{{ currentTime }}</v-toolbar-title>
+
     <v-icon class="me-5" @click="toggleTheme">{{ themeIcon }}</v-icon>
     <v-menu transition="slide-y-transition">
       <template v-slot:activator="{ props }">
@@ -56,7 +62,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { useTheme } from "vuetify";
 import { doLogout } from "@/lib/supabase";
 import router from "@/router";
@@ -94,6 +100,25 @@ function handleLogoutClick() {
   doLogout();
   router.push("/");
 }
+
+// Realtime Clock
+const currentTime = ref(new Date().toLocaleTimeString());
+
+const updateTime = () => {
+  currentTime.value = new Date().toLocaleTimeString();
+};
+
+let clockInterval: number | undefined;
+
+onMounted(() => {
+  clockInterval = setInterval(updateTime, 1000);
+});
+
+onUnmounted(() => {
+  if (clockInterval) {
+    clearInterval(clockInterval);
+  }
+});
 </script>
 
 <style scoped>
@@ -132,5 +157,13 @@ function handleLogoutClick() {
 .rounded-border {
   border-radius: 10px;
   border: 1px solid #ccc;
+}
+
+/* Clock Styling */
+.clock {
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  margin-right: 16px;
 }
 </style>
