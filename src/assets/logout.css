@@ -1,0 +1,52 @@
+/* Glassmorphic Popup */
+.glass-popup {
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+/* Title Styling */
+.glass-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 0px 0px 10px rgba(255, 255, 255, 0.7);
+}
+
+/* Confirm Button Styling */
+.glass-confirm-btn {
+  background: linear-gradient(135deg, #ff4d4d, #ff1a1a);
+  border-radius: 8px;
+  box-shadow: 0px 4px 15px rgba(255, 77, 77, 0.4);
+  transition: 0.3s;
+}
+
+.glass-confirm-btn:hover {
+  background: linear-gradient(135deg, #ff6666, #ff3333);
+  box-shadow: 0px 6px 20px rgba(255, 77, 77, 0.6);
+}
+
+/* Cancel Button Styling */
+.glass-cancel-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.glass-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .glass-popup {
+    background: rgba(30, 30, 30, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .glass-title {
+    color: #fff;
+    text-shadow: 0px 0px 15px rgba(255, 255, 255, 0.8);
+  }
+}

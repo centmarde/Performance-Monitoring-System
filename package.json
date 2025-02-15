@@ -23,6 +23,7 @@
     "datatables.net-vue3": "^3.0.4",
     "echarts": "^5.6.0",
     "roboto-fontface": "*",
+    "sweetalert2": "^11.16.1",
     "vue": "^3.4.31",
     "vue-echarts": "^7.0.3",
     "vue-sidebar-menu": "^5.2.2",

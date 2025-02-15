@@ -107,7 +107,7 @@ const menu = ref([
 
 function handleLogoutClick() {
   doLogout();
-  router.push("/");
+  /* router.push("/"); */
 }
 </script>
 
