@@ -438,14 +438,14 @@ const saveClassRecord = async () => {
 
   classRecordDialog.value = false;
 
-  toast.success("Subject added successfully!", {
+  toast.success("Subject added successfully.", {
     timeout: 3000,
   });
 };
 
 const deleteClassRecord = async (classRecordId: number) => {
   await classRecordStore.deleteClassRecord(classRecordId);
-  toast.success("Class record deleted successfully!", {
+  toast.success("Class record deleted successfully.", {
     timeout: 3000,
   });
   window.location.reload();

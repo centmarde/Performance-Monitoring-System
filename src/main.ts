@@ -19,6 +19,7 @@ import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import DataTable from "datatables.net-vue3";
 import DataTablesCore from "datatables.net-dt";
+import "@/assets/logout.css";
 
 // Custom Styles
 import "@/assets/styles.css";

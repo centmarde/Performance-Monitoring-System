@@ -10,30 +10,50 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function doLogout() {
-  // SweetAlert2 Confirmation
-  const result = await Swal.fire({
-    title: "Are you sure?",
-    text: "You will be logged out!",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "Yes, Logout",
-    cancelButtonText: "Cancel",
-    confirmButtonColor: "#d33",
-    cancelButtonColor: "#3085d6",
-  });
+  try {
+    // Show SweetAlert2 confirmation dialog with loading effect in title
+    const result = await Swal.fire({
+      title: "Confirm Logout",
+      text: "Are you sure you want to log out? You will need to log in again to continue.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Logout",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#ff4d4d",
+      cancelButtonColor: "#6c757d",
+      reverseButtons: true,
+      allowOutsideClick: false,
+      background: "rgba(255, 255, 255, 0.1)", // Soft glass effect
+      color: "#fff",
+      backdrop: "rgba(0, 0, 0, 0.6)", // Removed GIF
+      customClass: {
+        popup: "glass-popup",
+        title: "glass-title",
+        confirmButton: "glass-confirm-btn",
+        cancelButton: "glass-cancel-btn",
+      },
+    });
 
-  // If user cancels, stop here
-  if (!result.isConfirmed) return;
+    // If user cancels, exit function
+    if (!result.isConfirmed) return;
 
-  // Supabase Logout
-  await supabase.auth.signOut();
+    // Perform logout with Supabase
+    const { error } = await supabase.auth.signOut();
 
-  // Toast Notification for Success
-  toast.success("Logged out successfully.");
+    if (error) {
+      throw new Error(error.message);
+    }
 
-  // Clear Local Storage
-  localStorage.clear();
+    // Show success toast
+    toast.success("You have successfully logged out.", { timeout: 3000 });
 
-  // Redirect to Login Page
-  window.location.href = "/";
+    // Clear local storage and redirect to login page after a short delay
+    setTimeout(() => {
+      localStorage.clear();
+      window.location.href = "/";
+    }, 1500);
+  } catch (error) {
+    console.error("Logout failed:", error);
+    toast.error("Logout failed. Please try again.");
+  }
 }

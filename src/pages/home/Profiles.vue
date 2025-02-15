@@ -321,7 +321,7 @@ const updateProfile = async () => {
       profileImage.value = newImagePath;
       userStore.setProfileImage(newImagePath);
     }
-    toast.success("Profile updated successfully!");
+    toast.success("Profile updated successfully.");
     tempImage.value = null;
     selectedFile.value = null;
   }
@@ -396,7 +396,7 @@ const updatePassword = async () => {
       throw updateError;
     }
 
-    toast.success("Password updated successfully!");
+    toast.success("Password updated successfully.");
     resetPassword();
   } catch (err) {
     toast.error("Failed to update password. Please try again.");
