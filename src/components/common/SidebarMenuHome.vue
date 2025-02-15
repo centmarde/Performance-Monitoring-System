@@ -68,7 +68,7 @@
         <v-list-item to="/profiles">
           <v-list-item-title class="text-white">Profile</v-list-item-title>
         </v-list-item>
-        <v-list-item @click="logout">
+        <v-list-item @click="handleLogoutClick">
           <v-list-item-title class="text-white">Logout</v-list-item-title>
         </v-list-item>
       </v-list-group>
@@ -80,6 +80,8 @@
 import { ref, computed, onMounted } from "vue";
 import { useUserInfoStore } from "@/stores/userInfo";
 import Avatar from "@/assets/avatar.png";
+import { doLogout } from "@/lib/supabase";
+import router from "@/router";
 
 const avatar = Avatar;
 const drawer = ref(true);
@@ -96,10 +98,10 @@ const menu = ref([
   { title: "Tracking", icon: "mdi-history", href: "/tracking" },
 ]);
 
-const logout = () => {
-  console.log("Logging out...");
-  // Implement logout logic here
-};
+function handleLogoutClick() {
+  doLogout();
+  router.push("/");
+}
 </script>
 
 <style scoped>
