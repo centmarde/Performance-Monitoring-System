@@ -22,7 +22,7 @@ export async function doLogout() {
     // Supabase Logout
     await supabase.auth.signOut();
 
-    toast("Logout Successfully!"); // Notify successful logout
+    toast.success("Logout Successfully!"); // Notify successful logout
     localStorage.clear(); // Clear local storage
     window.location.href = '/';
 }

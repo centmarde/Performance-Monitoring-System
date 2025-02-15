@@ -104,5 +104,20 @@ export const useClassRecordStore = defineStore('classRecord', {
       this.loading = false;
       router.push('/newrecords');
     },
+    async deleteClassRecord(classRecordId: number) {
+      this.loading = true;
+      this.error = null;
+      const { error } = await supabase
+        .from('class_record')
+        .delete()
+        .eq('id', classRecordId);
+      if (error) {
+        this.error = error.message;
+      } else {
+        this.classRecords = this.classRecords.filter(record => record.id !== classRecordId);
+        this.classRecordCount = this.classRecords.length;
+      }
+      this.loading = false;
+    },
   },
 });

@@ -5,18 +5,12 @@
         <div class="p-8 bg-gray-100 min-h-screen">
           <v-row align="center" justify="space-between">
             <v-col cols="auto">
-              <v-btn @click="showAddUserForm = true" color="teal-darken-3">
+             <!--  <v-btn @click="showAddUserForm = true" color="teal-darken-3">
                 Add User
-              </v-btn>
+              </v-btn> -->
             </v-col>
-            <v-col cols="4">
-              <v-text-field
-                v-model="searchQuery"
-                prepend-icon="mdi-magnify"
-                label="Search Users"
-                outlined
-                dense
-              />
+            <v-col cols="4" class="mx-3">
+              <SearchBar v-model="searchQuery" />
             </v-col>
           </v-row>
 

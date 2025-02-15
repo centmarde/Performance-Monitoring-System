@@ -1,5 +1,5 @@
 <template>
-  <v-card-text class="mt-12">
+  <v-card-text>
     <h4 class="text-center">Sign Up for an Account</h4>
     <h6 class="text-center text-teal-darken-3 mt-2">
       Log in to your account so you can continue monitoring

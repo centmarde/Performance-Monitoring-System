@@ -77,16 +77,10 @@ onMounted(() => {
 const menu = ref([
   { title: "Users", icon: "mdi-account", href: "/admin" },
   { title: "Teachers", icon: "mdi-account-tie", href: "/teachers" },
-  { title: "Settings", icon: "mdi-cog-outline", href: "/settings" },
+ /*  { title: "Settings", icon: "mdi-cog-outline", href: "/settings" }, */
 ]);
 
-// Active Users List
-const activeUsers = ref([
-  { src: "/images/christ.png" },
-  { src: "/images/marde.png" },
-  { src: "/images/christ.png" },
-  { src: "/images/marde.png" },
-]);
+
 </script>
 
 <style scoped>
