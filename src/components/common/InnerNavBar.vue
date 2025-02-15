@@ -56,12 +56,11 @@
 </template>
 
 <script lang="ts" setup>
-
 import { computed } from "vue";
 import { useTheme } from "vuetify";
 import { doLogout } from "@/lib/supabase";
 import router from "@/router";
-import { useUserInfoStore } from '@/stores/userInfo';
+import { useUserInfoStore } from "@/stores/userInfo";
 
 const theme = useTheme();
 const isDarkTheme = computed(() => theme.global.current.value.dark);
@@ -76,7 +75,6 @@ function toggleTheme() {
   localStorage.setItem("theme", newTheme);
 }
 
-
 // Sync navbar color with sidebar
 const navbarClass = computed(() =>
   isDarkTheme.value ? "bg-dark-mode" : "bg-light-mode"
@@ -90,7 +88,7 @@ const titleClass = computed(() =>
 const userInfoStore = useUserInfoStore();
 userInfoStore.fetchUserInfo();
 
-const userEmail = computed(() => userInfoStore.userInfo?.email || '');
+const userEmail = computed(() => userInfoStore.userInfo?.email || "");
 
 function handleLogoutClick() {
   doLogout();
@@ -104,7 +102,6 @@ function handleLogoutClick() {
   background-color: #004d40 !important; /* Dark Teal */
   color: white;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
- 
 }
 
 /* Dark Mode Navbar (Matches Sidebar) */
@@ -112,7 +109,6 @@ function handleLogoutClick() {
   background-color: #004d40 !important; /* Dark Teal */
   color: white;
   box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
- 
 }
 
 /* Improve Readability of Title */
