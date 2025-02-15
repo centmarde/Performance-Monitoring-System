@@ -30,26 +30,26 @@
                 <v-card-title class="text-center" elevation="8">
                   <v-avatar size="80">
                     <v-img
-                      :src="teacher.avatar || '/default-avatar.png'"
+                      :src="teacher.image_path || '/default-avatar.png'"
                       alt="Teacher Avatar"
                     />
                   </v-avatar>
-                  <div class="mt-2 font-weight-bold">{{ teacher.name }}</div>
-                  <div class="text-caption text-muted">{{ teacher.email }}</div>
+                  <div class="mt-2 font-weight-bold">{{ teacher.firstname || "N/A" }}</div>
+                  <div class="text-caption text-muted">{{ teacher.email || "broken email" }}</div>
                 </v-card-title>
                 <v-card-text>
                   <div class="font-weight-bold">Subjects Handled:</div>
-                  <v-chip-group column>
-                    <v-chip v-for="(subject, i) in teacher.subjects" :key="i">
+                  <div class="subjects-list">
+                    <span v-for="(subject, i) in (teacher.subjects.length ? teacher.subjects : ['N/A'])" :key="i" class="subject-item">
                       {{ subject }}
-                    </v-chip>
-                  </v-chip-group>
+                    </span>
+                  </div>
 
                   <div class="mt-3 font-weight-bold">Phone:</div>
-                  <div class="text-muted">{{ teacher.phone }}</div>
+                  <div class="text-muted">{{ teacher.phone || "N/A" }}</div>
 
                   <div class="mt-2 font-weight-bold">Address:</div>
-                  <div class="text-muted">{{ teacher.complete_address }}</div>
+                  <div class="text-muted">{{ teacher.complete_address || "N/A" }}</div>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -71,70 +71,20 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import LayoutWrapper from "@/layouts/LayoutWrapper.vue";
-import { useTeacherList } from "@/stores/teachersList";
-import Avatar from "@/assets/avatar.png";
+import { useTeachers } from "@/composables/useTeachers";
 
-interface Teacher {
-  id: number;
-  name: string;
-  email: string;
-  avatar: string;
-  subjects: string[];
-  phone: string;
-  complete_address: string;
-}
+const {
+  teachers,
+  searchQuery,
+  currentPage,
+  itemsPerPage,
+  filteredTeachers,
+  totalPages,
+  paginatedTeachers,
+  initializeTeachers,
+} = useTeachers();
 
-const avatar = Avatar;
-const teachers = ref<Teacher[]>([]);
-const searchQuery = ref("");
-const currentPage = ref(1);
-
-const itemsPerPage = 8;
-
-const { fetchTeachersInfo, userInfo } = useTeacherList();
-
-const subjectsList = [
-  ["Math", "Science"],
-  ["English", "History"],
-  ["Physics", "Chemistry"],
-  ["Biology", "Geography"],
-  ["PE", "Health"],
-];
-
-const initializeTeachers = async () => {
-  const data = await fetchTeachersInfo();
-  if (data && data.length > 0) {
-    teachers.value = data.map((teacher, index) => ({
-      id: teacher.id,
-      name: `${teacher.firstname} ${teacher.lastname}`,
-      email: teacher.email,
-      avatar: teacher.image_path || avatar,
-      subjects: subjectsList[index % subjectsList.length],
-      phone: teacher.phone,
-      complete_address: teacher.complete_address,
-    }));
-  }
-};
-
-onMounted(initializeTeachers);
-
-const filteredTeachers = computed(() => {
-  if (!searchQuery.value) return teachers.value;
-  return teachers.value.filter(
-    (teacher) =>
-      teacher.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      teacher.email.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
-});
-
-const totalPages = computed(() =>
-  Math.ceil(filteredTeachers.value.length / itemsPerPage)
-);
-
-const paginatedTeachers = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage;
-  return filteredTeachers.value.slice(start, start + itemsPerPage);
-});
+initializeTeachers();
 </script>
 
 <style scoped>
@@ -180,5 +130,19 @@ const paginatedTeachers = computed(() => {
   flex-grow: 1; /* Makes sure the content stretches */
   width: 100%;
   text-align: center;
+}
+
+.subjects-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.subject-item {
+  background-color: #e0f7fa;
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 14px;
 }
 </style>

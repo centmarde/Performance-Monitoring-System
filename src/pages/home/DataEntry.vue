@@ -1,6 +1,27 @@
 <template>
   <HomeLayout>
     <template #content>
+      
+        <v-container> 
+          <v-row justify="start">
+          <v-col cols="auto">
+            <v-card class="pa-3 rounded-card glass-card">
+              <h4 class="font-weight-bold text-end">
+                <span class="mdi mdi-account-school"></span> Section and Students
+              </h4>
+            </v-card>
+          </v-col>
+        </v-row>
+          <v-row>
+            <v-col>
+              <v-card><SectionList /></v-card>
+              
+            </v-col>
+          </v-row>
+       </v-container>
+         
+        
+     
       <v-container>
         <v-row justify="start">
           <v-col cols="auto">
@@ -33,16 +54,17 @@
             sm="6"
             md="4"
           >
+          
             <v-card
               :class="['subject-card', getColorClass(index)]"
               @click="handleCardClick(subject.id)"
-            >
+            > 
               <!-- Subject Title -->
               <v-card-title class="subject-title">
                 <v-icon class="subject-icon" size="24">mdi-book-open</v-icon>
                 {{ subject.subjectName }}
               </v-card-title>
-
+            
               <v-divider></v-divider>
 
               <!-- Details Section -->
@@ -87,13 +109,15 @@
                         >
                         <span
                           >Handled by:
-                          <strong>{{ subject.handled_by }}</strong></span
+                          <strong>{{ subject.handled_by }}</strong>
+                          </span
                         >
                       </div>
                     </v-col>
                   </v-row>
                 </v-container>
               </v-card-text>
+            
             </v-card>
           </v-col>
         </v-row>
@@ -151,6 +175,30 @@
               <v-btn color="error" @click="classRecordDialog = false"
                 >Close</v-btn
               >
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <!-- Card Dialog -->
+        <v-dialog v-model="cardDialog" max-width="500px">
+          <v-card>
+            <v-card-title class="text-center font-weight-bold">
+              Manage Subject - {{ activeSubject || "Subject" }}
+            </v-card-title>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" class="text-center">
+                    <v-btn color="primary" @click="enterRecords">Enter Records</v-btn>
+                  </v-col>
+                  <v-col cols="12" class="text-center">
+                    <v-btn color="error" @click="activeSubjectId !== null && deleteClassRecord(activeSubjectId)">Delete</v-btn>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+            <v-card-actions class="d-flex justify-end">
+              <v-btn color="error" @click="cardDialog = false">Close</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -263,6 +311,14 @@ const saveClassRecord = async () => {
   });
 };
 
+const deleteClassRecord = async (classRecordId: number) => {
+  await classRecordStore.deleteClassRecord(classRecordId);
+  toast.success("Class record deleted successfully!", {
+    timeout: 3000,
+  });
+  window.location.reload();
+};
+
 const showAddNewDialog = () => {
   activeSubject.value = "";
   classRecordDialog.value = true;
@@ -276,14 +332,19 @@ const selectedQuarter = ref("");
 
 const router = useRouter();
 
+const cardDialog = ref(false);
+const activeSubjectId = ref<number | null>(null);
+
 const handleCardClick = (classRecordId: number) => {
-  const parsedClassRecordId = parseInt(classRecordId.toString(), 10);
-  if (isNaN(parsedClassRecordId)) {
-    console.error("Invalid class record ID");
-    return;
+  activeSubjectId.value = classRecordId;
+  cardDialog.value = true;
+};
+
+const enterRecords = () => {
+  if (activeSubjectId.value !== null) {
+    localStorage.setItem("classRecordId", activeSubjectId.value.toString());
+    router.push("/recentrecords");
   }
-  localStorage.setItem("classRecordId", parsedClassRecordId.toString());
-  router.push("/recentrecords");
 };
 </script>
 

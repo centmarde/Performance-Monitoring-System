@@ -19,7 +19,7 @@ import 'vue3-perfect-scrollbar/style.css';
 //@ts-ignore
 
 DataTable.use(DataTablesCore);
-// Components
+// @ts-ignore
 import App from "./App.vue";
 // Router
 import router from "./router"; // Import the router

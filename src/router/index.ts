@@ -3,21 +3,28 @@ import { setupLayouts } from "virtual:generated-layouts";
 import { useAuthUserStore } from "../stores/authUser";
 import { useToast } from "vue-toastification";
 
-import TeachersPage from "@/pages/admin/TeachersPage.vue";
-import Hero from "@/pages/index.vue";
-import Home from "@/pages/home/Home.vue";
-import NotFound from "@/pages/NotFound.vue";
-import Admin from "@/pages/admin/Admin.vue";
-import Profiles from "@/pages/home/Profiles.vue";
 
-//@ts-ignore
-import TeacherAccount from "@/pages/admin/TeacherAccount.vue";
+// @ts-ignore
+import TeachersPage from "@/pages/admin/TeachersPage.vue";
+// @ts-ignore
+import Hero from "@/pages/index.vue";
+// @ts-ignore
+import Home from "@/pages/home/Home.vue";
+// @ts-ignore
+import NotFound from "@/pages/NotFound.vue";
+// @ts-ignore
+import Admin from "@/pages/admin/Admin.vue";
+// @ts-ignore
+import Profiles from "@/pages/home/Profiles.vue";
+// @ts-ignore
 import DataEntry from "@/pages/home/DataEntry.vue";
+// @ts-ignore
 import Tracking from "@/pages/home/Tracking.vue";
+// @ts-ignore
 import Welcome from "@/pages/Welcome.vue";
-//@ts-ignore
+// @ts-ignore
 import NewRecords from "@/pages/home/NewRecords.vue";
-//@ts-ignore
+// @ts-ignore
 import RecentRecords from "@/pages/home/RecentRecords.vue";
 
 const toast = useToast();
@@ -55,12 +62,7 @@ const routes = setupLayouts([
     name: "Teachers",
     meta: { requiresAuth: true, role: "admin" },
   },
-  {
-    path: "/teacher_account",
-    component: TeacherAccount,
-    name: "teacher_account",
-    meta: { requiresAuth: true, role: "admin" },
-  },
+ 
   {
     path: "/data_entry",
     component: DataEntry,
@@ -87,7 +89,7 @@ router.beforeEach((to, from, next) => {
   const userRole = localStorage.getItem("Role");
   const publicPages = ["/", "/login"];
 
-  const adminPages = ["/admin", "/teachers", "/teacher_account"];
+  const adminPages = ["/admin", "/teachers", "/teacher_account",];
   // const protectedPages = ["/home", "/profiles", "/admin", "/teachers", "/teacher_account"];
 
   if (to.meta.requiresAuth && !isLoggedIn) {
