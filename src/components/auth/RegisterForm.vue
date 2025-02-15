@@ -1,5 +1,5 @@
 <template>
-  <v-card-text class="mt-12">
+  <v-card-text>
     <h4 class="text-center">Sign Up for an Account</h4>
     <h6 class="text-center text-teal-darken-3 mt-2">
       Log in to your account so you can continue monitoring
@@ -82,13 +82,13 @@
         <h5 class="text-center mt-4 mb-3 text-teal-darken-3">Sign up with</h5>
         <div class="social-buttons">
           <!-- Replaced FontAwesome icons with Vuetify icons -->
-          <v-btn depressed outlined color="grey">
+          <v-btn depressed outlined color="teal-darken-3">
             <v-icon color="red">mdi-google</v-icon>
           </v-btn>
-          <v-btn depressed outlined color="grey">
+          <v-btn depressed outlined color="teal-darken-3">
             <v-icon color="blue">mdi-facebook</v-icon>
           </v-btn>
-          <v-btn depressed outlined color="grey">
+          <v-btn depressed outlined color="teal-darken-3">
             <v-icon color="light-blue lighten-3">mdi-twitter</v-icon>
           </v-btn>
         </div>
@@ -151,7 +151,7 @@ async function onFormSubmit(event: SubmitEvent): Promise<void> {
       closeOnClick: true,
     });
   } else {
-    toast.success("Registration successful", {
+    toast.success("Registration successful.", {
       timeout: 3000,
       closeOnClick: true,
     });

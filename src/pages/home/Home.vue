@@ -14,8 +14,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref } from "vue";
 import HomeLayout from "@/layouts/HomeLayout.vue";
 
-const activeComponent = ref('StudentsStanding'); 
+const activeComponent = ref("StudentsStanding");
 </script>

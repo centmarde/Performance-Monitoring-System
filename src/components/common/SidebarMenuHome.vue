@@ -31,9 +31,9 @@
       <div class="mt-1 text-caption text-teal-lighten-4">
         {{ userInfo?.user_type || "Guest" }}
       </div>
-      <span class="mb-6 text-caption text-teal-lighten-3">
-        {{ userInfo?.email || "user@example.com" }}
-      </span>
+      <span class="mb-6 text-caption text-teal-lighten-3">{{
+        userInfo?.email || "user@example.com"
+      }}</span>
     </v-sheet>
 
     <!-- Menu Items -->
@@ -53,6 +53,32 @@
           v-text="item.title"
         ></v-list-item-title>
       </v-list-item>
+
+      <!-- Settings with Submenu -->
+      <v-list-group value="Settings">
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props">
+            <template v-slot:prepend>
+              <v-icon color="#B49239">mdi-account</v-icon>
+            </template>
+            <v-list-item-title class="text-white">Settings</v-list-item-title>
+          </v-list-item>
+        </template>
+
+        <v-list-item to="/profiles" class="submenu-item">
+          <template v-slot:prepend>
+            <v-icon color="#B49239">mdi-account-circle</v-icon>
+          </template>
+          <v-list-item-title class="text-white">Profile</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item @click="handleLogoutClick" class="submenu-item">
+          <template v-slot:prepend>
+            <v-icon color="#B49239">mdi-logout</v-icon>
+          </template>
+          <v-list-item-title class="text-white">Logout</v-list-item-title>
+        </v-list-item>
+      </v-list-group>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -61,6 +87,8 @@
 import { ref, computed, onMounted } from "vue";
 import { useUserInfoStore } from "@/stores/userInfo";
 import Avatar from "@/assets/avatar.png";
+import { doLogout } from "@/lib/supabase";
+import router from "@/router";
 
 const avatar = Avatar;
 const drawer = ref(true);
@@ -71,17 +99,20 @@ onMounted(() => {
   userInfoStore.fetchUserInfo();
 });
 
-// Define the menu with conditional links for Admin and Teachers
 const menu = ref([
   { title: "Dashboard", icon: "mdi-view-dashboard", href: "/home" },
   { title: "Data Entry", icon: "mdi-file-document-edit", href: "/data_entry" },
   { title: "Tracking", icon: "mdi-history", href: "/tracking" },
-  { title: "Settings", icon: "mdi-account", href: "/profiles" },
 ]);
+
+function handleLogoutClick() {
+  doLogout();
+  /* router.push("/"); */
+}
 </script>
 
 <style scoped>
-/* ✅ Sidebar Toggle Button */
+/* Sidebar Toggle Button */
 .toggle-btn {
   position: absolute;
   top: 50%;
@@ -90,20 +121,20 @@ const menu = ref([
   background-color: #00796b;
   color: white;
   border-radius: 50%;
-  z-index: 1100; /* Ensure it covers other components */
-  width: 60px; /* Increase size for dominance */
-  height: 60px; /* Increase size for dominance */
+  z-index: 1100;
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .toggle-btn.dominant {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add shadow for prominence */
-  border: 2px solid white; /* Add border for prominence */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 2px solid white;
 }
 
-/* ✅ Sidebar Styling */
+/* Sidebar Styling */
 .fixed-sidebar {
   position: fixed !important;
   top: 0;
@@ -114,22 +145,7 @@ const menu = ref([
   display: flex;
   flex-direction: column;
 }
-
-/* ✅ Sidebar Menu Styling */
-.v-list-item {
-  transition: background 0.3s ease-in-out;
-}
-.v-list-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* ✅ Active Users Section Styling */
-.active-users {
-  position: absolute;
-  bottom: 16px;
-  left: 0;
-  width: 100%;
-  padding: 16px;
-  background-color: #004d40;
+.submenu-item {
+  padding-left: 15px !important; /* Adjust this value as needed */
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="welcome-container">
+  <v-container fluid class="welcome-container" :class="{ 'blur-background': showDialog || showContactDialog }">
     <!-- Navigation -->
     <v-app-bar flat class="nav-bar">
       <v-container class="d-flex align-center justify-space-between">
@@ -46,69 +46,47 @@
     </v-container>
 
     <!-- Extra Information Dialog -->
-    <v-dialog v-model="showDialog" max-width="500" persistent>
-      <v-card class="dialog-box">
-        <v-card-title class="text-h5">Complete Your Profile</v-card-title>
-        <v-card-text>
-          <p>We need some extra details to personalize your experience.</p>
+      <v-dialog v-model="showDialog" max-width="500" persistent>
+        <v-card class="dialog-box">
+          <v-card-title class="text-h5">Complete Your Profile</v-card-title>
+          <v-card-text>
+            <p>We need some extra details to personalize your experience.</p>
 
-          <v-text-field
-            label="First Name"
-            v-model="extraInfo.firstname"
-            outlined
-            required
-          ></v-text-field>
-          <v-text-field
-            label="Last Name"
-            v-model="extraInfo.lastname"
-            outlined
-            required
-          ></v-text-field>
-          <v-text-field
-            label="Phone Number"
-            v-model="extraInfo.phone"
-            outlined
-            type="tel"
-            required
-          ></v-text-field>
-          <v-textarea
-            label="Complete Address"
-            v-model="extraInfo.complete_address"
-            outlined
-            required
-            clearable
-          ></v-textarea>
-        </v-card-text>
-        <v-card-actions class="justify-end">
-          <v-btn class="outline-btn" @click="showDialog = false">Skip</v-btn>
-          <v-btn class="primary-btn" @click="saveExtraInfo">Save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+            <v-text-field
+              label="First Name"
+              v-model="extraInfo.firstname"
+              outlined
+              required
+            ></v-text-field>
+            <v-text-field
+              label="Last Name"
+              v-model="extraInfo.lastname"
+              outlined
+              required
+            ></v-text-field>
+            <v-text-field
+              label="Phone Number"
+              v-model="extraInfo.phone"
+              outlined
+              type="tel"
+              required
+            ></v-text-field>
+            <v-textarea
+              label="Complete Address"
+              v-model="extraInfo.complete_address"
+              outlined
+              required
+              clearable
+            ></v-textarea>
+          </v-card-text>
+          <v-card-actions class="justify-end">
+            <v-btn class="outline-btn" @click="showDialog = false">Skip</v-btn>
+            <v-btn class="primary-btn" @click="saveExtraInfo">Save</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 
-    <v-container class="feature-section">
-      <v-row>
-        <v-col cols="12" md="4" class="feature-card">
-          <v-img src="@/assets/Hero.png" class="feature-icon"></v-img>
-          <h3>Track Progress</h3>
-          <p>Monitor student achievements and academic growth in real-time.</p>
-        </v-col>
-        <v-col cols="12" md="4" class="feature-card">
-          <v-img src="@/assets/Hero.png" class="feature-icon"></v-img>
-          <h3>Monitor Activities</h3>
-          <p>
-            Keep an eye on daily tasks, attendance, and overall participation.
-          </p>
-        </v-col>
-        <v-col cols="12" md="4" class="feature-card">
-          <v-img src="@/assets/Hero.png" class="feature-icon"></v-img>
-          <h3>Evaluate Performance</h3>
-          <p>
-            Assess student pass/fail status based on comprehensive criteria.
-          </p>
-        </v-col>
-      </v-row>
-    </v-container>
+   
   </v-container>
 </template>
 
@@ -232,6 +210,10 @@ onMounted(() => {
   flex-direction: column;
 }
 
+.blur-background {
+  filter: blur(5px);
+}
+
 /* Navigation */
 .nav-bar {
   background: transparent;
@@ -263,7 +245,14 @@ onMounted(() => {
 
 /* Dialog Box */
 .dialog-box {
-  background-color: #004d40;
-  color: #e0f2f1;
+  background-color: #E3F2FD;
+  color: #004d40;
+}
+
+.feature-icon {
+  width: 80px; /* Adjust size */
+  height: auto; /* Maintain aspect ratio */
+  display: block;
+  margin: 0 auto 10px; /* Center image & add spacing */
 }
 </style>
