@@ -178,7 +178,7 @@
                 variant="flat"
                 class="text-white rounded-lg shadow-md"
                 style="
-                  background: linear-gradient(135deg, #43a047, #2e7d32);
+                  background: linear-gradient(135deg, #004d40, #00332e);
                   transition: 0.3s ease-in-out;
                   font-size: 16px;
                 "
@@ -231,7 +231,7 @@
             <v-card-title
               class="text-center font-weight-bold py-4"
               style="
-                background: linear-gradient(135deg, #1976d2, #1565c0);
+                background: linear-gradient(135deg, #004d40, #00332e);
                 color: white;
                 border-radius: 12px 12px 0 0;
                 box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
@@ -255,7 +255,7 @@
                       style="
                         font-size: 16px;
                         transition: 0.3s ease-in-out;
-                        background: linear-gradient(135deg, #43a047, #2e7d32);
+                        background: linear-gradient(135deg, #004d40, #00332e);
                       "
                       @click="enterRecords"
                     >
