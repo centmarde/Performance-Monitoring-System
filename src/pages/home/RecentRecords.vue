@@ -771,67 +771,69 @@ const fetchRecords = async () => {
       console.log("This class record has no records yet.");
     } else {
       const gradeCalculations = await fetchGradeCalculations(classRecordId);
-      jsondata.value = records.map((record) => {
-        const gradeCalculation =
-          gradeCalculations.find((gc) => gc.student_id === record.id) || {};
-        const item = {
-          id: record.student_id,
-          name: `${record.students.firstname} ${record.students.lastname}`,
-          ww1: record.ww1,
-          ww2: record.ww2,
-          ww3: record.ww3,
-          ww4: record.ww4,
-          ww5: record.ww5,
-          ww6: record.ww6,
-          ww7: record.ww7,
-          ww8: record.ww8,
-          ww9: record.ww9,
-          ww10: record.ww10,
-          pt1: record.pt1,
-          pt2: record.pt2,
-          pt3: record.pt3,
-          pt4: record.pt4,
-          pt5: record.pt5,
-          pt6: record.pt6,
-          pt7: record.pt7,
-          pt8: record.pt8,
-          pt9: record.pt9,
-          pt10: record.pt10,
-          qa1: record.qa1,
-          wwTotal:
-            record.ww1 +
-            record.ww2 +
-            record.ww3 +
-            record.ww4 +
-            record.ww5 +
-            record.ww6 +
-            record.ww7 +
-            record.ww8 +
-            record.ww9 +
-            record.ww10,
-          ptTotal:
-            record.pt1 +
-            record.pt2 +
-            record.pt3 +
-            record.pt4 +
-            record.pt5 +
-            record.pt6 +
-            record.pt7 +
-            record.pt8 +
-            record.pt9 +
-            record.pt10,
-          qaTotal: record.qa1,
-          wwws: "40%",
-          wwps: gradeCalculation.ww_weighted_score || 0,
-          ptps: gradeCalculation.pt_weighted_score || 0,
-          ptws: "40%",
-          qaps: gradeCalculation.qa_weighted_score || 0,
-          qaws: "20%",
-          initial_grade: gradeCalculation.initial_grade || 0,
-          quarterly_grade: gradeCalculation.initial_grade || 0,
-        };
-        return item;
-      });
+      jsondata.value = records
+        .map((record) => {
+          const gradeCalculation =
+            gradeCalculations.find((gc) => gc.student_id === record.id) || {};
+          const item = {
+            id: record.student_id,
+            name: record.students ? `${record.students.firstname} ${record.students.lastname}` : 'Unknown',
+            ww1: record.ww1,
+            ww2: record.ww2,
+            ww3: record.ww3,
+            ww4: record.ww4,
+            ww5: record.ww5,
+            ww6: record.ww6,
+            ww7: record.ww7,
+            ww8: record.ww8,
+            ww9: record.ww9,
+            ww10: record.ww10,
+            pt1: record.pt1,
+            pt2: record.pt2,
+            pt3: record.pt3,
+            pt4: record.pt4,
+            pt5: record.pt5,
+            pt6: record.pt6,
+            pt7: record.pt7,
+            pt8: record.pt8,
+            pt9: record.pt9,
+            pt10: record.pt10,
+            qa1: record.qa1,
+            wwTotal:
+              record.ww1 +
+              record.ww2 +
+              record.ww3 +
+              record.ww4 +
+              record.ww5 +
+              record.ww6 +
+              record.ww7 +
+              record.ww8 +
+              record.ww9 +
+              record.ww10,
+            ptTotal:
+              record.pt1 +
+              record.pt2 +
+              record.pt3 +
+              record.pt4 +
+              record.pt5 +
+              record.pt6 +
+              record.pt7 +
+              record.pt8 +
+              record.pt9 +
+              record.pt10,
+            qaTotal: record.qa1,
+            wwws: "40%",
+            wwps: gradeCalculation.ww_weighted_score || 0,
+            ptps: gradeCalculation.pt_weighted_score || 0,
+            ptws: "40%",
+            qaps: gradeCalculation.qa_weighted_score || 0,
+            qaws: "20%",
+            initial_grade: gradeCalculation.initial_grade || 0,
+            quarterly_grade: gradeCalculation.initial_grade || 0,
+          };
+          return item;
+        })
+        .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically by name
     }
   } else {
     console.log("No class record ID found in local storage.");

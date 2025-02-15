@@ -14,6 +14,7 @@ declare module 'vue' {
     LoginForm: typeof import('./components/auth/LoginForm.vue')['default']
     NavBar: typeof import('./components/common/NavBar.vue')['default']
     RegisterForm: typeof import('./components/auth/RegisterForm.vue')['default']
+    Review: typeof import('./components/system/Review.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScrollDown: typeof import('./components/common/ScrollDown.vue')['default']
