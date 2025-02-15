@@ -65,10 +65,17 @@
           </v-list-item>
         </template>
 
-        <v-list-item to="/profiles">
+        <v-list-item to="/profiles" class="submenu-item">
+          <template v-slot:prepend>
+            <v-icon color="#B49239">mdi-account-circle</v-icon>
+          </template>
           <v-list-item-title class="text-white">Profile</v-list-item-title>
         </v-list-item>
-        <v-list-item @click="handleLogoutClick">
+
+        <v-list-item @click="handleLogoutClick" class="submenu-item">
+          <template v-slot:prepend>
+            <v-icon color="#B49239">mdi-logout</v-icon>
+          </template>
           <v-list-item-title class="text-white">Logout</v-list-item-title>
         </v-list-item>
       </v-list-group>
@@ -137,5 +144,8 @@ function handleLogoutClick() {
   z-index: 1000;
   display: flex;
   flex-direction: column;
+}
+.submenu-item {
+  padding-left: 15px !important; /* Adjust this value as needed */
 }
 </style>
