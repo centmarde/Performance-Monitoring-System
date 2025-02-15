@@ -24,3 +24,4 @@ pnpm-debug.log*
 
 .vercel
 src/components.d.ts
+.env
