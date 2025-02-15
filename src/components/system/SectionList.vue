@@ -55,7 +55,7 @@ export default defineComponent({
           left: "1%",
           right: "1%",
           bottom: "3%",
-          top: "5%",
+          top: "10%",
           containLabel: true,
         },
         xAxis: [
@@ -113,7 +113,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .chart-container {
   width: 100%;
-  height: 80vh;
+  height: 50vh;
   background: #e0f2f1;
   padding: 10px;
   border-radius: 10px;
