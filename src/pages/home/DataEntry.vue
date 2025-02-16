@@ -314,7 +314,7 @@ const saveClassRecord = async () => {
   const classRecordId = parseInt(addedClassRecordId ?? "0", 10);
 
   if (!isNaN(sectionId) && !isNaN(classRecordId)) {
-    await recordsStore.addRecordsForSection(sectionId.toString(), classRecordId.toString());
+    await recordsStore.addRecordsForSection(Number(sectionId), Number(classRecordId));
   } else {
     console.error("Invalid section or class record ID");
   }
