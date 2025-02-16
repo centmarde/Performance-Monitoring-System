@@ -29,11 +29,20 @@
           class="glass-card fixed-width-card pa-1 rounded-card"
           elevation="2"
         >
-          <div v-if="selectedSubject">Subject: {{ selectedSubject.title }}</div>
+          <div v-if="selectedSubject" class="font-semibold">
+            Subject: {{ selectedSubject.title }}
+          </div>
           <div v-if="studentRecord">
             <div>Initial Grade: {{ studentRecord.initial_grade }}</div>
-            <div v-if="isFailing">Status: Failing</div>
-            <div v-else>Status: Passing</div>
+            <div
+              :class="{
+                'text-green-500': !isFailing,
+                'text-red-500': isFailing,
+              }"
+            >
+              Status: <span v-if="isFailing">Failing</span
+              ><span v-else>Passing</span>
+            </div>
           </div>
         </v-card>
       </v-col>
