@@ -366,4 +366,7 @@ export default defineComponent({
 .fixed-width-card {
   height: 102px;
 }
+.rounded-card {
+  border-radius: 16px;
+}
 </style>
