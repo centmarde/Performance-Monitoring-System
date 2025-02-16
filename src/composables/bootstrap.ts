@@ -24,15 +24,15 @@ export function useGroqChat() {
   async function startChat(studentRecord: any, studentName: string) {
     const chatCompletion = await groq.chat.completions.create({
       messages: [
-        {
+        /* {
           role: "assistant",
           content:
             "Hello there, teacher. It's great to see you. I trust you're having a wonderful day so far. Is there something specific you'd like to discuss or learn about today, or would you like me to suggest some topics we could explore together?",
-        },
+        }, */
         {
-          role: "user",
+          role: "assistant",
           content:
-            "Pretend that you are talking to a teacher.Given the following student record.provide advice for the teacher to help the student improve their performance. dont provide a list in your responsne also shorten it in 500 words.",
+            "provide advice for the teacher to help the student improve their performance. dont provide a list in your responsne also shorten it in 500 words.",
         },
         {
           role: "system",

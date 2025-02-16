@@ -2,6 +2,18 @@
   <HomeLayout>
     <template #content>
       <v-container>
+        <v-overlay
+          :model-value="isLoading"
+          class="align-center justify-center"
+          persistent
+        >
+          <v-progress-circular
+            color="primary"
+            indeterminate
+            size="64"
+          ></v-progress-circular>
+        </v-overlay>
+
         <v-row justify="start">
           <v-col cols="auto">
             <v-card class="pa-3 rounded-card glass-card">
@@ -100,6 +112,7 @@
 
         <!-- Pagination Control -->
         <v-pagination
+          v-if="!isLoading"
           v-model="currentPage"
           :length="totalPages"
           class="mt-4 d-flex justify-center"
@@ -110,9 +123,10 @@
           <v-card
             class="pa-5 rounded-xl elevation-10"
             style="
-              background: rgba(255, 255, 255, 0.15);
+              background: #EEEFEE;
               backdrop-filter: blur(12px);
               border: 1px solid rgba(255, 255, 255, 0.2);
+              
             "
           >
             <!-- Elegant Header with Updated Color -->
@@ -373,7 +387,10 @@ const sectionOptions = computed(() => {
   return sectionsStore.sections.map(section => section.code);
 });
 
+const isLoading = ref(false);
+
 onMounted(async () => {
+  isLoading.value = true;
   try {
     await sectionsStore.fetchSections(); // Move this to the top
     await subjectsStore.fetchSubjects();
@@ -381,10 +398,13 @@ onMounted(async () => {
     subjects.value = classRecordStore.classRecords;
   } catch (error) {
     console.error('Error in mounting:', error);
+  } finally {
+    isLoading.value = false;
   }
 });
 
 const totalPages = computed(() => {
+  if (isLoading.value) return 0;
   const remainingSubjects = subjects.value.length - 5;
   return 1 + Math.ceil(remainingSubjects / itemsPerPage);
 });
@@ -553,5 +573,9 @@ const enterRecords = () => {
 .dark-mode .bg-red-light {
   background: #b71c1c;
   color: #fff;
+}
+
+.v-overlay {
+  backdrop-filter: blur(4px);
 }
 </style>

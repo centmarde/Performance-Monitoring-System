@@ -76,7 +76,7 @@
                 <v-list-item-subtitle>
                   <v-chip-group>
                     <v-chip
-                      v-for="quarter in availableQuarters"
+                      v-for="quarter in subject.availableQuarters"
                       :key="quarter"
                       @click="selectSubjectAndQuarter(subject, quarter)"
                       class="ma-1"
@@ -153,11 +153,11 @@ export default defineComponent({
       const student = students.value.find((stu) => stu.fullName === studentFullName);
       if (!student) return;
 
-      // First get subjects assigned to the section
-      const { data: sectionSubjects, error: sectionError } = await supabase
-        .from("section_subjects")
+      // Fetch subjects and their quarters from class_record
+      const { data: classRecords, error } = await supabase
+        .from("class_record")
         .select(`
-          subject_id,
+          quarter,
           subjects (
             id,
             title
@@ -165,28 +165,29 @@ export default defineComponent({
         `)
         .eq("section_id", student.sectionId);
 
-      if (sectionError) return;
+      if (!error && classRecords) {
+        // Group quarters by subject
+        const subjectQuartersMap = classRecords.reduce((acc, record) => {
+          if (!record.subjects) return acc;
+          
+          if (!acc[record.subjects.id]) {
+            acc[record.subjects.id] = {
+              subject: record.subjects,
+              quarters: []
+            };
+          }
+          acc[record.subjects.id].quarters.push(record.quarter);
+          return acc;
+        }, {});
 
-      // Then get available quarters for these subjects
-      const { data: quarters, error: quarterError } = await supabase
-        .from("class_record")
-        .select("quarter, subject_id")
-        .eq("section_id", student.sectionId)
-        .order("quarter");
+        // Convert to array and sort quarters
+        availableSubjects.value = Object.values(subjectQuartersMap).map(({ subject, quarters }) => ({
+          ...subject,
+          availableQuarters: [...new Set(quarters)].sort((a, b) => a - b)
+        }));
 
-      if (!quarterError && sectionSubjects && quarters) {
-        // Get unique subjects
-        availableSubjects.value = sectionSubjects
-          .map(item => item.subjects)
-          .filter(subject => subject); // Remove any null values
-
-        // Get unique quarters
-        availableQuarters.value = [...new Set(quarters.map(q => q.quarter))]
-          .filter(q => q != null)
-          .sort((a, b) => a - b);
-
-        if (availableSubjects.value.length === 1 && availableQuarters.value.length === 1) {
-          selectSubjectAndQuarter(availableSubjects.value[0], availableQuarters.value[0]);
+        if (availableSubjects.value.length === 1 && availableSubjects.value[0].availableQuarters.length === 1) {
+          selectSubjectAndQuarter(availableSubjects.value[0], availableSubjects.value[0].availableQuarters[0]);
         } else {
           showSubjectDialog.value = true;
         }

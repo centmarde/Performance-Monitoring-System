@@ -180,6 +180,20 @@ export const useRecordsStore = defineStore('recordsStore', () => {
     return missedActivities;
   }
 
+  async function countPassedStudents() {
+    const { data, error } = await supabase
+      .from('records')
+      .select('*')
+      .gte('initial_grade', 75);
+
+    if (error) {
+      console.error('Error fetching passed students:', error);
+      return 0;
+    }
+
+    return data.length;
+  }
+
   return {
     records,
     fetchRecordsBySection,
@@ -189,5 +203,6 @@ export const useRecordsStore = defineStore('recordsStore', () => {
     fetchInitialGradeByStudentId,
     countMissedActivities,
     recordCount,
+    countPassedStudents,
   };
 });
