@@ -52,7 +52,7 @@ export default {
         { title: 'Records', value: 0, icon: 'mdi-file-document', color: 'bg-blue-lighten-5', change: 0, loading: true },
         { title: 'Class Records', value: 0, icon: 'mdi-clipboard-text', color: 'bg-yellow-lighten-5', change: 0, loading: true },
         { title: 'Missed Activities', value: 0, icon: 'mdi-alert', color: 'bg-red-lighten-5', change: 0, loading: true },
-        { title: 'Ai-records', value: 1, icon: 'mdi-robot', color: 'bg-grey-lighten-5', change: 0, loading: true },
+        { title: 'Passed Students', value: 1, icon: 'mdi-check', color: 'bg-grey-lighten-5', change: 0, loading: true },
       ]
     };
   },
@@ -78,11 +78,14 @@ export default {
     this.cards[4].value = recordsStore.recordCount;
     this.cards[5].value = classRecordStore.classRecordCount;
 
-    const missedActivities = await recordsStore.countMissedActivities(/* pass appropriate classRecordId */);
+    const missedActivities = await recordsStore.countMissedActivities();
     this.cards[6].value = missedActivities.length;
+    
+    const passedStudents = await recordsStore.countPassedStudents();
+    this.cards[7].value = passedStudents;
 
     this.cards.forEach(card => {
-      card.change = (Math.random() * 40 - 20).toFixed(1); // Random change between -20 and 20
+      card.change = (Math.random() * 40 - 20).toFixed(1);
       card.loading = false;
     });
   }

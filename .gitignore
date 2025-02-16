@@ -61,6 +61,6 @@ public/mockServiceWorker.js
 # Env files
 .env*
 !.env.example
-*.ts
 auto-imports.d.ts
 themeConfig.js
+config/feature-flags.json

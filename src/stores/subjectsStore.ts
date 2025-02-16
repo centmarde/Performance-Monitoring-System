@@ -24,9 +24,11 @@ export const useSubjectsStore = defineStore('subjectsStore', () => {
     if (fetchError) {
       error.value = fetchError.message;
       subjects.value = [];
+      console.error('Error fetching subjects:', fetchError);
     } else {
       subjects.value = data as Subject[];
       subjectCount.value = data.length;
+      console.log('Fetched subjects:', data); // Add this line to debug
     }
     loading.value = false;
   }

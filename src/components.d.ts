@@ -23,6 +23,7 @@ declare module 'vue' {
     SidebarMenu: typeof import('./components/common/SidebarMenu.vue')['default']
     SidebarMenuHome: typeof import('./components/common/SidebarMenuHome.vue')['default']
     StudentsStanding: typeof import('./components/system/StudentsStanding.vue')['default']
+    TeacherBot: typeof import('./components/common/TeacherBot.vue')['default']
     WelcomeToDashboard: typeof import('./components/system/WelcomeToDashboard.vue')['default']
   }
 }

@@ -9,10 +9,10 @@
           <InnerNavBar />
           <v-col cols="12">
             <slot name="content"></slot>
-            <ScrollDown />
+            <TeacherBot/>
           </v-col>
         </v-row>
-        <AppFooter />
+        <AppFooter style="z-index: 1;" />
       </v-container>
     </v-main>
   </v-app>
