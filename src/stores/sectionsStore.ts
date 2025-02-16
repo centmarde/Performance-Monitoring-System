@@ -5,11 +5,11 @@ import { supabase } from '@/lib/supabase';
 export interface Section { // Export the Section interface
   id: number;
   created_at: string;
-  subject_id: number;
   teacher_id: number;
   code: string;
   description: string;
-  subject_title: string;
+  subject_ids: number[];
+  subject_titles: string[];
 }
 
 export const useSectionsStore = defineStore('sectionsStore', () => {
@@ -17,21 +17,26 @@ export const useSectionsStore = defineStore('sectionsStore', () => {
   const sectionCount = ref(0);
 
   async function fetchSections() {
-    const { data, error } = await supabase
+    // Fetch all sections directly without joining with section_subjects
+    const { data: sectionsData, error: sectionsError } = await supabase
       .from('sections')
-      .select('*, subjects(title), users(email)');
+      .select('*');
 
-    if (error) {
-      console.error('Error fetching sections:', error);
+    if (sectionsError) {
+      console.error('Error fetching sections:', sectionsError);
       sections.value = [];
       return null;
     }
 
-    sections.value = data.map((section: any) => ({
+    console.log('Fetched sections:', sectionsData); // Debug log
+
+    sections.value = sectionsData.map((section: any) => ({
       ...section,
-      subject_title: section.subjects.title,
+      subject_ids: [],
+      subject_titles: []
     })) as Section[];
-    sectionCount.value = data.length;
+    
+    sectionCount.value = sectionsData.length;
     return sections.value;
   }
 

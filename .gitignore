@@ -64,3 +64,4 @@ public/mockServiceWorker.js
 *.ts
 auto-imports.d.ts
 themeConfig.js
+config/feature-flags.json

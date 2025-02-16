@@ -44,6 +44,7 @@ export const useClassRecordStore = defineStore('classRecord', {
           section: record.sections.code,
           student_count: record.records.length,
         }));
+        
       }
       this.loading = false;
     },
@@ -75,8 +76,6 @@ export const useClassRecordStore = defineStore('classRecord', {
         return;
       }
 
-     
-
       const { data, error } = await supabase.from('class_record').insert([{
         quarter: selectedQuarter,
         subject_id: selectedSubject,
@@ -99,6 +98,16 @@ export const useClassRecordStore = defineStore('classRecord', {
         } else {
           localStorage.setItem("addedClassrecord", recentData.id);
           console.log("addedClassrecord", recentData.id);
+
+          // Add entry to section_subjects table
+          const { error: sectionSubjectsError } = await supabase.from('section_subjects').insert([{
+            section_id: selectedSection,
+            subject_id: selectedSubject,
+          }]);
+
+          if (sectionSubjectsError) {
+            this.error = sectionSubjectsError.message;
+          }
         }
       }
       this.loading = false;

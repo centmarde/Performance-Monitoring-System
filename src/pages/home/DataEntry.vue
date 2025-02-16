@@ -363,33 +363,26 @@ const subjects = ref<any[]>([]);
 const subjectsStore = useSubjectsStore();
 const sectionsStore = useSectionsStore();
 
-const subjectOptions = computed(() =>
-  subjectsStore.subjects.map((subject) => subject.title)
-);
-
-const excludedSections = ref<string[]>([]);
-
-onMounted(async () => {
-  await classRecordStore.fetchAllClassRecordsWithDetails();
-  subjects.value = classRecordStore.classRecords;
-  await subjectsStore.fetchSubjects();
-  await sectionsStore.fetchSections();
-
-  // Fetch class records and exclude sections already present
-  const { data: classRecords } = await supabase
-    .from('class_record')
-    .select('section_id');
-  
-  if (classRecords) {
-    excludedSections.value = classRecords.map(record => record.section_id);
-  }
+const subjectOptions = computed(() => {
+  console.log('Subjects in store:', subjectsStore.subjects); // Add this debug line
+  return subjectsStore.subjects.map((subject) => subject.title);
 });
 
-const sectionOptions = computed(() => 
-  sectionsStore.sections
-    .filter(section => !excludedSections.value.includes(section.id.toString()))
-    .map(section => section.code)
-);
+const sectionOptions = computed(() => {
+  console.log('Sections in store:', sectionsStore.sections); // Debug log
+  return sectionsStore.sections.map(section => section.code);
+});
+
+onMounted(async () => {
+  try {
+    await sectionsStore.fetchSections(); // Move this to the top
+    await subjectsStore.fetchSubjects();
+    await classRecordStore.fetchAllClassRecordsWithDetails();
+    subjects.value = classRecordStore.classRecords;
+  } catch (error) {
+    console.error('Error in mounting:', error);
+  }
+});
 
 const totalPages = computed(() => {
   const remainingSubjects = subjects.value.length - 5;

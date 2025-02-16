@@ -1,9 +1,5 @@
 <template>
-  <v-lazy
-    :min-height="200"
-    :options="{ threshold: 0.5 }"
-    transition="fade-transition"
-  >
+  <v-lazy :min-height="200" :options="{ threshold: 0.5 }" transition="fade-transition">
     <v-container>
       <v-row justify="start">
         <v-col cols="auto">
@@ -18,54 +14,28 @@
       <v-scale-transition mode="out-in">
         <v-row :key="currentPage">
           <v-col v-if="loading" cols="12" class="text-center">
-            <v-progress-circular
-              indeterminate
-              color="primary"
-            ></v-progress-circular>
+            <v-progress-circular indeterminate color="primary"></v-progress-circular>
           </v-col>
-          <v-col
-            v-else
-            v-for="(students, subject) in paginatedSubjects"
-            :key="subject"
-            cols="12"
-            md="4"
-          >
+          <v-col v-else v-for="record in paginatedRecords" :key="record.id" cols="12" md="4">
             <v-card class="pa-8 student-box fixed-card" color="#E8F5E9">
-              <h3 class="text-center font-weight-bold">Section: {{ subject }}</h3>
-              <span class="text-center">{{ sectionsStore.sections.find(sec => sec.code === subject)?.subject_title }}</span>
+              <h3 class="text-center font-weight-bold">Section: {{ record.section }}</h3>
               <div class="search-bar-container">
-                <SearchBar class="my-2" v-model="searchQuery[subject]" />
+                <SearchBar class="my-5" v-model="searchQuery[record.id]" />
               </div>
               <span class="text-body-2 my-2 text-center">
-
-                {{ sectionDescriptions[subject] }}<br>
-                <small>Teacher: {{ teacherEmails[subject] }}</small><br>
-                <small>Quarter: {{ classRecordQuarters[subject] }}</small><br>
-                <small>Total Students: {{ students.length }}</small>
-
+                <small>Teacher: {{ record.handled_by }}</small><br>
+                <small>Quarter: {{ record.quarter }}</small><br>
+                <small>Total Students: {{ record.student_count }}</small>
               </span>
               <v-divider class="mb-2"></v-divider>
               <PerfectScrollbar :options="{ suppressScrollX: true }">
                 <div>
-                  <v-row
-                    v-for="(student, index) in filteredStudents(
-                      String(subject)
-                    )"
-                    :key="student.name"
-                    align="center"
-                  >
+                  <v-row v-for="(student, index) in filteredStudents(record.id)" :key="student.name" align="center">
                     <v-col cols="9">{{ student.name }}</v-col>
-                    <v-col
-                      cols="3"
-                      class="text-right"
-                      :class="getColorClass(student.score)"
-                    >
+                    <v-col cols="3" class="text-right" :class="getColorClass(student.initialGrade)">
                       <span class="smallFont">{{ student.initialGrade }}%</span>
                     </v-col>
-                    <v-divider
-                      v-if="index < students.length - 1"
-                      class="my-1"
-                    ></v-divider>
+                    <v-divider v-if="index < (record.students?.length || 0) - 1" class="my-1"></v-divider>
                   </v-row>
                 </div>
               </PerfectScrollbar>
@@ -74,32 +44,19 @@
         </v-row>
       </v-scale-transition>
 
-      <v-pagination
-        v-model="currentPage"
-        :length="totalPages"
-        :total-visible="5"
-        class="mt-4"
-      ></v-pagination>
-     
+      <v-pagination v-model="currentPage" :length="totalPages" :total-visible="5" class="mt-4"></v-pagination>
     </v-container>
   </v-lazy>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, reactive, ref, computed, onMounted } from "vue";
 import { useSectionsStore } from "@/stores/sectionsStore";
 import { useStudentsStore } from "@/stores/studentsStore";
 import { useTeacherList } from "@/stores/teachersList";
-import { useClassRecordStore } from "@/stores/classRecord"; // Import the new store
-import { useRecordsStore } from "@/stores/recordsStore"; // Import the records store
-//@ts-ignore
+import { useRecordsStore } from "@/stores/recordsStore";
 import SearchBar from "@/components/common/SearchBar.vue";
-
-interface Student {
-  name: string;
-  score: number;
-  initialGrade: number; // Add initial grade to the interface
-}
+import { supabase } from "@/lib/supabase";
 
 export default defineComponent({
   components: {
@@ -109,97 +66,99 @@ export default defineComponent({
     const sectionsStore = useSectionsStore();
     const studentsStore = useStudentsStore();
     const teacherList = useTeacherList();
-    const classRecordStore = useClassRecordStore(); // Initialize the new store
-    const recordsStore = useRecordsStore(); // Initialize the records store
-    const studentStanding = reactive<Record<string, Student[]>>({});
-    const sectionDescriptions = reactive<Record<string, string>>({});
-    const teacherEmails = reactive<Record<string, string>>({});
-    const classRecordQuarters = reactive<Record<string, string>>({});
-    const searchQuery = reactive<Record<string, string>>({});
-    const currentPage = ref<number>(1);
-    const subjectsPerPage = 3;
-    const loading = ref<boolean>(true);
+    const recordsStore = useRecordsStore();
+    const studentStanding = reactive({});
+    const searchQuery = reactive({});
+    const currentPage = ref(1);
+    const recordsPerPage = 3;
+    const loading = ref(true);
+    const classRecords = ref([]);
 
     onMounted(async () => {
       await sectionsStore.fetchSections();
       await teacherList.fetchTeachersInfo();
-      await classRecordStore.fetchClassRecords(); // Fetch class records
-      const sections = sectionsStore.sections;
-      const teachers = teacherList.userInfo;
-      const classRecords = classRecordStore.classRecords; // Get class records
-
-      for (const record of classRecords) {
-        const section = sections.find((sec) => sec.id === record.section_id);
-        const teacher = teachers.find(
-          (teacher) => teacher.id === record.teacher_id
-        );
-        if (section && teacher) {
-          sectionDescriptions[section.code] = section.description;
-          searchQuery[section.code] = "";
-          teacherEmails[section.code] = teacher.email;
-          classRecordQuarters[section.code] = record.quarter; // Add quarter to the record
-          await classRecordStore.fetchStudentsByClassRecord(record.id); // Fetch students by class record
-          const students = classRecordStore.students;
-          if (students) {
-            studentStanding[section.code] = await Promise.all(
-              students.map(async (student) => {
-                try {
-                  const score = await studentsStore.fetchInitialScore(
-                    student.id
-                  );
-                  const initialGrade = await recordsStore.fetchInitialGradeByStudentId(student.id, record.id); // Fetch initial grade with classRecordId
-                  return {
-                    name: `${student.firstname} ${student.lastname}`,
-                    score: typeof score === "number" ? score : 0,
-                    initialGrade: typeof initialGrade === "number" ? initialGrade : 0, // Add initial grade
-                  };
-                } catch (error) {
-                  console.error(
-                    `Error fetching score for student ${student.id}:`,
-                    error
-                  );
-                  return {
-                    name: `${student.firstname} ${student.lastname}`,
-                    score: 0,
-                    initialGrade: 0, // Default initial grade
-                  };
-                }
-              })
-            );
-          }
-        }
+      await fetchAllClassRecordsWithDetails();
+      
+      for (const record of classRecords.value) {
+        searchQuery[record.id] = "";
+        await fetchStudentsByClassRecord(record.id, record.section_id);
+        studentStanding[record.id] = recordsStore.students;
       }
       loading.value = false;
     });
 
-    const totalPages = computed(() =>
-      Math.ceil(Object.keys(studentStanding).length / subjectsPerPage)
-    );
+    const totalPages = computed(() => Math.ceil(classRecords.value.length / recordsPerPage));
 
-    const paginatedSubjects = computed(() => {
-      const subjects = Object.keys(studentStanding);
-      const start = (currentPage.value - 1) * subjectsPerPage;
-      const end = start + subjectsPerPage;
-      return Object.fromEntries(
-        subjects
-          .slice(start, end)
-          .map((subject) => [subject, studentStanding[subject]])
-      );
+    const paginatedRecords = computed(() => {
+      const start = (currentPage.value - 1) * recordsPerPage;
+      const end = start + recordsPerPage;
+      return classRecords.value.slice(start, end);
     });
 
-    const totalStudents = computed(() => {
-      return Object.values(studentStanding).reduce((acc, students) => acc + students.length, 0);
-    });
-
-    function filteredStudents(subject: string) {
-      return studentStanding[subject].filter((student) =>
-        student.name
-          .toLowerCase()
-          .includes(String(searchQuery[subject]).toLowerCase())
+    function filteredStudents(recordId) {
+      return (
+        studentStanding[recordId]?.filter((student) =>
+          student.name.toLowerCase().includes(String(searchQuery[recordId]).toLowerCase())
+        ) || []
       );
     }
 
-    function getColorClass(score: number): string {
+    async function fetchAllClassRecordsWithDetails() {
+      loading.value = true;
+      const { data, error } = await supabase
+        .from("class_record")
+        .select(`
+          id, quarter, created_at, section_id,
+          subjects (title),
+          sections (code, id),
+          users (email),
+          records (student_id, initial_grade)
+        `)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error(error.message);
+      } else {
+        classRecords.value = data.map(record => ({
+          ...record,
+          subjectName: record.subjects.title,
+          section: record.sections.code,
+          handled_by: record.users.email,
+          quarter: record.quarter,
+          student_count: record.records.length,
+        }));
+      }
+      loading.value = false;
+    }
+
+    async function fetchStudentsByClassRecord(classRecordId, sectionId) {
+      const { data, error } = await supabase
+        .from("students")
+        .select("*")
+        .eq("section_id", sectionId);
+
+      if (error) {
+        console.error(error.message);
+      } else {
+        recordsStore.students = await Promise.all(
+          data.map(async (student) => {
+            const { data: record, error: recordError } = await supabase
+              .from("records")
+              .select("initial_grade")
+              .eq("student_id", student.id)
+              .eq("class_record_id", classRecordId)
+              .single();
+
+            return {
+              name: `${student.firstname} ${student.lastname}`,
+              initialGrade: record?.initial_grade || 0,
+            };
+          })
+        );
+      }
+    }
+
+    function getColorClass(score) {
       if (score >= 80) return "text-green";
       if (score >= 75) return "text-orange";
       return "text-red";
@@ -208,17 +167,13 @@ export default defineComponent({
     return {
       studentStanding,
       getColorClass,
-      sectionDescriptions,
-      teacherEmails,
-      classRecordQuarters,
       currentPage,
       totalPages,
-      paginatedSubjects,
+      paginatedRecords,
       searchQuery,
       filteredStudents,
       loading,
-      sectionsStore, // Add sectionsStore to the return object
-      totalStudents,
+      classRecords,
     };
   },
 });
@@ -229,10 +184,10 @@ export default defineComponent({
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
-  backdrop-filter: blur(10px); /* Blur effect for glass background */
-  -webkit-backdrop-filter: blur(10px); /* Safari support */
-  box-shadow: 0 0 10px #004d40; /* Glowing effect */
+  border: 1px solid rgba(0, 77, 64, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 0 10px #004d40;
 }
 
 .fixed-card {
@@ -251,11 +206,11 @@ export default defineComponent({
 }
 
 .glass-card {
- 
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
-.smallFont{
+
+.smallFont {
   font-size: 10px;
 }
 </style>

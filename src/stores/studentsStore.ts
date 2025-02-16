@@ -36,7 +36,7 @@ export const useStudentsStore = defineStore('studentsStore', () => {
 
   async function fetchInitialScore(studentId: number) {
     // ...existing code...
-    console.log("pending", studentId);
+    // console.log("pending", studentId);
   }
 
   async function fetchStudentsBySection(sectionId: number) {
