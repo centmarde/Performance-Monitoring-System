@@ -255,7 +255,7 @@ onMounted(async () => {
 
 const sectionOptions = computed(() => 
   sectionsStore.sections
-    .filter(section => !excludedSections.value.includes(section.id))
+    .filter(section => !excludedSections.value.includes(section.id.toString()))
     .map(section => section.code)
 );
 
@@ -314,7 +314,7 @@ const saveClassRecord = async () => {
   const classRecordId = parseInt(addedClassRecordId ?? "0", 10);
 
   if (!isNaN(sectionId) && !isNaN(classRecordId)) {
-    await recordsStore.addRecordsForSection(sectionId, classRecordId);
+    await recordsStore.addRecordsForSection(sectionId.toString(), classRecordId.toString());
   } else {
     console.error("Invalid section or class record ID");
   }
