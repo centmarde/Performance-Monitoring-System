@@ -1,73 +1,90 @@
 <template>
   <v-container>
-
     <v-row>
       <v-col cols="4">
-        <v-card class="pa-3 rounded-card" elevation="2">
-        <v-select
-          :items="sections"
-          item-title="code"
-          item-value="code"
-          label="Select Section"
-          v-model="selectedSection"
-        ></v-select>
+        <v-card class="glass-card pa-3 rounded-card" elevation="2">
+          <v-select
+            :items="sections"
+            item-title="code"
+            item-value="code"
+            label="Select Section"
+            v-model="selectedSection"
+          ></v-select>
         </v-card>
       </v-col>
       <v-col cols="4">
-        <v-card class="pa-3 rounded-card" elevation="2">
-        <v-select
-          :items="students"
-          item-title="fullName"
-          item-value="fullName"
-          label="Select Student"
-          v-model="selectedStudent"
-          :disabled="!selectedSection"
-        ></v-select>
+        <v-card class="glass-card pa-3 rounded-card" elevation="2">
+          <v-select
+            :items="students"
+            item-title="fullName"
+            item-value="fullName"
+            label="Select Student"
+            v-model="selectedStudent"
+            :disabled="!selectedSection"
+          ></v-select>
         </v-card>
       </v-col>
       <v-col cols="4">
-        <v-card class="fixed-width-card pa-1 rounded-card" elevation="2">
-          <div v-if="selectedSubject">
-            Subject: {{ selectedSubject.title }}
+        <v-card
+          class="glass-card fixed-width-card pa-4 rounded-card"
+          elevation="2"
+        >
+          <div
+            v-if="selectedSubject"
+            class="font-semibold text-center text-xl mb-2"
+          >
+            {{ selectedSubject.title }}
           </div>
-          <div v-if="studentRecord">
+          <div
+            v-if="studentRecord"
+            class="d-flex justify-space-between align-center"
+          >
             <div>Initial Grade: {{ studentRecord.initial_grade }}</div>
-            <div v-if="isFailing">Status: Failing</div>
-            <div v-else>Status: Passing</div>
+            <v-chip
+              :color="isFailing ? 'red lighten-3' : 'green lighten-3'"
+              :text-color="isFailing ? 'red darken-3' : 'green darken-3'"
+              class="font-bold"
+              small
+            >
+              <span v-if="isFailing">Failing</span>
+              <span v-else>Passing</span>
+            </v-chip>
           </div>
         </v-card>
       </v-col>
     </v-row>
-   
-      <v-row>
+
+    <v-row>
       <v-col cols="12">
-        <v-card class="pa-2">
-          <v-card-title>Advice for Teacher</v-card-title>
+        <v-card class="glass-card pa-4 rounded-card" elevation="3">
+          <v-card-title class="font-semibold text-lg"
+            >Advice for Teacher</v-card-title
+          >
           <v-card-text v-html="chatContent"></v-card-text>
         </v-card>
       </v-col>
     </v-row>
- 
+
     <v-row>
       <v-col cols="12">
-        <v-card>
-          <v-card-title>Student Performance Chart</v-card-title>
+        <v-card class="glass-card pa-4 rounded-card" elevation="3">
+          <v-card-title class="font-semibold text-lg"
+            >Student Performance Chart</v-card-title
+          >
           <v-card-text>
-            <div id="chart" style="width: 100%; height: 400px;"></div>
+            <div id="chart" style="width: 100%; height: 400px"></div>
           </v-card-text>
         </v-card>
       </v-col>
     </v-row>
-    
- 
   </v-container>
 </template>
 
 <script lang="ts">
-import { supabase } from '@/lib/supabase';
-import { defineComponent, ref, onMounted, watch } from 'vue';
-import * as echarts from 'echarts';
-import { useGroqChat } from '@/composables/bootstrap';
+import { supabase } from "@/lib/supabase";
+import { defineComponent, ref, onMounted, watch } from "vue";
+import * as echarts from "echarts";
+import { useGroqChat } from "@/composables/bootstrap";
 
 interface Section {
   code: string;
@@ -126,7 +143,9 @@ export default defineComponent({
     const { chatContent, startChat } = useGroqChat();
 
     const fetchSections = async () => {
-      const { data, error } = await supabase.from('sections').select('code, id');
+      const { data, error } = await supabase
+        .from("sections")
+        .select("code, id");
       if (error) {
         console.error(error);
       } else {
@@ -138,16 +157,16 @@ export default defineComponent({
       students.value = []; // Clear previous students
       selectedStudent.value = null; // Reset selected student
 
-      const section = sections.value.find(sec => sec.code === sectionCode);
+      const section = sections.value.find((sec) => sec.code === sectionCode);
       if (!section) {
-        console.error('Section not found');
+        console.error("Section not found");
         return;
       }
 
       const { data, error } = await supabase
-        .from('students')
-        .select('id, firstname, lastname, section_id')
-        .eq('section_id', section.id);
+        .from("students")
+        .select("id, firstname, lastname, section_id")
+        .eq("section_id", section.id);
 
       if (error) {
         console.error(error);
@@ -163,16 +182,18 @@ export default defineComponent({
     };
 
     const fetchSubject = async (studentFullName: string) => {
-      const student = students.value.find(stu => stu.fullName === studentFullName);
+      const student = students.value.find(
+        (stu) => stu.fullName === studentFullName
+      );
       if (!student) {
-        console.error('Student not found');
+        console.error("Student not found");
         return;
       }
 
       const { data, error } = await supabase
-        .from('sections')
-        .select('subject_id')
-        .eq('id', student.sectionId)
+        .from("sections")
+        .select("subject_id")
+        .eq("id", student.sectionId)
         .single();
 
       if (error) {
@@ -182,9 +203,9 @@ export default defineComponent({
 
       const subjectId = data.subject_id;
       const { data: subjectData, error: subjectError } = await supabase
-        .from('subjects')
-        .select('title')
-        .eq('id', subjectId)
+        .from("subjects")
+        .select("title")
+        .eq("id", subjectId)
         .single();
 
       if (subjectError) {
@@ -195,16 +216,20 @@ export default defineComponent({
     };
 
     const fetchStudentRecord = async (studentFullName: string) => {
-      const student = students.value.find(stu => stu.fullName === studentFullName);
+      const student = students.value.find(
+        (stu) => stu.fullName === studentFullName
+      );
       if (!student) {
-        console.error('Student not found');
+        console.error("Student not found");
         return;
       }
 
       const { data, error } = await supabase
-        .from('records')
-        .select('initial_grade, quarterly_grade, ww1, ww2, ww3, ww4, ww5, ww6, ww7, ww8, ww9, ww10, pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8, pt9, pt10, qa1')
-        .eq('student_id', student.id)
+        .from("records")
+        .select(
+          "initial_grade, quarterly_grade, ww1, ww2, ww3, ww4, ww5, ww6, ww7, ww8, ww9, ww10, pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8, pt9, pt10, qa1"
+        )
+        .eq("student_id", student.id)
         .single();
 
       if (error) {
@@ -220,61 +245,93 @@ export default defineComponent({
     const updateChart = () => {
       if (!studentRecord.value) return;
 
-      const chartDom = document.getElementById('chart')!;
+      const chartDom = document.getElementById("chart")!;
       const myChart = echarts.init(chartDom);
       const option: echarts.EChartsOption = {
         tooltip: {
-          trigger: 'axis',
+          trigger: "axis",
           axisPointer: {
-            type: 'shadow'
-          }
+            type: "shadow",
+          },
         },
         grid: {
-          left: '0%',
-          right: '0%',
-          bottom: '3%',
-          containLabel: true
+          left: "0%",
+          right: "0%",
+          bottom: "3%",
+          containLabel: true,
         },
         xAxis: [
           {
-            type: 'category',
+            type: "category",
             data: [
-              'WW1', 'WW2', 'WW3', 'WW4', 'WW5', 'WW6', 'WW7', 'WW8', 'WW9', 'WW10',
-              'PT1', 'PT2', 'PT3', 'PT4', 'PT5', 'PT6', 'PT7', 'PT8', 'PT9', 'PT10',
-              'QA1',
+              "WW1",
+              "WW2",
+              "WW3",
+              "WW4",
+              "WW5",
+              "WW6",
+              "WW7",
+              "WW8",
+              "WW9",
+              "WW10",
+              "PT1",
+              "PT2",
+              "PT3",
+              "PT4",
+              "PT5",
+              "PT6",
+              "PT7",
+              "PT8",
+              "PT9",
+              "PT10",
+              "QA1",
             ],
             axisTick: {
-              alignWithLabel: true
+              alignWithLabel: true,
             },
             axisLabel: {
               interval: 0, // Adjust the interval of the x-axis labels
-              rotate: 30  // Rotate the labels for better readability
-            }
-          }
+              rotate: 30, // Rotate the labels for better readability
+            },
+          },
         ],
         yAxis: [
           {
-            type: 'value'
-          }
+            type: "value",
+          },
         ],
         series: [
           {
-            name: 'Written Works',
-            type: 'bar',
-            barWidth: '60%',
-            barGap: '10%', // Adjust the gap between bars
+            name: "Written Works",
+            type: "bar",
+            barWidth: "60%",
+            barGap: "10%", // Adjust the gap between bars
             data: [
-              studentRecord.value.ww1, studentRecord.value.ww2, studentRecord.value.ww3,
-              studentRecord.value.ww4, studentRecord.value.ww5, studentRecord.value.ww6,
-              studentRecord.value.ww7, studentRecord.value.ww8, studentRecord.value.ww9,
-              studentRecord.value.ww10, studentRecord.value.pt1, studentRecord.value.pt2, studentRecord.value.pt3,
-              studentRecord.value.pt4, studentRecord.value.pt5, studentRecord.value.pt6,
-              studentRecord.value.pt7, studentRecord.value.pt8, studentRecord.value.pt9,
-              studentRecord.value.pt10,studentRecord.value.qa1,
+              studentRecord.value.ww1,
+              studentRecord.value.ww2,
+              studentRecord.value.ww3,
+              studentRecord.value.ww4,
+              studentRecord.value.ww5,
+              studentRecord.value.ww6,
+              studentRecord.value.ww7,
+              studentRecord.value.ww8,
+              studentRecord.value.ww9,
+              studentRecord.value.ww10,
+              studentRecord.value.pt1,
+              studentRecord.value.pt2,
+              studentRecord.value.pt3,
+              studentRecord.value.pt4,
+              studentRecord.value.pt5,
+              studentRecord.value.pt6,
+              studentRecord.value.pt7,
+              studentRecord.value.pt8,
+              studentRecord.value.pt9,
+              studentRecord.value.pt10,
+              studentRecord.value.qa1,
             ],
             itemStyle: {
-              color: '#004D40' // Set the bar color
-            }
+              color: "#4CAF50", // Set the bar color
+            },
           },
         ],
       };
@@ -308,12 +365,27 @@ export default defineComponent({
       chartOptions,
       chatContent,
     };
-  }
+  },
 });
 </script>
 
 <style scoped>
+.glass-card {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.glass-card.dark {
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
 .fixed-width-card {
   height: 102px;
+}
+.rounded-card {
+  border-radius: 16px;
 }
 </style>

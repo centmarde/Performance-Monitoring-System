@@ -53,13 +53,18 @@
 
           <h5 class="text-center text-teal-darken-3 mt-4 mb-3">Login with</h5>
           <div class="social-buttons">
-            <v-btn depressed outlined color="grey">
+            <v-btn depressed outlined color="teal-darken-3">
               <v-icon color="red">mdi-google</v-icon>
             </v-btn>
-            <v-btn depressed outlined color="grey">
+            <v-btn
+              depressed
+              outlined
+              color="teal-darken-3
+            "
+            >
               <v-icon color="blue">mdi-facebook</v-icon>
             </v-btn>
-            <v-btn depressed outlined color="grey">
+            <v-btn depressed outlined color="teal-darken-3">
               <v-icon color="light-blue lighten-3">mdi-twitter</v-icon>
             </v-btn>
           </div>

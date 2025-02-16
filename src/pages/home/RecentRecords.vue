@@ -732,7 +732,7 @@ const saveChanges = async (item) => {
     if (error) {
       console.error("Error updating record:", error);
     } else {
-      console.log("Record updated successfully");
+      console.log("Record updated successfully.");
     }
   } catch (error) {
     console.error("Error saving changes:", error);
