@@ -58,9 +58,11 @@ resources/js/plugins/iconify/icons.css
 # Ignore MSW script
 public/mockServiceWorker.js
 
+
 # Env files
 .env*
 !.env.example
 auto-imports.d.ts
 themeConfig.js
 config/feature-flags.json
+
