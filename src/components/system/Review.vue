@@ -26,23 +26,29 @@
       </v-col>
       <v-col cols="4">
         <v-card
-          class="glass-card fixed-width-card pa-1 rounded-card"
+          class="glass-card fixed-width-card pa-4 rounded-card"
           elevation="2"
         >
-          <div v-if="selectedSubject" class="font-semibold">
-            Subject: {{ selectedSubject.title }}
+          <div
+            v-if="selectedSubject"
+            class="font-semibold text-center text-xl mb-2"
+          >
+            {{ selectedSubject.title }}
           </div>
-          <div v-if="studentRecord">
+          <div
+            v-if="studentRecord"
+            class="d-flex justify-space-between align-center"
+          >
             <div>Initial Grade: {{ studentRecord.initial_grade }}</div>
-            <div
-              :class="{
-                'text-green-500': !isFailing,
-                'text-red-500': isFailing,
-              }"
+            <v-chip
+              :color="isFailing ? 'red lighten-3' : 'green lighten-3'"
+              :text-color="isFailing ? 'red darken-3' : 'green darken-3'"
+              class="font-bold"
+              small
             >
-              Status: <span v-if="isFailing">Failing</span
-              ><span v-else>Passing</span>
-            </div>
+              <span v-if="isFailing">Failing</span>
+              <span v-else>Passing</span>
+            </v-chip>
           </div>
         </v-card>
       </v-col>
