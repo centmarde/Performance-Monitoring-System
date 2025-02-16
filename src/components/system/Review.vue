@@ -52,8 +52,10 @@
 
     <v-row>
       <v-col cols="12">
-        <v-card>
-          <v-card-title>Student Performance Chart</v-card-title>
+        <v-card class="glass-card pa-4 rounded-card" elevation="3">
+          <v-card-title class="font-semibold text-lg"
+            >Student Performance Chart</v-card-title
+          >
           <v-card-text>
             <div id="chart" style="width: 100%; height: 400px"></div>
           </v-card-text>
