@@ -315,7 +315,7 @@ export default defineComponent({
               studentRecord.value.qa1,
             ],
             itemStyle: {
-              color: "#004D40", // Set the bar color
+              color: "#4CAF50", // Set the bar color
             },
           },
         ],
