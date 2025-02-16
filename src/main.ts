@@ -19,9 +19,9 @@ import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 import DataTable from "datatables.net-vue3";
 import DataTablesCore from "datatables.net-dt";
-import "@/assets/logout.css";
+import "@/styles/styles.css";
 // Custom Styles
-import "@/assets/styles.css";
+import "@/styles/logout.css";
 
 // Perfect Scrollbar
 import { PerfectScrollbarPlugin } from "vue3-perfect-scrollbar";

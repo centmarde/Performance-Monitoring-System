@@ -144,7 +144,7 @@ export const useRecordsStore = defineStore('recordsStore', () => {
       console.error('Error fetching initial grade:', error);
       return null;
     }
-    console.log(data);
+   
     return data?.[0]?.initial_grade || 0; // Return the initial grade from the first index
   }
 
@@ -176,8 +176,22 @@ export const useRecordsStore = defineStore('recordsStore', () => {
       return acc;
     }, []);
 
-    console.log(missedActivities);
+    // console.log(missedActivities);
     return missedActivities;
+  }
+
+  async function countPassedStudents() {
+    const { data, error } = await supabase
+      .from('records')
+      .select('*')
+      .gte('initial_grade', 75);
+
+    if (error) {
+      console.error('Error fetching passed students:', error);
+      return 0;
+    }
+
+    return data.length;
   }
 
   return {
@@ -189,5 +203,6 @@ export const useRecordsStore = defineStore('recordsStore', () => {
     fetchInitialGradeByStudentId,
     countMissedActivities,
     recordCount,
+    countPassedStudents,
   };
 });

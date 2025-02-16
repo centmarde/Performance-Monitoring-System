@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { useToast } from "vue-toastification";
 import Swal from "sweetalert2";
-import "@/assets/logout.css";
+import "@/styles/logout.css";
 const toast = useToast();
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;

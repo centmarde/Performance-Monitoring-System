@@ -2,7 +2,19 @@
   <HomeLayout>
     <template #content>
       <v-container>
-         
+        <!-- Add loading overlay -->
+        <v-overlay
+          :model-value="isLoading"
+          class="align-center justify-center"
+          persistent
+        >
+          <v-progress-circular
+            color="primary"
+            indeterminate
+            size="64"
+          ></v-progress-circular>
+        </v-overlay>
+
         <v-row justify="end">
           <v-col>
               <router-link to="/data_entry">
@@ -151,6 +163,7 @@
         </v-table>
 
         <v-pagination v-model="page" :length="pageCount" :total-visible="5" class="mt-4"></v-pagination>
+        <v-btn class="save-btn" @click="saveAllChanges" style="display: none;">Save</v-btn>
       </v-container>
     </template>
   </HomeLayout>
@@ -170,6 +183,9 @@ const studentsStore = useStudentsStore();
 const searchQuery = ref('');
 const page = ref(1);
 const itemsPerPage = 5;
+
+// Add loading state
+const isLoading = ref(true);
 
 const wwHeaders = [
   { text: '1', value: 'ww1', points: '100%' },
@@ -253,6 +269,12 @@ const saveChanges = async (item) => {
   }
 };
 
+const saveAllChanges = async () => {
+  for (const item of jsondata.value) {
+    await saveChanges(item);
+  }
+};
+
 const fetchGradeCalculations = async (classRecordId) => {
   const { data: records, error } = await supabase
     .from('calculate_initial_grade')
@@ -276,59 +298,62 @@ const fetchGradeCalculations = async (classRecordId) => {
 
 const fetchRecords = async () => {
   const classRecordId = localStorage.getItem("addedClassrecord");
-  if (classRecordId) {
-    console.log("Class Record ID:", classRecordId);
-    const records = await recordsStore.fetchRecordsByClassRecordId(Number(classRecordId));
-    if (!records || records.length === 0) {
-      console.log("This class record has no records yet.");
-    } else {
-      const gradeCalculations = await fetchGradeCalculations(classRecordId);
-      jsondata.value = records
-        .map(record => {
-          const gradeCalculation = gradeCalculations.find(gc => gc.student_id === record.id) || {};
-          const item = {
-            id: record.student_id,
-            name: record.students ? `${record.students.firstname} ${record.students.lastname}` : 'Unknown',
-            ww1: record.ww1,
-            ww2: record.ww2,
-            ww3: record.ww3,
-            ww4: record.ww4,
-            ww5: record.ww5,
-            ww6: record.ww6,
-            ww7: record.ww7,
-            ww8: record.ww8,
-            ww9: record.ww9,
-            ww10: record.ww10,
-            pt1: record.pt1,
-            pt2: record.pt2,
-            pt3: record.pt3,
-            pt4: record.pt4,
-            pt5: record.pt5,
-            pt6: record.pt6,
-            pt7: record.pt7,
-            pt8: record.pt8,
-            pt9: record.pt9,
-            pt10: record.pt10,
-            qa1: record.qa1,
-            wwTotal: record.ww1 + record.ww2 + record.ww3 + record.ww4 + record.ww5 + record.ww6 + record.ww7 + record.ww8 + record.ww9 + record.ww10,
-            ptTotal: record.pt1 + record.pt2 + record.pt3 + record.pt4 + record.pt5 + record.pt6 + record.pt7 + record.pt8 + record.pt9 + record.pt10,
-            qaTotal: record.qa1,
-            wwws: "40%",
-            wwps: gradeCalculation.ww_weighted_score || 0,
-            ptps: gradeCalculation.pt_weighted_score || 0,
-            ptws: "40%",
-            qaps: gradeCalculation.qa_weighted_score || 0,
-            qaws: "20%",
-            initial_grade: gradeCalculation.initial_grade || 0,
-            quarterly_grade: gradeCalculation.initial_grade || 0,
-          };
-          return item;
-        })
-        .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically by name
-    }
-  } else {
+  if (!classRecordId) {
     console.log("No class record ID found in local storage.");
+    return;
   }
+
+  console.log("Class Record ID:", classRecordId);
+  const records = await recordsStore.fetchRecordsByClassRecordId(Number(classRecordId));
+  
+  if (!records || records.length === 0) {
+    console.log("This class record has no records yet.");
+    return;
+  }
+
+  const gradeCalculations = await fetchGradeCalculations(classRecordId);
+  jsondata.value = records
+    .map(record => {
+      const gradeCalculation = gradeCalculations.find(gc => gc.student_id === record.id) || {};
+      const item = {
+        id: record.student_id,
+        name: record.students ? `${record.students.firstname} ${record.students.lastname}` : 'Unknown',
+        ww1: record.ww1,
+        ww2: record.ww2,
+        ww3: record.ww3,
+        ww4: record.ww4,
+        ww5: record.ww5,
+        ww6: record.ww6,
+        ww7: record.ww7,
+        ww8: record.ww8,
+        ww9: record.ww9,
+        ww10: record.ww10,
+        pt1: record.pt1,
+        pt2: record.pt2,
+        pt3: record.pt3,
+        pt4: record.pt4,
+        pt5: record.pt5,
+        pt6: record.pt6,
+        pt7: record.pt7,
+        pt8: record.pt8,
+        pt9: record.pt9,
+        pt10: record.pt10,
+        qa1: record.qa1,
+        wwTotal: record.ww1 + record.ww2 + record.ww3 + record.ww4 + record.ww5 + record.ww6 + record.ww7 + record.ww8 + record.ww9 + record.ww10,
+        ptTotal: record.pt1 + record.pt2 + record.pt3 + record.pt4 + record.pt5 + record.pt6 + record.pt7 + record.pt8 + record.pt9 + record.pt10,
+        qaTotal: record.qa1,
+        wwws: "40%",
+        wwps: gradeCalculation.ww_weighted_score || 0,
+        ptps: gradeCalculation.pt_weighted_score || 0,
+        ptws: "40%",
+        qaps: gradeCalculation.qa_weighted_score || 0,
+        qaws: "20%",
+        initial_grade: gradeCalculation.initial_grade || 0,
+        quarterly_grade: gradeCalculation.initial_grade || 0,
+      };
+      return item;
+    })
+    .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically by name
 };
 
 const clickSaveButtons = () => {
@@ -338,17 +363,34 @@ const clickSaveButtons = () => {
 const startAutoSave = () => {
   setInterval(async () => {
     await fetchRecords();
-  }, 10000);
+  }, 5000);
 
   setInterval(() => {
-    clickSaveButtons();
-  }, 5000);
+    document.querySelectorAll('.save-btn').forEach(button => button.click());
+  }, 8000);
 };
 
 onMounted(async () => {
-  await fetchRecords();
-  await studentsStore.fetchAllStudents();
-  startAutoSave();
+  isLoading.value = true;
+  
+  // Start loading timer
+  const loadingTimer = new Promise(resolve => setTimeout(resolve, 11000));
+  
+  // Fetch data
+  const fetchData = async () => {
+    try {
+      await fetchRecords();
+      await studentsStore.fetchAllStudents();
+      startAutoSave();
+    } catch (error) {
+      console.error('Error in mounting:', error);
+    }
+  };
+
+  // Wait for both timer and data fetching to complete
+  await Promise.all([loadingTimer, fetchData()]);
+  
+  isLoading.value = false;
 });
 </script>
 
@@ -418,5 +460,9 @@ onMounted(async () => {
     height: 32px;
     font-size: 14px;
   }
+}
+
+.v-overlay {
+  backdrop-filter: blur(4px);
 }
 </style>
