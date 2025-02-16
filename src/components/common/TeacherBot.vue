@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { useGroqChat } from '@/composables/pusher';
+import { useGroqChat } from '@/composables/pusherBot';
 
 export default {
   name: 'TeacherBot',
