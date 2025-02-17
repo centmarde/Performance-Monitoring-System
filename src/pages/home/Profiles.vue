@@ -327,7 +327,6 @@ const updateProfile = async () => {
   }
 };
 
-// Reset Profile
 const resetProfile = () => {
   profileData.value = { ...originalProfileData.value };
   tempImage.value = null;
