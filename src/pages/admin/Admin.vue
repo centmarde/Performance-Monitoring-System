@@ -404,7 +404,7 @@ const addUser = async () => {
       lastname: "",
       phone: "",
       complete_address: "",
-      user_type: "", // Updated field name
+      user_type: "",
     };
     showAddUserForm.value = false;
   } catch (error) {
