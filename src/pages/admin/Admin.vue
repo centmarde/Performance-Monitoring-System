@@ -227,7 +227,7 @@ interface User {
   lastname: string;
   phone: string;
   complete_address: string;
-  user_type: string; // Updated field name
+  user_type: string;
 }
 
 const items = ref<User[]>([]);
