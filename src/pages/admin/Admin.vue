@@ -259,7 +259,6 @@ const editedUser = ref<User>({
   user_type: "",
 });
 
-// Password visibility toggle
 const passwordVisible = ref(false);
 
 const togglePasswordVisibility = () => {
