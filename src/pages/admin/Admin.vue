@@ -279,7 +279,7 @@ const isAddUserValid = computed(() => {
     passwordValidator(newUser.value.password) === true &&
     newUser.value.phone.trim() !== "" && // Ensure phone is not empty
     newUser.value.complete_address.trim() !== "" && // Ensure address is not empty
-    newUser.value.user_type.trim() !== "" // Role field must not be empty
+    newUser.value.user_type.trim() !== ""
   );
 });
 
