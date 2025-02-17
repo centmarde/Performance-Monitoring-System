@@ -394,7 +394,7 @@ const addUser = async () => {
     }
     // Add the new user to the list
     items.value.push({ ...newUser.value, id: data[0].id });
-    // Reset form fields after successful addition
+
     newUser.value = {
       id: 0,
       name: "",
