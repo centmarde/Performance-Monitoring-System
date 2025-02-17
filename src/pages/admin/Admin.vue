@@ -299,7 +299,7 @@ const isEditUserValid = computed(() => {
 });
 
 const filteredItems = computed(() => {
-  console.log("Search Query:", searchQuery.value); // Debugging search query
+  console.log("Search Query:", searchQuery.value);
   if (!searchQuery.value) return items.value;
   return items.value.filter((user) =>
     [
