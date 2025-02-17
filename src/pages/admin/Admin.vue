@@ -379,7 +379,7 @@ const openEditDialog = (user?: User) => {
         user_type: "",
       };
 
-  console.log("Opening Edit Dialog:", editedUser.value); // Debugging log
+  console.log("Opening Edit Dialog:", editedUser.value);
   showEditUserForm.value = true;
 };
 
