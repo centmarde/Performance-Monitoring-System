@@ -356,7 +356,7 @@ onMounted(async () => {
       phone: profile.phone,
       password: profile.password,
       complete_address: profile.complete_address,
-      user_type: profile.user_type, // Updated field name
+      user_type: profile.user_type,
     }));
   } catch (error) {
     console.error("Error fetching users:", error);
