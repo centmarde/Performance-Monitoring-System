@@ -260,7 +260,6 @@ const editedUser = ref<User>({
 });
 
 // Password visibility toggle
-// Password visibility toggle
 const passwordVisible = ref(false);
 
 const togglePasswordVisibility = () => {
