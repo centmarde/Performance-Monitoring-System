@@ -5,7 +5,7 @@
         <div class="p-8 bg-gray-100 min-h-screen">
           <v-row align="center" justify="space-between">
             <v-col cols="auto">
-             <!--  <v-btn @click="showAddUserForm = true" color="teal-darken-3">
+              <!--  <v-btn @click="showAddUserForm = true" color="teal-darken-3">
                 Add User
               </v-btn> -->
             </v-col>
@@ -413,7 +413,7 @@ const addUser = async () => {
 };
 
 const updateUser = async () => {
-  console.log("Edited User:", editedUser.value); // Log the user data
+  console.log("Edited User:", editedUser.value);
   try {
     const { error } = await supabase
       .from("users")
