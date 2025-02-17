@@ -269,7 +269,7 @@ const togglePasswordVisibility = () => {
 
 // Pagination related state
 const currentPage = ref(1);
-const itemsPerPage = ref(10); // Default to 10, but can be changed
+const itemsPerPage = ref(10);
 
 const isAddUserValid = computed(() => {
   return (
