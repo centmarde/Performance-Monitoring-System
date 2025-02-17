@@ -256,7 +256,7 @@ const editedUser = ref<User>({
   password: "",
   phone: "",
   complete_address: "",
-  user_type: "", // Updated field name
+  user_type: "",
 });
 
 // Password visibility toggle
