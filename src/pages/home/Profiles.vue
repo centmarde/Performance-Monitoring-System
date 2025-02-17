@@ -343,7 +343,6 @@ const resetPassword = () => {
   };
 };
 
-// Update Password
 const updatePassword = async () => {
   const { oldPassword, newPassword, confirmNewPassword } = passwordData.value;
 
