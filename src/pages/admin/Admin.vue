@@ -245,7 +245,7 @@ const newUser = ref<User>({
   password: "",
   phone: "",
   complete_address: "",
-  user_type: "", // Updated field name
+  user_type: "",
 });
 const editedUser = ref<User>({
   id: 0,
