@@ -334,7 +334,6 @@ const resetProfile = () => {
   selectedFile.value = null;
 };
 
-// Reset Password
 const resetPassword = () => {
   passwordData.value = {
     oldPassword: "",
