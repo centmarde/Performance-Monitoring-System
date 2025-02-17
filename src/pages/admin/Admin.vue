@@ -309,7 +309,7 @@ const filteredItems = computed(() => {
       user.lastname,
       user.phone,
       user.complete_address,
-      user.user_type, // Updated field name
+      user.user_type,
     ].some((field) =>
       field?.toLowerCase().includes(searchQuery.value.toLowerCase())
     )
