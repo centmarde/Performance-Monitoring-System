@@ -292,7 +292,7 @@ const isEditUserValid = computed(() => {
     (editedUser.value.lastname?.trim() || "").length > 0 &&
     emailValidator(editedUser.value.email || "") === true &&
     isValidPassword && // Check password only if it's not empty
-    (editedUser.value.user_type?.trim() || "").length > 0 && // Updated field name
+    (editedUser.value.user_type?.trim() || "").length > 0 &&
     (editedUser.value.phone?.trim() || "").length > 0 &&
     (editedUser.value.complete_address?.trim() || "").length > 0
   );
