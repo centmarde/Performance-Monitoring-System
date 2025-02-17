@@ -392,7 +392,6 @@ const addUser = async () => {
     if (error) {
       throw error;
     }
-    // Add the new user to the list
     items.value.push({ ...newUser.value, id: data[0].id });
 
     newUser.value = {
