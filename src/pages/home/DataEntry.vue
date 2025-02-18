@@ -8,7 +8,7 @@
           persistent
         >
           <v-progress-circular
-            color="primary"
+            :color="primaryColor"
             indeterminate
             size="64"
           ></v-progress-circular>
@@ -368,6 +368,7 @@ const classRecordDialog = ref(false);
 const activeSubject = ref("");
 const currentPage = ref(1);
 const itemsPerPage = 6;
+const primaryColor = computed(() => "#004D40");
 
 const classRecordStore = useClassRecordStore();
 const recordsStore = useRecordsStore();
