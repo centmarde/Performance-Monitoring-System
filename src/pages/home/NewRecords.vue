@@ -857,7 +857,7 @@ const fetchRecords = async () => {
       };
       return item;
     })
-    .sort((a, b) => a.name.localeCompare(b.name)); // Sort alphabetically by name
+    .sort((a, b) => a.name.localeCompare(b.name));
 };
 
 const clickSaveButtons = () => {
