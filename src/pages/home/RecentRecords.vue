@@ -777,7 +777,9 @@ const fetchRecords = async () => {
             gradeCalculations.find((gc) => gc.student_id === record.id) || {};
           const item = {
             id: record.student_id,
-            name: record.students ? `${record.students.firstname} ${record.students.lastname}` : 'Unknown',
+            name: record.students
+              ? `${record.students.firstname} ${record.students.lastname}`
+              : "Unknown",
             ww1: record.ww1,
             ww2: record.ww2,
             ww3: record.ww3,
