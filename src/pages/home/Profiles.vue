@@ -273,7 +273,6 @@ const handleImageChange = async (event: Event) => {
   tempImage.value = URL.createObjectURL(file);
 };
 
-// Update Profile
 const updateProfile = async () => {
   const { data: user, error } = await supabase.auth.getUser();
   if (error || !user?.user?.id) {
