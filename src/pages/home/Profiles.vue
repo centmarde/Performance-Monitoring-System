@@ -327,14 +327,12 @@ const updateProfile = async () => {
   }
 };
 
-// Reset Profile
 const resetProfile = () => {
   profileData.value = { ...originalProfileData.value };
   tempImage.value = null;
   selectedFile.value = null;
 };
 
-// Reset Password
 const resetPassword = () => {
   passwordData.value = {
     oldPassword: "",
@@ -343,7 +341,6 @@ const resetPassword = () => {
   };
 };
 
-// Update Password
 const updatePassword = async () => {
   const { oldPassword, newPassword, confirmNewPassword } = passwordData.value;
 

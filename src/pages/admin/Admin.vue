@@ -5,7 +5,7 @@
         <div class="p-8 bg-gray-100 min-h-screen">
           <v-row align="center" justify="space-between">
             <v-col cols="auto">
-             <!--  <v-btn @click="showAddUserForm = true" color="teal-darken-3">
+              <!--  <v-btn @click="showAddUserForm = true" color="teal-darken-3">
                 Add User
               </v-btn> -->
             </v-col>
@@ -227,7 +227,7 @@ interface User {
   lastname: string;
   phone: string;
   complete_address: string;
-  user_type: string; // Updated field name
+  user_type: string;
 }
 
 const items = ref<User[]>([]);
@@ -245,7 +245,7 @@ const newUser = ref<User>({
   password: "",
   phone: "",
   complete_address: "",
-  user_type: "", // Updated field name
+  user_type: "",
 });
 const editedUser = ref<User>({
   id: 0,
@@ -256,11 +256,9 @@ const editedUser = ref<User>({
   password: "",
   phone: "",
   complete_address: "",
-  user_type: "", // Updated field name
+  user_type: "",
 });
 
-// Password visibility toggle
-// Password visibility toggle
 const passwordVisible = ref(false);
 
 const togglePasswordVisibility = () => {
@@ -269,7 +267,7 @@ const togglePasswordVisibility = () => {
 
 // Pagination related state
 const currentPage = ref(1);
-const itemsPerPage = ref(10); // Default to 10, but can be changed
+const itemsPerPage = ref(10);
 
 const isAddUserValid = computed(() => {
   return (
@@ -277,9 +275,9 @@ const isAddUserValid = computed(() => {
     newUser.value.lastname.trim() !== "" &&
     emailValidator(newUser.value.email) === true &&
     passwordValidator(newUser.value.password) === true &&
-    newUser.value.phone.trim() !== "" && // Ensure phone is not empty
-    newUser.value.complete_address.trim() !== "" && // Ensure address is not empty
-    newUser.value.user_type.trim() !== "" // Role field must not be empty
+    newUser.value.phone.trim() !== "" &&
+    newUser.value.complete_address.trim() !== "" &&
+    newUser.value.user_type.trim() !== ""
   );
 });
 
@@ -292,14 +290,14 @@ const isEditUserValid = computed(() => {
     (editedUser.value.lastname?.trim() || "").length > 0 &&
     emailValidator(editedUser.value.email || "") === true &&
     isValidPassword && // Check password only if it's not empty
-    (editedUser.value.user_type?.trim() || "").length > 0 && // Updated field name
+    (editedUser.value.user_type?.trim() || "").length > 0 &&
     (editedUser.value.phone?.trim() || "").length > 0 &&
     (editedUser.value.complete_address?.trim() || "").length > 0
   );
 });
 
 const filteredItems = computed(() => {
-  console.log("Search Query:", searchQuery.value); // Debugging search query
+  console.log("Search Query:", searchQuery.value);
   if (!searchQuery.value) return items.value;
   return items.value.filter((user) =>
     [
@@ -309,7 +307,7 @@ const filteredItems = computed(() => {
       user.lastname,
       user.phone,
       user.complete_address,
-      user.user_type, // Updated field name
+      user.user_type,
     ].some((field) =>
       field?.toLowerCase().includes(searchQuery.value.toLowerCase())
     )
@@ -356,7 +354,7 @@ onMounted(async () => {
       phone: profile.phone,
       password: profile.password,
       complete_address: profile.complete_address,
-      user_type: profile.user_type, // Updated field name
+      user_type: profile.user_type,
     }));
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -379,7 +377,7 @@ const openEditDialog = (user?: User) => {
         user_type: "",
       };
 
-  console.log("Opening Edit Dialog:", editedUser.value); // Debugging log
+  console.log("Opening Edit Dialog:", editedUser.value);
   showEditUserForm.value = true;
 };
 
@@ -392,9 +390,8 @@ const addUser = async () => {
     if (error) {
       throw error;
     }
-    // Add the new user to the list
     items.value.push({ ...newUser.value, id: data[0].id });
-    // Reset form fields after successful addition
+
     newUser.value = {
       id: 0,
       name: "",
@@ -404,7 +401,7 @@ const addUser = async () => {
       lastname: "",
       phone: "",
       complete_address: "",
-      user_type: "", // Updated field name
+      user_type: "",
     };
     showAddUserForm.value = false;
   } catch (error) {
@@ -413,7 +410,7 @@ const addUser = async () => {
 };
 
 const updateUser = async () => {
-  console.log("Edited User:", editedUser.value); // Log the user data
+  console.log("Edited User:", editedUser.value);
   try {
     const { error } = await supabase
       .from("users")
