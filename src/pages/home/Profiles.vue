@@ -223,7 +223,6 @@ const showOldPassword = ref(false);
 const showNewPassword = ref(false);
 const showConfirmNewPassword = ref(false);
 
-// Fetch Profile
 const fetchProfile = async () => {
   const { data: user, error } = await supabase.auth.getUser();
   if (error || !user?.user?.id) {
