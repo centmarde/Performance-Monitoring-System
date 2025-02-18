@@ -3,7 +3,6 @@ import { setupLayouts } from "virtual:generated-layouts";
 import { useAuthUserStore } from "../stores/authUser";
 import { useToast } from "vue-toastification";
 
-
 // @ts-ignore
 import TeachersPage from "@/pages/admin/TeachersPage.vue";
 // @ts-ignore
@@ -62,7 +61,7 @@ const routes = setupLayouts([
     name: "Teachers",
     meta: { requiresAuth: true, role: "admin" },
   },
- 
+
   {
     path: "/data_entry",
     component: DataEntry,
@@ -89,7 +88,7 @@ router.beforeEach((to, from, next) => {
   const userRole = localStorage.getItem("Role");
   const publicPages = ["/", "/login"];
 
-  const adminPages = ["/admin", "/teachers", "/teacher_account",];
+  const adminPages = ["/admin", "/teachers", "/teacher_account", "/profiles"];
   // const protectedPages = ["/home", "/profiles", "/admin", "/teachers", "/teacher_account"];
 
   if (to.meta.requiresAuth && !isLoggedIn) {

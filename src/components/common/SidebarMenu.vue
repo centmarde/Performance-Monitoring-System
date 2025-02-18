@@ -54,12 +54,31 @@
           v-text="item.title"
         ></v-list-item-title>
       </v-list-item>
-      <v-list-item @click="handleLogoutClick">
-        <template v-slot:prepend>
-          <v-icon color="#B49239">mdi-logout</v-icon>
+      <v-list-group value="Settings">
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props">
+            <template v-slot:prepend>
+              <v-icon color="#B49239">mdi-account</v-icon>
+            </template>
+            <v-list-item-title class="text-white">Settings</v-list-item-title>
+          </v-list-item>
         </template>
-        <v-list-item-title class="text-white">Logout</v-list-item-title>
-      </v-list-item>
+
+        <!-- Admin Profile Link -->
+        <v-list-item to="/admin/profile" class="submenu-item">
+          <template v-slot:prepend>
+            <v-icon color="#B49239">mdi-account-circle</v-icon>
+          </template>
+          <v-list-item-title class="text-white">Profile</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item @click="handleLogoutClick" class="submenu-item">
+          <template v-slot:prepend>
+            <v-icon color="#B49239">mdi-logout</v-icon>
+          </template>
+          <v-list-item-title class="text-white">Logout</v-list-item-title>
+        </v-list-item>
+      </v-list-group>
     </v-list>
   </v-navigation-drawer>
 </template>
