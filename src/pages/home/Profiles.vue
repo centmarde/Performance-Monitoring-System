@@ -205,7 +205,6 @@ const originalProfileData = ref({
   completeAddress: "",
 });
 
-// Password Data
 const passwordData = ref({
   oldPassword: "",
   newPassword: "",
