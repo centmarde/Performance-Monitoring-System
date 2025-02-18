@@ -189,7 +189,6 @@ const userStore = useUserInfoStore();
 const primaryColor = computed(() => "#004D40");
 const fileInput = ref<HTMLInputElement | null>(null);
 
-// Profile Data
 const profileData = ref({
   firstName: "",
   lastName: "",
