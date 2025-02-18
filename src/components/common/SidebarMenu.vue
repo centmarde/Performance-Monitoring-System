@@ -54,7 +54,7 @@
           v-text="item.title"
         ></v-list-item-title>
       </v-list-item>
-      <v-list-item @click="handleLogoutClick" class="submenu-item">
+      <v-list-item @click="handleLogoutClick">
         <template v-slot:prepend>
           <v-icon color="#B49239">mdi-logout</v-icon>
         </template>
