@@ -80,14 +80,14 @@
           active-class="v-list-item--active"
         >
           <template v-slot:prepend>
-            <v-icon color="#B49239">mdi-account-circle</v-icon>
+            <v-icon color="#B49239" size="small">mdi-account-circle</v-icon>
           </template>
           <v-list-item-title class="text-white">Profile</v-list-item-title>
         </v-list-item>
 
         <v-list-item @click="handleLogoutClick" class="submenu-item">
           <template v-slot:prepend>
-            <v-icon color="#B49239">mdi-logout</v-icon>
+            <v-icon color="#B49239" size="small">mdi-logout</v-icon>
           </template>
           <v-list-item-title class="text-white">Logout</v-list-item-title>
         </v-list-item>
@@ -175,8 +175,26 @@ const menu = ref([
   color: white;
 }
 .submenu-item {
-  padding-left: 15px !important; /* Adjust this value as needed */
-  color: black;
-  background-image: -moz-element();
+  min-height: 40px;
+  padding-left: 32px !important;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.submenu-item :deep(.v-list-item__content) {
+  padding-left: 8px;
+}
+.menu-item {
+  min-height: 48px;
+  padding: 0 16px;
+}
+
+.settings-group {
+  margin: 0;
+  padding: 0;
+}
+
+.settings-item {
+  min-height: 48px;
+  padding: 0 16px;
 }
 </style>
