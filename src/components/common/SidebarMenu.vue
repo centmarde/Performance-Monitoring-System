@@ -54,17 +54,31 @@
           v-text="item.title"
         ></v-list-item-title>
       </v-list-item>
-      <v-list-group value="Settings">
-        <template v-slot:activator="{ props }">
-          <v-list-item v-bind="props">
+      <v-list-group value="Settings" class="settings-group">
+        <template v-slot:activator="{ props, isOpen }">
+          <v-list-item
+            v-bind="props"
+            class="settings-item"
+            active-class="v-list-item--active"
+          >
             <template v-slot:prepend>
-              <v-icon color="#B49239">mdi-account</v-icon>
+              <v-icon color="#B49239">mdi-cog</v-icon>
             </template>
             <v-list-item-title class="text-white">Settings</v-list-item-title>
+            <template v-slot:append>
+              <v-icon color="#B49239">{{
+                isOpen ? "mdi-chevron-up" : "mdi-chevron-down"
+              }}</v-icon>
+            </template>
           </v-list-item>
         </template>
 
-        <v-list-item to="/admin_profiles" class="submenu-item">
+        <!-- Submenu Items -->
+        <v-list-item
+          to="/admin_profiles"
+          class="submenu-item"
+          active-class="v-list-item--active"
+        >
           <template v-slot:prepend>
             <v-icon color="#B49239">mdi-account-circle</v-icon>
           </template>
@@ -159,5 +173,10 @@ const menu = ref([
   padding: 16px;
   background-color: #004d40;
   color: white;
+}
+.submenu-item {
+  padding-left: 15px !important; /* Adjust this value as needed */
+  color: black;
+  background-image: -moz-element();
 }
 </style>
