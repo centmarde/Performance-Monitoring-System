@@ -189,7 +189,6 @@ const userStore = useUserInfoStore();
 const primaryColor = computed(() => "#004D40");
 const fileInput = ref<HTMLInputElement | null>(null);
 
-// Profile Data
 const profileData = ref({
   firstName: "",
   lastName: "",
@@ -206,7 +205,6 @@ const originalProfileData = ref({
   completeAddress: "",
 });
 
-// Password Data
 const passwordData = ref({
   oldPassword: "",
   newPassword: "",
@@ -223,7 +221,6 @@ const showOldPassword = ref(false);
 const showNewPassword = ref(false);
 const showConfirmNewPassword = ref(false);
 
-// Fetch Profile
 const fetchProfile = async () => {
   const { data: user, error } = await supabase.auth.getUser();
   if (error || !user?.user?.id) {
@@ -273,7 +270,6 @@ const handleImageChange = async (event: Event) => {
   tempImage.value = URL.createObjectURL(file);
 };
 
-// Update Profile
 const updateProfile = async () => {
   const { data: user, error } = await supabase.auth.getUser();
   if (error || !user?.user?.id) {

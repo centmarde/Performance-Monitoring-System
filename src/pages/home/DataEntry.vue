@@ -8,7 +8,7 @@
           persistent
         >
           <v-progress-circular
-            color="primary"
+            :color="primaryColor"
             indeterminate
             size="64"
           ></v-progress-circular>
@@ -123,10 +123,9 @@
           <v-card
             class="pa-5 rounded-xl elevation-10"
             style="
-              background: #EEEFEE;
+              background: #eeefee;
               backdrop-filter: blur(12px);
               border: 1px solid rgba(255, 255, 255, 0.2);
-              
             "
           >
             <!-- Elegant Header with Updated Color -->
@@ -362,13 +361,14 @@ import { useSubjectsStore } from "@/stores/subjectsStore";
 import { useSectionsStore } from "@/stores/sectionsStore";
 import { useRecordsStore } from "@/stores/recordsStore";
 import { useToast } from "vue-toastification";
-import { supabase } from '@/lib/supabase';
+import { supabase } from "@/lib/supabase";
 
 const toast = useToast();
 const classRecordDialog = ref(false);
 const activeSubject = ref("");
 const currentPage = ref(1);
 const itemsPerPage = 6;
+const primaryColor = computed(() => "#004D40");
 
 const classRecordStore = useClassRecordStore();
 const recordsStore = useRecordsStore();
@@ -378,13 +378,13 @@ const subjectsStore = useSubjectsStore();
 const sectionsStore = useSectionsStore();
 
 const subjectOptions = computed(() => {
-  console.log('Subjects in store:', subjectsStore.subjects); // Add this debug line
+  console.log("Subjects in store:", subjectsStore.subjects); // Add this debug line
   return subjectsStore.subjects.map((subject) => subject.title);
 });
 
 const sectionOptions = computed(() => {
-  console.log('Sections in store:', sectionsStore.sections); // Debug log
-  return sectionsStore.sections.map(section => section.code);
+  console.log("Sections in store:", sectionsStore.sections); // Debug log
+  return sectionsStore.sections.map((section) => section.code);
 });
 
 const isLoading = ref(false);
@@ -397,7 +397,7 @@ onMounted(async () => {
     await classRecordStore.fetchAllClassRecordsWithDetails();
     subjects.value = classRecordStore.classRecords;
   } catch (error) {
-    console.error('Error in mounting:', error);
+    console.error("Error in mounting:", error);
   } finally {
     isLoading.value = false;
   }
@@ -459,7 +459,10 @@ const saveClassRecord = async () => {
   const classRecordId = parseInt(addedClassRecordId ?? "0", 10);
 
   if (!isNaN(sectionId) && !isNaN(classRecordId)) {
-    await recordsStore.addRecordsForSection(Number(sectionId), Number(classRecordId));
+    await recordsStore.addRecordsForSection(
+      Number(sectionId),
+      Number(classRecordId)
+    );
   } else {
     console.error("Invalid section or class record ID");
   }

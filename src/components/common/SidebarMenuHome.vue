@@ -65,7 +65,8 @@
           </v-list-item>
         </template>
 
-        <v-list-item to="/profiles" class="submenu-item">
+        <!-- Teacher Profile Link -->
+        <v-list-item to="/teacher/profile" class="submenu-item">
           <template v-slot:prepend>
             <v-icon color="#B49239">mdi-account-circle</v-icon>
           </template>
