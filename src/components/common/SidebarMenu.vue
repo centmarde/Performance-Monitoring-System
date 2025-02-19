@@ -54,6 +54,30 @@
           v-text="item.title"
         ></v-list-item-title>
       </v-list-item>
+      <v-list-group value="Settings">
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props">
+            <template v-slot:prepend>
+              <v-icon color="#B49239">mdi-account</v-icon>
+            </template>
+            <v-list-item-title class="text-white">Settings</v-list-item-title>
+          </v-list-item>
+        </template>
+
+        <v-list-item to="/admin_profiles" class="submenu-item">
+          <template v-slot:prepend>
+            <v-icon color="#B49239">mdi-account-circle</v-icon>
+          </template>
+          <v-list-item-title class="text-white">Profile</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item @click="handleLogoutClick" class="submenu-item">
+          <template v-slot:prepend>
+            <v-icon color="#B49239">mdi-logout</v-icon>
+          </template>
+          <v-list-item-title class="text-white">Logout</v-list-item-title>
+        </v-list-item>
+      </v-list-group>
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -61,6 +85,8 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useUserInfoStore } from "@/stores/userInfo";
+import { doLogout } from "@/lib/supabase";
+
 import Avatar from "@/assets/avatar.png";
 
 // Sidebar State
@@ -73,14 +99,17 @@ onMounted(() => {
   userInfoStore.fetchUserInfo();
 });
 
+function handleLogoutClick() {
+  doLogout();
+  /* router.push("/"); */
+}
+
 // Define the menu with conditional links for Admin and Teachers
 const menu = ref([
   { title: "Users", icon: "mdi-account", href: "/admin" },
   { title: "Teachers", icon: "mdi-account-tie", href: "/teachers" },
- /*  { title: "Settings", icon: "mdi-cog-outline", href: "/settings" }, */
+  /*  { title: "Settings", icon: "mdi-cog-outline", href: "/settings" }, */
 ]);
-
-
 </script>
 
 <style scoped>

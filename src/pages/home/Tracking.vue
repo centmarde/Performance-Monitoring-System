@@ -2,9 +2,7 @@
   <HomeLayout>
     <template #content>
       <v-container>
-
         <v-row justify="start">
-
           <v-col cols="auto">
             <v-card class="pa-3 rounded-card glass-card">
               <h4 class="font-weight-bold text-end">
@@ -16,9 +14,8 @@
         </v-row>
 
         <v-row>
-          <Review/>
+          <Review />
         </v-row>
-    
       </v-container>
     </template>
   </HomeLayout>
@@ -27,7 +24,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import HomeLayout from "@/layouts/HomeLayout.vue";
-
 </script>
 
 <style scoped>

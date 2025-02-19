@@ -1,5 +1,5 @@
 <template>
-  <HomeLayout>
+  <LayoutWrapper>
     <template #content>
       <v-container>
         <v-row>
@@ -172,12 +172,12 @@
         </v-card>
       </v-container>
     </template>
-  </HomeLayout>
+  </LayoutWrapper>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import HomeLayout from "@/layouts/HomeLayout.vue";
+import LayoutWrapper from "@/layouts/LayoutWrapper.vue";
 import { supabase } from "@/lib/supabase";
 import { useToast } from "vue-toastification";
 import { useUserInfoStore } from "@/stores/userInfo";
