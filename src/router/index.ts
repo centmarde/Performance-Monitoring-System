@@ -25,6 +25,7 @@ import Welcome from "@/pages/Welcome.vue";
 import NewRecords from "@/pages/home/NewRecords.vue";
 // @ts-ignore
 import RecentRecords from "@/pages/home/RecentRecords.vue";
+import AdminPorfiles from "@/pages/admin/AdminProfiles.vue";
 
 const toast = useToast();
 
@@ -74,7 +75,12 @@ const routes = setupLayouts([
     name: "tracking",
     meta: { requiresAuth: true, role: "teacher" },
   },
-
+  {
+    path: "/admin_profiles",
+    component: AdminPorfiles,
+    name: "admin_profiles",
+    meta: { requiresAuth: true, role: "admin" },
+  },
   { path: "/:pathMatch(.*)*", component: NotFound, name: "NotFound" },
 ]);
 
@@ -88,7 +94,7 @@ router.beforeEach((to, from, next) => {
   const userRole = localStorage.getItem("Role");
   const publicPages = ["/", "/login"];
 
-  const adminPages = ["/admin", "/teachers", "/teacher_account", "/profiles"];
+  const adminPages = ["/admin", "/teachers", "/teacher_account", "/admin_profiles"];
   // const protectedPages = ["/home", "/profiles", "/admin", "/teachers", "/teacher_account"];
 
   if (to.meta.requiresAuth && !isLoggedIn) {
