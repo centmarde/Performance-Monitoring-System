@@ -64,7 +64,7 @@
           </v-list-item>
         </template>
 
-        <v-list-item to="/profiles" class="submenu-item">
+        <v-list-item to="/admin_profiles" class="submenu-item">
           <template v-slot:prepend>
             <v-icon color="#B49239">mdi-account-circle</v-icon>
           </template>
