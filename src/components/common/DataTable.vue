@@ -30,7 +30,7 @@
               <td>{{ item.complete_address }}</td>
               <td>{{ item.role }}</td>
               <td class="actions-cell">
-                <v-btn @click="editUser(item)" small color="primary"
+                <v-btn :color="primaryColor" @click="editUser(item)" small
                   >Edit</v-btn
                 >
                 <v-btn @click="deleteUser(item.id)" small color="red"
@@ -47,6 +47,8 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from "vue";
+
+const primaryColor = computed(() => "#004D40");
 
 const props = defineProps<{ items: any[] }>();
 const emit = defineEmits(["edit-user", "delete-user"]);
