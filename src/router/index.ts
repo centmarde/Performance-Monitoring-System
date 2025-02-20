@@ -54,7 +54,7 @@ const routes = setupLayouts([
     path: "/profiles",
     component: Profiles,
     name: "Profiles",
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, role: "teacher" },
   },
   {
     path: "/teachers",
