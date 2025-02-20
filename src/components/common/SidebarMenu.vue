@@ -42,52 +42,41 @@
       <v-list-item
         v-for="(item, i) in menu"
         :key="i"
+        :value="item.title"
         active-class="border"
         :ripple="false"
         :to="item.href"
+        class="list-item"
       >
         <template v-slot:prepend>
-          <v-icon :icon="item.icon" color="#B49239"></v-icon>
+          <v-icon :icon="item.icon" color="#B49239" size="20"></v-icon>
         </template>
-        <v-list-item-title
-          class="text-white"
-          v-text="item.title"
-        ></v-list-item-title>
+        <v-list-item-title class="text-white">{{
+          item.title
+        }}</v-list-item-title>
       </v-list-item>
-      <v-list-group value="Settings" class="settings-group">
-        <template v-slot:activator="{ props, isOpen }">
-          <v-list-item
-            v-bind="props"
-            class="settings-item"
-            active-class="v-list-item--active"
-          >
+
+      <!-- Settings Group -->
+      <v-list-group value="Settings">
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" class="list-item">
             <template v-slot:prepend>
-              <v-icon color="#B49239">mdi-cog</v-icon>
+              <v-icon color="#B49239" size="20">mdi-cog</v-icon>
             </template>
             <v-list-item-title class="text-white">Settings</v-list-item-title>
-            <template v-slot:append>
-              <v-icon color="#B49239">{{
-                isOpen ? "mdi-chevron-up" : "mdi-chevron-down"
-              }}</v-icon>
-            </template>
           </v-list-item>
         </template>
 
-        <!-- Submenu Items -->
-        <v-list-item
-          to="/admin_profiles"
-          class="submenu-item"
-          active-class="v-list-item--active"
-        >
+        <v-list-item to="/admin_profiles" class="list-item">
           <template v-slot:prepend>
-            <v-icon color="#B49239" size="small">mdi-account-circle</v-icon>
+            <v-icon color="#B49239" size="20">mdi-account-circle</v-icon>
           </template>
           <v-list-item-title class="text-white">Profile</v-list-item-title>
         </v-list-item>
 
-        <v-list-item @click="handleLogoutClick" class="submenu-item">
+        <v-list-item @click="handleLogoutClick" class="list-item">
           <template v-slot:prepend>
-            <v-icon color="#B49239" size="small">mdi-logout</v-icon>
+            <v-icon color="#B49239" size="20">mdi-logout</v-icon>
           </template>
           <v-list-item-title class="text-white">Logout</v-list-item-title>
         </v-list-item>
@@ -122,12 +111,10 @@ function handleLogoutClick() {
 const menu = ref([
   { title: "Users", icon: "mdi-account", href: "/admin" },
   { title: "Teachers", icon: "mdi-account-tie", href: "/teachers" },
-  /*  { title: "Settings", icon: "mdi-cog-outline", href: "/settings" }, */
 ]);
 </script>
 
 <style scoped>
-/* ✅ Fixed Sidebar Position */
 .fixed-sidebar {
   position: fixed !important;
   top: 0;
@@ -140,7 +127,6 @@ const menu = ref([
   background-color: #004d40;
 }
 
-/* ✅ Toggle Button Inside Sidebar */
 .toggle-btn {
   position: absolute;
   top: 50%;
@@ -153,48 +139,42 @@ const menu = ref([
   color: white;
 }
 
-/* ✅ Adjust Position When Drawer Is Closed */
 .v-navigation-drawer.v-navigation-drawer--mini-variant .toggle-btn {
   right: 0;
 }
 
-/* ✅ Sidebar Content Positioning */
 .v-navigation-drawer__content {
   padding-right: 48px;
   flex-grow: 1;
 }
 
-/* ✅ Active Users Section Styling */
-.active-users {
-  position: absolute;
-  bottom: 16px;
-  left: 0;
-  width: 100%;
-  padding: 16px;
-  background-color: #004d40;
-  color: white;
-}
-.submenu-item {
-  min-height: 40px;
-  padding-left: 32px !important;
-  background-color: rgba(0, 0, 0, 0.1);
+/* Unified list item styling */
+.list-item {
+  padding-left: 16px !important;
+  min-height: 48px !important;
 }
 
-.submenu-item :deep(.v-list-item__content) {
-  padding-left: 8px;
-}
-.menu-item {
-  min-height: 48px;
-  padding: 0 16px;
+.list-item :deep(.v-list-item__content) {
+  padding-left: 12px !important;
 }
 
-.settings-group {
-  margin: 0;
+/* Override v-list-group styles */
+:deep(.v-list-group__items) {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+:deep(.v-list-group__items .v-list-item) {
+  padding-left: 16px !important;
+}
+
+/* Icon alignment */
+.list-item :deep(.v-list-item__prepend) {
+  margin-right: 12px !important;
+}
+
+/* Remove any default margins/padding from the list */
+:deep(.v-list) {
   padding: 0;
-}
-
-.settings-item {
-  min-height: 48px;
-  padding: 0 16px;
 }
 </style>
