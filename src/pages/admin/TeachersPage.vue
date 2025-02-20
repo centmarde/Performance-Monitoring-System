@@ -139,7 +139,7 @@ initializeTeachers();
 }
 
 .teacher-card .v-card-text {
-  flex-grow: 1; /* Makes sure the content stretches */
+  flex-grow: 1;
   width: 100%;
   text-align: center;
 }
