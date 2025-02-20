@@ -1,5 +1,9 @@
 <template>
-  <v-container fluid class="welcome-container" :class="{ 'blur-background': showDialog || showContactDialog }">
+  <v-container
+    fluid
+    class="welcome-container"
+    :class="{ 'blur-background': showDialog || showContactDialog }"
+  >
     <!-- Navigation -->
     <v-app-bar flat class="nav-bar">
       <v-container class="d-flex align-center justify-space-between">
@@ -46,47 +50,45 @@
     </v-container>
 
     <!-- Extra Information Dialog -->
-      <v-dialog v-model="showDialog" max-width="500" persistent>
-        <v-card class="dialog-box">
-          <v-card-title class="text-h5">Complete Your Profile</v-card-title>
-          <v-card-text>
-            <p>We need some extra details to personalize your experience.</p>
+    <v-dialog v-model="showDialog" max-width="500" persistent>
+      <v-card class="dialog-box">
+        <v-card-title class="text-h5">Complete Your Profile</v-card-title>
+        <v-card-text>
+          <p>We need some extra details to personalize your experience.</p>
 
-            <v-text-field
-              label="First Name"
-              v-model="extraInfo.firstname"
-              outlined
-              required
-            ></v-text-field>
-            <v-text-field
-              label="Last Name"
-              v-model="extraInfo.lastname"
-              outlined
-              required
-            ></v-text-field>
-            <v-text-field
-              label="Phone Number"
-              v-model="extraInfo.phone"
-              outlined
-              type="tel"
-              required
-            ></v-text-field>
-            <v-textarea
-              label="Complete Address"
-              v-model="extraInfo.complete_address"
-              outlined
-              required
-              clearable
-            ></v-textarea>
-          </v-card-text>
-          <v-card-actions class="justify-end">
-            <v-btn class="outline-btn" @click="showDialog = false">Skip</v-btn>
-            <v-btn class="primary-btn" @click="saveExtraInfo">Save</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-   
+          <v-text-field
+            label="First Name"
+            v-model="extraInfo.firstname"
+            outlined
+            required
+          ></v-text-field>
+          <v-text-field
+            label="Last Name"
+            v-model="extraInfo.lastname"
+            outlined
+            required
+          ></v-text-field>
+          <v-text-field
+            label="Phone Number"
+            v-model="extraInfo.phone"
+            outlined
+            type="tel"
+            required
+          ></v-text-field>
+          <v-textarea
+            label="Complete Address"
+            v-model="extraInfo.complete_address"
+            outlined
+            required
+            clearable
+          ></v-textarea>
+        </v-card-text>
+        <v-card-actions class="justify-end">
+          <v-btn class="outline-btn" @click="showDialog = false">Skip</v-btn>
+          <v-btn class="primary-btn" @click="saveExtraInfo">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -245,7 +247,7 @@ onMounted(() => {
 
 /* Dialog Box */
 .dialog-box {
-  background-color: #E3F2FD;
+  background-color: #e3f2fd;
   color: #004d40;
 }
 
