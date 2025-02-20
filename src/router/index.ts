@@ -94,7 +94,12 @@ router.beforeEach((to, from, next) => {
   const userRole = localStorage.getItem("Role");
   const publicPages = ["/", "/login"];
 
-  const adminPages = ["/admin", "/teachers", "/teacher_account", "/admin_profiles"];
+  const adminPages = [
+    "/admin",
+    "/teachers",
+    "/teacher_account",
+    "/admin_profiles",
+  ];
   // const protectedPages = ["/home", "/profiles", "/admin", "/teachers", "/teacher_account"];
 
   if (to.meta.requiresAuth && !isLoggedIn) {
