@@ -92,7 +92,7 @@ export default defineComponent({
             barWidth: "60%",
             data: [...sectionData.map((section) => section.students.length)],
             itemStyle: {
-              color: "#2E7D6F",
+              color: "#fffff",
               borderRadius: [5, 5, 0, 0],
             },
             emphasis: {
