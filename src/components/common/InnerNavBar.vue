@@ -8,7 +8,9 @@
 
     <!-- Move Dark Mode Icon & Clock to the End -->
     <v-container class="d-flex align-center justify-end" style="width: auto">
-      <v-icon class="me-3" @click="toggleTheme">{{ themeIcon }}</v-icon>
+      <v-icon class="theme-toggle-btn me-3" @click="toggleTheme">{{
+        themeIcon
+      }}</v-icon>
       <v-toolbar-title class="clock">{{ currentTime }}</v-toolbar-title>
     </v-container>
 
@@ -91,6 +93,29 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.theme-toggle-btn {
+  background-color: rgba(255, 255, 255, 0.2); /* Subtle contrast */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.bg-dark-mode .theme-toggle-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.bg-light-mode .theme-toggle-btn {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
 /* Light Mode Navbar (Matches Sidebar) */
 .bg-light-mode {
   background-color: #004d40 !important; /* Dark Teal */

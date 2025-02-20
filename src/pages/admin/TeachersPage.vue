@@ -34,13 +34,23 @@
                       alt="Teacher Avatar"
                     />
                   </v-avatar>
-                  <div class="mt-2 font-weight-bold">{{ teacher.firstname || "N/A" }}</div>
-                  <div class="text-caption text-muted">{{ teacher.email || "broken email" }}</div>
+                  <div class="mt-2 font-weight-bold">
+                    {{ teacher.firstname || "N/A" }}
+                  </div>
+                  <div class="text-caption text-muted">
+                    {{ teacher.email || "broken email" }}
+                  </div>
                 </v-card-title>
                 <v-card-text>
                   <div class="font-weight-bold">Subjects Handled:</div>
                   <div class="subjects-list">
-                    <span v-for="(subject, i) in (teacher.subjects.length ? teacher.subjects : ['N/A'])" :key="i" class="subject-item">
+                    <span
+                      v-for="(subject, i) in teacher.subjects.length
+                        ? teacher.subjects
+                        : ['N/A']"
+                      :key="i"
+                      class="subject-item"
+                    >
                       {{ subject }}
                     </span>
                   </div>
@@ -49,7 +59,9 @@
                   <div class="text-muted">{{ teacher.phone || "N/A" }}</div>
 
                   <div class="mt-2 font-weight-bold">Address:</div>
-                  <div class="text-muted">{{ teacher.complete_address || "N/A" }}</div>
+                  <div class="text-muted">
+                    {{ teacher.complete_address || "N/A" }}
+                  </div>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -127,7 +139,7 @@ initializeTeachers();
 }
 
 .teacher-card .v-card-text {
-  flex-grow: 1; /* Makes sure the content stretches */
+  flex-grow: 1;
   width: 100%;
   text-align: center;
 }
@@ -137,6 +149,7 @@ initializeTeachers();
   flex-wrap: wrap;
   gap: 8px;
   justify-content: center;
+  color: black;
 }
 
 .subject-item {
