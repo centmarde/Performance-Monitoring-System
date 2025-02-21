@@ -9,9 +9,6 @@
                 Add User
               </v-btn> -->
             </v-col>
-            <v-col cols="4" class="mx-3">
-              <SearchBar v-model="searchQuery" />
-            </v-col>
           </v-row>
 
           <!-- Add User Dialog -->

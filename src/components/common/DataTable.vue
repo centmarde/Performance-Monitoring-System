@@ -1,9 +1,14 @@
 <template>
   <v-container>
     <v-card class="data-card">
-      <v-card-title class="d-flex justify-space-between align-center">
-        <span class="text-h6">User List</span>
-      </v-card-title>
+      <v-row class="align-center mb-1">
+        <v-col cols="6">
+          <v-card-title class="text-h6">User List</v-card-title>
+        </v-col>
+        <v-col cols="6" class="d-flex justify-end">
+          <SearchBar v-model="searchQuery" />
+        </v-col>
+      </v-row>
 
       <v-divider></v-divider>
       <v-card-text>
@@ -48,8 +53,27 @@
 <script setup lang="ts">
 import { defineProps, defineEmits } from "vue";
 
+const searchQuery = ref("");
+
 const primaryColor = computed(() => "#004D40");
 
+const filteredItems = computed(() => {
+  console.log("Search Query:", searchQuery.value);
+  if (!searchQuery.value) return items.value;
+  return items.value.filter((user) =>
+    [
+      user.id.toString(),
+      user.email,
+      user.firstname,
+      user.lastname,
+      user.phone,
+      user.complete_address,
+      user.user_type,
+    ].some((field) =>
+      field?.toLowerCase().includes(searchQuery.value.toLowerCase())
+    )
+  );
+});
 const props = defineProps<{ items: any[] }>();
 const emit = defineEmits(["edit-user", "delete-user"]);
 
