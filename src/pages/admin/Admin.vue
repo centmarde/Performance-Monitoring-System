@@ -177,10 +177,9 @@
             @delete-user="promptDeleteUser"
           />
 
-          <!-- Pagination Controls -->
-          <v-row class="d-flex align-center justify-space-between mt-4">
-            <!-- Pagination centered -->
-            <v-col class="d-flex justify-center">
+          <v-container class="mt-4">
+            <v-row class="align-center justify-center">
+              <!-- Pagination centered under the table -->
               <v-pagination
                 v-model="currentPage"
                 :length="totalPages"
@@ -189,22 +188,22 @@
                 active-color="black"
                 density="comfortable"
               ></v-pagination>
-            </v-col>
+            </v-row>
 
-            <!-- Items per page dropdown aligned to the right -->
-            <v-col cols="auto" class="d-flex justify-end">
-              <v-select
-                v-model="itemsPerPage"
-                :items="[3, 10, 20, 30, 50, 100]"
-                label="Items per page"
-                dense
-                outlined
-                min-width="150"
-                class="mt-0"
-                @change="handleItemsPerPageChange"
-              />
-            </v-col>
-          </v-row>
+            <v-row class="align-center justify-end mt-2">
+              <v-col cols="auto">
+                <v-select
+                  v-model="itemsPerPage"
+                  :items="[3, 10, 20, 30, 50, 100]"
+                  label="Items per page"
+                  dense
+                  outlined
+                  style="max-width: 150px"
+                  @change="handleItemsPerPageChange"
+                />
+              </v-col>
+            </v-row>
+          </v-container>
         </div>
       </v-container>
     </template>
