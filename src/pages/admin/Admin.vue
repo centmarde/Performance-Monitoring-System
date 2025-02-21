@@ -179,7 +179,6 @@
 
           <v-container class="mt-4">
             <v-row class="align-center justify-center">
-              <!-- Pagination centered under the table -->
               <v-pagination
                 v-model="currentPage"
                 :length="totalPages"
@@ -198,7 +197,7 @@
                   label="Items per page"
                   dense
                   outlined
-                  style="max-width: 150px"
+                  style="min-width: 150px; max-width: 200px"
                   @change="handleItemsPerPageChange"
                 />
               </v-col>
