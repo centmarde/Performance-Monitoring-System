@@ -294,11 +294,6 @@ const isEditUserValid = computed(() => {
 });
 
 // Paginated Items (dynamic based on selected itemsPerPage)
-const paginatedItems = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return filteredItems.value.slice(start, end);
-});
 
 // Pagination methods
 const nextPage = () => {
