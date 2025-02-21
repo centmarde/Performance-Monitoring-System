@@ -293,24 +293,6 @@ const isEditUserValid = computed(() => {
   );
 });
 
-const filteredItems = computed(() => {
-  console.log("Search Query:", searchQuery.value);
-  if (!searchQuery.value) return items.value;
-  return items.value.filter((user) =>
-    [
-      user.id.toString(),
-      user.email,
-      user.firstname,
-      user.lastname,
-      user.phone,
-      user.complete_address,
-      user.user_type,
-    ].some((field) =>
-      field?.toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
-  );
-});
-
 // Paginated Items (dynamic based on selected itemsPerPage)
 const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
