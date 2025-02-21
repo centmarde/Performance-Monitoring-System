@@ -52,10 +52,9 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from "vue";
+const props = defineProps<{ items: any[] }>();
 
 const searchQuery = ref("");
-
-const primaryColor = computed(() => "#004D40");
 
 const filteredItems = computed(() => {
   if (!searchQuery.value) return props.items;
@@ -73,6 +72,8 @@ const filteredItems = computed(() => {
     )
   );
 });
+
+const primaryColor = computed(() => "#004D40");
 
 const emit = defineEmits(["edit-user", "delete-user"]);
 
