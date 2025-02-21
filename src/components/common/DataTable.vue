@@ -64,6 +64,7 @@ const searchQuery = ref("");
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
 
+// **Filter the items before paginating**
 const filteredItems = computed(() => {
   if (!searchQuery.value) return props.items;
   return props.items.filter((user) =>
