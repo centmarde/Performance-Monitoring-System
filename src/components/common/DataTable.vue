@@ -81,6 +81,10 @@ const filteredItems = computed(() => {
     )
   );
 });
+// **Apply pagination AFTER filtering**
+const totalPages = computed(() =>
+  Math.ceil(filteredItems.value.length / itemsPerPage.value)
+);
 
 const primaryColor = computed(() => "#004D40");
 
