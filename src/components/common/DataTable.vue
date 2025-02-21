@@ -6,7 +6,7 @@
           <v-card-title class="text-h6">User List</v-card-title>
         </v-col>
         <v-col cols="6" class="d-flex justify-end">
-          <SearchBar v-model="searchQuery" :disabled="!props.items.length" />
+          <SearchBar v-model="searchQuery" />
         </v-col>
       </v-row>
 
@@ -15,29 +15,18 @@
         <v-table class="styled-table">
           <thead>
             <tr>
-              <th
-                v-for="header in [
-                  'ID',
-                  'Email',
-                  'First Name',
-                  'Last Name',
-                  'Phone',
-                  'Address',
-                  'Role',
-                  'Actions',
-                ]"
-                :key="header"
-                :class="[
-                  'text-left',
-                  header === 'Actions' ? 'actions-header' : '',
-                ]"
-              >
-                {{ header }}
-              </th>
+              <th class="text-left">ID</th>
+              <th class="text-left">Email</th>
+              <th class="text-left">First Name</th>
+              <th class="text-left">Last Name</th>
+              <th class="text-left">Phone</th>
+              <th class="text-left">Address</th>
+              <th class="text-left">Role</th>
+              <th class="text-center actions-header">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in paginatedItems" :key="item.id">
+            <tr v-for="item in filteredItems" :key="item.id">
               <td>{{ item.id }}</td>
               <td>{{ item.email }}</td>
               <td>{{ item.firstname }}</td>
@@ -46,96 +35,48 @@
               <td>{{ item.complete_address }}</td>
               <td>{{ item.role }}</td>
               <td class="actions-cell">
-                <v-btn
-                  :color="primaryColor"
-                  @click="editUser(item)"
-                  size="small"
+                <v-btn :color="primaryColor" @click="editUser(item)" small
+                  >Edit</v-btn
                 >
-                  Edit
-                </v-btn>
-                <v-btn color="error" @click="deleteUser(item.id)" size="small">
-                  Delete
-                </v-btn>
+                <v-btn @click="deleteUser(item.id)" small color="red"
+                  >Delete</v-btn
+                >
               </td>
             </tr>
           </tbody>
         </v-table>
-
-        <v-pagination
-          v-if="totalPages > 1"
-          v-model="currentPage"
-          :length="totalPages"
-          :total-visible="7"
-          class="mt-3"
-        ></v-pagination>
       </v-card-text>
     </v-card>
   </v-container>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, defineProps, defineEmits } from "vue";
 
 const props = defineProps<{ items: any[] }>();
+
 const searchQuery = ref("");
-const currentPage = ref(1);
-const itemsPerPage = ref(10);
 
-const primaryColor = computed(() => "#004D40");
-
-// Filtered items computed property
 const filteredItems = computed(() => {
-  if (!searchQuery.value.trim()) return props.items;
-
-  const query = searchQuery.value.toLowerCase();
-  return props.items.filter((user) => {
-    return [
-      user.id?.toString(),
+  if (!searchQuery.value) return props.items;
+  return props.items.filter((user) =>
+    [
+      user.id.toString(),
       user.email,
       user.firstname,
       user.lastname,
       user.phone,
       user.complete_address,
       user.user_type,
-    ].some((field) => field?.toLowerCase().includes(query));
-  });
+    ].some((field) =>
+      field?.toLowerCase().includes(searchQuery.value.toLowerCase())
+    )
+  );
 });
 
-// Calculate total pages
-const totalPages = computed(
-  () => Math.ceil(filteredItems.value.length / itemsPerPage.value) || 1
-);
+const primaryColor = computed(() => "#004D40");
 
-// Watch for changes that should reset pagination
-watch(
-  [searchQuery, () => props.items],
-  () => {
-    // Defer the page reset to avoid recursive updates
-    nextTick(() => {
-      currentPage.value = 1;
-    });
-  },
-  { deep: true }
-);
-
-// Watch to ensure currentPage stays within bounds
-watch([currentPage, totalPages], ([newPage, totalPages]) => {
-  if (newPage > totalPages) {
-    currentPage.value = totalPages;
-  }
-});
-
-// Paginated items computed property
-const paginatedItems = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return filteredItems.value.slice(start, end);
-});
-
-const emit = defineEmits<{
-  (e: "edit-user", user: any): void;
-  (e: "delete-user", id: number): void;
-}>();
+const emit = defineEmits(["edit-user", "delete-user"]);
 
 const editUser = (user: any) => {
   emit("edit-user", user);
@@ -144,9 +85,43 @@ const editUser = (user: any) => {
 const deleteUser = (id: number) => {
   emit("delete-user", id);
 };
-
-// Initialize component
-onMounted(() => {
-  currentPage.value = 1;
-});
 </script>
+
+<style scoped>
+.data-card {
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 77, 64, 0.5);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 0 10px #004d40;
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.styled-table th,
+.styled-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.styled-table th {
+  background: #004d40;
+  color: white;
+}
+
+.actions-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  vertical-align: middle;
+}
+</style>

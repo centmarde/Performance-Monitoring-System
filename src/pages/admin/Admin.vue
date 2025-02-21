@@ -232,7 +232,7 @@ const showAddUserForm = ref(false);
 const showEditUserForm = ref(false);
 const showDeleteConfirmation = ref(false);
 const userToDelete = ref<number | null>(null);
-
+const searchQuery = ref("");
 const newUser = ref<User>({
   id: 0,
   name: "",
@@ -292,6 +292,44 @@ const isEditUserValid = computed(() => {
     (editedUser.value.complete_address?.trim() || "").length > 0
   );
 });
+
+const filteredItems = computed(() => {
+  console.log("Search Query:", searchQuery.value);
+  if (!searchQuery.value) return items.value;
+  return items.value.filter((user) =>
+    [
+      user.id.toString(),
+      user.email,
+      user.firstname,
+      user.lastname,
+      user.phone,
+      user.complete_address,
+      user.user_type,
+    ].some((field) =>
+      field?.toLowerCase().includes(searchQuery.value.toLowerCase())
+    )
+  );
+});
+
+// Paginated Items (dynamic based on selected itemsPerPage)
+const paginatedItems = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredItems.value.slice(start, end);
+});
+
+// Pagination methods
+const nextPage = () => {
+  if (currentPage.value * itemsPerPage.value < filteredItems.value.length) {
+    currentPage.value += 1;
+  }
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value -= 1;
+  }
+};
 
 onMounted(async () => {
   try {
