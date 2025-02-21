@@ -6,7 +6,7 @@
           <v-card-title class="text-h6">User List</v-card-title>
         </v-col>
         <v-col cols="6" class="d-flex justify-end">
-          <SearchBar v-model="searchQuery" />
+          <SearchBar v-model="searchQuery" :disabled="!props.items.length" />
         </v-col>
       </v-row>
 
@@ -15,14 +15,25 @@
         <v-table class="styled-table">
           <thead>
             <tr>
-              <th class="text-left">ID</th>
-              <th class="text-left">Email</th>
-              <th class="text-left">First Name</th>
-              <th class="text-left">Last Name</th>
-              <th class="text-left">Phone</th>
-              <th class="text-left">Address</th>
-              <th class="text-left">Role</th>
-              <th class="text-center actions-header">Actions</th>
+              <th
+                v-for="header in [
+                  'ID',
+                  'Email',
+                  'First Name',
+                  'Last Name',
+                  'Phone',
+                  'Address',
+                  'Role',
+                  'Actions',
+                ]"
+                :key="header"
+                :class="[
+                  'text-left',
+                  header === 'Actions' ? 'actions-header' : '',
+                ]"
+              >
+                {{ header }}
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -35,21 +46,26 @@
               <td>{{ item.complete_address }}</td>
               <td>{{ item.role }}</td>
               <td class="actions-cell">
-                <v-btn :color="primaryColor" @click="editUser(item)" small
-                  >Edit</v-btn
+                <v-btn
+                  :color="primaryColor"
+                  @click="editUser(item)"
+                  size="small"
                 >
-                <v-btn @click="deleteUser(item.id)" small color="red"
-                  >Delete</v-btn
-                >
+                  Edit
+                </v-btn>
+                <v-btn color="error" @click="deleteUser(item.id)" size="small">
+                  Delete
+                </v-btn>
               </td>
             </tr>
           </tbody>
         </v-table>
 
-        <!-- Pagination Controls -->
         <v-pagination
+          v-if="totalPages > 1"
           v-model="currentPage"
           :length="totalPages"
+          :total-visible="7"
           class="mt-3"
         ></v-pagination>
       </v-card-text>
@@ -58,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watchEffect, defineProps, defineEmits } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 
 const props = defineProps<{ items: any[] }>();
 const searchQuery = ref("");
@@ -67,40 +83,59 @@ const itemsPerPage = ref(10);
 
 const primaryColor = computed(() => "#004D40");
 
-// **Filter items before pagination**
+// Filtered items computed property
 const filteredItems = computed(() => {
-  if (!searchQuery.value) return props.items;
-  return props.items.filter((user) =>
-    [
-      user.id.toString(),
+  if (!searchQuery.value.trim()) return props.items;
+
+  const query = searchQuery.value.toLowerCase();
+  return props.items.filter((user) => {
+    return [
+      user.id?.toString(),
       user.email,
       user.firstname,
       user.lastname,
       user.phone,
       user.complete_address,
       user.user_type,
-    ].some((field) =>
-      field?.toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
-  );
+    ].some((field) => field?.toLowerCase().includes(query));
+  });
 });
 
-// **Pagination Fix: Reset page when search changes**
-watchEffect(() => {
-  currentPage.value = 1; // Reset to page 1 when search changes
-});
-
-const totalPages = computed(() =>
-  Math.max(1, Math.ceil(filteredItems.value.length / itemsPerPage.value))
+// Calculate total pages
+const totalPages = computed(
+  () => Math.ceil(filteredItems.value.length / itemsPerPage.value) || 1
 );
 
-// **Paginate AFTER filtering**
-const paginatedItems = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  return filteredItems.value.slice(start, start + itemsPerPage.value);
+// Watch for changes that should reset pagination
+watch(
+  [searchQuery, () => props.items],
+  () => {
+    // Defer the page reset to avoid recursive updates
+    nextTick(() => {
+      currentPage.value = 1;
+    });
+  },
+  { deep: true }
+);
+
+// Watch to ensure currentPage stays within bounds
+watch([currentPage, totalPages], ([newPage, totalPages]) => {
+  if (newPage > totalPages) {
+    currentPage.value = totalPages;
+  }
 });
 
-const emit = defineEmits(["edit-user", "delete-user"]);
+// Paginated items computed property
+const paginatedItems = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredItems.value.slice(start, end);
+});
+
+const emit = defineEmits<{
+  (e: "edit-user", user: any): void;
+  (e: "delete-user", id: number): void;
+}>();
 
 const editUser = (user: any) => {
   emit("edit-user", user);
@@ -109,4 +144,9 @@ const editUser = (user: any) => {
 const deleteUser = (id: number) => {
   emit("delete-user", id);
 };
+
+// Initialize component
+onMounted(() => {
+  currentPage.value = 1;
+});
 </script>

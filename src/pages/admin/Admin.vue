@@ -232,7 +232,7 @@ const showAddUserForm = ref(false);
 const showEditUserForm = ref(false);
 const showDeleteConfirmation = ref(false);
 const userToDelete = ref<number | null>(null);
-const searchQuery = ref("");
+
 const newUser = ref<User>({
   id: 0,
   name: "",
