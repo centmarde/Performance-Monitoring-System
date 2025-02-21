@@ -178,9 +178,9 @@
           />
 
           <!-- Pagination Controls -->
-          <v-row justify="center" class="mt-4">
-            <!-- Pagination Controls -->
-            <v-container class="d-flex justify-center mt-4">
+          <v-row class="d-flex align-center justify-space-between mt-4">
+            <!-- Pagination centered -->
+            <v-col class="d-flex justify-center">
               <v-pagination
                 v-model="currentPage"
                 :length="totalPages"
@@ -189,11 +189,10 @@
                 active-color="black"
                 density="comfortable"
               ></v-pagination>
-            </v-container>
+            </v-col>
 
             <!-- Items per page dropdown aligned to the right -->
-            <v-spacer></v-spacer>
-            <v-col cols="auto" class="d-flex">
+            <v-col cols="auto" class="d-flex justify-end">
               <v-select
                 v-model="itemsPerPage"
                 :items="[3, 10, 20, 30, 50, 100]"
