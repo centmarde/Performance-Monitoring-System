@@ -26,7 +26,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in items" :key="item.id">
+            <tr v-for="item in filteredItems" :key="item.id">
               <td>{{ item.id }}</td>
               <td>{{ item.email }}</td>
               <td>{{ item.firstname }}</td>
@@ -52,6 +52,7 @@
 
 <script setup lang="ts">
 import { defineProps, defineEmits } from "vue";
+
 const props = defineProps<{ items: any[] }>();
 
 const searchQuery = ref("");
