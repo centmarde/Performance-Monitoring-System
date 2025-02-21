@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineProps, defineEmits } from "vue";
+import { ref, computed, watchEffect, defineProps, defineEmits } from "vue";
 
 const props = defineProps<{ items: any[] }>();
 const searchQuery = ref("");
@@ -67,7 +67,7 @@ const itemsPerPage = ref(10);
 
 const primaryColor = computed(() => "#004D40");
 
-// **Filter the items before paginating**
+// **Filter items before pagination**
 const filteredItems = computed(() => {
   if (!searchQuery.value) return props.items;
   return props.items.filter((user) =>
@@ -85,11 +85,16 @@ const filteredItems = computed(() => {
   );
 });
 
-// **Apply pagination AFTER filtering**
+// **Pagination Fix: Reset page when search changes**
+watchEffect(() => {
+  currentPage.value = 1; // Reset to page 1 when search changes
+});
+
 const totalPages = computed(() =>
-  Math.ceil(filteredItems.value.length / itemsPerPage.value)
+  Math.max(1, Math.ceil(filteredItems.value.length / itemsPerPage.value))
 );
 
+// **Paginate AFTER filtering**
 const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   return filteredItems.value.slice(start, start + itemsPerPage.value);
