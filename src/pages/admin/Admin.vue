@@ -293,10 +293,6 @@ const isEditUserValid = computed(() => {
   );
 });
 
-// Paginated Items (dynamic based on selected itemsPerPage)
-
-// Pagination methods
-
 onMounted(async () => {
   try {
     const {
