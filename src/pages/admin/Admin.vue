@@ -186,6 +186,7 @@
                 rounded
                 active-color="black"
                 density="comfortable"
+                class="custom-pagination"
               ></v-pagination>
             </v-row>
 
@@ -193,7 +194,7 @@
               <v-col cols="auto">
                 <v-select
                   v-model="itemsPerPage"
-                  :items="[3, 10, 20, 30, 50, 100]"
+                  :items="[10, 20, 30, 50, 100]"
                   label="Items per page"
                   dense
                   outlined
@@ -475,3 +476,16 @@ const confirmDeleteUser = async () => {
   }
 };
 </script>
+<style scoped>
+/* Light Mode */
+:deep(.v-pagination__item--active) {
+  background-color: #e0e0e0 !important;
+  color: black !important;
+}
+
+/* Dark Mode */
+.dark-mode :deep(.v-pagination__item--active) {
+  background-color: #333 !important;
+  color: white !important;
+}
+</style>

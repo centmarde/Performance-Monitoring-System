@@ -92,7 +92,7 @@ const deleteUser = (id: number) => {
 .styled-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin-top: 0;
 }
 
 .styled-table th,
