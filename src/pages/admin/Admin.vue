@@ -179,20 +179,21 @@
 
           <!-- Pagination Controls -->
           <v-row justify="center" class="mt-4">
-            <v-btn @click="prevPage" :disabled="currentPage === 1">Prev</v-btn>
-            <span class="mx-4">
-              Page {{ currentPage }} of {{ totalPages }}
-            </span>
-            <v-btn @click="nextPage" :disabled="currentPage >= totalPages"
-              >Next</v-btn
-            >
+            <v-container class="d-flex justify-center mt-4">
+              <v-pagination
+                v-model="currentPage"
+                :length="totalPages"
+                rounded
+                color="grey"
+              ></v-pagination>
+            </v-container>
 
             <!-- Items per page dropdown aligned to the right -->
             <v-spacer></v-spacer>
             <v-col cols="auto" class="d-flex">
               <v-select
                 v-model="itemsPerPage"
-                :items="[3, 5, 10, 20, 30, 50, 100]"
+                :items="[10, 20, 30, 50, 100]"
                 label="Items per page"
                 dense
                 outlined
