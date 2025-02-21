@@ -57,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
+import { ref, computed, defineProps, defineEmits } from "vue";
 
 const props = defineProps<{ items: any[] }>();
 
