@@ -58,9 +58,8 @@ const searchQuery = ref("");
 const primaryColor = computed(() => "#004D40");
 
 const filteredItems = computed(() => {
-  console.log("Search Query:", searchQuery.value);
-  if (!searchQuery.value) return items.value;
-  return items.value.filter((user) =>
+  if (!searchQuery.value) return props.items;
+  return props.items.filter((user) =>
     [
       user.id.toString(),
       user.email,
