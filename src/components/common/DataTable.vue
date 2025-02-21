@@ -73,7 +73,7 @@ const filteredItems = computed(() => {
     )
   );
 });
-const props = defineProps<{ items: any[] }>();
+
 const emit = defineEmits(["edit-user", "delete-user"]);
 
 const editUser = (user: any) => {
