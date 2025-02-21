@@ -45,6 +45,12 @@
             </tr>
           </tbody>
         </v-table>
+        <!-- Pagination Controls -->
+        <v-pagination
+          v-model="currentPage"
+          :length="totalPages"
+          class="mt-3"
+        ></v-pagination>
       </v-card-text>
     </v-card>
   </v-container>
