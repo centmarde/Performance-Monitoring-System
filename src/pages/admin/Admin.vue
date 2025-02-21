@@ -179,12 +179,15 @@
 
           <!-- Pagination Controls -->
           <v-row justify="center" class="mt-4">
+            <!-- Pagination Controls -->
             <v-container class="d-flex justify-center mt-4">
               <v-pagination
                 v-model="currentPage"
                 :length="totalPages"
+                :total-visible="3"
                 rounded
-                color="grey"
+                active-color="black"
+                density="comfortable"
               ></v-pagination>
             </v-container>
 
