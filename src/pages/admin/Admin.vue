@@ -297,12 +297,6 @@ const isEditUserValid = computed(() => {
 
 // Pagination methods
 
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value -= 1;
-  }
-};
-
 onMounted(async () => {
   try {
     const {
