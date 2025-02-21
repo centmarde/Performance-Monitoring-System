@@ -296,11 +296,6 @@ const isEditUserValid = computed(() => {
 // Paginated Items (dynamic based on selected itemsPerPage)
 
 // Pagination methods
-const nextPage = () => {
-  if (currentPage.value * itemsPerPage.value < filteredItems.value.length) {
-    currentPage.value += 1;
-  }
-};
 
 const prevPage = () => {
   if (currentPage.value > 1) {
