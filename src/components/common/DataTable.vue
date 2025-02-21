@@ -60,8 +60,9 @@
 import { ref, computed, defineProps, defineEmits } from "vue";
 
 const props = defineProps<{ items: any[] }>();
-
 const searchQuery = ref("");
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
 
 const filteredItems = computed(() => {
   if (!searchQuery.value) return props.items;
