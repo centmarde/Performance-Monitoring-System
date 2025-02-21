@@ -6,7 +6,10 @@
           <v-card-title class="text-h6">User List</v-card-title>
         </v-col>
         <v-col cols="6" class="d-flex justify-end">
-          <SearchBar v-model="searchQuery" />
+          <SearchBar
+            :model-value="searchQuery"
+            @update:model-value="$emit('update:searchQuery', $event)"
+          />
         </v-col>
       </v-row>
 
@@ -26,7 +29,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in filteredItems" :key="item.id">
+            <tr v-for="item in items" :key="item.id">
               <td>{{ item.id }}</td>
               <td>{{ item.email }}</td>
               <td>{{ item.firstname }}</td>
@@ -51,32 +54,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineProps, defineEmits } from "vue";
+import { computed } from "vue";
 
-const props = defineProps<{ items: any[] }>();
-
-const searchQuery = ref("");
-
-const filteredItems = computed(() => {
-  if (!searchQuery.value) return props.items;
-  return props.items.filter((user) =>
-    [
-      user.id.toString(),
-      user.email,
-      user.firstname,
-      user.lastname,
-      user.phone,
-      user.complete_address,
-      user.user_type,
-    ].some((field) =>
-      field?.toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
-  );
-});
+const props = defineProps<{
+  items: any[];
+  searchQuery: string;
+}>();
 
 const primaryColor = computed(() => "#004D40");
 
-const emit = defineEmits(["edit-user", "delete-user"]);
+const emit = defineEmits<{
+  (e: "edit-user", user: any): void;
+  (e: "delete-user", id: number): void;
+  (e: "update:searchQuery", value: string): void;
+}>();
 
 const editUser = (user: any) => {
   emit("edit-user", user);
