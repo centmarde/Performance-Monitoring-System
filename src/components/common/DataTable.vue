@@ -45,6 +45,7 @@
             </tr>
           </tbody>
         </v-table>
+
         <!-- Pagination Controls -->
         <v-pagination
           v-model="currentPage"
@@ -64,6 +65,8 @@ const searchQuery = ref("");
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
 
+const primaryColor = computed(() => "#004D40");
+
 // **Filter the items before paginating**
 const filteredItems = computed(() => {
   if (!searchQuery.value) return props.items;
@@ -81,16 +84,16 @@ const filteredItems = computed(() => {
     )
   );
 });
+
 // **Apply pagination AFTER filtering**
 const totalPages = computed(() =>
   Math.ceil(filteredItems.value.length / itemsPerPage.value)
 );
+
 const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   return filteredItems.value.slice(start, start + itemsPerPage.value);
 });
-
-const primaryColor = computed(() => "#004D40");
 
 const emit = defineEmits(["edit-user", "delete-user"]);
 
@@ -102,42 +105,3 @@ const deleteUser = (id: number) => {
   emit("delete-user", id);
 };
 </script>
-
-<style scoped>
-.data-card {
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(0, 77, 64, 0.5);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 0 10px #004d40;
-}
-
-.styled-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-}
-
-.styled-table th,
-.styled-table td {
-  padding: 12px;
-  border-bottom: 1px solid #ddd;
-  text-align: left;
-  vertical-align: middle;
-}
-
-.styled-table th {
-  background: #004d40;
-  color: white;
-}
-
-.actions-cell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  vertical-align: middle;
-}
-</style>
