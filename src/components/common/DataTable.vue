@@ -85,6 +85,10 @@ const filteredItems = computed(() => {
 const totalPages = computed(() =>
   Math.ceil(filteredItems.value.length / itemsPerPage.value)
 );
+const paginatedItems = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  return filteredItems.value.slice(start, start + itemsPerPage.value);
+});
 
 const primaryColor = computed(() => "#004D40");
 
