@@ -189,7 +189,7 @@
             <v-col cols="auto" class="d-flex">
               <v-select
                 v-model="itemsPerPage"
-                :items="[10, 20, 30, 50, 100]"
+                :items="[3, 5, 10, 20, 30, 50, 100]"
                 label="Items per page"
                 dense
                 outlined
