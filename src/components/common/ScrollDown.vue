@@ -75,7 +75,7 @@ a {
 
 .main__scroll-text {
   color: rgb(28, 29, 30);
-  display: none; /* Hide text to make it more compact */
+  display: none;
 }
 
 .main__action:hover .main__scroll-box {
