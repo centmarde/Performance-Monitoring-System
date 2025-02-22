@@ -50,7 +50,6 @@ const themeIcon = computed(() =>
   isDarkTheme.value ? "mdi-weather-sunny" : "mdi-weather-night"
 );
 
-// Toggle light/dark mode
 function toggleTheme() {
   const newTheme = isDarkTheme.value ? "light" : "dark";
   theme.global.name.value = newTheme;
