@@ -132,7 +132,7 @@ onUnmounted(() => {
 
 /* Improve Readability of Title */
 .text-dark-title {
-  color: white !important; /* Strong contrast */
+  color: white !important;
   font-size: 1.2rem;
   font-weight: bold;
   text-transform: uppercase;
