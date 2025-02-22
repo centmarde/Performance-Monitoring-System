@@ -116,7 +116,6 @@ onUnmounted(() => {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* Light Mode Navbar (Matches Sidebar) */
 .bg-light-mode {
   background-color: #004d40 !important;
   color: white;
