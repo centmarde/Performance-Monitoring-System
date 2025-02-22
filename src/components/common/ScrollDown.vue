@@ -13,47 +13,49 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted } from 'vue';
-import { useTheme } from 'vuetify';
+import { ref, computed, onMounted } from "vue";
+import { useTheme } from "vuetify";
 
 const theme = useTheme();
 const isAtBottom = ref(false);
 
-const iconColor = computed(() => (theme.global.current.value.dark ? 'rgba(255,255,255,1)' : 'rgba(28,28,30,1)'));
+const iconColor = computed(() =>
+  theme.global.current.value.dark ? "rgba(255,255,255,1)" : "rgba(28,28,30,1)"
+);
 
-const arrowPath = computed(() => 
-  isAtBottom.value 
-    ? 'M11.9997 10.8284L16.9495 15.7781L18.3637 14.3639L11.9997 8L5.63574 14.3639L7.04996 15.7781L11.9997 10.8284Z' // Up arrow
-    : 'M11.9997 13.1716L7.04996 8.22186L5.63574 9.63607L11.9997 16L18.3637 9.63607L16.9495 8.22186L11.9997 13.1716Z' // Down arrow
+const arrowPath = computed(
+  () =>
+    isAtBottom.value
+      ? "M11.9997 10.8284L16.9495 15.7781L18.3637 14.3639L11.9997 8L5.63574 14.3639L7.04996 15.7781L11.9997 10.8284Z" // Up arrow
+      : "M11.9997 13.1716L7.04996 8.22186L5.63574 9.63607L11.9997 16L18.3637 9.63607L16.9495 8.22186L11.9997 13.1716Z" // Down arrow
 );
 
 function toggleScroll() {
   if (isAtBottom.value) {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   } else {
     window.scrollTo({
       top: document.body.scrollHeight,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   }
 }
 
 function checkScrollPosition() {
-  isAtBottom.value = (window.innerHeight + window.scrollY) >= document.body.offsetHeight;
+  isAtBottom.value =
+    window.innerHeight + window.scrollY >= document.body.offsetHeight;
 }
 
 onMounted(() => {
-  window.addEventListener('scroll', checkScrollPosition);
+  window.addEventListener("scroll", checkScrollPosition);
   checkScrollPosition(); // Initial check
 });
-
 </script>
 
 <style scoped>
-
 a {
   text-decoration: none;
 }
@@ -68,7 +70,7 @@ a {
 
 .main__scroll-box {
   width: 40px; /* Adjusted size */
-  height: 40px; /* Adjusted size */
+  height: 40px;
 }
 
 .main__scroll-text {
@@ -82,7 +84,8 @@ a {
 
 /* Animate scroll icon */
 @keyframes scroll-down {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0rem);
     opacity: 1;
   }
