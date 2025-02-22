@@ -130,7 +130,6 @@ onUnmounted(() => {
   box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
 }
 
-/* Improve Readability of Title */
 .text-dark-title {
   color: white !important;
   font-size: 1.2rem;
