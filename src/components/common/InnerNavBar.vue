@@ -62,7 +62,6 @@ const navbarClass = computed(() =>
   isDarkTheme.value ? "bg-dark-mode" : "bg-light-mode"
 );
 
-// Adjust title color for readability
 const titleClass = computed(() =>
   isDarkTheme.value ? "text-light-title" : "text-dark-title"
 );
