@@ -43,7 +43,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Ensuring high contrast & readability */
 .v-toolbar-title {
   letter-spacing: 0.5px;
 }
