@@ -1,6 +1,6 @@
-import { ref } from 'vue';
-import { defineStore } from 'pinia';
-import { supabase } from '@/lib/supabase';
+import { ref } from "vue";
+import { defineStore } from "pinia";
+import { supabase } from "@/lib/supabase";
 
 interface Student {
   id: number;
@@ -14,17 +14,15 @@ interface Student {
   remarks: string;
 }
 
-export const useStudentsStore = defineStore('studentsStore', () => {
+export const useStudentsStore = defineStore("studentsStore", () => {
   const students = ref<Student[]>([]);
   const studentCount = ref(0);
 
   async function fetchAllStudents() {
-    const { data, error } = await supabase
-      .from('students')
-      .select('*');
+    const { data, error } = await supabase.from("students").select("*");
 
     if (error) {
-      console.error('Error fetching all students:', error);
+      console.error("Error fetching all students:", error);
       students.value = [];
       return null;
     }
@@ -41,12 +39,12 @@ export const useStudentsStore = defineStore('studentsStore', () => {
 
   async function fetchStudentsBySection(sectionId: number) {
     const { data, error } = await supabase
-      .from('students')
-      .select('*')
-      .eq('section_id', sectionId);
+      .from("students")
+      .select("*")
+      .eq("section_id", sectionId);
 
     if (error) {
-      console.error('Error fetching students by section:', error);
+      console.error("Error fetching students by section:", error);
       return [];
     }
 
