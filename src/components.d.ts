@@ -8,7 +8,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./components/common/AppFooter.vue')['default']
-    DataTable: typeof import('./components/common/DataTable.vue')['default']
+    DataTable: typeof import('./components/admin/DataTable.vue')['default']
     InnerNavBar: typeof import('./components/common/InnerNavBar.vue')['default']
     LoginForm: typeof import('./components/auth/LoginForm.vue')['default']
     LogoutConfirmationDialog: typeof import('./components/LogoutConfirmationDialog.vue')['default']
@@ -23,6 +23,7 @@ declare module 'vue' {
     SidebarMenu: typeof import('./components/common/SidebarMenu.vue')['default']
     SidebarMenuHome: typeof import('./components/common/SidebarMenuHome.vue')['default']
     StudentsStanding: typeof import('./components/system/StudentsStanding.vue')['default']
+    SubjectsTable: typeof import('./components/admin/SubjectsTable.vue')['default']
     TeacherBot: typeof import('./components/common/TeacherBot.vue')['default']
     WelcomeToDashboard: typeof import('./components/system/WelcomeToDashboard.vue')['default']
   }
