@@ -94,7 +94,7 @@ onUnmounted(() => {
 
 <style scoped>
 .theme-toggle-btn {
-  background-color: rgba(255, 255, 255, 0.2); /* Subtle contrast */
+  background-color: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   width: 40px;
   height: 40px;
