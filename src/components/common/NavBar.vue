@@ -6,7 +6,6 @@
 
     <v-spacer></v-spacer>
 
-    <!-- Theme Toggle Button -->
     <v-btn icon @click="toggleTheme">
       <v-icon :color="isDarkTheme ? 'white' : '#B49239'">{{
         themeIcon
