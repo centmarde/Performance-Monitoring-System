@@ -6,7 +6,6 @@
 
     <v-spacer></v-spacer>
 
-    <!-- Theme Toggle Button -->
     <v-btn icon @click="toggleTheme">
       <v-icon :color="isDarkTheme ? 'white' : '#B49239'">{{
         themeIcon
@@ -43,7 +42,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Ensuring high contrast & readability */
 .v-toolbar-title {
   letter-spacing: 0.5px;
 }
