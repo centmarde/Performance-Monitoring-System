@@ -72,7 +72,6 @@ userInfoStore.fetchUserInfo();
 
 const userEmail = computed(() => userInfoStore.userInfo?.email || "");
 
-// Realtime Clock
 const currentTime = ref(new Date().toLocaleTimeString());
 
 const updateTime = () => {
