@@ -118,7 +118,7 @@ onUnmounted(() => {
 
 /* Light Mode Navbar (Matches Sidebar) */
 .bg-light-mode {
-  background-color: #004d40 !important; /* Dark Teal */
+  background-color: #004d40 !important;
   color: white;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
