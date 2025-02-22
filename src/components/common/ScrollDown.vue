@@ -69,7 +69,7 @@ a {
 }
 
 .main__scroll-box {
-  width: 40px; /* Adjusted size */
+  width: 40px;
   height: 40px;
 }
 
