@@ -152,7 +152,6 @@ onUnmounted(() => {
   border: 1px solid #ccc;
 }
 
-/* Clock Styling */
 .clock {
   font-size: 1rem;
   font-weight: bold;
