@@ -36,7 +36,7 @@
               <td>{{ item.lastname }}</td>
               <td>{{ item.phone }}</td>
               <td>{{ item.complete_address }}</td>
-              <td>{{ item.role }}</td>
+              <td>{{ item.user_type }}</td>
               <td class="actions-cell">
                 <v-btn :color="primaryColor" @click="editUser(item)" small
                   >Edit</v-btn

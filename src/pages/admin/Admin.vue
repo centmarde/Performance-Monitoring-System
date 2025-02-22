@@ -5,9 +5,10 @@
         <div class="p-8 bg-gray-100 min-h-screen">
           <v-row align="center" justify="space-between">
             <v-col cols="auto">
-              <!--  <v-btn @click="showAddUserForm = true" color="teal-darken-3">
-                Add User
-              </v-btn> -->
+              <v-btn-toggle v-model="selectedTable" mandatory>
+                <v-btn value="users">Users</v-btn>
+                <v-btn value="subjects">Subjects</v-btn>
+              </v-btn-toggle>
             </v-col>
           </v-row>
 
@@ -22,7 +23,7 @@
                       <v-text-field
                         v-model="editedUser.firstname"
                         label="First Name"
-                        :rules="[requiredValidator]"
+                        
                         outlined
                       />
                     </v-col>
@@ -30,7 +31,7 @@
                       <v-text-field
                         v-model="editedUser.lastname"
                         label="Last Name"
-                        :rules="[requiredValidator]"
+                       
                         outlined
                       />
                     </v-col>
@@ -44,24 +45,24 @@
                   <v-text-field
                     v-model="editedUser.phone"
                     label="Phone"
-                    :rules="[requiredValidator]"
+                   
                     outlined
                   />
                   <v-text-field
                     v-model="editedUser.complete_address"
                     label="Address"
-                    :rules="[requiredValidator]"
+                   
                     outlined
                   />
                   <v-text-field
                     v-model="editedUser.user_type"
                     label="Role"
-                    :rules="[requiredValidator]"
+                   
                     outlined
                   />
                 </v-form>
               </v-card-text>
-              <v-card-actions>
+              <v-card-actions class="">
                 <v-btn @click="showEditUserForm = false" color="grey darken-1"
                   >Cancel</v-btn
                 >
@@ -87,7 +88,7 @@
                       <v-text-field
                         v-model="newUser.firstname"
                         label="First Name"
-                        :rules="[requiredValidator]"
+                       
                         outlined
                       />
                     </v-col>
@@ -95,7 +96,7 @@
                       <v-text-field
                         v-model="newUser.lastname"
                         label="Last Name"
-                        :rules="[requiredValidator]"
+                       
                         outlined
                       />
                     </v-col>
@@ -124,13 +125,13 @@
                   <v-text-field
                     v-model="newUser.complete_address"
                     label="Address"
-                    :rules="[requiredValidator]"
+                   
                     outlined
                   />
                   <v-text-field
                     v-model="newUser.user_type"
                     label="Role"
-                    :rules="[requiredValidator]"
+                   
                     outlined
                   />
                 </v-form>
@@ -170,12 +171,14 @@
 
           <!-- Data Table -->
           <DataTable
+            v-if="selectedTable === 'users'"
             :items="paginatedItems"
             :search-query="searchQuery"
             @update:search-query="searchQuery = $event"
             @edit-user="openEditDialog"
             @delete-user="promptDeleteUser"
           />
+          <SubjectsTable v-else />
 
           <v-container class="mt-4">
             <v-row class="align-center justify-center">
@@ -213,7 +216,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import LayoutWrapper from "@/layouts/LayoutWrapper.vue";
-import DataTable from "@/components/common/DataTable.vue";
+import DataTable from "@/components/admin/DataTable.vue";
+import SubjectsTable from "@/components/admin/SubjectsTable.vue";
 import {
   emailValidator,
   passwordValidator,
@@ -375,6 +379,8 @@ onMounted(async () => {
       complete_address: profile.complete_address,
       user_type: profile.user_type,
     }));
+
+    console.log("Fetched Users:", items.value);
   } catch (error) {
     console.error("Error fetching users:", error);
   }
@@ -475,6 +481,8 @@ const confirmDeleteUser = async () => {
     console.error("Error deleting user:", error);
   }
 };
+
+const selectedTable = ref("users");
 </script>
 <style scoped>
 /* Light Mode */
