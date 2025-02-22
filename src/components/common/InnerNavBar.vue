@@ -140,7 +140,7 @@ onUnmounted(() => {
 }
 
 .text-light-title {
-  color: #e0f7fa !important; /* Light teal for better visibility */
+  color: #e0f7fa !important;
   font-size: 1.2rem;
   font-weight: bold;
   text-transform: uppercase;
