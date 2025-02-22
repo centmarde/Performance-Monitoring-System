@@ -57,7 +57,6 @@ function toggleTheme() {
   localStorage.setItem("theme", newTheme);
 }
 
-// Sync navbar color with sidebar
 const navbarClass = computed(() =>
   isDarkTheme.value ? "bg-dark-mode" : "bg-light-mode"
 );
