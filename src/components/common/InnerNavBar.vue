@@ -147,7 +147,6 @@ onUnmounted(() => {
   letter-spacing: 0.5px;
 }
 
-/* Menu Card Styling */
 .rounded-border {
   border-radius: 10px;
   border: 1px solid #ccc;
