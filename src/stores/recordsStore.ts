@@ -1,6 +1,6 @@
-import { ref } from 'vue';
-import { defineStore } from 'pinia';
-import { supabase } from '@/lib/supabase';
+import { ref } from "vue";
+import { defineStore } from "pinia";
+import { supabase } from "@/lib/supabase";
 
 interface Record {
   student_id: number;
@@ -28,19 +28,18 @@ interface Record {
   class_record_id: number;
 }
 
-export const useRecordsStore = defineStore('recordsStore', () => {
+export const useRecordsStore = defineStore("recordsStore", () => {
   const records = ref<Record[]>([]);
   const recordCount = ref(0);
 
   async function fetchRecordsBySection(sectionId: number) {
     const { data, error } = await supabase
-      .from('records')
-      .select('*')
-      .eq('section_id', sectionId);
-    
+      .from("records")
+      .select("*")
+      .eq("section_id", sectionId);
 
     if (error) {
-      console.error('Error fetching records:', error);
+      console.error("Error fetching records:", error);
       records.value = [];
       return null;
     }
@@ -50,12 +49,10 @@ export const useRecordsStore = defineStore('recordsStore', () => {
   }
 
   async function fetchAllRecords() {
-    const { data, error } = await supabase
-      .from('records')
-      .select('*');
+    const { data, error } = await supabase.from("records").select("*");
 
     if (error) {
-      console.error('Error fetching records:', error);
+      console.error("Error fetching records:", error);
       records.value = [];
       return null;
     }
@@ -67,12 +64,12 @@ export const useRecordsStore = defineStore('recordsStore', () => {
 
   async function fetchRecordsByClassRecordId(classRecordId: number) {
     const { data, error } = await supabase
-      .from('records')
-      .select('*,students(firstname, lastname)')
-      .eq('class_record_id', classRecordId);
+      .from("records")
+      .select("*,students(firstname, lastname)")
+      .eq("class_record_id", classRecordId);
 
     if (error) {
-      console.error('Error fetching records:', error);
+      console.error("Error fetching records:", error);
       records.value = [];
       return null;
     }
@@ -81,18 +78,22 @@ export const useRecordsStore = defineStore('recordsStore', () => {
     return records.value;
   }
 
-  async function addRecordsForSection(sectionId: number, classRecordId: number) {
+  async function addRecordsForSection(
+    sectionId: number,
+    classRecordId: number
+  ) {
     const { data: students, error } = await supabase
-      .from('students')
-      .select('*')
-      .eq('section_id', sectionId);
-  
+      .from("students")
+      .select("*")
+      .eq("section_id", sectionId);
+
     if (error) {
-      console.error('Error fetching students for section:', error);
+      console.error("Error fetching students for section:", error);
       return null;
     }
-  
-    const getRandomScore = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    const getRandomScore = (min: number, max: number) =>
+      Math.floor(Math.random() * (max - min + 1)) + min;
 
     const records: Record[] = students.map((student: any) => ({
       student_id: student.id,
@@ -119,50 +120,67 @@ export const useRecordsStore = defineStore('recordsStore', () => {
       qa1: getRandomScore(50, 100),
       class_record_id: classRecordId,
     }));
-  
+
     const { error: insertError } = await supabase
-      .from('records')
+      .from("records")
       .insert(records);
-  
+
     if (insertError) {
-      console.error('Error adding records:', insertError);
+      console.error("Error adding records:", insertError);
       return null;
     }
-  
+
     return records;
   }
 
-  async function fetchInitialGradeByStudentId(studentId: number, classRecordId: number) {
+  async function fetchInitialGradeByStudentId(
+    studentId: number,
+    classRecordId: number
+  ) {
     const { data, error } = await supabase
-      .from('records')
-      .select('initial_grade')
-      .eq('student_id', studentId)
-      .eq('class_record_id', classRecordId);
-    
+      .from("records")
+      .select("initial_grade")
+      .eq("student_id", studentId)
+      .eq("class_record_id", classRecordId);
 
     if (error) {
-      console.error('Error fetching initial grade:', error);
+      console.error("Error fetching initial grade:", error);
       return null;
     }
-   
+
     return data?.[0]?.initial_grade || 0; // Return the initial grade from the first index
   }
 
   async function countMissedActivities() {
-    const { data, error } = await supabase
-      .from('records')
-      .select('*')
-     
+    const { data, error } = await supabase.from("records").select("*");
 
     if (error) {
-      console.error('Error fetching records:', error);
+      console.error("Error fetching records:", error);
       return null;
     }
 
     const columnsToCheck = [
-      'ww1', 'ww2', 'ww3', 'ww4', 'ww5', 'ww6', 'ww7', 'ww8', 'ww9', 'ww10',
-      'pt1', 'pt2', 'pt3', 'pt4', 'pt5', 'pt6', 'pt7', 'pt8', 'pt9', 'pt10',
-      'qa1'
+      "ww1",
+      "ww2",
+      "ww3",
+      "ww4",
+      "ww5",
+      "ww6",
+      "ww7",
+      "ww8",
+      "ww9",
+      "ww10",
+      "pt1",
+      "pt2",
+      "pt3",
+      "pt4",
+      "pt5",
+      "pt6",
+      "pt7",
+      "pt8",
+      "pt9",
+      "pt10",
+      "qa1",
     ];
 
     const missedActivities = data.reduce((acc, record) => {
@@ -182,12 +200,12 @@ export const useRecordsStore = defineStore('recordsStore', () => {
 
   async function countPassedStudents() {
     const { data, error } = await supabase
-      .from('records')
-      .select('*')
-      .gte('initial_grade', 75);
+      .from("records")
+      .select("*")
+      .gte("initial_grade", 75);
 
     if (error) {
-      console.error('Error fetching passed students:', error);
+      console.error("Error fetching passed students:", error);
       return 0;
     }
 
