@@ -40,7 +40,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/* From Uiverse.io by Shaidend */ 
+/* From Uiverse.io by Shaidend */
 .InputContainer {
   height: 40px;
   display: flex;
@@ -51,7 +51,7 @@ export default {
   overflow: hidden;
   cursor: pointer;
   padding-left: 15px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2); /* Darker drop shadow */
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .input {
@@ -103,5 +103,4 @@ export default {
   background-color: rgb(255, 230, 230);
   transition-duration: 0.3s;
 }
-
 </style>
