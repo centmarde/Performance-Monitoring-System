@@ -123,7 +123,6 @@ onUnmounted(() => {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Dark Mode Navbar (Matches Sidebar) */
 .bg-dark-mode {
   background-color: #004d40 !important;
   color: white;
