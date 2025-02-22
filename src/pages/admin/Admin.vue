@@ -9,9 +9,6 @@
                 Add User
               </v-btn> -->
             </v-col>
-            <v-col cols="4" class="mx-3">
-              <SearchBar v-model="searchQuery" />
-            </v-col>
           </v-row>
 
           <!-- Add User Dialog -->
@@ -174,33 +171,39 @@
           <!-- Data Table -->
           <DataTable
             :items="paginatedItems"
+            :search-query="searchQuery"
+            @update:search-query="searchQuery = $event"
             @edit-user="openEditDialog"
             @delete-user="promptDeleteUser"
           />
 
-          <!-- Pagination Controls -->
-          <v-row justify="center" class="mt-4">
-            <v-btn @click="prevPage" :disabled="currentPage === 1">Prev</v-btn>
-            <v-btn
-              @click="nextPage"
-              :disabled="currentPage * itemsPerPage >= filteredItems.length"
-              >Next</v-btn
-            >
+          <v-container class="mt-4">
+            <v-row class="align-center justify-center">
+              <v-pagination
+                v-model="currentPage"
+                :length="totalPages"
+                :total-visible="3"
+                rounded
+                active-color="black"
+                density="comfortable"
+                class="custom-pagination"
+              ></v-pagination>
+            </v-row>
 
-            <!-- Items per page dropdown aligned to the right -->
-            <v-spacer></v-spacer>
-            <v-col cols="auto" class="d-flex">
-              <v-select
-                v-model="itemsPerPage"
-                :items="[10, 20, 30, 50, 100]"
-                label="Items per page"
-                dense
-                outlined
-                min-width="150"
-                class="mt-0"
-              />
-            </v-col>
-          </v-row>
+            <v-row class="align-center justify-end mt-2">
+              <v-col cols="auto">
+                <v-select
+                  v-model="itemsPerPage"
+                  :items="[10, 20, 30, 50, 100]"
+                  label="Items per page"
+                  dense
+                  outlined
+                  style="min-width: 150px; max-width: 200px"
+                  @change="handleItemsPerPageChange"
+                />
+              </v-col>
+            </v-row>
+          </v-container>
         </div>
       </v-container>
     </template>
@@ -297,40 +300,56 @@ const isEditUserValid = computed(() => {
 });
 
 const filteredItems = computed(() => {
-  console.log("Search Query:", searchQuery.value);
-  if (!searchQuery.value) return items.value;
-  return items.value.filter((user) =>
-    [
-      user.id.toString(),
+  if (!searchQuery.value.trim()) return items.value;
+
+  const query = searchQuery.value.toLowerCase();
+  return items.value.filter((user) => {
+    const searchFields = [
+      user.id?.toString(),
       user.email,
       user.firstname,
       user.lastname,
       user.phone,
       user.complete_address,
       user.user_type,
-    ].some((field) =>
-      field?.toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
-  );
+    ];
+    return searchFields.some((field) => field?.toLowerCase().includes(query));
+  });
 });
 
 // Paginated Items (dynamic based on selected itemsPerPage)
+// Calculate total pages
+const totalPages = computed(() =>
+  Math.ceil(filteredItems.value.length / itemsPerPage.value)
+);
+
+// Get paginated items from filtered results
 const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
   return filteredItems.value.slice(start, end);
 });
 
+// Watch search query to reset pagination
+watch(searchQuery, () => {
+  currentPage.value = 1;
+});
+
+// Handle items per page change
+const handleItemsPerPageChange = () => {
+  currentPage.value = 1;
+};
+
 // Pagination methods
 const nextPage = () => {
-  if (currentPage.value * itemsPerPage.value < filteredItems.value.length) {
-    currentPage.value += 1;
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
   }
 };
 
 const prevPage = () => {
   if (currentPage.value > 1) {
-    currentPage.value -= 1;
+    currentPage.value--;
   }
 };
 
@@ -457,3 +476,16 @@ const confirmDeleteUser = async () => {
   }
 };
 </script>
+<style scoped>
+/* Light Mode */
+:deep(.v-pagination__item--active) {
+  background-color: #e0e0e0 !important;
+  color: black !important;
+}
+
+/* Dark Mode */
+.dark-mode :deep(.v-pagination__item--active) {
+  background-color: #333 !important;
+  color: white !important;
+}
+</style>

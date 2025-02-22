@@ -71,8 +71,10 @@
           <v-pagination
             v-model="currentPage"
             :length="totalPages"
-            circle
-            class="mt-4"
+            :total-visible="3"
+            rounded
+            active-color="black"
+            density="comfortable"
           ></v-pagination>
         </div>
       </v-container>

@@ -1,6 +1,6 @@
-import { ref } from 'vue';
-import { defineStore } from 'pinia';
-import { supabase } from '@/lib/supabase';
+import { ref } from "vue";
+import { defineStore } from "pinia";
+import { supabase } from "@/lib/supabase";
 
 interface Subject {
   id: number;
@@ -19,18 +19,20 @@ interface Teacher {
   subjects?: Subject[];
 }
 
-export const useTeacherList = defineStore('teacherList', () => {
+export const useTeacherList = defineStore("teacherList", () => {
   const userInfo = ref<Teacher[]>([]);
   const teacherCount = ref(0);
 
   async function fetchTeachersInfo() {
     const { data, error } = await supabase
-      .from('users')
-      .select('id, firstname, lastname, email, phone, complete_address, user_type, image_path')
-      .eq('user_type', 'teacher');
+      .from("users")
+      .select(
+        "id, firstname, lastname, email, phone, complete_address, user_type, image_path"
+      )
+      .eq("user_type", "teacher");
 
     if (error) {
-      console.error('Error fetching user info:', error);
+      console.error("Error fetching user info:", error);
       userInfo.value = [];
       return null;
     }
@@ -39,12 +41,12 @@ export const useTeacherList = defineStore('teacherList', () => {
 
     const teacherIds = data.map((teacher: any) => teacher.id);
     const { data: subjectsData, error: subjectsError } = await supabase
-      .from('asign_subjects')
-      .select('user_id, subject_id, subjects(title)')
-      .in('user_id', teacherIds);
+      .from("asign_subjects")
+      .select("user_id, subject_id, subjects(title)")
+      .in("user_id", teacherIds);
 
     if (subjectsError) {
-      console.error('Error fetching teacher subjects:', subjectsError);
+      console.error("Error fetching teacher subjects:", subjectsError);
       userInfo.value = data as Teacher[];
       return userInfo.value;
     }
@@ -54,7 +56,10 @@ export const useTeacherList = defineStore('teacherList', () => {
       if (!subjectsMap[item.user_id]) {
         subjectsMap[item.user_id] = [];
       }
-      subjectsMap[item.user_id].push({ id: item.subject_id, title: item.subjects.title });
+      subjectsMap[item.user_id].push({
+        id: item.subject_id,
+        title: item.subjects.title,
+      });
     });
 
     userInfo.value = data.map((teacher: any) => ({
@@ -62,7 +67,7 @@ export const useTeacherList = defineStore('teacherList', () => {
       subjects: subjectsMap[teacher.id] || [],
     }));
 
-   /*  console.log('Fetched user info with subjects:', userInfo.value); */
+    /*  console.log('Fetched user info with subjects:', userInfo.value); */
     return userInfo.value;
   }
 

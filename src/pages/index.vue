@@ -1,7 +1,6 @@
 <template>
   <v-app :class="theme.global.name">
-    
-    <v-main  :class="['login-background', isDark ? 'dark-mode' : 'light-mode']">
+    <v-main :class="['login-background', isDark ? 'dark-mode' : 'light-mode']">
       <v-container class="my-5">
         <v-row align="center" justify="center">
           <v-col cols="12" sm="10">
@@ -158,7 +157,7 @@ const isDark = computed(() => theme.global.current.value.dark);
 
 /* Light Mode Side Panel */
 .light-panel {
-  background: linear-gradient(135deg, #007a6c 30%, #00695C 100%);
+  background: linear-gradient(135deg, #007a6c 30%, #00695c 100%);
   color: white;
 }
 
