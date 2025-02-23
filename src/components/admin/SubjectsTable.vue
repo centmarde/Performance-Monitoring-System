@@ -3,7 +3,7 @@
     <v-card class="data-card">
       <v-card-title class="d-flex justify-space-between align-center">
         <span class="text-h6">Subjects List</span>
-        <v-btn @click="showAddSubjectForm = true" color="teal darken-3">
+        <v-btn @click="showAddSubjectForm = true" :color="primaryColor">
           Add Subject
         </v-btn>
       </v-card-title>
