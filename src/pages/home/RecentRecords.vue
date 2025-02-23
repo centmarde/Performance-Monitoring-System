@@ -902,7 +902,6 @@ onMounted(async () => {
 /* Alternate row colors for better readability */
 .styled-table tbody tr:nth-child(even) {
   background-color: #f1f8e9;
-  /* Light green */
 }
 
 /* Input Fields */
