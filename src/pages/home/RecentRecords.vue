@@ -918,10 +918,10 @@ onMounted(async () => {
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(0, 77, 64, 0.5);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 0 10px #004d40;
+  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
+  backdrop-filter: blur(10px); /* Blur effect for glass background */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  box-shadow: 0 0 10px #004d40; /* Glowing effect */
 }
 
 /* Responsive Design */
