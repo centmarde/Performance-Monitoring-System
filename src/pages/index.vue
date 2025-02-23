@@ -105,7 +105,6 @@ const step = ref(1);
 const { mobile } = useDisplay();
 const theme = useTheme();
 
-// Check if the current theme is dark mode
 const isDark = computed(() => theme.global.current.value.dark);
 </script>
 
