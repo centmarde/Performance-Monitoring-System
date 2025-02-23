@@ -113,7 +113,6 @@ const isDark = computed(() => theme.global.current.value.dark);
   background: linear-gradient(135deg, #e0f2f1 30%, #b2dfdb 100%);
 }
 
-/* Dark Mode Background */
 .dark-mode {
   background: linear-gradient(135deg, #102924 30%, #071b18 100%);
 }
