@@ -130,7 +130,6 @@ const isDark = computed(() => theme.global.current.value.dark);
   box-shadow: 0 0 10px rgba(0, 150, 136, 0.4);
 }
 
-/* Dark Mode Card */
 .dark-card {
   background: #1e2a29;
   color: white;
