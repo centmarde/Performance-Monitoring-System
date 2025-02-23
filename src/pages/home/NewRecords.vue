@@ -911,6 +911,7 @@ onMounted(async () => {
   white-space: nowrap;
 }
 
+/* Table Headers */
 .styled-table th {
   background: #004d40;
   color: white;
