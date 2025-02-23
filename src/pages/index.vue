@@ -123,7 +123,6 @@ const isDark = computed(() => theme.global.current.value.dark);
   transition: all 0.3s ease-in-out;
 }
 
-/* Light Mode Card */
 .light-card {
   background: #ffffff;
   color: #333;
