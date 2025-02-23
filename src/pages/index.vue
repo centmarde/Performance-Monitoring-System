@@ -159,7 +159,6 @@ const isDark = computed(() => theme.global.current.value.dark);
   color: white;
 }
 
-/* Modern Buttons */
 .action-btn {
   border-radius: 25px;
   font-weight: bold;
