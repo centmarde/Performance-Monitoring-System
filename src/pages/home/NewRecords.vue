@@ -904,7 +904,7 @@ onMounted(async () => {
   border-collapse: collapse;
   margin-top: 20px;
   background-color: #ffffff;
-  /* White background */
+
   color: black;
   display: block;
   overflow-x: auto;
