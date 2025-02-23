@@ -940,7 +940,6 @@ onMounted(async () => {
 .styled-table input {
   width: 50px;
   height: 36px;
-  /* Increased height for better readability */
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 6px;
