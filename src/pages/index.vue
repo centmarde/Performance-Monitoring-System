@@ -153,7 +153,6 @@ const isDark = computed(() => theme.global.current.value.dark);
   color: white;
 }
 
-/* Dark Mode Side Panel */
 .dark-panel {
   background: linear-gradient(135deg, #1e3a3a 30%, #0d2323 100%);
   color: white;
