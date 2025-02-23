@@ -3,15 +3,6 @@
     <template #content>
       <v-container fluid>
         <div class="p-8 bg-gray-100 min-h-screen">
-          <v-row align="center" justify="space-between">
-            <v-col cols="auto">
-              <v-btn-toggle v-model="selectedTable" mandatory>
-                <v-btn :color="primaryColor" value="users">Users</v-btn>
-                <v-btn :color="primaryColor" value="subjects">Subjects</v-btn>
-              </v-btn-toggle>
-            </v-col>
-          </v-row>
-
           <!-- Add User Dialog -->
           <v-dialog v-model="showEditUserForm" max-width="500px">
             <v-card>
@@ -161,17 +152,25 @@
           </v-dialog>
 
           <!-- Data Table -->
-
-          <DataTable
-            v-if="selectedTable === 'users'"
-            :items="paginatedItems"
-            :search-query="searchQuery"
-            @update:search-query="searchQuery = $event"
-            @edit-user="openEditDialog"
-            @delete-user="promptDeleteUser"
-          />
-          <SubjectsTable v-else />
-
+          <v-container>
+            <v-row align="center" justify="start">
+              <v-col cols="auto">
+                <v-btn-toggle v-model="selectedTable" mandatory>
+                  <v-btn :color="primaryColor" value="users">Users</v-btn>
+                  <v-btn :color="primaryColor" value="subjects">Subjects</v-btn>
+                </v-btn-toggle>
+              </v-col>
+            </v-row>
+            <DataTable
+              v-if="selectedTable === 'users'"
+              :items="paginatedItems"
+              :search-query="searchQuery"
+              @update:search-query="searchQuery = $event"
+              @edit-user="openEditDialog"
+              @delete-user="promptDeleteUser"
+            />
+            <SubjectsTable v-else />
+          </v-container>
           <v-container class="mt-4">
             <v-row class="align-center justify-center">
               <v-pagination
