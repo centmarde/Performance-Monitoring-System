@@ -47,7 +47,11 @@
           <v-btn @click="showAddSubjectForm = false" color="grey darken-1">
             Cancel
           </v-btn>
-          <v-btn @click="addSubject" color="teal darken-3" :disabled="!isAddSubjectValid">
+          <v-btn
+            @click="addSubject"
+            color="teal darken-3"
+            :disabled="!isAddSubjectValid"
+          >
             Add Subject
           </v-btn>
         </v-card-actions>
@@ -60,7 +64,9 @@
 import { ref, computed, onMounted } from "vue";
 import { useSubjectsStore } from "@/stores/subjectsStore";
 import { requiredValidator } from "@/lib/validator";
-import {supabase} from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
+
+const primaryColor = computed(() => "#004D40");
 
 const subjectsStore = useSubjectsStore();
 const { subjects, fetchSubjects } = subjectsStore;
@@ -81,7 +87,11 @@ const addSubject = async () => {
     if (error) {
       throw error;
     }
-    subjects.push({ ...newSubject.value, id: data[0].id, created_at: data[0].created_at });
+    subjects.push({
+      ...newSubject.value,
+      id: data[0].id,
+      created_at: data[0].created_at,
+    });
     newSubject.value = { title: "" };
     showAddSubjectForm.value = false;
   } catch (error) {
