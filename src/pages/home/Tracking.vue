@@ -27,7 +27,6 @@ import HomeLayout from "@/layouts/HomeLayout.vue";
 </script>
 
 <style scoped>
-/* Optional Styling */
 .v-card {
   border-radius: 12px;
   backdrop-filter: blur(10px);
