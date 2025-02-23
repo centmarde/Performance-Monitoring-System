@@ -168,7 +168,6 @@ const isDark = computed(() => theme.global.current.value.dark);
   border: 2px solid white;
 }
 
-/* Smooth rounded corners */
 .rounded-bl-xl {
   border-bottom-left-radius: 200px !important;
 }
