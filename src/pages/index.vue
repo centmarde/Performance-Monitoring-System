@@ -117,7 +117,6 @@ const isDark = computed(() => theme.global.current.value.dark);
   background: linear-gradient(135deg, #102924 30%, #071b18 100%);
 }
 
-/* Login Card */
 .login-card {
   border-radius: 12px;
   padding: 24px;
