@@ -928,7 +928,6 @@ onMounted(async () => {
 @media (max-width: 768px) {
   .styled-table input {
     width: 100px;
-    /* Slightly smaller for mobile */
     height: 32px;
     font-size: 14px;
   }
