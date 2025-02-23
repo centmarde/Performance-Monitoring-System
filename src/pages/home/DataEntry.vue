@@ -277,7 +277,6 @@
                     </v-btn>
                   </v-col>
 
-                  <!-- Delete Button with Dynamic Behavior -->
                   <v-col cols="12">
                     <v-btn
                       block
