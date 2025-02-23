@@ -908,7 +908,6 @@ onMounted(async () => {
   color: black;
   display: block;
   overflow-x: auto;
-  /* Enable horizontal scrolling */
   white-space: nowrap;
   /* Prevent table cells from wrapping */
 }
