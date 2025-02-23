@@ -110,7 +110,6 @@ const isDark = computed(() => theme.global.current.value.dark);
 </script>
 
 <style scoped>
-/* Light Mode Background */
 .light-mode {
   background: linear-gradient(135deg, #e0f2f1 30%, #b2dfdb 100%);
 }
