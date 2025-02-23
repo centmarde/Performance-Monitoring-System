@@ -30,7 +30,7 @@ import HomeLayout from "@/layouts/HomeLayout.vue";
 /* Optional Styling */
 .v-card {
   border-radius: 12px;
-  backdrop-filter: blur(10px); /* Blur effect for glass background */
+  backdrop-filter: blur(10px);
 }
 .glass-card {
   background: rgba(0, 105, 92, 0.5);
