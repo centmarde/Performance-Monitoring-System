@@ -913,7 +913,6 @@ onMounted(async () => {
   border-radius: 6px;
   padding: 6px;
   font-size: 16px;
-  /* Bigger font for readability */
 }
 .class-record-card {
   border-radius: 12px;
