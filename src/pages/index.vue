@@ -137,7 +137,6 @@ const isDark = computed(() => theme.global.current.value.dark);
   box-shadow: 0 0 15px rgba(0, 255, 204, 0.6);
 }
 
-/* Side Panel */
 .side-panel {
   display: flex;
   justify-content: center;
