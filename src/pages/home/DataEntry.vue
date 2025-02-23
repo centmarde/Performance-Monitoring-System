@@ -557,7 +557,6 @@ const enterRecords = () => {
   color: #000;
 }
 
-/* Dark Mode Colors */
 .dark-mode .bg-blue-light {
   background: #1e3a5f;
   color: #fff;
