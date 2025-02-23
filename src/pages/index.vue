@@ -148,7 +148,6 @@ const isDark = computed(() => theme.global.current.value.dark);
   padding: 20px 0;
 }
 
-/* Light Mode Side Panel */
 .light-panel {
   background: linear-gradient(135deg, #007a6c 30%, #00695c 100%);
   color: white;
