@@ -914,7 +914,6 @@ onMounted(async () => {
 /* Table Headers */
 .styled-table th {
   background: #004d40;
-  /* Deep teal for contrast */
   color: white;
   padding: 14px;
   border: 1px solid #00796b;
