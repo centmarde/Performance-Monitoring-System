@@ -6,8 +6,8 @@
           <v-row align="center" justify="space-between">
             <v-col cols="auto">
               <v-btn-toggle v-model="selectedTable" mandatory>
-                <v-btn value="users">Users</v-btn>
-                <v-btn value="subjects">Subjects</v-btn>
+                <v-btn :color="primaryColor" value="users">Users</v-btn>
+                <v-btn :color="primaryColor" value="subjects">Subjects</v-btn>
               </v-btn-toggle>
             </v-col>
           </v-row>
@@ -23,7 +23,6 @@
                       <v-text-field
                         v-model="editedUser.firstname"
                         label="First Name"
-                        
                         outlined
                       />
                     </v-col>
@@ -31,7 +30,6 @@
                       <v-text-field
                         v-model="editedUser.lastname"
                         label="Last Name"
-                       
                         outlined
                       />
                     </v-col>
@@ -45,19 +43,16 @@
                   <v-text-field
                     v-model="editedUser.phone"
                     label="Phone"
-                   
                     outlined
                   />
                   <v-text-field
                     v-model="editedUser.complete_address"
                     label="Address"
-                   
                     outlined
                   />
                   <v-text-field
                     v-model="editedUser.user_type"
                     label="Role"
-                   
                     outlined
                   />
                 </v-form>
@@ -88,7 +83,6 @@
                       <v-text-field
                         v-model="newUser.firstname"
                         label="First Name"
-                       
                         outlined
                       />
                     </v-col>
@@ -96,7 +90,6 @@
                       <v-text-field
                         v-model="newUser.lastname"
                         label="Last Name"
-                       
                         outlined
                       />
                     </v-col>
@@ -125,13 +118,11 @@
                   <v-text-field
                     v-model="newUser.complete_address"
                     label="Address"
-                   
                     outlined
                   />
                   <v-text-field
                     v-model="newUser.user_type"
                     label="Role"
-                   
                     outlined
                   />
                 </v-form>
@@ -237,6 +228,7 @@ interface User {
   user_type: string;
 }
 
+const primaryColor = computed(() => "#004D40");
 const items = ref<User[]>([]);
 const showAddUserForm = ref(false);
 const showEditUserForm = ref(false);
