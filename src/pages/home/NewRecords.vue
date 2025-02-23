@@ -909,7 +909,6 @@ onMounted(async () => {
   display: block;
   overflow-x: auto;
   white-space: nowrap;
-  /* Prevent table cells from wrapping */
 }
 
 /* Table Headers */
