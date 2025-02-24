@@ -122,7 +122,7 @@ export default {
   },
   computed: {
     primaryColor() {
-      return "#004D40"; // Change this value to your desired primary color
+      return "#004D40";
     },
   },
   async created() {
