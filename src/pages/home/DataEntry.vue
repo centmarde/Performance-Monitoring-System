@@ -118,7 +118,6 @@
           class="mt-4 d-flex justify-center"
         ></v-pagination>
 
-        <!-- Class Record Dialog -->
         <v-dialog v-model="classRecordDialog" max-width="900px">
           <v-card
             class="pa-5 rounded-xl elevation-10"
