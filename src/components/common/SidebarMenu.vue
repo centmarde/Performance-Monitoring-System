@@ -1,5 +1,4 @@
 <template>
-  <!-- Navigation Drawer with Toggle Button Inside -->
   <v-navigation-drawer
     v-model="drawer"
     app
