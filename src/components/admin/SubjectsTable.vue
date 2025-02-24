@@ -39,7 +39,16 @@
           border: 1px solid rgba(255, 255, 255, 0.2);
         "
       >
-        <v-card-title>Add Subject</v-card-title>
+        <v-card-title
+          class="text-center font-weight-bold"
+          style="
+            background: linear-gradient(135deg, #004d40, #00332e);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+          "
+          >Add Subject</v-card-title
+        >
         <v-card-text>
           <v-form @submit.prevent="addSubject">
             <v-text-field
