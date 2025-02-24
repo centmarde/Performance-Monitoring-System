@@ -256,7 +256,6 @@
             <v-card-text class="mt-4">
               <v-container>
                 <v-row justify="center">
-                  <!-- Enter Records Button (Green) -->
                   <v-col cols="12">
                     <v-btn
                       block
