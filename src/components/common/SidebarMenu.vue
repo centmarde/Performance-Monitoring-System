@@ -167,7 +167,6 @@ const menu = ref([
   padding-left: 16px !important;
 }
 
-/* Icon alignment */
 .list-item :deep(.v-list-item__prepend) {
   margin-right: 12px !important;
 }
