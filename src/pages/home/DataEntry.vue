@@ -128,7 +128,6 @@
               border: 1px solid rgba(255, 255, 255, 0.2);
             "
           >
-            <!-- Elegant Header with Updated Color -->
             <v-card-title
               class="text-center font-weight-bold py-4"
               style="
