@@ -38,7 +38,6 @@
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   .glass-popup {
     background: rgba(30, 30, 30, 0.8);
