@@ -25,6 +25,7 @@
         </v-row>
 
         <v-row>
+          <!-- "Add New" Card -->
           <v-col v-if="currentPage === 1" cols="12" sm="6" md="4">
             <v-card class="subject-card add-new-card" @click="showAddNewDialog">
               <v-container
@@ -36,6 +37,7 @@
             </v-card>
           </v-col>
 
+          <!-- Subject Cards with Pagination -->
           <v-col
             v-for="(subject, index) in paginatedSubjects"
             :key="index"
@@ -108,6 +110,7 @@
           </v-col>
         </v-row>
 
+        <!-- Pagination Control -->
         <v-pagination
           v-if="!isLoading"
           v-model="currentPage"
@@ -115,6 +118,7 @@
           class="mt-4 d-flex justify-center"
         ></v-pagination>
 
+        <!-- Class Record Dialog -->
         <v-dialog v-model="classRecordDialog" max-width="900px">
           <v-card
             class="pa-5 rounded-xl elevation-10"
@@ -124,6 +128,7 @@
               border: 1px solid rgba(255, 255, 255, 0.2);
             "
           >
+            <!-- Elegant Header with Updated Color -->
             <v-card-title
               class="text-center font-weight-bold py-4"
               style="
@@ -225,6 +230,7 @@
           </v-card>
         </v-dialog>
 
+        <!-- Card Dialog -->
         <v-dialog v-model="cardDialog" max-width="480px">
           <v-card
             class="pa-5 rounded-xl elevation-10"
@@ -234,6 +240,7 @@
               border: 1px solid rgba(255, 255, 255, 0.2);
             "
           >
+            <!-- Elegant Header with Glassmorphism Effect -->
             <v-card-title
               class="text-center font-weight-bold py-4"
               style="
@@ -247,9 +254,11 @@
               - {{ activeSubject || "Subject" }}
             </v-card-title>
 
+            <!-- Content -->
             <v-card-text class="mt-4">
               <v-container>
                 <v-row justify="center">
+                  <!-- Enter Records Button (Green) -->
                   <v-col cols="12">
                     <v-btn
                       block
