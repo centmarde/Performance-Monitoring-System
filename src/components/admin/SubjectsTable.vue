@@ -31,7 +31,14 @@
 
     <!-- Add Subject Dialog -->
     <v-dialog v-model="showAddSubjectForm" max-width="500px">
-      <v-card>
+      <v-card
+        class="pa-5 rounded-xl elevation-10"
+        style="
+          background: #eeefee;
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        "
+      >
         <v-card-title>Add Subject</v-card-title>
         <v-card-text>
           <v-form @submit.prevent="addSubject">
