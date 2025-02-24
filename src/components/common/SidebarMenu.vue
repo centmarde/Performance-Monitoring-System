@@ -5,7 +5,6 @@
     color="#004D40"
     class="fixed-sidebar"
   >
-    <!-- Toggle Button Inside Sidebar -->
     <v-btn icon @click="drawer = !drawer" class="toggle-btn">
       <v-icon>{{ drawer ? "mdi-chevron-left" : "mdi-chevron-right" }}</v-icon>
     </v-btn>
