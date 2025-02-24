@@ -40,7 +40,7 @@
         "
       >
         <v-card-title
-          class="text-center font-weight-bold"
+          class="text-center font-weight-bold py-4"
           style="
             background: linear-gradient(135deg, #004d40, #00332e);
             color: white;
