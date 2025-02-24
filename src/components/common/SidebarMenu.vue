@@ -11,7 +11,6 @@
       <v-icon>{{ drawer ? "mdi-chevron-left" : "mdi-chevron-right" }}</v-icon>
     </v-btn>
 
-    <!-- User Info Section -->
     <v-sheet color="#00695C" class="pa-4 text-center">
       <v-progress-circular
         model-value="80"
