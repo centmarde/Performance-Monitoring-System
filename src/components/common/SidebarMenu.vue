@@ -148,7 +148,6 @@ const menu = ref([
   flex-grow: 1;
 }
 
-/* Unified list item styling */
 .list-item {
   padding-left: 16px !important;
   min-height: 48px !important;
