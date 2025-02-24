@@ -317,7 +317,6 @@ const totalPages = computed(() =>
   Math.ceil(filteredItems.value.length / itemsPerPage.value)
 );
 
-// Get paginated items from filtered results
 const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
