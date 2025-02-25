@@ -216,7 +216,6 @@ const profileImage = ref(Avatar);
 const tempImage = ref<string | null>(null);
 const selectedFile = ref<File | null>(null);
 
-// Password visibility toggles
 const showOldPassword = ref(false);
 const showNewPassword = ref(false);
 const showConfirmNewPassword = ref(false);
