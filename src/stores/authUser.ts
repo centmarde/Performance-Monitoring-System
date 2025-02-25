@@ -63,7 +63,6 @@ export const useAuthUserStore = defineStore("authUser", () => {
 
     const userId = signUpData.user.id;
 
-    // Hash the password before inserting it into the database
     const hashedPassword = customHash(password);
 
     const { error: insertError } = await supabase.from("users").insert([
