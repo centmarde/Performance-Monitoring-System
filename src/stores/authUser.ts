@@ -7,12 +7,13 @@ import { useToast } from "vue-toastification";
 
 const toast = useToast();
 
+// Custom hash function
 function customHash(password: string): string {
   let hash = 0;
   for (let i = 0; i < password.length; i++) {
     const char = password.charCodeAt(i);
     hash = (hash << 5) - hash + char;
-    hash |= 0;
+    hash |= 0; // Convert to 32bit integer
   }
   return `HashPassword${hash.toString()}`;
 }
@@ -31,6 +32,7 @@ interface SessionUser {
 }
 
 export const useAuthUserStore = defineStore("authUser", () => {
+  // States
   const userData: Ref<UserData | null> = ref(null);
   const authPages: Ref<string[]> = ref([]);
   const authBranchIds: Ref<number[]> = ref([]);
@@ -63,13 +65,14 @@ export const useAuthUserStore = defineStore("authUser", () => {
 
     const userId = signUpData.user.id;
 
+    // Hash the password before inserting it into the database
     const hashedPassword = customHash(password);
 
     const { error: insertError } = await supabase.from("users").insert([
       {
         user_type: userType,
         email: email,
-        password: hashedPassword,
+        password: hashedPassword, // Use the hashed password
         user_id: userId,
       },
     ]);
@@ -78,6 +81,7 @@ export const useAuthUserStore = defineStore("authUser", () => {
       return { error: insertError };
     }
 
+    // Automatically sign in the user
     const { data: signInData, error: signInError } =
       await supabase.auth.signInWithPassword({ email, password });
 
@@ -113,6 +117,7 @@ export const useAuthUserStore = defineStore("authUser", () => {
       user_type: profiles.user_type,
     };
 
+    // Redirect to /welcome
     router.push("/welcome");
 
     return { data: { id: userId, email, user_type: userType } };
