@@ -391,7 +391,6 @@ onMounted(async () => {
   }
 });
 
-// Methods for managing users
 const openEditDialog = (user?: User) => {
   editedUser.value = user
     ? { ...user }
