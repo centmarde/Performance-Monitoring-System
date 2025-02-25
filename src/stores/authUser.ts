@@ -7,7 +7,6 @@ import { useToast } from "vue-toastification";
 
 const toast = useToast();
 
-// Custom hash function
 function customHash(password: string): string {
   let hash = 0;
   for (let i = 0; i < password.length; i++) {
