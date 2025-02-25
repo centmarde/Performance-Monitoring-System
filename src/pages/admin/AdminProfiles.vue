@@ -362,7 +362,6 @@ const updatePassword = async () => {
       return;
     }
 
-    // Use the email from the current session instead of profile data
     const {
       data: { user },
       error: signInError,
