@@ -211,10 +211,12 @@ const passwordData = ref({
   confirmNewPassword: "",
 });
 
+// Image handling
 const profileImage = ref(Avatar);
 const tempImage = ref<string | null>(null);
 const selectedFile = ref<File | null>(null);
 
+// Password visibility toggles
 const showOldPassword = ref(false);
 const showNewPassword = ref(false);
 const showConfirmNewPassword = ref(false);
@@ -243,11 +245,13 @@ const fetchProfile = async () => {
       completeAddress: data.complete_address || "",
     };
 
+    // Store original data for reset functionality
     originalProfileData.value = { ...profileData.value };
     profileImage.value = data.image_path || Avatar;
   }
 };
 
+// Image handling functions
 const triggerFileInput = () => {
   const input = document.createElement("input");
   input.type = "file";
@@ -275,6 +279,7 @@ const updateProfile = async () => {
 
   let newImagePath = profileImage.value;
 
+  // Upload new image if selected
   if (selectedFile.value) {
     const filePath = `profile_images/${Date.now()}-${selectedFile.value.name}`;
     const { error: uploadError } = await supabase.storage
@@ -351,6 +356,7 @@ const updatePassword = async () => {
   }
 
   try {
+    // Get current session first
     const {
       data: { session },
       error: sessionError,
@@ -361,11 +367,12 @@ const updatePassword = async () => {
       return;
     }
 
+    // Use the email from the current session instead of profile data
     const {
       data: { user },
       error: signInError,
     } = await supabase.auth.signInWithPassword({
-      email: session.user.email!,
+      email: session.user.email!, // Use session email
       password: oldPassword,
     });
 
