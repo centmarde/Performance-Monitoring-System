@@ -330,7 +330,7 @@ const filteredItems = computed(() => {
 });
 
 // Paginated Items (dynamic based on selected itemsPerPage)
-
+// Calculate total pages
 const totalPages = computed(() =>
   Math.ceil(filteredItems.value.length / itemsPerPage.value)
 );
@@ -342,14 +342,17 @@ const paginatedItems = computed(() => {
   return filteredItems.value.slice(start, end);
 });
 
+// Watch search query to reset pagination
 watch(searchQuery, () => {
   currentPage.value = 1;
 });
 
+// Handle items per page change
 const handleItemsPerPageChange = () => {
   currentPage.value = 1;
 };
 
+// Pagination methods
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
@@ -391,6 +394,7 @@ onMounted(async () => {
   }
 });
 
+// Methods for managing users
 const openEditDialog = (user?: User) => {
   editedUser.value = user
     ? { ...user }
@@ -489,11 +493,13 @@ const confirmDeleteUser = async () => {
 const selectedTable = ref("users");
 </script>
 <style scoped>
+/* Light Mode */
 :deep(.v-pagination__item--active) {
   background-color: #e0e0e0 !important;
   color: black !important;
 }
 
+/* Dark Mode */
 .dark-mode :deep(.v-pagination__item--active) {
   background-color: #333 !important;
   color: white !important;
