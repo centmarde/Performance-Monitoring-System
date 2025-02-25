@@ -3,19 +3,26 @@
     <template #content>
       <v-container fluid>
         <div class="p-8 bg-gray-100 min-h-screen">
-          <v-row align="center" justify="space-between">
-            <v-col cols="auto">
-              <v-btn-toggle v-model="selectedTable" mandatory>
-                <v-btn value="users">Users</v-btn>
-                <v-btn value="subjects">Subjects</v-btn>
-              </v-btn-toggle>
-            </v-col>
-          </v-row>
-
           <!-- Add User Dialog -->
           <v-dialog v-model="showEditUserForm" max-width="500px">
-            <v-card>
-              <v-card-title>Edit User</v-card-title>
+            <v-card
+              class="pa-5 rounded-xl elevation-10"
+              style="
+                background: #eeefee;
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+              "
+            >
+              <v-card-title
+                class="text-center font-weight-bold py-4"
+                style="
+                  background: linear-gradient(135deg, #004d40, #00332e);
+                  color: white;
+                  border-radius: 12px 12px 0 0;
+                  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+                "
+                >Edit User</v-card-title
+              >
               <v-card-text>
                 <v-form @submit.prevent="updateUser">
                   <v-row>
@@ -23,7 +30,6 @@
                       <v-text-field
                         v-model="editedUser.firstname"
                         label="First Name"
-                        
                         outlined
                       />
                     </v-col>
@@ -31,7 +37,6 @@
                       <v-text-field
                         v-model="editedUser.lastname"
                         label="Last Name"
-                       
                         outlined
                       />
                     </v-col>
@@ -45,19 +50,16 @@
                   <v-text-field
                     v-model="editedUser.phone"
                     label="Phone"
-                   
                     outlined
                   />
                   <v-text-field
                     v-model="editedUser.complete_address"
                     label="Address"
-                   
                     outlined
                   />
                   <v-text-field
                     v-model="editedUser.user_type"
                     label="Role"
-                   
                     outlined
                   />
                 </v-form>
@@ -88,7 +90,6 @@
                       <v-text-field
                         v-model="newUser.firstname"
                         label="First Name"
-                       
                         outlined
                       />
                     </v-col>
@@ -96,7 +97,6 @@
                       <v-text-field
                         v-model="newUser.lastname"
                         label="Last Name"
-                       
                         outlined
                       />
                     </v-col>
@@ -125,13 +125,11 @@
                   <v-text-field
                     v-model="newUser.complete_address"
                     label="Address"
-                   
                     outlined
                   />
                   <v-text-field
                     v-model="newUser.user_type"
                     label="Role"
-                   
                     outlined
                   />
                 </v-form>
@@ -170,16 +168,25 @@
           </v-dialog>
 
           <!-- Data Table -->
-          <DataTable
-            v-if="selectedTable === 'users'"
-            :items="paginatedItems"
-            :search-query="searchQuery"
-            @update:search-query="searchQuery = $event"
-            @edit-user="openEditDialog"
-            @delete-user="promptDeleteUser"
-          />
-          <SubjectsTable v-else />
-
+          <v-container>
+            <v-row align="center" justify="start">
+              <v-col cols="auto">
+                <v-btn-toggle v-model="selectedTable" mandatory>
+                  <v-btn :color="primaryColor" value="users">Users</v-btn>
+                  <v-btn :color="primaryColor" value="subjects">Subjects</v-btn>
+                </v-btn-toggle>
+              </v-col>
+            </v-row>
+            <DataTable
+              v-if="selectedTable === 'users'"
+              :items="paginatedItems"
+              :search-query="searchQuery"
+              @update:search-query="searchQuery = $event"
+              @edit-user="openEditDialog"
+              @delete-user="promptDeleteUser"
+            />
+            <SubjectsTable v-else />
+          </v-container>
           <v-container class="mt-4">
             <v-row class="align-center justify-center">
               <v-pagination
@@ -237,6 +244,7 @@ interface User {
   user_type: string;
 }
 
+const primaryColor = computed(() => "#004D40");
 const items = ref<User[]>([]);
 const showAddUserForm = ref(false);
 const showEditUserForm = ref(false);
