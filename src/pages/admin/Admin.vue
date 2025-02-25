@@ -489,7 +489,6 @@ const confirmDeleteUser = async () => {
 const selectedTable = ref("users");
 </script>
 <style scoped>
-/* Light Mode */
 :deep(.v-pagination__item--active) {
   background-color: #e0e0e0 !important;
   color: black !important;
