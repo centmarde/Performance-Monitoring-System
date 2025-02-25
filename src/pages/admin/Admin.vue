@@ -79,7 +79,6 @@
             </v-card>
           </v-dialog>
 
-          <!-- Edit User Dialog -->
           <v-dialog v-model="showAddUserForm" max-width="500px">
             <v-card>
               <v-card-title>Add User</v-card-title>
