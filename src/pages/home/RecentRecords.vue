@@ -902,21 +902,17 @@ onMounted(async () => {
 /* Alternate row colors for better readability */
 .styled-table tbody tr:nth-child(even) {
   background-color: #f1f8e9;
-  /* Light green */
 }
 
 /* Input Fields */
 .styled-table input {
   width: 50px;
-  /* Increased width for better usability */
   height: 36px;
-  /* Increased height for better readability */
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 6px;
   padding: 6px;
   font-size: 16px;
-  /* Bigger font for readability */
 }
 .class-record-card {
   border-radius: 12px;
@@ -932,7 +928,6 @@ onMounted(async () => {
 @media (max-width: 768px) {
   .styled-table input {
     width: 100px;
-    /* Slightly smaller for mobile */
     height: 32px;
     font-size: 14px;
   }

@@ -392,7 +392,7 @@ const isLoading = ref(false);
 onMounted(async () => {
   isLoading.value = true;
   try {
-    await sectionsStore.fetchSections(); // Move this to the top
+    await sectionsStore.fetchSections();
     await subjectsStore.fetchSubjects();
     await classRecordStore.fetchAllClassRecordsWithDetails();
     subjects.value = classRecordStore.classRecords;
@@ -557,7 +557,6 @@ const enterRecords = () => {
   color: #000;
 }
 
-/* Dark Mode Colors */
 .dark-mode .bg-blue-light {
   background: #1e3a5f;
   color: #fff;

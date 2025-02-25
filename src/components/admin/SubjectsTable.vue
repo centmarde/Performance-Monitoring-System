@@ -3,7 +3,7 @@
     <v-card class="data-card">
       <v-card-title class="d-flex justify-space-between align-center">
         <span class="text-h6">Subjects List</span>
-        <v-btn @click="showAddSubjectForm = true" color="teal darken-3">
+        <v-btn @click="showAddSubjectForm = true" :color="primaryColor">
           Add Subject
         </v-btn>
       </v-card-title>
@@ -31,8 +31,24 @@
 
     <!-- Add Subject Dialog -->
     <v-dialog v-model="showAddSubjectForm" max-width="500px">
-      <v-card>
-        <v-card-title>Add Subject</v-card-title>
+      <v-card
+        class="pa-5 rounded-xl elevation-10"
+        style="
+          background: #eeefee;
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        "
+      >
+        <v-card-title
+          class="text-center font-weight-bold py-4"
+          style="
+            background: linear-gradient(135deg, #004d40, #00332e);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+          "
+          >Add Subject</v-card-title
+        >
         <v-card-text>
           <v-form @submit.prevent="addSubject">
             <v-text-field
@@ -47,7 +63,11 @@
           <v-btn @click="showAddSubjectForm = false" color="grey darken-1">
             Cancel
           </v-btn>
-          <v-btn @click="addSubject" color="teal darken-3" :disabled="!isAddSubjectValid">
+          <v-btn
+            @click="addSubject"
+            color="teal darken-3"
+            :disabled="!isAddSubjectValid"
+          >
             Add Subject
           </v-btn>
         </v-card-actions>
@@ -60,7 +80,9 @@
 import { ref, computed, onMounted } from "vue";
 import { useSubjectsStore } from "@/stores/subjectsStore";
 import { requiredValidator } from "@/lib/validator";
-import {supabase} from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
+
+const primaryColor = computed(() => "#004D40");
 
 const subjectsStore = useSubjectsStore();
 const { subjects, fetchSubjects } = subjectsStore;
@@ -81,7 +103,11 @@ const addSubject = async () => {
     if (error) {
       throw error;
     }
-    subjects.push({ ...newSubject.value, id: data[0].id, created_at: data[0].created_at });
+    subjects.push({
+      ...newSubject.value,
+      id: data[0].id,
+      created_at: data[0].created_at,
+    });
     newSubject.value = { title: "" };
     showAddSubjectForm.value = false;
   } catch (error) {
