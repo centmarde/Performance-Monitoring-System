@@ -69,7 +69,7 @@ export const useAuthUserStore = defineStore("authUser", () => {
       {
         user_type: userType,
         email: email,
-        password: hashedPassword, // Use the hashed password
+        password: hashedPassword,
         user_id: userId,
       },
     ]);
