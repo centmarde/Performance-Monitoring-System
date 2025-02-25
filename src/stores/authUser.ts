@@ -78,7 +78,6 @@ export const useAuthUserStore = defineStore("authUser", () => {
       return { error: insertError };
     }
 
-    // Automatically sign in the user
     const { data: signInData, error: signInError } =
       await supabase.auth.signInWithPassword({ email, password });
 
