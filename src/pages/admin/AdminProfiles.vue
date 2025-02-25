@@ -365,7 +365,7 @@ const updatePassword = async () => {
       data: { user },
       error: signInError,
     } = await supabase.auth.signInWithPassword({
-      email: session.user.email!, // Use session email
+      email: session.user.email!,
       password: oldPassword,
     });
 
