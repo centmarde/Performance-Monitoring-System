@@ -67,6 +67,7 @@ export const useTeacherList = defineStore("teacherList", () => {
       subjects: subjectsMap[teacher.id] || [],
     }));
 
+    /*  console.log('Fetched user info with subjects:', userInfo.value); */
     return userInfo.value;
   }
 
