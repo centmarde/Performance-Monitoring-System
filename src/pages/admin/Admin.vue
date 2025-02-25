@@ -147,7 +147,6 @@
             </v-card>
           </v-dialog>
 
-          <!-- Delete Confirmation Dialog -->
           <v-dialog v-model="showDeleteConfirmation" max-width="400px">
             <v-card>
               <v-card-title>Confirm Deletion</v-card-title>
