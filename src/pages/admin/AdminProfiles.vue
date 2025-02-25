@@ -243,7 +243,6 @@ const fetchProfile = async () => {
       completeAddress: data.complete_address || "",
     };
 
-    // Store original data for reset functionality
     originalProfileData.value = { ...profileData.value };
     profileImage.value = data.image_path || Avatar;
   }
