@@ -351,7 +351,6 @@ const updatePassword = async () => {
   }
 
   try {
-    // Get current session first
     const {
       data: { session },
       error: sessionError,
