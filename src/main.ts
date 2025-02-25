@@ -4,7 +4,6 @@
  * Bootstraps Vuetify and other plugins then mounts the App
  */
 
-// Vue & Core Dependencies
 import { createApp } from "vue";
 import App from "./App.vue";
 
