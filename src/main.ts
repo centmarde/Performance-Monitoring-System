@@ -23,7 +23,6 @@ import "@/styles/styles.css";
 // Custom Styles
 import "@/styles/logout.css";
 
-// Perfect Scrollbar
 import { PerfectScrollbarPlugin } from "vue3-perfect-scrollbar";
 import "vue3-perfect-scrollbar/style.css";
 
