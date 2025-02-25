@@ -8,7 +8,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 
-// Router
 import router from "./router";
 
 import { registerPlugins } from "@/plugins";
