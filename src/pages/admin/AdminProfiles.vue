@@ -211,7 +211,6 @@ const passwordData = ref({
   confirmNewPassword: "",
 });
 
-// Image handling
 const profileImage = ref(Avatar);
 const tempImage = ref<string | null>(null);
 const selectedFile = ref<File | null>(null);
