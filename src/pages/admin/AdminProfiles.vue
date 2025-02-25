@@ -248,7 +248,6 @@ const fetchProfile = async () => {
   }
 };
 
-// Image handling functions
 const triggerFileInput = () => {
   const input = document.createElement("input");
   input.type = "file";
