@@ -113,7 +113,6 @@ export const useAuthUserStore = defineStore("authUser", () => {
       user_type: profiles.user_type,
     };
 
-    // Redirect to /welcome
     router.push("/welcome");
 
     return { data: { id: userId, email, user_type: userType } };
