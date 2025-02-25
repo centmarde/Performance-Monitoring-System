@@ -275,7 +275,6 @@ const updateProfile = async () => {
 
   let newImagePath = profileImage.value;
 
-  // Upload new image if selected
   if (selectedFile.value) {
     const filePath = `profile_images/${Date.now()}-${selectedFile.value.name}`;
     const { error: uploadError } = await supabase.storage
