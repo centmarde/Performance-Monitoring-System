@@ -31,7 +31,6 @@ interface SessionUser {
 }
 
 export const useAuthUserStore = defineStore("authUser", () => {
-  // States
   const userData: Ref<UserData | null> = ref(null);
   const authPages: Ref<string[]> = ref([]);
   const authBranchIds: Ref<number[]> = ref([]);
