@@ -202,8 +202,6 @@ onMounted(() => {
   color: #e0f2f1;
   min-height: 100vh;
   padding-top: 80px;
-  display: flex;
-  flex-direction: column;
 }
 
 .blur-background {
