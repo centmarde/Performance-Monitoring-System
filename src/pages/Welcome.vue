@@ -126,7 +126,6 @@ const saveExtraInfo = async () => {
   errorMessage.value = "";
   successMessage.value = "";
 
-  // Get the authenticated user
   const { data: authData, error: authError } = await supabase.auth.getUser();
   if (authError || !authData?.user) {
     console.error("Authentication failed:", authError);
