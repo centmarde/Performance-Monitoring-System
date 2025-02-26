@@ -42,7 +42,6 @@ const toastOptions = {
   transition: "Vue-Toastification__fade",
 };
 
-// Create and Mount App
 const app = createApp(App)
   .use(router)
   .use(Toast, toastOptions)
