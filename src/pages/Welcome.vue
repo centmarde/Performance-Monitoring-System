@@ -122,7 +122,6 @@ onMounted(async () => {
   console.log("Authenticated User ID:", authData.user.id); // Debugging
 });
 
-// Function to save or update user info
 const saveExtraInfo = async () => {
   errorMessage.value = "";
   successMessage.value = "";
