@@ -27,7 +27,6 @@ import "@/styles/logout.css";
 import { PerfectScrollbarPlugin } from "vue3-perfect-scrollbar";
 import "vue3-perfect-scrollbar/style.css";
 
-// Use DataTables
 DataTable.use(DataTablesCore);
 
 // Toast Configuration
