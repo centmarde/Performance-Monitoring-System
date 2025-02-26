@@ -31,7 +31,7 @@
               <v-col cols="12" sm="7">
                 <v-checkbox
                   label="Remember Me"
-                  color="teal-darken-4"
+                  color="teal-darken-3"
                 ></v-checkbox>
               </v-col>
               <v-col cols="12" sm="5">
