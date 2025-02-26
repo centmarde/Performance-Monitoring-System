@@ -136,7 +136,6 @@ const saveExtraInfo = async () => {
   const user_id = authData.user.id;
   console.log("Saving data for user ID:", user_id); // Debugging
 
-  // Remove duplicate rows (if any)
   await supabase.rpc("delete_duplicate_users", { user_id_param: user_id });
 
   // Check if user already exists
