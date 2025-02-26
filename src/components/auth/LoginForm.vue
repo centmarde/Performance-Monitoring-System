@@ -119,11 +119,6 @@ const onFormSubmit = async (event: SubmitEvent): Promise<void> => {
   color: #8c8c8c;
 }
 
-.login-btn {
-  border-radius: 25px;
-  font-weight: bold;
-}
-
 .social-buttons {
   display: flex;
   justify-content: center;
