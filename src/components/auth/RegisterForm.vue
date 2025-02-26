@@ -151,7 +151,7 @@ async function onFormSubmit(event: SubmitEvent): Promise<void> {
       closeOnClick: true,
     });
   } else {
-    toast.success("Registration successful.", {
+    toast.success("Registration successfully.", {
       timeout: 3000,
       closeOnClick: true,
     });
