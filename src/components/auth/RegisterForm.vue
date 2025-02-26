@@ -164,8 +164,8 @@ async function onFormSubmit(event: SubmitEvent): Promise<void> {
 <style scoped>
 .close-icon {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 15px;
+  right: 15px;
   cursor: pointer;
 }
 .social-buttons {
