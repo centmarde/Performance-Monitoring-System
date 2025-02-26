@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import { supabase } from "@/lib/supabase";
 
 export interface Section {
+  // Export the Section interface
   id: number;
   created_at: string;
   teacher_id: number;
@@ -17,6 +18,7 @@ export const useSectionsStore = defineStore("sectionsStore", () => {
   const sectionCount = ref(0);
 
   async function fetchSections() {
+    // Fetch all sections directly without joining with section_subjects
     const { data: sectionsData, error: sectionsError } = await supabase
       .from("sections")
       .select("*");
