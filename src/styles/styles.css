@@ -92,7 +92,6 @@
   animation: progressBar 3s linear forwards;
 }
 
-/* Custom Close Button */
 .custom-toast .Vue-Toastification__close-button {
   color: white !important;
   opacity: 0.8;
