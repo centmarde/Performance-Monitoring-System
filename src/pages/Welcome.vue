@@ -109,6 +109,7 @@ const extraInfo = ref({
   phone: "",
   complete_address: "",
 });
+// Fetch user information when the component is mounted
 
 onMounted(async () => {
   const { data: authData, error: authError } = await supabase.auth.getUser();
@@ -121,10 +122,12 @@ onMounted(async () => {
   console.log("Authenticated User ID:", authData.user.id); // Debugging
 });
 
+// Function to save or update user info
 const saveExtraInfo = async () => {
   errorMessage.value = "";
   successMessage.value = "";
 
+  // Get the authenticated user
   const { data: authData, error: authError } = await supabase.auth.getUser();
   if (authError || !authData?.user) {
     console.error("Authentication failed:", authError);
@@ -135,15 +138,17 @@ const saveExtraInfo = async () => {
   const user_id = authData.user.id;
   console.log("Saving data for user ID:", user_id); // Debugging
 
+  // Remove duplicate rows (if any)
   await supabase.rpc("delete_duplicate_users", { user_id_param: user_id });
 
+  // Check if user already exists
   const { data: existingUser, error: fetchError } = await supabase
     .from("users")
     .select("*")
     .eq("user_id", user_id)
     .order("created_at", { ascending: false }) // Get latest entry
     .limit(1)
-    .single();
+    .single(); // Expect only one row
 
   if (fetchError && fetchError.code !== "PGRST116") {
     console.error("Error fetching user:", fetchError);
@@ -197,11 +202,14 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+/* Background - Full Page */
 .welcome-container {
   background: linear-gradient(to bottom, #004d40, #00695c);
   color: #e0f2f1;
   min-height: 100vh;
   padding-top: 80px;
+  display: flex;
+  flex-direction: column;
 }
 
 .blur-background {

@@ -170,6 +170,5 @@ const isDark = computed(() => theme.global.current.value.dark);
   border-bottom-left-radius: 200px !important;
 }
 .rounded-br-xl {
-  border-bottom-right-radius: 200px !important;
 }
 </style>
