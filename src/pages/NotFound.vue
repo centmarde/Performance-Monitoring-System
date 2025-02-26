@@ -11,6 +11,6 @@
 </script>
 <style scoped>
 .spacer {
-  height: 40vh;
+  height: 32vh;
 }
 </style>

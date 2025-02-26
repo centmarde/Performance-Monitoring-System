@@ -3,7 +3,6 @@ import { defineStore } from "pinia";
 import { supabase } from "@/lib/supabase";
 
 export interface Section {
-  // Export the Section interface
   id: number;
   created_at: string;
   teacher_id: number;
