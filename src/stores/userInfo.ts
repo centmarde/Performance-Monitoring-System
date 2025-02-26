@@ -23,7 +23,7 @@ export const useUserInfoStore = defineStore("userInfo", () => {
     }
 
     const userId = authData.user.id;
-    console.log("Fetching data for user ID:", userId); // Debugging
+    console.log("Fetching data for user ID:", userId);
 
     const { data, error } = await supabase
       .from("users")
