@@ -145,7 +145,7 @@ const saveExtraInfo = async () => {
     .eq("user_id", user_id)
     .order("created_at", { ascending: false }) // Get latest entry
     .limit(1)
-    .single(); // Expect only one row
+    .single();
 
   if (fetchError && fetchError.code !== "PGRST116") {
     console.error("Error fetching user:", fetchError);
