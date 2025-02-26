@@ -31,7 +31,7 @@
               <v-col cols="12" sm="7">
                 <v-checkbox
                   label="Remember Me"
-                  color="teal-darken-3"
+                  color="teal-darken-4"
                 ></v-checkbox>
               </v-col>
               <v-col cols="12" sm="5">
@@ -122,5 +122,12 @@ const onFormSubmit = async (event: SubmitEvent): Promise<void> => {
 .login-btn {
   border-radius: 25px;
   font-weight: bold;
+}
+
+.social-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 </style>
