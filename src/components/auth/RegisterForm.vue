@@ -151,7 +151,7 @@ async function onFormSubmit(event: SubmitEvent): Promise<void> {
       closeOnClick: true,
     });
   } else {
-    toast.success("Registration successfully.", {
+    toast.success("Registration successful.", {
       timeout: 3000,
       closeOnClick: true,
     });
@@ -164,12 +164,14 @@ async function onFormSubmit(event: SubmitEvent): Promise<void> {
 <style scoped>
 .close-icon {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 10px;
+  right: 10px;
   cursor: pointer;
 }
 .social-buttons {
   display: flex;
   justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 </style>

@@ -40,7 +40,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-/* From Uiverse.io by Shaidend */
 .InputContainer {
   height: 40px;
   display: flex;
@@ -74,8 +73,6 @@ export default {
 
 .border {
   height: 40%;
-  width: 1.3px;
-  background-color: rgb(223, 223, 223);
 }
 
 .micIcon {
