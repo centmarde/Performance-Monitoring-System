@@ -138,7 +138,6 @@ const saveExtraInfo = async () => {
 
   await supabase.rpc("delete_duplicate_users", { user_id_param: user_id });
 
-  // Check if user already exists
   const { data: existingUser, error: fetchError } = await supabase
     .from("users")
     .select("*")
