@@ -32,7 +32,7 @@ DataTable.use(DataTablesCore);
 
 // Toast Configuration
 const toastOptions = {
-  toastClassName: "custom-toast", // Custom styling
+  toastClassName: "custom-toast",
   position: "top-right",
   timeout: 3000,
   closeOnClick: true,
