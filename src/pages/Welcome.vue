@@ -197,7 +197,6 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-/* Background - Full Page */
 .welcome-container {
   background: linear-gradient(to bottom, #004d40, #00695c);
   color: #e0f2f1;
