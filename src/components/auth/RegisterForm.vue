@@ -171,7 +171,5 @@ async function onFormSubmit(event: SubmitEvent): Promise<void> {
 .social-buttons {
   display: flex;
   justify-content: center;
-  gap: 15px;
-  margin-bottom: 20px;
 }
 </style>
