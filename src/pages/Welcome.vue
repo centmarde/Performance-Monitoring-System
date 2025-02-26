@@ -109,7 +109,6 @@ const extraInfo = ref({
   phone: "",
   complete_address: "",
 });
-// Fetch user information when the component is mounted
 
 onMounted(async () => {
   const { data: authData, error: authError } = await supabase.auth.getUser();
