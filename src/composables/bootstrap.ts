@@ -51,7 +51,6 @@ export function useGroqChat() {
       stop: null,
     });
 
-    // Collect and format the response
     for await (const chunk of chatCompletion) {
       const content = chunk.choices[0]?.delta?.content || "";
       chatContent.value += formatResponse(content);
