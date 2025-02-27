@@ -54,7 +54,6 @@
   backdrop-filter: blur(10px); /* Glass effect */
 }
 
-/* Hover Glow Effect */
 .custom-toast:hover {
   box-shadow: 0px 5px 20px rgba(0, 255, 100, 0.6);
   transform: scale(1.05);
