@@ -36,7 +36,6 @@ const toastOptions = {
   position: "top-right",
   timeout: 3000,
   closeOnClick: true,
-  pauseOnHover: true,
   hideProgressBar: false,
   transition: "Vue-Toastification__fade",
 };
