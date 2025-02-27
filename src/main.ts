@@ -34,7 +34,7 @@ DataTable.use(DataTablesCore);
 const toastOptions = {
   toastClassName: "custom-toast", // Custom styling
   position: "top-right",
-  timeout: 2000,
+  timeout: 3000,
   closeOnClick: true,
   pauseOnHover: true,
   draggable: true,
