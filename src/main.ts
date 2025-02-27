@@ -20,7 +20,6 @@ import "vue-toastification/dist/index.css";
 import DataTable from "datatables.net-vue3";
 import DataTablesCore from "datatables.net-dt";
 import "@/styles/styles.css";
-// Custom Styles
 import "@/styles/logout.css";
 
 // Perfect Scrollbar
