@@ -32,9 +32,12 @@ DataTable.use(DataTablesCore);
 
 // Toast Configuration
 const toastOptions = {
+  toastClassName: "custom-toast", // Custom styling
   position: "top-right",
-  timeout: 3000,
+  timeout: 2000,
   closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
   hideProgressBar: false,
   transition: "Vue-Toastification__fade",
 };
