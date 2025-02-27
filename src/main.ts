@@ -22,7 +22,6 @@ import DataTablesCore from "datatables.net-dt";
 import "@/styles/styles.css";
 import "@/styles/logout.css";
 
-// Perfect Scrollbar
 import { PerfectScrollbarPlugin } from "vue3-perfect-scrollbar";
 import "vue3-perfect-scrollbar/style.css";
 
