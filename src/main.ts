@@ -44,7 +44,7 @@ const app = createApp(App)
   .use(PerfectScrollbarPlugin)
   .use(VueSidebarMenu);
 
-app.config.warnHandler = () => {}; // Suppress warnings
+app.config.warnHandler = () => {};
 
 registerPlugins(app);
 app.mount("#app");
