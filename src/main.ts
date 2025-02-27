@@ -25,7 +25,6 @@ import "vue3-perfect-scrollbar/style.css";
 
 DataTable.use(DataTablesCore);
 
-// Toast Configuration
 const toastOptions = {
   position: "top-right",
   timeout: 3000,
