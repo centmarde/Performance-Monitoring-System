@@ -54,6 +54,7 @@
         ></v-list-item-title>
       </v-list-item>
 
+      <!-- Settings with Submenu -->
       <v-list-group value="Settings">
         <template v-slot:activator="{ props }">
           <v-list-item v-bind="props">
@@ -64,6 +65,7 @@
           </v-list-item>
         </template>
 
+        <!-- Teacher Profile Link -->
         <v-list-item to="/profiles" class="submenu-item">
           <template v-slot:prepend>
             <v-icon color="#B49239">mdi-account-circle</v-icon>
@@ -111,6 +113,7 @@ function handleLogoutClick() {
 </script>
 
 <style scoped>
+/* Sidebar Toggle Button */
 .toggle-btn {
   position: absolute;
   top: 50%;
@@ -144,6 +147,6 @@ function handleLogoutClick() {
   flex-direction: column;
 }
 .submenu-item {
-  padding-left: 15px !important;
+  padding-left: 15px !important; /* Adjust this value as needed */
 }
 </style>
