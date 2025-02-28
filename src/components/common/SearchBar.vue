@@ -55,12 +55,12 @@ export default {
 }
 
 .input {
-  width: 170px;
+  width: 150px;
   height: 100%;
   border: none;
   outline: none;
   font-size: 0.9em;
-  caret-color: rgb(114, 114, 114);
+  caret-color: rgb(120, 120, 120);
 }
 
 .labelforsearch {
