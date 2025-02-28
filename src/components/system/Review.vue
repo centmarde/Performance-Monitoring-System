@@ -133,9 +133,10 @@ export default defineComponent({
 
     const { chatContent, startChat } = useGroqChat();
 
+    // Add watch effect for studentRecord
     watch(studentRecord, (newValue) => {
       if (newValue) {
-        chatContent.value = "";
+        chatContent.value = ""; // Reset chat content
       }
     });
 
