@@ -47,7 +47,7 @@ const items = [
 }
 
 .social-link:hover .v-icon {
-  color: #ffd54f; /* Yellow accent on hover */
+  color: #ffd54f;
   transform: scale(1.2);
 }
 </style>
