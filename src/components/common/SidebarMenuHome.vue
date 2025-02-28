@@ -111,7 +111,6 @@ function handleLogoutClick() {
 </script>
 
 <style scoped>
-/* Sidebar Toggle Button */
 .toggle-btn {
   position: absolute;
   top: 50%;
