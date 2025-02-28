@@ -69,12 +69,12 @@ export default {
 }
 
 .searchIcon {
-  width: 10px;
+  width: 13px;
 }
 
 .border {
   height: 40%;
-  width: 1.4px;
+  width: 1.3px;
   background-color: rgb(223, 223, 223);
 }
 
@@ -100,7 +100,7 @@ export default {
 }
 
 .micButton:hover {
-  background-color: rgb(255, 230, 230);
-  transition-duration: 0.3s;
+  background-color: rgb(225, 210, 230);
+  transition-duration: 0.5s;
 }
 </style>
