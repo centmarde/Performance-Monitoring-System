@@ -147,6 +147,6 @@ function handleLogoutClick() {
   flex-direction: column;
 }
 .submenu-item {
-  padding-left: 15px !important; /* Adjust this value as needed */
+  padding-left: 15px !important;
 }
 </style>
