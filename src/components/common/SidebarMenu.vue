@@ -169,7 +169,6 @@ const menu = ref([
   margin-right: 12px !important;
 }
 
-/* Remove any default margins/padding from the list */
 :deep(.v-list) {
   padding: 0;
 }
