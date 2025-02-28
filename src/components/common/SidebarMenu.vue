@@ -1,4 +1,5 @@
 <template>
+  <!-- Navigation Drawer with Toggle Button Inside -->
   <v-navigation-drawer
     v-model="drawer"
     app
@@ -104,7 +105,6 @@ function handleLogoutClick() {
   /* router.push("/"); */
 }
 
-// Define the menu with conditional links for Admin and Teachers
 const menu = ref([
   { title: "Users", icon: "mdi-account", href: "/admin" },
   { title: "Teachers", icon: "mdi-account-tie", href: "/teachers" },
