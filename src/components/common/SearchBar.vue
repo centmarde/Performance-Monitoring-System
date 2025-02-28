@@ -40,6 +40,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/* From Uiverse.io by Shaidend */
 .InputContainer {
   height: 40px;
   display: flex;
