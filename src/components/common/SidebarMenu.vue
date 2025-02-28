@@ -155,7 +155,6 @@ const menu = ref([
   padding-left: 12px !important;
 }
 
-/* Override v-list-group styles */
 :deep(.v-list-group__items) {
   margin-left: 0 !important;
   padding-left: 0 !important;
