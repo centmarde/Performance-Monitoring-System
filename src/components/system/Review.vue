@@ -133,7 +133,6 @@ export default defineComponent({
 
     const { chatContent, startChat } = useGroqChat();
 
-    // Add watch effect for studentRecord
     watch(studentRecord, (newValue) => {
       if (newValue) {
         chatContent.value = ""; // Reset chat content
@@ -174,6 +173,7 @@ export default defineComponent({
       );
       if (!student) return;
 
+      // Fetch subjects and their quarters from class_record
       const { data: classRecords, error } = await supabase
         .from("class_record")
         .select(
@@ -188,6 +188,7 @@ export default defineComponent({
         .eq("section_id", student.sectionId);
 
       if (!error && classRecords) {
+        // Group quarters by subject
         const subjectQuartersMap = classRecords.reduce((acc, record) => {
           if (!record.subjects) return acc;
 
@@ -201,6 +202,7 @@ export default defineComponent({
           return acc;
         }, {});
 
+        // Convert to array and sort quarters
         availableSubjects.value = Object.values(subjectQuartersMap).map(
           ({ subject, quarters }) => ({
             ...subject,
