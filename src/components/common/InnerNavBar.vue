@@ -6,7 +6,6 @@
 
     <v-spacer></v-spacer>
 
-    <!-- Move Dark Mode Icon & Clock to the End -->
     <v-container class="d-flex align-center justify-end" style="width: auto">
       <v-icon class="theme-toggle-btn me-3" @click="toggleTheme">{{
         themeIcon
