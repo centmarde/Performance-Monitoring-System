@@ -100,7 +100,7 @@ export default {
 }
 
 .micButton:hover {
-  background-color: rgb(225, 210, 230);
-  transition-duration: 0.5s;
+  background-color: rgb(255, 230, 230);
+  transition-duration: 0.3s;
 }
 </style>
