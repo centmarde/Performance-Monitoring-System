@@ -6,10 +6,12 @@
     color="#004D40"
     class="fixed-sidebar"
   >
+    <!-- Toggle Button Inside Sidebar -->
     <v-btn icon @click="drawer = !drawer" class="toggle-btn">
       <v-icon>{{ drawer ? "mdi-chevron-left" : "mdi-chevron-right" }}</v-icon>
     </v-btn>
 
+    <!-- User Info Section -->
     <v-sheet color="#00695C" class="pa-4 text-center">
       <v-progress-circular
         model-value="80"
@@ -105,6 +107,7 @@ function handleLogoutClick() {
   /* router.push("/"); */
 }
 
+// Define the menu with conditional links for Admin and Teachers
 const menu = ref([
   { title: "Users", icon: "mdi-account", href: "/admin" },
   { title: "Teachers", icon: "mdi-account-tie", href: "/teachers" },
@@ -145,6 +148,7 @@ const menu = ref([
   flex-grow: 1;
 }
 
+/* Unified list item styling */
 .list-item {
   padding-left: 16px !important;
   min-height: 48px !important;
@@ -154,6 +158,7 @@ const menu = ref([
   padding-left: 12px !important;
 }
 
+/* Override v-list-group styles */
 :deep(.v-list-group__items) {
   margin-left: 0 !important;
   padding-left: 0 !important;
@@ -163,10 +168,12 @@ const menu = ref([
   padding-left: 16px !important;
 }
 
+/* Icon alignment */
 .list-item :deep(.v-list-item__prepend) {
   margin-right: 12px !important;
 }
 
+/* Remove any default margins/padding from the list */
 :deep(.v-list) {
   padding: 0;
 }
