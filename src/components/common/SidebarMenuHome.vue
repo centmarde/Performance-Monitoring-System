@@ -54,7 +54,6 @@
         ></v-list-item-title>
       </v-list-item>
 
-      <!-- Settings with Submenu -->
       <v-list-group value="Settings">
         <template v-slot:activator="{ props }">
           <v-list-item v-bind="props">
