@@ -31,7 +31,7 @@
         >
           <div
             v-if="selectedSubject"
-            class="font-semibold text-center text-xl mb-2"
+            class="font-semibold text-center text-xl mb-5"
           >
             {{ selectedSubject.title }}
           </div>
