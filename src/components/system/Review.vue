@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="4">
-        <v-card class="glass-card pa-3 rounded-card" elevation="2">
+        <v-card class="glass-card pa-4 rounded-card" elevation="2">
           <v-select
             :items="sections"
             item-title="code"
@@ -13,7 +13,7 @@
         </v-card>
       </v-col>
       <v-col cols="4">
-        <v-card class="glass-card pa-3 rounded-card" elevation="2">
+        <v-card class="glass-card pa-4 rounded-card" elevation="2">
           <v-select
             :items="students"
             item-title="fullName"
