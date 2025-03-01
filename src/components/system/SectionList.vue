@@ -53,8 +53,8 @@ export default defineComponent({
         },
         grid: {
           left: "1%",
-          right: "1%",
-          bottom: "3%",
+          right: "2%",
+          bottom: "5%",
           top: "10%",
           containLabel: true,
         },
