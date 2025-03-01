@@ -112,7 +112,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .chart-container {
-  width: 100%;
+  width: 50%;
   height: 30vh;
   background: #e0f2f1;
   padding: 10px;
