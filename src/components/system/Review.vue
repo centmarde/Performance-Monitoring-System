@@ -203,7 +203,7 @@ export default defineComponent({
           return acc;
         }, {});
 
-        // Convert to array and s
+        // Convert to array and sort quarters
         availableSubjects.value = Object.values(subjectQuartersMap).map(
           ({ subject, quarters }) => ({
             ...subject,
