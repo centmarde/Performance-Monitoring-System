@@ -46,7 +46,7 @@
               class="font-bold"
               small
             >
-              <span v-if="isFailing">Failing</span>
+              <span v-if="isFailing">Failingg</span>
               <span v-else>Passing</span>
             </v-chip>
           </div>
