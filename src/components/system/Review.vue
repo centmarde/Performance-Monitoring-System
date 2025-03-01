@@ -47,7 +47,7 @@
               small
             >
               <span v-if="isFailing">Failing</span>
-              <span v-else>Passing</span>
+              <span v-else>Passings</span>
             </v-chip>
           </div>
         </v-card>
