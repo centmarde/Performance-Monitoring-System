@@ -53,9 +53,9 @@ export default defineComponent({
         },
         grid: {
           left: "1%",
-          right: "2%",
-          bottom: "5%",
-          top: "11%",
+          right: "1%",
+          bottom: "3%",
+          top: "10%",
           containLabel: true,
         },
         xAxis: [
@@ -68,7 +68,7 @@ export default defineComponent({
             axisLabel: {
               interval: 0,
               rotate: 30,
-              color: "#fffff",
+              color: "#004D40",
             },
           },
         ],
@@ -115,7 +115,7 @@ export default defineComponent({
   width: 100%;
   height: 50vh;
   background: #e0f2f1;
-  padding: 50px;
-  border-radius: 20px;
+  padding: 10px;
+  border-radius: 10px;
 }
 </style>
