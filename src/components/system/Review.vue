@@ -56,7 +56,7 @@
 
     <v-row>
       <v-col cols="12">
-        <v-card class="glass-card pa-4 rounded-card" elevation="3">
+        <v-card class="glass-card pa-4 rounded-card" elevation="4">
           <v-card-title class="font-semibold text-lg"
             >Advice for Teacher</v-card-title
           >
