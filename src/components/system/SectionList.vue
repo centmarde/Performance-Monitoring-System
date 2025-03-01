@@ -114,7 +114,7 @@ export default defineComponent({
 .chart-container {
   width: 100%;
   height: 50vh;
-  background: #ffffff;
+  background: #e0f2f1;
   padding: 10px;
   border-radius: 10px;
 }
