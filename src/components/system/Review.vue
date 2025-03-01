@@ -189,7 +189,6 @@ export default defineComponent({
         .eq("section_id", student.sectionId);
 
       if (!error && classRecords) {
-        // Group quarters by subject
         const subjectQuartersMap = classRecords.reduce((acc, record) => {
           if (!record.subjects) return acc;
 
