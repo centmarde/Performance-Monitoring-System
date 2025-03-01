@@ -68,7 +68,7 @@ export default defineComponent({
             axisLabel: {
               interval: 0,
               rotate: 30,
-              color: "#004D40",
+              color: "#fffff",
             },
           },
         ],
