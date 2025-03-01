@@ -116,6 +116,6 @@ export default defineComponent({
   height: 50vh;
   background: #e0f2f1;
   padding: 10px;
-  border-radius: 10px;
+  border-radius: 20px;
 }
 </style>
