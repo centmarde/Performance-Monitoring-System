@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="4">
-        <v-card class="glass-card pa-4 rounded-card" elevation="2">
+        <v-card class="glass-card pa-3 rounded-card" elevation="2">
           <v-select
             :items="sections"
             item-title="code"
@@ -13,7 +13,7 @@
         </v-card>
       </v-col>
       <v-col cols="4">
-        <v-card class="glass-card pa-4 rounded-card" elevation="2">
+        <v-card class="glass-card pa-3 rounded-card" elevation="2">
           <v-select
             :items="students"
             item-title="fullName"
@@ -47,7 +47,7 @@
               small
             >
               <span v-if="isFailing">Failing</span>
-              <span v-else>Passings</span>
+              <span v-else>Passing</span>
             </v-chip>
           </div>
         </v-card>
@@ -56,7 +56,7 @@
 
     <v-row>
       <v-col cols="12">
-        <v-card class="glass-card pa-4 rounded-card" elevation="4">
+        <v-card class="glass-card pa-4 rounded-card" elevation="3">
           <v-card-title class="font-semibold text-lg"
             >Advice for Teacher</v-card-title
           >
@@ -133,9 +133,10 @@ export default defineComponent({
 
     const { chatContent, startChat } = useGroqChat();
 
+    // Add watch effect for studentRecord
     watch(studentRecord, (newValue) => {
       if (newValue) {
-        chatContent.value = "";
+        chatContent.value = ""; // Reset chat content
       }
     });
 
