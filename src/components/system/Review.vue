@@ -31,7 +31,7 @@
         >
           <div
             v-if="selectedSubject"
-            class="font-semibold text-center text-xl mb-5"
+            class="font-semibold text-center text-xl mb-2"
           >
             {{ selectedSubject.title }}
           </div>
@@ -41,8 +41,8 @@
           >
             <div>Initial Grade: {{ studentRecord.initial_grade }}</div>
             <v-chip
-              :color="isFailing ? 'red lighten-4' : 'green lighten-5'"
-              :text-color="isFailing ? 'red darken-2' : 'green darken-5'"
+              :color="isFailing ? 'red lighten-3' : 'green lighten-3'"
+              :text-color="isFailing ? 'red darken-3' : 'green darken-3'"
               class="font-bold"
               small
             >
@@ -56,8 +56,8 @@
 
     <v-row>
       <v-col cols="12">
-        <v-card class="glass-card pa-3 rounded-card" elevation="3">
-          <v-card-title class="font-semibold text-md"
+        <v-card class="glass-card pa-4 rounded-card" elevation="3">
+          <v-card-title class="font-semibold text-lg"
             >Advice for Teacher</v-card-title
           >
           <v-card-text v-html="chatContent"></v-card-text>
