@@ -39,7 +39,7 @@
             v-if="studentRecord"
             class="d-flex justify-space-between align-center"
           >
-            <div>Initial Grade: {{ studentRecord.initial_grade }}</div>
+            <div>Initial s: {{ studentRecord.initial_grade }}</div>
             <v-chip
               :color="isFailing ? 'red lighten-3' : 'green lighten-3'"
               :text-color="isFailing ? 'red darken-3' : 'green darken-3'"
