@@ -135,7 +135,7 @@ export default defineComponent({
 
     watch(studentRecord, (newValue) => {
       if (newValue) {
-        chatContent.value = ""; //
+        chatContent.value = "";
       }
     });
 
