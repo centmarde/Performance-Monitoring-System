@@ -55,7 +55,7 @@ export default defineComponent({
           left: "1%",
           right: "2%",
           bottom: "5%",
-          top: "10%",
+          top: "11%",
           containLabel: true,
         },
         xAxis: [
