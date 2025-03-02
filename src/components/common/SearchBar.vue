@@ -75,7 +75,7 @@ export default {
 .border {
   height: 40%;
   width: 1.3px;
-  background-color: rgb(223, 223, 223);
+  background-color: rgb(215, 223, 223);
 }
 
 .micIcon {
