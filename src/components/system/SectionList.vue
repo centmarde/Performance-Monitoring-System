@@ -48,7 +48,7 @@ export default defineComponent({
           },
           backgroundColor: "rgba(46, 125, 111, 0.8)",
           textStyle: {
-            color: "#fff",
+            color: "#00000",
           },
         },
         grid: {
