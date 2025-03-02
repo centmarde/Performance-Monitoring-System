@@ -101,27 +101,27 @@ onUnmounted(() => {
 }
 
 .theme-toggle-btn:hover {
-  background-color: rgba(244, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.3);
 }
 
 .bg-dark-mode .theme-toggle-btn {
-  background-color: rgba(255, 244, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .bg-light-mode .theme-toggle-btn {
-  background-color: rgba(255, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 .bg-light-mode {
   background-color: #004d40 !important;
   color: white;
-  box-shadow: 0 4px 10px rgba(255, 0, 0, 0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 .bg-dark-mode {
-  background-color: #fff !important;
+  background-color: #004d40 !important;
   color: white;
-  box-shadow: 0 4px 10px rgba(244, 255, 255, 0.1);
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
 }
 
 .text-dark-title {
@@ -134,10 +134,10 @@ onUnmounted(() => {
 
 .text-light-title {
   color: #e0f7fa !important;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.5px;
 }
 
 .rounded-border {
