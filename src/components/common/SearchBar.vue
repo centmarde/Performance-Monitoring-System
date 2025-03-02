@@ -88,7 +88,7 @@ export default {
   background-color: transparent;
   height: 40px;
   cursor: pointer;
-  transition-duration: 0.3s;
+  transition-duration: 0.5s;
 }
 
 .searchIcon path {
