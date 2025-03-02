@@ -137,7 +137,7 @@ onUnmounted(() => {
   font-size: 1.2rem;
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
 }
 
 .rounded-border {
