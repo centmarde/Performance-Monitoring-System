@@ -80,7 +80,7 @@ export default defineComponent({
             },
             splitLine: {
               lineStyle: {
-                color: "#A5D6A7",
+                color: "#fff",
               },
             },
           },
