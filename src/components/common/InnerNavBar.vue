@@ -109,7 +109,7 @@ onUnmounted(() => {
 }
 
 .bg-light-mode .theme-toggle-btn {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 0, 0, 0.1);
 }
 
 .bg-light-mode {
