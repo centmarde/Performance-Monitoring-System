@@ -109,7 +109,6 @@ import { useAuthUserStore } from "@/stores/authUser";
 import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
 
-// Define the emit function for the component
 const emit = defineEmits(["registration-success", "close-dialog"]);
 
 const toast = useToast();
