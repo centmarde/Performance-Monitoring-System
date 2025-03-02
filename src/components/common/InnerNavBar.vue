@@ -134,7 +134,7 @@ onUnmounted(() => {
 
 .text-light-title {
   color: #e0f7fa !important;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.6px;
