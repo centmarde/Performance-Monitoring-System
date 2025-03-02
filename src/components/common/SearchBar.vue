@@ -50,12 +50,12 @@ export default {
   border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
-  padding-left: 20px;
+  padding-left: 15px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .input {
-  width: 200px;
+  width: 170px;
   height: 100%;
   border: none;
   outline: none;
@@ -75,7 +75,7 @@ export default {
 .border {
   height: 40%;
   width: 1.3px;
-  background-color: rgb(215, 223, 223);
+  background-color: rgb(223, 223, 223);
 }
 
 .micIcon {
@@ -86,21 +86,21 @@ export default {
   padding: 0px 15px 0px 12px;
   border: none;
   background-color: transparent;
-  height: 50;
+  height: 40px;
   cursor: pointer;
-  transition-duration: 0.5s;
+  transition-duration: 0.3s;
 }
 
 .searchIcon path {
-  fill: rgb(110, 155, 114);
+  fill: rgb(114, 114, 114);
 }
 
 .micIcon path {
-  fill: rgb(110, 155, 114);
+  fill: rgb(114, 114, 114);
 }
 
 .micButton:hover {
-  background-color: rgb(244, 230, 230);
+  background-color: rgb(255, 230, 230);
   transition-duration: 0.3s;
 }
 </style>
