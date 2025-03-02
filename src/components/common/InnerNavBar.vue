@@ -101,7 +101,7 @@ onUnmounted(() => {
 }
 
 .theme-toggle-btn:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(244, 255, 255, 0.3);
 }
 
 .bg-dark-mode .theme-toggle-btn {
