@@ -86,7 +86,7 @@ export default {
   padding: 0px 15px 0px 12px;
   border: none;
   background-color: transparent;
-  height: 40px;
+  height: 50;
   cursor: pointer;
   transition-duration: 0.5s;
 }
