@@ -55,7 +55,7 @@ export default {
 }
 
 .input {
-  width: 170px;
+  width: 200px;
   height: 100%;
   border: none;
   outline: none;
