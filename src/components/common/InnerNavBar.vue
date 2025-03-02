@@ -119,7 +119,7 @@ onUnmounted(() => {
 }
 
 .bg-dark-mode {
-  background-color: #004d40 !important;
+  background-color: #fff !important;
   color: white;
   box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
 }
