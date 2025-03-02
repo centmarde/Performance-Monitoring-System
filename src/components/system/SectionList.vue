@@ -97,7 +97,7 @@ export default defineComponent({
             },
             emphasis: {
               itemStyle: {
-                color: "#1B5E57",
+                color: "#fff",
               },
             },
           },
