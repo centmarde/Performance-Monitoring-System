@@ -76,7 +76,7 @@ export default defineComponent({
           {
             type: "value",
             axisLabel: {
-              color: "#004D40",
+              color: "#fff",
             },
             splitLine: {
               lineStyle: {
