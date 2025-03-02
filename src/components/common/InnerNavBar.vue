@@ -121,7 +121,7 @@ onUnmounted(() => {
 .bg-dark-mode {
   background-color: #fff !important;
   color: white;
-  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 10px rgba(244, 255, 255, 0.1);
 }
 
 .text-dark-title {
