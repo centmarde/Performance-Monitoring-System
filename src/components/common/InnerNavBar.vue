@@ -105,7 +105,7 @@ onUnmounted(() => {
 }
 
 .bg-dark-mode .theme-toggle-btn {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 244, 255, 0.1);
 }
 
 .bg-light-mode .theme-toggle-btn {
