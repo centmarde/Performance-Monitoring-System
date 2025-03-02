@@ -48,7 +48,7 @@ export default defineComponent({
           },
           backgroundColor: "rgba(46, 125, 111, 0.8)",
           textStyle: {
-            color: "#00000",
+            color: "#fff",
           },
         },
         grid: {
@@ -68,7 +68,7 @@ export default defineComponent({
             axisLabel: {
               interval: 0,
               rotate: 30,
-              color: "#fff",
+              color: "#004D40",
             },
           },
         ],
@@ -76,11 +76,11 @@ export default defineComponent({
           {
             type: "value",
             axisLabel: {
-              color: "#fff",
+              color: "#004D40",
             },
             splitLine: {
               lineStyle: {
-                color: "#fff",
+                color: "#A5D6A7",
               },
             },
           },
@@ -92,12 +92,12 @@ export default defineComponent({
             barWidth: "60%",
             data: [...sectionData.map((section) => section.students.length)],
             itemStyle: {
-              color: "#fff",
+              color: "#2E7D6F",
               borderRadius: [5, 5, 0, 0],
             },
             emphasis: {
               itemStyle: {
-                color: "#fff",
+                color: "#1B5E57",
               },
             },
           },
@@ -112,10 +112,10 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .chart-container {
-  width: 50%;
-  height: 60vh;
+  width: 100%;
+  height: 50vh;
   background: #e0f2f1;
-  padding: 15px;
-  border-radius: 15px;
+  padding: 10px;
+  border-radius: 10px;
 }
 </style>
