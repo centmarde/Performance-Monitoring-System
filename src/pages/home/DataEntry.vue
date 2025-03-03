@@ -305,6 +305,7 @@
               style="border-color: rgba(255, 255, 255, 0.2)"
             ></v-divider>
 
+            <!-- Card Actions -->
             <v-card-actions class="d-flex justify-end">
               <v-btn
                 color="error"
