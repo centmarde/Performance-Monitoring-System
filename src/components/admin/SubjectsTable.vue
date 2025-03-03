@@ -42,7 +42,7 @@
         <v-card-title
           class="pa-5 rounded-xl elevation-10"
           style="
-            background: #1e1e1e; /* Dark background */
+            background: #1e1e1e;
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.2);
           "
