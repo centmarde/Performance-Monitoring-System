@@ -74,7 +74,7 @@ export default {
 
 .border {
   height: 40%;
-  width: 1.3px;
+  width: 1.5px;
   background-color: rgb(223, 223, 223);
 }
 
