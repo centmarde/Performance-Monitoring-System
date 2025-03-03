@@ -49,6 +49,7 @@
               :class="['subject-card', getColorClass(index)]"
               @click="handleCardClick(subject.id)"
             >
+              <!-- Subject Title -->
               <v-card-title class="subject-title">
                 <v-icon class="subject-icon" size="24">mdi-book-open</v-icon>
                 {{ subject.subjectName }}
