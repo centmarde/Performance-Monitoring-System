@@ -92,7 +92,7 @@ export default {
 }
 
 .searchIcon path {
-  fill: rgb(124, 114, 114);
+  fill: rgb(124, 130, 114);
 }
 
 .micIcon path {
