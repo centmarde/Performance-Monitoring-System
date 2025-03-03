@@ -143,68 +143,41 @@
             </v-card-title>
 
             <!-- Form Fields -->
-            <v-card
-              :color="
-                $vuetify.theme.global.current.dark ? 'grey-darken-4' : 'white'
-              "
-              class="rounded-lg"
-              elevation="2"
-            >
-              <!-- Form Fields -->
-              <v-card-text class="mt-4">
-                <v-container>
-                  <v-row>
-                    <v-col cols="12">
-                      <v-select
-                        label="Subject"
-                        :items="subjectOptions"
-                        v-model="selectedSubject"
-                        variant="outlined"
-                        class="rounded-lg"
-                        density="comfortable"
-                        :color="
-                          $vuetify.theme.global.current.dark
-                            ? 'teal-lighten-2'
-                            : 'teal-darken-4'
-                        "
-                      ></v-select>
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col cols="12" md="6">
-                      <v-select
-                        label="Section"
-                        :items="sectionOptions"
-                        v-model="selectedSection"
-                        variant="outlined"
-                        class="rounded-lg"
-                        density="comfortable"
-                        :color="
-                          $vuetify.theme.global.current.dark
-                            ? 'teal-lighten-2'
-                            : 'teal-darken-4'
-                        "
-                      ></v-select>
-                    </v-col>
-                    <v-col cols="12" md="6">
-                      <v-select
-                        label="Quarter"
-                        :items="quarterOptions"
-                        v-model="selectedQuarter"
-                        variant="outlined"
-                        class="rounded-lg"
-                        density="comfortable"
-                        :color="
-                          $vuetify.theme.global.current.dark
-                            ? 'teal-lighten-2'
-                            : 'teal-darken-4'
-                        "
-                      ></v-select>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-            </v-card>
+            <v-card-text class="mt-4">
+              <v-container>
+                <v-row>
+                  <v-col cols="12">
+                    <v-select
+                      label="Subject"
+                      :items="subjectOptions"
+                      v-model="selectedSubject"
+                      variant="outlined"
+                      class="rounded-lg"
+                    ></v-select>
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12" md="6">
+                    <v-select
+                      label="Section"
+                      :items="sectionOptions"
+                      v-model="selectedSection"
+                      variant="outlined"
+                      class="rounded-lg"
+                    ></v-select>
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-select
+                      label="Quarter"
+                      :items="quarterOptions"
+                      v-model="selectedQuarter"
+                      variant="outlined"
+                      class="rounded-lg"
+                    ></v-select>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
 
             <!-- Divider -->
             <v-divider
