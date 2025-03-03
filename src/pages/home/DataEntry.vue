@@ -25,7 +25,6 @@
         </v-row>
 
         <v-row>
-          <!-- "Add New" Card -->
           <v-col v-if="currentPage === 1" cols="12" sm="6" md="4">
             <v-card class="subject-card add-new-card" @click="showAddNewDialog">
               <v-container
