@@ -580,7 +580,7 @@ const enterRecords = () => {
 }
 
 .dark-mode {
-  background: #f5f5f5; /* Lightened background for dark mode */
+  background: #f5f5f5;
   color: black;
 }
 
