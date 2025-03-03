@@ -122,11 +122,7 @@
         <v-dialog v-model="classRecordDialog" max-width="900px">
           <v-card
             class="pa-5 rounded-xl elevation-10"
-            style="
-              background: #eeefee;
-              backdrop-filter: blur(12px);
-              border: 1px solid rgba(255, 255, 255, 0.2);
-            "
+            :class="$vuetify.theme.global.dark ? 'dark-mode' : 'light-mode'"
           >
             <!-- Elegant Header with Updated Color -->
             <v-card-title
@@ -152,7 +148,7 @@
                       :items="subjectOptions"
                       v-model="selectedSubject"
                       variant="outlined"
-                      class="rounded-lg"
+                      class="rounded-lg text-field"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -163,7 +159,7 @@
                       :items="sectionOptions"
                       v-model="selectedSection"
                       variant="outlined"
-                      class="rounded-lg"
+                      class="rounded-lg text-field"
                     ></v-select>
                   </v-col>
                   <v-col cols="12" md="6">
@@ -172,7 +168,7 @@
                       :items="quarterOptions"
                       v-model="selectedQuarter"
                       variant="outlined"
-                      class="rounded-lg"
+                      class="rounded-lg text-field"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -180,9 +176,7 @@
             </v-card-text>
 
             <!-- Divider -->
-            <v-divider
-              style="border-color: rgba(255, 255, 255, 0.2)"
-            ></v-divider>
+            <v-divider></v-divider>
 
             <!-- Actions -->
             <v-card-actions class="d-flex justify-end">
@@ -215,11 +209,11 @@
 
               <v-btn
                 variant="outlined"
-                class="text-white rounded-lg shadow-md"
-                style="
-                  border: 1px solid rgba(255, 255, 255, 0.3);
-                  transition: 0.3s ease-in-out;
-                  font-size: 16px;
+                class="rounded-lg shadow-md"
+                :class="
+                  $vuetify.theme.global.dark
+                    ? 'dark-close-btn'
+                    : 'light-close-btn'
                 "
                 color="error"
                 @click="classRecordDialog = false"
@@ -579,5 +573,30 @@ const enterRecords = () => {
 
 .v-overlay {
   backdrop-filter: blur(4px);
+}
+.light-mode {
+  background: white;
+  color: black;
+}
+
+.dark-mode {
+  background: #f5f5f5; /* Lightened background for dark mode */
+  color: black;
+}
+
+.text-field {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: black;
+  border-radius: 8px;
+}
+
+.light-close-btn {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  color: red !important;
+}
+
+.dark-close-btn {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white !important;
 }
 </style>
