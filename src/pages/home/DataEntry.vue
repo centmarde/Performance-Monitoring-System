@@ -234,6 +234,7 @@
               border: 1px solid rgba(255, 255, 255, 0.2);
             "
           >
+            <!-- Elegant Header with Glassmorphism Effect -->
             <v-card-title
               class="text-center font-weight-bold py-4"
               style="
