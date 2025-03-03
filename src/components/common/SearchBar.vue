@@ -65,7 +65,7 @@ export default {
 
 .labelforsearch {
   cursor: text;
-  padding: 0px 12px;
+  padding: 0px 20px;
 }
 
 .searchIcon {
