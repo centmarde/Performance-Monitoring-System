@@ -37,6 +37,7 @@
             </v-card>
           </v-col>
 
+          <!-- Subject Cards with Pagination -->
           <v-col
             v-for="(subject, index) in paginatedSubjects"
             :key="index"
