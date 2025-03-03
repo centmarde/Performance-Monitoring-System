@@ -372,7 +372,7 @@ const subjectsStore = useSubjectsStore();
 const sectionsStore = useSectionsStore();
 
 const subjectOptions = computed(() => {
-  console.log("Subjects in store:", subjectsStore.subjects); // Add this deb
+  console.log("Subjects in store:", subjectsStore.subjects);
   return subjectsStore.subjects.map((subject) => subject.title);
 });
 
