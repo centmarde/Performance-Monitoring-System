@@ -83,7 +83,7 @@ export default {
 }
 
 .micButton {
-  padding: 0px 15px 0px 12px;
+  padding: 0px 20px 0px 20px;
   border: none;
   background-color: transparent;
   height: 30px;
