@@ -57,6 +57,7 @@
 
               <v-divider></v-divider>
 
+              <!-- Details Section -->
               <v-card-text class="details-container pa-2">
                 <v-container>
                   <v-row class="fill-height">
