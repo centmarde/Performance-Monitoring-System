@@ -301,7 +301,6 @@
               </v-container>
             </v-card-text>
 
-            <!-- Animated Divider -->
             <v-divider
               style="border-color: rgba(255, 255, 255, 0.2)"
             ></v-divider>
