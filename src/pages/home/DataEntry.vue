@@ -224,7 +224,6 @@
           </v-card>
         </v-dialog>
 
-        <!-- Card Dialog -->
         <v-dialog v-model="cardDialog" max-width="480px">
           <v-card
             class="pa-5 rounded-xl elevation-10"
