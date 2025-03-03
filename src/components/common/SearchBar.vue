@@ -96,7 +96,7 @@ export default {
 }
 
 .micIcon path {
-  fill: rgb(120, 114, 114);
+  fill: rgb(120, 115, 114);
 }
 
 .micButton:hover {
