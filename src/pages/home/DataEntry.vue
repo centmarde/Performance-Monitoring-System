@@ -248,6 +248,7 @@
               - {{ activeSubject || "Subject" }}
             </v-card-title>
 
+            <!-- Content -->
             <v-card-text class="mt-4">
               <v-container>
                 <v-row justify="center">
