@@ -124,6 +124,7 @@
             class="pa-5 rounded-xl elevation-10"
             :class="$vuetify.theme.global.dark ? 'dark-mode' : 'light-mode'"
           >
+            <!-- Elegant Header with Updated Color -->
             <v-card-title
               class="text-center font-weight-bold py-4"
               style="
