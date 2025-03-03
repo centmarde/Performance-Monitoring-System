@@ -69,7 +69,7 @@ export default {
 }
 
 .searchIcon {
-  width: 20px;
+  width: 30px;
 }
 
 .border {
