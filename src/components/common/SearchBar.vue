@@ -50,7 +50,7 @@ export default {
   border-radius: 10px;
   overflow: hidden;
   cursor: pointer;
-  padding-left: 20px;
+  padding-left: 15px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -65,7 +65,7 @@ export default {
 
 .labelforsearch {
   cursor: text;
-  padding: 0px 20px;
+  padding: 0px 12px;
 }
 
 .searchIcon {
@@ -83,10 +83,10 @@ export default {
 }
 
 .micButton {
-  padding: 0px 20px 0px 20px;
+  padding: 0px 15px 0px 12px;
   border: none;
   background-color: transparent;
-  height: 30px;
+  height: 40px;
   cursor: pointer;
   transition-duration: 0.3s;
 }
