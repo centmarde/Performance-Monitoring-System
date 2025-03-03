@@ -175,7 +175,6 @@
               </v-container>
             </v-card-text>
 
-            <!-- Divider -->
             <v-divider></v-divider>
 
             <v-card-actions class="d-flex justify-end">
