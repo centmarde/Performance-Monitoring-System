@@ -138,7 +138,6 @@
               {{ activeSubject || "New Subject" }}
             </v-card-title>
 
-            <!-- Form Fields -->
             <v-card-text class="mt-4">
               <v-container>
                 <v-row>
