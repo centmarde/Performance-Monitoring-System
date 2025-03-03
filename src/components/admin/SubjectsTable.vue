@@ -34,7 +34,7 @@
       <v-card
         class="pa-5 rounded-xl elevation-10"
         style="
-          background: #eeefee;
+          background: #1e1e1e; /* Dark background */
           backdrop-filter: blur(12px);
           border: 1px solid rgba(255, 255, 255, 0.2);
         "
@@ -47,8 +47,9 @@
             border-radius: 12px 12px 0 0;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
           "
-          >Add Subject</v-card-title
         >
+          Add Subject
+        </v-card-title>
         <v-card-text>
           <v-form @submit.prevent="addSubject">
             <v-text-field
@@ -56,6 +57,11 @@
               label="Title"
               :rules="[requiredValidator]"
               outlined
+              style="
+                background-color: rgba(255, 255, 255, 0.1);
+                color: white;
+                border-radius: 8px;
+              "
             />
           </v-form>
         </v-card-text>
