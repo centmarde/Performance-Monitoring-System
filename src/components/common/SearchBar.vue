@@ -55,7 +55,7 @@ export default {
 }
 
 .input {
-  width: 180px;
+  width: 170px;
   height: 100%;
   border: none;
   outline: none;
@@ -69,17 +69,17 @@ export default {
 }
 
 .searchIcon {
-  width: 30px;
+  width: 13px;
 }
 
 .border {
   height: 40%;
-  width: 1.5px;
+  width: 1.3px;
   background-color: rgb(223, 223, 223);
 }
 
 .micIcon {
-  width: 20px;
+  width: 12px;
 }
 
 .micButton {
