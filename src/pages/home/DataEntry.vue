@@ -110,7 +110,6 @@
           </v-col>
         </v-row>
 
-        <!-- Pagination Control -->
         <v-pagination
           v-if="!isLoading"
           v-model="currentPage"
