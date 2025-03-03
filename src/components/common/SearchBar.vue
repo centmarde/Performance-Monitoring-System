@@ -79,7 +79,7 @@ export default {
 }
 
 .micIcon {
-  width: 12px;
+  width: 20px;
 }
 
 .micButton {
