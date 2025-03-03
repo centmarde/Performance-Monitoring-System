@@ -377,7 +377,7 @@ const subjectOptions = computed(() => {
 });
 
 const sectionOptions = computed(() => {
-  console.log("Sections in store:", sectionsStore.sections); // Debug log
+  console.log("Sections in store:", sectionsStore.sections);
   return sectionsStore.sections.map((section) => section.code);
 });
 
