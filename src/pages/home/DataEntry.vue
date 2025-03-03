@@ -178,6 +178,7 @@
             <!-- Divider -->
             <v-divider></v-divider>
 
+            <!-- Actions -->
             <v-card-actions class="d-flex justify-end">
               <v-btn
                 v-if="!activeSubject"
