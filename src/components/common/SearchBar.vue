@@ -92,11 +92,11 @@ export default {
 }
 
 .searchIcon path {
-  fill: rgb(124, 130, 124);
+  fill: rgb(114, 114, 114);
 }
 
 .micIcon path {
-  fill: rgb(152, 115, 120);
+  fill: rgb(114, 114, 114);
 }
 
 .micButton:hover {
