@@ -530,7 +530,6 @@ const enterRecords = () => {
   font-size: 16px;
 }
 
-/* Light Mode Colors */
 .bg-blue-light {
   background: #dceeff;
   color: #000;
