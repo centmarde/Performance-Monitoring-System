@@ -33,7 +33,7 @@
     <v-dialog v-model="showAddSubjectForm" max-width="500px">
       <v-card
         class="pa-5 rounded-xl elevation-10"
-        :class="$vuetify.theme.global.dark ? 'dark-mode' : 'light-mode'"
+        :class="theme.global.name.value === 'dark' ? 'dark-mode' : 'light-mode'"
       >
         <v-card-title
           class="text-center font-weight-bold py-4"
