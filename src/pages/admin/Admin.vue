@@ -168,7 +168,7 @@
           </v-dialog>
 
           <!-- Data Table -->
-          <v-container fluid>
+          <v-container>
             <v-row align="center" justify="start">
               <v-col cols="auto">
                 <v-btn-toggle v-model="selectedTable" mandatory>
