@@ -210,11 +210,7 @@
               <v-btn
                 variant="outlined"
                 class="rounded-lg shadow-md"
-                :class="
-                  $vuetify.theme.global.dark
-                    ? 'dark-close-btn'
-                    : 'light-close-btn'
-                "
+                :class="isDarkMode ? 'dark-mode' : 'light-mode'"
                 color="error"
                 @click="classRecordDialog = false"
               >
