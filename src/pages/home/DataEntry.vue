@@ -148,26 +148,27 @@
                       :items="subjectOptions"
                       v-model="selectedSubject"
                       variant="outlined"
-                      class="rounded-lg"
-                      density="comfortable"
+                      class="rounded-lg text-field"
                     ></v-select>
-
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col cols="12" md="6">
                     <v-select
                       label="Section"
                       :items="sectionOptions"
                       v-model="selectedSection"
                       variant="outlined"
-                      class="rounded-lg"
-                      density="comfortable"
+                      class="rounded-lg text-field"
                     ></v-select>
-
+                  </v-col>
+                  <v-col cols="12" md="6">
                     <v-select
                       label="Quarter"
                       :items="quarterOptions"
                       v-model="selectedQuarter"
                       variant="outlined"
-                      class="rounded-lg"
-                      density="comfortable"
+                      class="rounded-lg text-field"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -587,9 +588,16 @@ const enterRecords = () => {
 }
 
 .text-field {
-  background-color: rgba(255, 255, 255, 0.9);
-  color: black;
-  border-radius: 8px;
+  background-color: transparent !important;
+}
+
+.text-field .v-field {
+  border: 1px solid rgba(0, 0, 0, 0.23) !important;
+  border-radius: 8px !important;
+}
+
+.v-theme--dark .text-field .v-field {
+  border-color: rgba(255, 255, 255, 0.23) !important;
 }
 
 .light-close-btn {
