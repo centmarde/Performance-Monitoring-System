@@ -208,12 +208,11 @@
               >
                 <v-icon class="mr-2">mdi-content-save</v-icon> Save
               </v-btn>
-
               <v-btn
                 variant="outlined"
                 class="rounded-lg shadow-md"
                 :class="
-                  $vuetify.theme.global.dark
+                  theme.global.name.value === 'dark'
                     ? 'dark-close-btn'
                     : 'light-close-btn'
                 "
