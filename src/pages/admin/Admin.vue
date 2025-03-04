@@ -168,8 +168,8 @@
           </v-dialog>
 
           <!-- Data Table -->
-          <v-container>
-            <v-row align="center" justify="start">
+          <v-container class="d-flex flex-column align-center">
+            <v-row align="center" justify="center" class="mb-3">
               <v-col cols="auto">
                 <v-btn-toggle v-model="selectedTable" mandatory>
                   <v-btn :color="primaryColor" value="users">Users</v-btn>
@@ -177,6 +177,7 @@
                 </v-btn-toggle>
               </v-col>
             </v-row>
+
             <DataTable
               v-if="selectedTable === 'users'"
               :items="paginatedItems"
@@ -187,6 +188,7 @@
             />
             <SubjectsTable v-else />
           </v-container>
+
           <v-container class="mt-4">
             <v-row class="align-center justify-center">
               <v-pagination
