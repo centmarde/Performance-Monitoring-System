@@ -122,9 +122,7 @@
         <v-dialog v-model="classRecordDialog" max-width="900px">
           <v-card
             class="pa-5 rounded-xl elevation-10"
-            :class="
-              theme.global.name.value === 'dark' ? 'dark-mode' : 'light-mode'
-            "
+            :class="isDarkMode ? 'dark-mode' : 'light-mode'"
           >
             <!-- Elegant Header with Updated Color -->
             <v-card-title
@@ -150,27 +148,26 @@
                       :items="subjectOptions"
                       v-model="selectedSubject"
                       variant="outlined"
-                      class="rounded-lg text-field"
+                      class="rounded-lg"
+                      density="comfortable"
                     ></v-select>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col cols="12" md="6">
+
                     <v-select
                       label="Section"
                       :items="sectionOptions"
                       v-model="selectedSection"
                       variant="outlined"
-                      class="rounded-lg text-field"
+                      class="rounded-lg"
+                      density="comfortable"
                     ></v-select>
-                  </v-col>
-                  <v-col cols="12" md="6">
+
                     <v-select
                       label="Quarter"
                       :items="quarterOptions"
                       v-model="selectedQuarter"
                       variant="outlined"
-                      class="rounded-lg text-field"
+                      class="rounded-lg"
+                      density="comfortable"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -208,11 +205,12 @@
               >
                 <v-icon class="mr-2">mdi-content-save</v-icon> Save
               </v-btn>
+
               <v-btn
                 variant="outlined"
                 class="rounded-lg shadow-md"
                 :class="
-                  theme.global.name.value === 'dark'
+                  $vuetify.theme.global.dark
                     ? 'dark-close-btn'
                     : 'light-close-btn'
                 "
@@ -360,6 +358,7 @@ import { supabase } from "@/lib/supabase";
 import { useTheme } from "vuetify";
 
 const theme = useTheme();
+const isDarkMode = computed(() => theme.current.value.dark);
 
 const toast = useToast();
 const classRecordDialog = ref(false);
