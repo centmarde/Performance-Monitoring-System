@@ -168,7 +168,7 @@
           </v-dialog>
 
           <!-- Data Table -->
-          <v-container>
+          <v-container fluid>
             <v-row align="center" justify="start">
               <v-col cols="auto">
                 <v-btn-toggle v-model="selectedTable" mandatory>
@@ -194,7 +194,6 @@
                 :length="totalPages"
                 :total-visible="3"
                 rounded
-                active-color="black"
                 density="comfortable"
                 class="custom-pagination"
               ></v-pagination>
@@ -503,5 +502,24 @@ const selectedTable = ref("users");
 .dark-mode :deep(.v-pagination__item--active) {
   background-color: #333 !important;
   color: white !important;
+}
+.custom-pagination {
+  --v-pagination-active-color: #ffffff !important; /* White text */
+  --v-pagination-active-bg: #004d40 !important; /* Teal background */
+  --v-pagination-item-color: #ffffff !important; /* White text for inactive items */
+  --v-pagination-item-bg: transparent !important; /* Transparent background */
+}
+
+.custom-pagination .v-pagination__item--active {
+  background-color: var(--v-pagination-active-bg) !important;
+  color: var(--v-pagination-active-color) !important;
+}
+
+.custom-pagination .v-pagination__item {
+  color: var(--v-pagination-item-color) !important;
+}
+
+.custom-pagination .v-pagination__item:hover {
+  background-color: rgba(0, 77, 64, 0.7) !important;
 }
 </style>
