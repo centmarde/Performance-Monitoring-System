@@ -160,8 +160,6 @@ onMounted(() => {
 }
 
 .text-field {
-  background-color: rgba(255, 255, 255, 0.9);
-  color: black;
-  border-radius: 8px;
+  background-color: transparent !important;
 }
 </style>
