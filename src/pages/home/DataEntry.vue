@@ -149,7 +149,7 @@
                       label="Subject"
                       :items="subjectOptions"
                       v-model="selectedSubject"
-                      variant="outlined"
+                      variant="solo"
                       class="rounded-lg text-field"
                     ></v-select>
                   </v-col>
@@ -160,7 +160,7 @@
                       label="Section"
                       :items="sectionOptions"
                       v-model="selectedSection"
-                      variant="outlined"
+                      variant="solo"
                       class="rounded-lg text-field"
                     ></v-select>
                   </v-col>
@@ -169,7 +169,7 @@
                       label="Quarter"
                       :items="quarterOptions"
                       v-model="selectedQuarter"
-                      variant="outlined"
+                      variant="solo"
                       class="rounded-lg text-field"
                     ></v-select>
                   </v-col>
