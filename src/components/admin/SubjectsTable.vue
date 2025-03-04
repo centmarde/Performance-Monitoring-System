@@ -167,4 +167,8 @@ onMounted(() => {
   border: 1px solid rgba(0, 0, 0, 0.23) !important;
   border-radius: 8px !important;
 }
+
+.v-theme--dark .text-field .v-field {
+  border-color: rgba(255, 255, 255, 0.23) !important;
+}
 </style>
