@@ -162,4 +162,9 @@ onMounted(() => {
 .text-field {
   background-color: transparent !important;
 }
+
+.text-field .v-field {
+  border: 1px solid rgba(0, 0, 0, 0.23) !important;
+  border-radius: 8px !important;
+}
 </style>
