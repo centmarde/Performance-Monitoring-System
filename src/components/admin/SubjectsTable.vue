@@ -79,7 +79,9 @@ import { ref, computed, onMounted } from "vue";
 import { useSubjectsStore } from "@/stores/subjectsStore";
 import { requiredValidator } from "@/lib/validator";
 import { supabase } from "@/lib/supabase";
+import { useTheme } from "vuetify";
 
+const theme = useTheme();
 const primaryColor = computed(() => "#004D40");
 
 const subjectsStore = useSubjectsStore();
