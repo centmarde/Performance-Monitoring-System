@@ -122,7 +122,9 @@
         <v-dialog v-model="classRecordDialog" max-width="900px">
           <v-card
             class="pa-5 rounded-xl elevation-10"
-            :class="$vuetify.theme.global.dark ? 'dark-mode' : 'light-mode'"
+            :class="
+              theme.global.name.value === 'dark' ? 'dark-mode' : 'light-mode'
+            "
           >
             <!-- Elegant Header with Updated Color -->
             <v-card-title
@@ -356,6 +358,9 @@ import { useSectionsStore } from "@/stores/sectionsStore";
 import { useRecordsStore } from "@/stores/recordsStore";
 import { useToast } from "vue-toastification";
 import { supabase } from "@/lib/supabase";
+import { useTheme } from "vuetify";
+
+const theme = useTheme();
 
 const toast = useToast();
 const classRecordDialog = ref(false);
