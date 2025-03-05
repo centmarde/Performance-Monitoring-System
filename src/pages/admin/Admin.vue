@@ -3,6 +3,7 @@
     <template #content>
       <v-container fluid>
         <div class="p-8 bg-gray-100 min-h-screen">
+          <!-- Add User Dialog -->
           <v-dialog v-model="showEditUserForm" max-width="500px">
             <v-card
               class="pa-5 rounded-xl elevation-10"
@@ -78,6 +79,7 @@
             </v-card>
           </v-dialog>
 
+          <!-- Edit User Dialog -->
           <v-dialog v-model="showAddUserForm" max-width="500px">
             <v-card>
               <v-card-title>Add User</v-card-title>
@@ -147,6 +149,7 @@
             </v-card>
           </v-dialog>
 
+          <!-- Delete Confirmation Dialog -->
           <v-dialog v-model="showDeleteConfirmation" max-width="400px">
             <v-card>
               <v-card-title>Confirm Deletion</v-card-title>
@@ -276,6 +279,7 @@ const togglePasswordVisibility = () => {
   passwordVisible.value = !passwordVisible.value;
 };
 
+// Pagination related state
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
 
@@ -299,7 +303,7 @@ const isEditUserValid = computed(() => {
     (editedUser.value.firstname?.trim() || "").length > 0 &&
     (editedUser.value.lastname?.trim() || "").length > 0 &&
     emailValidator(editedUser.value.email || "") === true &&
-    isValidPassword &&
+    isValidPassword && // Check password only if it's not empty
     (editedUser.value.user_type?.trim() || "").length > 0 &&
     (editedUser.value.phone?.trim() || "").length > 0 &&
     (editedUser.value.complete_address?.trim() || "").length > 0
@@ -324,24 +328,30 @@ const filteredItems = computed(() => {
   });
 });
 
+// Paginated Items (dynamic based on selected itemsPerPage)
+// Calculate total pages
 const totalPages = computed(() =>
   Math.ceil(filteredItems.value.length / itemsPerPage.value)
 );
 
+// Get paginated items from filtered results
 const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
   return filteredItems.value.slice(start, end);
 });
 
+// Watch search query to reset pagination
 watch(searchQuery, () => {
   currentPage.value = 1;
 });
 
+// Handle items per page change
 const handleItemsPerPageChange = () => {
   currentPage.value = 1;
 };
 
+// Pagination methods
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
@@ -383,6 +393,7 @@ onMounted(async () => {
   }
 });
 
+// Methods for managing users
 const openEditDialog = (user?: User) => {
   editedUser.value = user
     ? { ...user }
@@ -481,20 +492,24 @@ const confirmDeleteUser = async () => {
 const selectedTable = ref("users");
 </script>
 <style scoped>
+/* Light Mode */
 :deep(.v-pagination__item--active) {
   background-color: #e0e0e0 !important;
   color: black !important;
 }
 
+/* Dark Mode */
 .dark-mode :deep(.v-pagination__item--active) {
   background-color: #333 !important;
   color: white !important;
 }
 .custom-pagination {
-  --v-pagination-active-color: #ffffff !important;
-  --v-pagination-active-bg: #004d40 !important;
-  --v-pagination-item-color: #ffffff !important;
-  --v-pagination-item-bg: transparent !important;
+  --v-pagination-active-color: #ffffff !important; /* White text */
+  --v-pagination-active-bg: #004d40 !important; /* Teal background */
+  --v-pagination-item-color: #ffffff !important; /* White text for inactive items */
+  --v-pagination-item-bg: transparent !important; /* Transparent background */
+}
+
 .custom-pagination .v-pagination__item--active {
   background-color: var(--v-pagination-active-bg) !important;
   color: var(--v-pagination-active-color) !important;
