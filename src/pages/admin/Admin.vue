@@ -335,6 +335,7 @@ const paginatedItems = computed(() => {
   return filteredItems.value.slice(start, end);
 });
 
+// Watch search query to reset pagination
 watch(searchQuery, () => {
   currentPage.value = 1;
 });
