@@ -323,6 +323,7 @@ const filteredItems = computed(() => {
   });
 });
 
+// Paginated Items (dynamic based on selected itemsPerPage)
 const totalPages = computed(() =>
   Math.ceil(filteredItems.value.length / itemsPerPage.value)
 );
