@@ -33,11 +33,7 @@
     <v-dialog v-model="showAddSubjectForm" max-width="500px">
       <v-card
         class="pa-5 rounded-xl elevation-10"
-        style="
-          background: #eeefee;
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-        "
+        :class="theme.global.name.value === 'dark' ? 'dark-mode' : 'light-mode'"
       >
         <v-card-title
           class="text-center font-weight-bold py-4"
@@ -47,8 +43,9 @@
             border-radius: 12px 12px 0 0;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
           "
-          >Add Subject</v-card-title
         >
+          Add Subject
+        </v-card-title>
         <v-card-text>
           <v-form @submit.prevent="addSubject">
             <v-text-field
@@ -56,6 +53,7 @@
               label="Title"
               :rules="[requiredValidator]"
               outlined
+              class="text-field"
             />
           </v-form>
         </v-card-text>
@@ -81,7 +79,9 @@ import { ref, computed, onMounted } from "vue";
 import { useSubjectsStore } from "@/stores/subjectsStore";
 import { requiredValidator } from "@/lib/validator";
 import { supabase } from "@/lib/supabase";
+import { useTheme } from "vuetify";
 
+const theme = useTheme();
 const primaryColor = computed(() => "#004D40");
 
 const subjectsStore = useSubjectsStore();
@@ -148,5 +148,27 @@ onMounted(() => {
 .styled-table th {
   background: #004d40;
   color: white;
+}
+.light-mode {
+  background: white;
+  color: black;
+}
+
+.dark-mode {
+  background: #f5f5f5; /* Light background for dark mode */
+  color: black;
+}
+
+.text-field {
+  background-color: transparent !important;
+}
+
+.text-field .v-field {
+  border: 1px solid rgba(0, 0, 0, 0.23) !important;
+  border-radius: 8px !important;
+}
+
+.v-theme--dark .text-field .v-field {
+  border-color: rgba(255, 255, 255, 0.23) !important;
 }
 </style>
