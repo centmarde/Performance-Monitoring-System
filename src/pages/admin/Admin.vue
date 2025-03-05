@@ -486,7 +486,6 @@ const selectedTable = ref("users");
   color: black !important;
 }
 
-/* Dark Mode */
 .dark-mode :deep(.v-pagination__item--active) {
   background-color: #333 !important;
   color: white !important;
