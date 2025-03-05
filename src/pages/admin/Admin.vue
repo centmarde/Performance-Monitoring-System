@@ -491,7 +491,7 @@ const selectedTable = ref("users");
   color: white !important;
 }
 .custom-pagination {
-  --v-pagination-active-color: #ffffff !important; /* White text */
+  --v-pagination-active-color: #ffffff !important;
   --v-pagination-active-bg: #004d40 !important; /* Teal background */
   --v-pagination-item-color: #ffffff !important; /* White text for inactive items */
   --v-pagination-item-bg: transparent !important; /* Transparent background */
