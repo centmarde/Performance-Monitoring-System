@@ -164,7 +164,6 @@
             </v-card>
           </v-dialog>
 
-          <!-- Data Table -->
           <v-container>
             <v-row align="center" justify="start">
               <v-col cols="auto">
