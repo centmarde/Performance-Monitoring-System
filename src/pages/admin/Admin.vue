@@ -494,9 +494,7 @@ const selectedTable = ref("users");
   --v-pagination-active-color: #ffffff !important;
   --v-pagination-active-bg: #004d40 !important;
   --v-pagination-item-color: #ffffff !important;
-  --v-pagination-item-bg: transparent !important; /* Transparent background */
-}
-
+  --v-pagination-item-bg: transparent !important;
 .custom-pagination .v-pagination__item--active {
   background-color: var(--v-pagination-active-bg) !important;
   color: var(--v-pagination-active-color) !important;
