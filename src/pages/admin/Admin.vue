@@ -340,6 +340,7 @@ watch(searchQuery, () => {
   currentPage.value = 1;
 });
 
+// Handle items per page change
 const handleItemsPerPageChange = () => {
   currentPage.value = 1;
 };
