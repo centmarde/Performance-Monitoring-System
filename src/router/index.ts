@@ -25,6 +25,9 @@ import Welcome from "@/pages/Welcome.vue";
 import NewRecords from "@/pages/home/NewRecords.vue";
 // @ts-ignore
 import RecentRecords from "@/pages/home/RecentRecords.vue";
+// @ts-ignore
+import SectionTracking from "@/pages/home/SectionTracking.vue";
+// @ts-ignore
 import AdminPorfiles from "@/pages/admin/AdminProfiles.vue";
 
 const toast = useToast();
@@ -80,6 +83,12 @@ const routes = setupLayouts([
     component: AdminPorfiles,
     name: "admin_profiles",
     meta: { requiresAuth: true, role: "admin" },
+  },
+  {
+    path: "/section_tracking",
+    component: SectionTracking,
+    name: "section_tracking",
+    meta: { requiresAuth: true, role: "teacher" },
   },
   { path: "/:pathMatch(.*)*", component: NotFound, name: "NotFound" },
 ]);
