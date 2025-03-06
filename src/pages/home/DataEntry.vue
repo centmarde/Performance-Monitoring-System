@@ -37,8 +37,18 @@
             </v-card>
           </v-col>
 
+          <!-- No Data Message -->
+          <v-col v-if="!isLoading && subjects.length === 0" cols="12">
+            <v-card class="pa-8 text-center">
+              <v-icon size="64" color="grey">mdi-book-off-outline</v-icon>
+              <h3 class="mt-4 text-grey-darken-1">No Class Record available</h3>
+              <p class="text-grey">Click "Add New" to create your first Class Record entry.</p>
+            </v-card>
+          </v-col>
+
           <!-- Subject Cards with Pagination -->
           <v-col
+            v-else-if="!isLoading"
             v-for="(subject, index) in paginatedSubjects"
             :key="index"
             cols="12"

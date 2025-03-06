@@ -29,7 +29,9 @@ export const useClassRecordStore = defineStore("classRecord", {
       const { data, error } = await supabase
         .from("class_record")
         .select("*, subjects(title),sections(code),records(*),users(email)")
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .eq("teacher_id", localStorage.getItem("user_id"));
+
       if (error) {
         this.error = error.message;
       } else {
