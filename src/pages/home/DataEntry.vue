@@ -122,11 +122,7 @@
         <v-dialog v-model="classRecordDialog" max-width="900px">
           <v-card
             class="pa-5 rounded-xl elevation-10"
-            style="
-              background: #eeefee;
-              backdrop-filter: blur(12px);
-              border: 1px solid rgba(255, 255, 255, 0.2);
-            "
+            :class="isDarkMode ? 'dark-mode' : 'light-mode'"
           >
             <!-- Elegant Header with Updated Color -->
             <v-card-title
@@ -152,7 +148,7 @@
                       :items="subjectOptions"
                       v-model="selectedSubject"
                       variant="outlined"
-                      class="rounded-lg"
+                      class="rounded-lg text-field"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -163,7 +159,7 @@
                       :items="sectionOptions"
                       v-model="selectedSection"
                       variant="outlined"
-                      class="rounded-lg"
+                      class="rounded-lg text-field"
                     ></v-select>
                   </v-col>
                   <v-col cols="12" md="6">
@@ -172,7 +168,7 @@
                       :items="quarterOptions"
                       v-model="selectedQuarter"
                       variant="outlined"
-                      class="rounded-lg"
+                      class="rounded-lg text-field"
                     ></v-select>
                   </v-col>
                 </v-row>
@@ -180,9 +176,7 @@
             </v-card-text>
 
             <!-- Divider -->
-            <v-divider
-              style="border-color: rgba(255, 255, 255, 0.2)"
-            ></v-divider>
+            <v-divider></v-divider>
 
             <!-- Actions -->
             <v-card-actions class="d-flex justify-end">
@@ -215,12 +209,8 @@
 
               <v-btn
                 variant="outlined"
-                class="text-white rounded-lg shadow-md"
-                style="
-                  border: 1px solid rgba(255, 255, 255, 0.3);
-                  transition: 0.3s ease-in-out;
-                  font-size: 16px;
-                "
+                class="rounded-lg shadow-md"
+                :class="isDarkMode ? 'dark-mode' : 'light-mode'"
                 color="error"
                 @click="classRecordDialog = false"
               >
@@ -362,6 +352,10 @@ import { useSectionsStore } from "@/stores/sectionsStore";
 import { useRecordsStore } from "@/stores/recordsStore";
 import { useToast } from "vue-toastification";
 import { supabase } from "@/lib/supabase";
+import { useTheme } from "vuetify";
+
+const theme = useTheme();
+const isDarkMode = computed(() => theme.current.value.dark);
 
 const toast = useToast();
 const classRecordDialog = ref(false);
@@ -378,12 +372,12 @@ const subjectsStore = useSubjectsStore();
 const sectionsStore = useSectionsStore();
 
 const subjectOptions = computed(() => {
-  console.log("Subjects in store:", subjectsStore.subjects); // Add this debug line
+  console.log("Subjects in store:", subjectsStore.subjects);
   return subjectsStore.subjects.map((subject) => subject.title);
 });
 
 const sectionOptions = computed(() => {
-  console.log("Sections in store:", sectionsStore.sections); // Debug log
+  console.log("Sections in store:", sectionsStore.sections);
   return sectionsStore.sections.map((section) => section.code);
 });
 
@@ -392,7 +386,7 @@ const isLoading = ref(false);
 onMounted(async () => {
   isLoading.value = true;
   try {
-    await sectionsStore.fetchSections(); // Move this to the top
+    await sectionsStore.fetchSections();
     await subjectsStore.fetchSubjects();
     await classRecordStore.fetchAllClassRecordsWithDetails();
     subjects.value = classRecordStore.classRecords;
@@ -536,7 +530,6 @@ const enterRecords = () => {
   font-size: 16px;
 }
 
-/* Light Mode Colors */
 .bg-blue-light {
   background: #dceeff;
   color: #000;
@@ -557,7 +550,6 @@ const enterRecords = () => {
   color: #000;
 }
 
-/* Dark Mode Colors */
 .dark-mode .bg-blue-light {
   background: #1e3a5f;
   color: #fff;
@@ -580,5 +572,37 @@ const enterRecords = () => {
 
 .v-overlay {
   backdrop-filter: blur(4px);
+}
+.light-mode {
+  background: white;
+  color: black;
+}
+
+.dark-mode {
+  background: #f5f5f5;
+  color: black;
+}
+
+.text-field {
+  background-color: transparent !important;
+}
+
+.text-field .v-field {
+  border: 1px solid rgba(0, 0, 0, 0.23) !important;
+  border-radius: 8px !important;
+}
+
+.v-theme--dark .text-field .v-field {
+  border-color: rgba(255, 255, 255, 0.23) !important;
+}
+
+.light-close-btn {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  color: red !important;
+}
+
+.dark-close-btn {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white !important;
 }
 </style>

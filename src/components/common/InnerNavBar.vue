@@ -8,7 +8,9 @@
 
     <!-- Move Dark Mode Icon & Clock to the End -->
     <v-container class="d-flex align-center justify-end" style="width: auto">
-      <v-icon class="me-3" @click="toggleTheme">{{ themeIcon }}</v-icon>
+      <v-icon class="theme-toggle-btn me-3" @click="toggleTheme">{{
+        themeIcon
+      }}</v-icon>
       <v-toolbar-title class="clock">{{ currentTime }}</v-toolbar-title>
     </v-container>
 
@@ -48,19 +50,16 @@ const themeIcon = computed(() =>
   isDarkTheme.value ? "mdi-weather-sunny" : "mdi-weather-night"
 );
 
-// Toggle light/dark mode
 function toggleTheme() {
   const newTheme = isDarkTheme.value ? "light" : "dark";
   theme.global.name.value = newTheme;
   localStorage.setItem("theme", newTheme);
 }
 
-// Sync navbar color with sidebar
 const navbarClass = computed(() =>
   isDarkTheme.value ? "bg-dark-mode" : "bg-light-mode"
 );
 
-// Adjust title color for readability
 const titleClass = computed(() =>
   isDarkTheme.value ? "text-light-title" : "text-dark-title"
 );
@@ -70,7 +69,6 @@ userInfoStore.fetchUserInfo();
 
 const userEmail = computed(() => userInfoStore.userInfo?.email || "");
 
-// Realtime Clock
 const currentTime = ref(new Date().toLocaleTimeString());
 
 const updateTime = () => {
@@ -91,23 +89,43 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Light Mode Navbar (Matches Sidebar) */
+.theme-toggle-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.theme-toggle-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.bg-dark-mode .theme-toggle-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.bg-light-mode .theme-toggle-btn {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
 .bg-light-mode {
-  background-color: #004d40 !important; /* Dark Teal */
+  background-color: #004d40 !important;
   color: white;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Dark Mode Navbar (Matches Sidebar) */
 .bg-dark-mode {
-  background-color: #004d40 !important; /* Dark Teal */
+  background-color: #004d40 !important;
   color: white;
   box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
 }
 
-/* Improve Readability of Title */
 .text-dark-title {
-  color: white !important; /* Strong contrast */
+  color: white !important;
   font-size: 1.2rem;
   font-weight: bold;
   text-transform: uppercase;
@@ -115,20 +133,18 @@ onUnmounted(() => {
 }
 
 .text-light-title {
-  color: #e0f7fa !important; /* Light teal for better visibility */
+  color: #e0f7fa !important;
   font-size: 1.2rem;
   font-weight: bold;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-/* Menu Card Styling */
 .rounded-border {
   border-radius: 10px;
   border: 1px solid #ccc;
 }
 
-/* Clock Styling */
 .clock {
   font-size: 1rem;
   font-weight: bold;

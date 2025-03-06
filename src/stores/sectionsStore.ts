@@ -1,8 +1,9 @@
-import { ref } from 'vue';
-import { defineStore } from 'pinia';
-import { supabase } from '@/lib/supabase';
+import { ref } from "vue";
+import { defineStore } from "pinia";
+import { supabase } from "@/lib/supabase";
 
-export interface Section { // Export the Section interface
+export interface Section {
+  // Export the Section interface
   id: number;
   created_at: string;
   teacher_id: number;
@@ -12,41 +13,41 @@ export interface Section { // Export the Section interface
   subject_titles: string[];
 }
 
-export const useSectionsStore = defineStore('sectionsStore', () => {
+export const useSectionsStore = defineStore("sectionsStore", () => {
   const sections = ref<Section[]>([]);
   const sectionCount = ref(0);
 
   async function fetchSections() {
     // Fetch all sections directly without joining with section_subjects
     const { data: sectionsData, error: sectionsError } = await supabase
-      .from('sections')
-      .select('*');
+      .from("sections")
+      .select("*");
 
     if (sectionsError) {
-      console.error('Error fetching sections:', sectionsError);
+      console.error("Error fetching sections:", sectionsError);
       sections.value = [];
       return null;
     }
 
-    console.log('Fetched sections:', sectionsData); // Debug log
+    console.log("Fetched sections:", sectionsData); // Debug log
 
     sections.value = sectionsData.map((section: any) => ({
       ...section,
       subject_ids: [],
-      subject_titles: []
+      subject_titles: [],
     })) as Section[];
-    
+
     sectionCount.value = sectionsData.length;
     return sections.value;
   }
 
   async function fetchSectionsWithStudents() {
     const { data, error } = await supabase
-      .from('sections')
-      .select('*, students(id)');
+      .from("sections")
+      .select("*, students(id)");
 
     if (error) {
-      console.error('Error fetching sections with students:', error);
+      console.error("Error fetching sections with students:", error);
       sections.value = [];
       return null;
     }
@@ -60,13 +61,13 @@ export const useSectionsStore = defineStore('sectionsStore', () => {
 
   async function fetchSectionIdByCode(code: string): Promise<number | null> {
     const { data, error } = await supabase
-      .from('sections')
-      .select('id')
-      .eq('code', code)
+      .from("sections")
+      .select("id")
+      .eq("code", code)
       .single();
 
     if (error) {
-      console.error('Error fetching section ID:', error);
+      console.error("Error fetching section ID:", error);
       return null;
     }
 

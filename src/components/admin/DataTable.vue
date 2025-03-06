@@ -1,9 +1,17 @@
 <template>
   <v-container>
     <v-card class="data-card">
-      <v-card-title class="d-flex justify-space-between align-center">
-        <span class="text-h6">User List</span>
-      </v-card-title>
+      <v-row class="align-center mb-1">
+        <v-col cols="6">
+          <v-card-title class="text-h6">User List</v-card-title>
+        </v-col>
+        <v-col cols="6" class="d-flex justify-end">
+          <SearchBar
+            :model-value="searchQuery"
+            @update:model-value="$emit('update:searchQuery', $event)"
+          />
+        </v-col>
+      </v-row>
 
       <v-divider></v-divider>
       <v-card-text>
@@ -46,12 +54,20 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
+import { computed } from "vue";
+
+const props = defineProps<{
+  items: any[];
+  searchQuery: string;
+}>();
 
 const primaryColor = computed(() => "#004D40");
 
-const props = defineProps<{ items: any[] }>();
-const emit = defineEmits(["edit-user", "delete-user"]);
+const emit = defineEmits<{
+  (e: "edit-user", user: any): void;
+  (e: "delete-user", id: number): void;
+  (e: "update:searchQuery", value: string): void;
+}>();
 
 const editUser = (user: any) => {
   emit("edit-user", user);
@@ -76,7 +92,7 @@ const deleteUser = (id: number) => {
 .styled-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin-top: 0;
 }
 
 .styled-table th,

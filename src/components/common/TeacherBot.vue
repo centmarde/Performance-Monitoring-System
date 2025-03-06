@@ -17,9 +17,12 @@
           @click="toggleChat"
         ></v-btn>
       </v-card-title>
-      
-      <v-card-text class="chat-messages pa-2" v-html="chatResponse"></v-card-text>
-      
+
+      <v-card-text
+        class="chat-messages pa-2"
+        v-html="chatResponse"
+      ></v-card-text>
+
       <v-card-text class="pa-2">
         <div class="d-flex align-center gap-2">
           <v-text-field
@@ -51,8 +54,8 @@
       v-show="!isChatVisible"
     >
       <transition name="fade" mode="out-in">
-        <v-card-text 
-          class="text-body-1 text-dark position-relative" 
+        <v-card-text
+          class="text-body-1 text-dark position-relative"
           :key="currentAdvice"
         >
           <template v-if="shouldShowAdvice">
@@ -75,19 +78,23 @@
       elevation="4"
       @click="toggleChat"
     >
-      <v-icon :icon="isChatVisible ? 'mdi-close' : currentRobotIcon" size="large" color="white"></v-icon>
+      <v-icon
+        :icon="isChatVisible ? 'mdi-close' : currentRobotIcon"
+        size="large"
+        color="white"
+      ></v-icon>
     </v-avatar>
   </div>
 </template>
 
 <script>
-import { useGroqChat } from '@/composables/pusher';
+import { useGroqChat } from "@/composables/pusher";
 
 export default {
-  name: 'TeacherBot',
+  name: "TeacherBot",
   data() {
     return {
-      currentAdvice: '',
+      currentAdvice: "",
       adviceList: [
         "Remember to take regular breaks to maintain productivity!",
         "Consider using visual aids in your next lesson",
@@ -98,15 +105,15 @@ export default {
         "Make sure to document student progress",
         "Think about implementing peer-learning activities",
         "Time to update your teaching materials?",
-        "Remember to stay hydrated during your classes!"
+        "Remember to stay hydrated during your classes!",
       ],
       isChatVisible: false,
-      chatInput: '',
-      chatResponse: '',
+      chatInput: "",
+      chatResponse: "",
       isLoading: false,
-      currentRobotIcon: 'mdi-robot',
-      iconInterval: null
-    }
+      currentRobotIcon: "mdi-robot",
+      iconInterval: null,
+    };
   },
   setup() {
     const { chatContent, startChat } = useGroqChat();
@@ -121,12 +128,13 @@ export default {
         setTimeout(this.setRandomAdvice, 2000);
       }, 30000);
     }, 30000);
-    
+
     // Set up robot icon switching
     this.iconInterval = setInterval(() => {
-      this.currentRobotIcon = this.currentRobotIcon === 'mdi-robot' 
-        ? 'mdi-robot-excited' 
-        : 'mdi-robot';
+      this.currentRobotIcon =
+        this.currentRobotIcon === "mdi-robot"
+          ? "mdi-robot-excited"
+          : "mdi-robot";
     }, 5000);
   },
   beforeUnmount() {
@@ -137,7 +145,7 @@ export default {
   computed: {
     shouldShowAdvice() {
       return this.currentAdvice && !this.isChatVisible;
-    }
+    },
   },
   methods: {
     setRandomAdvice() {
@@ -145,7 +153,7 @@ export default {
       this.currentAdvice = this.adviceList[randomIndex];
     },
     clearAdvice() {
-      this.currentAdvice = '';
+      this.currentAdvice = "";
     },
     toggleChat() {
       this.isChatVisible = !this.isChatVisible;
@@ -157,23 +165,24 @@ export default {
     },
     async sendMessage() {
       if (!this.chatInput.trim() || this.isLoading) return;
-      
+
       const userMessage = this.chatInput;
-      this.chatInput = '';
+      this.chatInput = "";
       this.isLoading = true;
-      
+
       try {
-        await this.startChat(null, 'Teacher');
+        await this.startChat(null, "Teacher");
         this.chatResponse = this.chatContent;
       } catch (error) {
-        console.error('Chat error:', error);
-        this.chatResponse += '<br>Sorry, I encountered an error. Please try again.';
+        console.error("Chat error:", error);
+        this.chatResponse +=
+          "<br>Sorry, I encountered an error. Please try again.";
       } finally {
         this.isLoading = false;
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -236,9 +245,15 @@ export default {
 }
 
 @keyframes dotAnimation {
-  0% { opacity: 0; }
-  20% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 .chat-interface {
@@ -298,7 +313,11 @@ export default {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

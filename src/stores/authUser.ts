@@ -1,9 +1,9 @@
-import { computed, ref } from 'vue'
-import type { Ref } from 'vue'
-import { defineStore } from 'pinia'
-import { useRouter } from 'vue-router';
-import { supabase } from '@/lib/supabase';
-import { useToast } from 'vue-toastification';
+import { computed, ref } from "vue";
+import type { Ref } from "vue";
+import { defineStore } from "pinia";
+import { useRouter } from "vue-router";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "vue-toastification";
 
 const toast = useToast();
 
@@ -31,21 +31,29 @@ interface SessionUser {
   user_metadata: Record<string, any>;
 }
 
-export const useAuthUserStore = defineStore('authUser', () => {
+export const useAuthUserStore = defineStore("authUser", () => {
   // States
-  const userData: Ref<UserData | null> = ref(null)
-  const authPages: Ref<string[]> = ref([])
-  const authBranchIds: Ref<number[]> = ref([])
+  const userData: Ref<UserData | null> = ref(null);
+  const authPages: Ref<string[]> = ref([]);
+  const authBranchIds: Ref<number[]> = ref([]);
   const router = useRouter();
 
-  const userRole = computed(() => userData.value?.user_type === 'admin' ? 'Admin' : 'Teacher')
+  const userRole = computed(() =>
+    userData.value?.user_type === "admin" ? "Admin" : "Teacher"
+  );
 
-  async function registerUser(email: string, password: string, userType: string) {
-    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { user_type: userType } },
-    });
+  async function registerUser(
+    email: string,
+    password: string,
+    userType: string
+  ) {
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp(
+      {
+        email,
+        password,
+        options: { data: { user_type: userType } },
+      }
+    );
 
     if (signUpError) {
       return { error: signUpError };
@@ -60,19 +68,22 @@ export const useAuthUserStore = defineStore('authUser', () => {
     // Hash the password before inserting it into the database
     const hashedPassword = customHash(password);
 
-    const { error: insertError } = await supabase.from('users').insert([{ 
-      user_type: userType, 
-      email: email,
-      password: hashedPassword, // Use the hashed password
-      user_id: userId ,
-    }]);
+    const { error: insertError } = await supabase.from("users").insert([
+      {
+        user_type: userType,
+        email: email,
+        password: hashedPassword, // Use the hashed password
+        user_id: userId,
+      },
+    ]);
 
     if (insertError) {
       return { error: insertError };
     }
 
     // Automatically sign in the user
-    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+    const { data: signInData, error: signInError } =
+      await supabase.auth.signInWithPassword({ email, password });
 
     if (signInError) {
       return { error: signInError };
@@ -107,13 +118,16 @@ export const useAuthUserStore = defineStore('authUser', () => {
     };
 
     // Redirect to /welcome
-    router.push('/welcome');
+    router.push("/welcome");
 
     return { data: { id: userId, email, user_type: userType } };
   }
 
   async function signIn(email: string, password: string) {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     if (error) {
       return { error };

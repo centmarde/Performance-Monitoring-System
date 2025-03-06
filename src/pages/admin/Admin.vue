@@ -3,22 +3,26 @@
     <template #content>
       <v-container fluid>
         <div class="p-8 bg-gray-100 min-h-screen">
-          <v-row align="center" justify="space-between">
-            <v-col cols="auto">
-              <v-btn-toggle v-model="selectedTable" mandatory>
-                <v-btn value="users">Users</v-btn>
-                <v-btn value="subjects">Subjects</v-btn>
-              </v-btn-toggle>
-            </v-col>
-            <v-col cols="4" class="mx-3">
-              <SearchBar v-model="searchQuery" />
-            </v-col>
-          </v-row>
-
           <!-- Add User Dialog -->
           <v-dialog v-model="showEditUserForm" max-width="500px">
-            <v-card>
-              <v-card-title>Edit User</v-card-title>
+            <v-card
+              class="pa-5 rounded-xl elevation-10"
+              style="
+                background: #eeefee;
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+              "
+            >
+              <v-card-title
+                class="text-center font-weight-bold py-4"
+                style="
+                  background: linear-gradient(135deg, #004d40, #00332e);
+                  color: white;
+                  border-radius: 12px 12px 0 0;
+                  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+                "
+                >Edit User</v-card-title
+              >
               <v-card-text>
                 <v-form @submit.prevent="updateUser">
                   <v-row>
@@ -26,7 +30,6 @@
                       <v-text-field
                         v-model="editedUser.firstname"
                         label="First Name"
-                        
                         outlined
                       />
                     </v-col>
@@ -34,7 +37,6 @@
                       <v-text-field
                         v-model="editedUser.lastname"
                         label="Last Name"
-                       
                         outlined
                       />
                     </v-col>
@@ -48,19 +50,16 @@
                   <v-text-field
                     v-model="editedUser.phone"
                     label="Phone"
-                   
                     outlined
                   />
                   <v-text-field
                     v-model="editedUser.complete_address"
                     label="Address"
-                   
                     outlined
                   />
                   <v-text-field
                     v-model="editedUser.user_type"
                     label="Role"
-                   
                     outlined
                   />
                 </v-form>
@@ -91,7 +90,6 @@
                       <v-text-field
                         v-model="newUser.firstname"
                         label="First Name"
-                       
                         outlined
                       />
                     </v-col>
@@ -99,7 +97,6 @@
                       <v-text-field
                         v-model="newUser.lastname"
                         label="Last Name"
-                       
                         outlined
                       />
                     </v-col>
@@ -128,13 +125,11 @@
                   <v-text-field
                     v-model="newUser.complete_address"
                     label="Address"
-                   
                     outlined
                   />
                   <v-text-field
                     v-model="newUser.user_type"
                     label="Role"
-                   
                     outlined
                   />
                 </v-form>
@@ -173,37 +168,51 @@
           </v-dialog>
 
           <!-- Data Table -->
-          <DataTable
-            v-if="selectedTable === 'users'"
-            :items="paginatedItems"
-            @edit-user="openEditDialog"
-            @delete-user="promptDeleteUser"
-          />
-          <SubjectsTable v-else />
+          <v-container>
+            <v-row align="center" justify="start">
+              <v-col cols="auto">
+                <v-btn-toggle v-model="selectedTable" mandatory>
+                  <v-btn :color="primaryColor" value="users">Users</v-btn>
+                  <v-btn :color="primaryColor" value="subjects">Subjects</v-btn>
+                </v-btn-toggle>
+              </v-col>
+            </v-row>
+            <DataTable
+              v-if="selectedTable === 'users'"
+              :items="paginatedItems"
+              :search-query="searchQuery"
+              @update:search-query="searchQuery = $event"
+              @edit-user="openEditDialog"
+              @delete-user="promptDeleteUser"
+            />
+            <SubjectsTable v-else />
+          </v-container>
+          <v-container class="mt-4">
+            <v-row class="align-center justify-center">
+              <v-pagination
+                v-model="currentPage"
+                :length="totalPages"
+                :total-visible="3"
+                rounded
+                density="comfortable"
+                class="custom-pagination"
+              ></v-pagination>
+            </v-row>
 
-          <!-- Pagination Controls -->
-          <v-row justify="center" class="mt-4">
-            <v-btn @click="prevPage" :disabled="currentPage === 1">Prev</v-btn>
-            <v-btn
-              @click="nextPage"
-              :disabled="currentPage * itemsPerPage >= filteredItems.length"
-              >Next</v-btn
-            >
-
-            <!-- Items per page dropdown aligned to the right -->
-            <v-spacer></v-spacer>
-            <v-col cols="auto" class="d-flex">
-              <v-select
-                v-model="itemsPerPage"
-                :items="[10, 20, 30, 50, 100]"
-                label="Items per page"
-                dense
-                outlined
-                min-width="150"
-                class="mt-0"
-              />
-            </v-col>
-          </v-row>
+            <v-row class="align-center justify-end mt-2">
+              <v-col cols="auto">
+                <v-select
+                  v-model="itemsPerPage"
+                  :items="[10, 20, 30, 50, 100]"
+                  label="Items per page"
+                  dense
+                  outlined
+                  style="min-width: 150px; max-width: 200px"
+                  @change="handleItemsPerPageChange"
+                />
+              </v-col>
+            </v-row>
+          </v-container>
         </div>
       </v-container>
     </template>
@@ -234,6 +243,7 @@ interface User {
   user_type: string;
 }
 
+const primaryColor = computed(() => "#004D40");
 const items = ref<User[]>([]);
 const showAddUserForm = ref(false);
 const showEditUserForm = ref(false);
@@ -301,40 +311,56 @@ const isEditUserValid = computed(() => {
 });
 
 const filteredItems = computed(() => {
-  console.log("Search Query:", searchQuery.value);
-  if (!searchQuery.value) return items.value;
-  return items.value.filter((user) =>
-    [
-      user.id.toString(),
+  if (!searchQuery.value.trim()) return items.value;
+
+  const query = searchQuery.value.toLowerCase();
+  return items.value.filter((user) => {
+    const searchFields = [
+      user.id?.toString(),
       user.email,
       user.firstname,
       user.lastname,
       user.phone,
       user.complete_address,
       user.user_type,
-    ].some((field) =>
-      field?.toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
-  );
+    ];
+    return searchFields.some((field) => field?.toLowerCase().includes(query));
+  });
 });
 
 // Paginated Items (dynamic based on selected itemsPerPage)
+// Calculate total pages
+const totalPages = computed(() =>
+  Math.ceil(filteredItems.value.length / itemsPerPage.value)
+);
+
+// Get paginated items from filtered results
 const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
   return filteredItems.value.slice(start, end);
 });
 
+// Watch search query to reset pagination
+watch(searchQuery, () => {
+  currentPage.value = 1;
+});
+
+// Handle items per page change
+const handleItemsPerPageChange = () => {
+  currentPage.value = 1;
+};
+
 // Pagination methods
 const nextPage = () => {
-  if (currentPage.value * itemsPerPage.value < filteredItems.value.length) {
-    currentPage.value += 1;
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
   }
 };
 
 const prevPage = () => {
   if (currentPage.value > 1) {
-    currentPage.value -= 1;
+    currentPage.value--;
   }
 };
 
@@ -465,3 +491,35 @@ const confirmDeleteUser = async () => {
 
 const selectedTable = ref("users");
 </script>
+<style scoped>
+/* Light Mode */
+:deep(.v-pagination__item--active) {
+  background-color: #e0e0e0 !important;
+  color: black !important;
+}
+
+/* Dark Mode */
+.dark-mode :deep(.v-pagination__item--active) {
+  background-color: #333 !important;
+  color: white !important;
+}
+.custom-pagination {
+  --v-pagination-active-color: #ffffff !important; /* White text */
+  --v-pagination-active-bg: #004d40 !important; /* Teal background */
+  --v-pagination-item-color: #ffffff !important; /* White text for inactive items */
+  --v-pagination-item-bg: transparent !important; /* Transparent background */
+}
+
+.custom-pagination .v-pagination__item--active {
+  background-color: var(--v-pagination-active-bg) !important;
+  color: var(--v-pagination-active-color) !important;
+}
+
+.custom-pagination .v-pagination__item {
+  color: var(--v-pagination-item-color) !important;
+}
+
+.custom-pagination .v-pagination__item:hover {
+  background-color: rgba(0, 77, 64, 0.7) !important;
+}
+</style>
