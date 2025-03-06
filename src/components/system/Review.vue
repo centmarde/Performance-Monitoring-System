@@ -30,10 +30,9 @@
           elevation="2"
         >
           <div
-            v-if="selectedSubject"
-            class="font-semibold text-center text-xl mb-2"
+           
           >
-            {{ selectedSubject.title }}
+            {{ subjectName }}
           </div>
           <div
             v-if="studentRecord"
@@ -78,36 +77,7 @@
       </v-col>
     </v-row>
 
-    <v-dialog v-model="showSubjectDialog" max-width="500px">
-      <v-card>
-        <v-card-title class="text-h5">Select Subject and Quarter</v-card-title>
-        <v-card-text>
-          <v-list>
-            <v-list-item
-              v-for="subject in availableSubjects"
-              :key="subject.id"
-              class="mb-4"
-            >
-              <template v-slot:default>
-                <v-list-item-title>{{ subject.title }}</v-list-item-title>
-                <v-list-item-subtitle>
-                  <v-chip-group>
-                    <v-chip
-                      v-for="quarter in subject.availableQuarters"
-                      :key="quarter"
-                      @click="selectSubjectAndQuarter(subject, quarter)"
-                      class="ma-1"
-                    >
-                      Quarter {{ quarter }}
-                    </v-chip>
-                  </v-chip-group>
-                </v-list-item-subtitle>
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+   
   </v-container>
 </template>
 
@@ -116,9 +86,11 @@ import { supabase } from "@/lib/supabase";
 import { defineComponent, ref, onMounted, watch } from "vue";
 import * as echarts from "echarts";
 import { useGroqChat } from "@/composables/bootstrap";
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   setup() {
+    const route = useRoute();
     const sections = ref([]);
     const students = ref([]);
     const selectedSection = ref(null);
@@ -130,6 +102,7 @@ export default defineComponent({
     const availableSubjects = ref([]);
     const selectedQuarter = ref(null);
     const availableQuarters = ref([]);
+    const subjectName = ref('');
 
     const { chatContent, startChat } = useGroqChat();
 
@@ -215,6 +188,7 @@ export default defineComponent({
           availableSubjects.value.length === 1 &&
           availableSubjects.value[0].availableQuarters.length === 1
         ) {
+          console.log(availableSubjects.value[0]);
           selectSubjectAndQuarter(
             availableSubjects.value[0],
             availableSubjects.value[0].availableQuarters[0]
@@ -229,6 +203,7 @@ export default defineComponent({
       selectedSubject.value = subject;
       selectedQuarter.value = quarter;
       showSubjectDialog.value = false;
+      console.log(selectedStudent.value, );
       fetchStudentRecord(selectedStudent.value);
     };
 
@@ -313,7 +288,36 @@ export default defineComponent({
 
     watch(selectedSection, fetchStudents);
     watch(selectedStudent, fetchSubjects);
-    onMounted(fetchSections);
+    onMounted(async () => {
+      await fetchSections();
+      
+      // Set the values from route query if they exist
+      if (route.query.section) {
+        selectedSection.value = route.query.section;
+        await fetchStudents(selectedSection.value);
+      }
+      
+      if (route.query.name) {
+        selectedStudent.value = route.query.name;
+      }
+
+      // Get subject name from localStorage
+      const storedSubjectName = localStorage.getItem("selectedSubjectName");
+      console.log(storedSubjectName);
+      if (storedSubjectName) {
+        subjectName.value = storedSubjectName;
+      }
+
+      // Handle subject and quarter selection automatically
+      if (route.query.subject && route.query.quarter) {
+        selectedSubject.value = {
+          id: parseInt(route.query.subject),
+          title: storedSubjectName || route.query.subject
+        };
+        selectedQuarter.value = parseInt(route.query.quarter);
+        fetchStudentRecord(selectedStudent.value);
+      }
+    });
 
     return {
       sections,
@@ -329,6 +333,7 @@ export default defineComponent({
       selectSubjectAndQuarter,
       selectedQuarter,
       availableQuarters,
+      subjectName,
     };
   },
 });

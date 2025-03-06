@@ -102,8 +102,8 @@ onMounted(() => {
 
 const menu = ref([
   { title: "Dashboard", icon: "mdi-view-dashboard", href: "/home" },
-  { title: "Data Entry", icon: "mdi-file-document-edit", href: "/data_entry" },
-  { title: "Tracking", icon: "mdi-history", href: "/tracking" },
+  { title: "Class Records", icon: "mdi-file-document-edit", href: "/data_entry" },
+  { title: "Section Analysis", icon: "mdi-chart-areaspline", href: "/section_tracking" },
 ]);
 
 function handleLogoutClick() {
