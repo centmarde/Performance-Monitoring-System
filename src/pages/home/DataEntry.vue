@@ -502,9 +502,19 @@ const router = useRouter();
 const cardDialog = ref(false);
 const activeSubjectId = ref<number | null>(null);
 
-const handleCardClick = (classRecordId: number) => {
+const handleCardClick = async (classRecordId: number) => {
   activeSubjectId.value = classRecordId;
   cardDialog.value = true;
+  
+  // Fetch and store the selected card's details
+  const selectedCard = subjects.value.find(subject => subject.id === classRecordId);
+  console.log("Selected Card:", selectedCard);
+  if (selectedCard) {
+    localStorage.setItem("selectedSection", selectedCard.section);
+    localStorage.setItem("selectedQuarter", selectedCard.quarter.toString());
+    localStorage.setItem("selectedSubject", selectedCard.subject_id.toString()); // Store subject ID instead of name
+    localStorage.setItem("selectedSubjectName", selectedCard.subjectName);
+  }
 };
 
 const enterRecords = () => {
