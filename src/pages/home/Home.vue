@@ -3,9 +3,6 @@
     <template #content>
       <div>
         <KeepAlive>
-          <WelcomeToDashboard :is="activeComponent" />
-        </KeepAlive>
-        <KeepAlive>
           <StudentsStanding :is="activeComponent" />
         </KeepAlive>
       </div>
