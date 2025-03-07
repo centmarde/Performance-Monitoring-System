@@ -16,6 +16,13 @@
           <v-col v-if="loading" cols="12" class="text-center">
             <v-progress-circular indeterminate color="primary"></v-progress-circular>
           </v-col>
+          <v-col v-else-if="paginatedRecords.length === 0" cols="12">
+            <v-card class="pa-8 text-center">
+              <v-icon size="64" color="grey">mdi-alert-circle-outline</v-icon>
+              <h3 class="mt-4 text-grey-darken-1">Oh no! You have no sections and subjects assigned.</h3>
+              <p class="text-grey">Please contact your administrator to assign sections and subjects to you.</p>
+            </v-card>
+          </v-col>
           <v-col v-else v-for="record in paginatedRecords" :key="record.id" cols="12" md="4">
             <v-card class="pa-8 student-box fixed-card" color="#E8F5E9">
               <h3 class="text-center font-weight-bold">Section: {{ record.section }}</h3>
@@ -44,7 +51,13 @@
         </v-row>
       </v-scale-transition>
 
-      <v-pagination v-model="currentPage" :length="totalPages" :total-visible="5" class="mt-4"></v-pagination>
+      <v-pagination 
+        v-if="paginatedRecords.length > 0" 
+        v-model="currentPage" 
+        :length="totalPages" 
+        :total-visible="5" 
+        class="mt-4">
+      </v-pagination>
     </v-container>
   </v-lazy>
 </template>
@@ -57,6 +70,7 @@ import { useTeacherList } from "@/stores/teachersList";
 import { useRecordsStore } from "@/stores/recordsStore";
 import SearchBar from "@/components/common/SearchBar.vue";
 import { supabase } from "@/lib/supabase";
+import { useAuthUserStore } from "@/stores/authUser";
 
 export default defineComponent({
   components: {
@@ -105,6 +119,7 @@ export default defineComponent({
 
     async function fetchAllClassRecordsWithDetails() {
       loading.value = true;
+      const userId = localStorage.getItem("user_id");
       const { data, error } = await supabase
         .from("class_record")
         .select(`
@@ -114,7 +129,8 @@ export default defineComponent({
           users (email),
           records (student_id, initial_grade)
         `)
-        .order("created_at", { ascending: false });
+        .order("created_at", { ascending: false })
+        .eq("teacher_id", userId);
 
       if (error) {
         console.error(error.message);

@@ -177,6 +177,22 @@
               >
                 Quarterly Grade
               </th>
+              <th
+                rowspan="3"
+                style="
+                  background: #004d40;
+                  color: white;
+                  padding: 14px;
+                  border: 1px solid #00796b;
+                  text-align: center;
+                  font-weight: bold;
+                  position: sticky;
+                  top: 0;
+                  z-index: 2;
+                "
+              >
+                Actions
+              </th>
             </tr>
             <tr>
               <th
@@ -623,6 +639,17 @@
                   "
                 />
               </td>
+              <td>
+                <v-btn
+                  v-if="parseFloat(item.quarterly_grade) < 75"
+                  color="warning"
+                  size="small"
+                  @click="navigateToTracking(item)"
+                >
+                  <v-icon left>mdi-brain</v-icon>
+                  AI Analysis
+                </v-btn>
+              </td>
               <button
                 class="save-btn"
                 @click="saveChanges(item)"
@@ -655,6 +682,14 @@ import { useRecordsStore } from "@/stores/recordsStore";
 import { useStudentsStore } from "@/stores/studentsStore";
 import SearchBar from "@/components/common/SearchBar.vue";
 import { supabase } from "@/lib/supabase";
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const navigateToTracking = (item) => {
+  localStorage.setItem('selectedStudent', JSON.stringify(item));
+  router.push('/tracking');
+};
 
 const jsondata = ref([]);
 const recordsStore = useRecordsStore();

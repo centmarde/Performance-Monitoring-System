@@ -168,6 +168,22 @@
                   >
                     Quarterly Grade
                   </th>
+                  <th
+                    rowspan="3"
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    Actions
+                  </th>
                 </tr>
                 <tr>
                   <th
@@ -615,6 +631,17 @@
                       "
                     />
                   </td>
+                  <td>
+                    <v-btn
+                      v-if="parseFloat(item.quarterly_grade) < 75"
+                      color="warning"
+                      size="small"
+                      @click="navigateToTracking(item)"
+                    >
+                      <v-icon left>mdi-brain</v-icon>
+                      AI Analysis
+                    </v-btn>
+                  </td>
                   <button
                     class="save-btn"
                     @click="saveChanges(item)"
@@ -646,6 +673,31 @@ import { useRecordsStore } from "@/stores/recordsStore";
 import { useStudentsStore } from "@/stores/studentsStore";
 import SearchBar from "@/components/common/SearchBar.vue";
 import { supabase } from "@/lib/supabase";
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const navigateToTracking = (item) => {
+  // Get values from localStorage that were set in DataEntry.vue
+  const section = localStorage.getItem("selectedSection");
+  const quarter = localStorage.getItem("selectedQuarter");
+  const subjectId = localStorage.getItem("selectedSubject"); // Get subject ID instead of subject name
+  console.log(section, quarter, subjectId);
+  router.push({
+    path: '/tracking',
+    query: {
+      studentId: item.id,
+      name: item.name,
+      wwTotal: item.wwTotal,
+      ptTotal: item.ptTotal,
+      qaTotal: item.qa1,
+      quarterly_grade: item.quarterly_grade,
+      section: section,
+      quarter: quarter,
+      subject: subjectId // Pass subject ID instead of subject name
+    }
+  });
+};
 
 const jsondata = ref([]);
 const recordsStore = useRecordsStore();
