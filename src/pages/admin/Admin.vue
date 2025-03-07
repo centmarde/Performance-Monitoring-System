@@ -129,7 +129,6 @@ const handleItemsPerPageChange = () => {
   currentPage.value = 1;
 };
 
-// Pagination methods
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
