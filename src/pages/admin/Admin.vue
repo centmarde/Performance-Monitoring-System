@@ -59,7 +59,6 @@ const togglePasswordVisibility = () => {
   passwordVisible.value = !passwordVisible.value;
 };
 
-// Pagination related state
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
 
