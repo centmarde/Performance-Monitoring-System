@@ -108,7 +108,6 @@ const filteredItems = computed(() => {
   });
 });
 
-// Paginated Items (dynamic based on selected itemsPerPage)
 // Calculate total pages
 const totalPages = computed(() =>
   Math.ceil(filteredItems.value.length / itemsPerPage.value)
