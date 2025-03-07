@@ -83,7 +83,7 @@ const isEditUserValid = computed(() => {
     (editedUser.value.firstname?.trim() || "").length > 0 &&
     (editedUser.value.lastname?.trim() || "").length > 0 &&
     emailValidator(editedUser.value.email || "") === true &&
-    isValidPassword && // Check password only if it's not empty
+    isValidPassword &&
     (editedUser.value.user_type?.trim() || "").length > 0 &&
     (editedUser.value.phone?.trim() || "").length > 0 &&
     (editedUser.value.complete_address?.trim() || "").length > 0
