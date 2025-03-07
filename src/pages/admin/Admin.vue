@@ -1,276 +1,7 @@
-<script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import LayoutWrapper from "@/layouts/LayoutWrapper.vue";
-import DataTable from "@/components/admin/DataTable.vue";
-import SubjectsTable from "@/components/admin/SubjectsTable.vue";
-import {
-  emailValidator,
-  passwordValidator,
-  requiredValidator,
-} from "@/lib/validator";
-import { supabase } from "@/lib/supabase";
-//@ts-ignore
-import WelcomeToDashboard from "@/components/system/WelcomeToDashboard.vue";
-interface User {
-  id: number;
-  name: string;
-  email: string;
-  firstname: string;
-  password: string;
-  lastname: string;
-  phone: string;
-  complete_address: string;
-  user_type: string;
-}
-
-const primaryColor = computed(() => "#004D40");
-const items = ref<User[]>([]);
-const showAddUserForm = ref(false);
-const showEditUserForm = ref(false);
-const showDeleteConfirmation = ref(false);
-const userToDelete = ref<number | null>(null);
-const searchQuery = ref("");
-const newUser = ref<User>({
-  id: 0,
-  name: "",
-  email: "",
-  firstname: "",
-  lastname: "",
-  password: "",
-  phone: "",
-  complete_address: "",
-  user_type: "",
-});
-const editedUser = ref<User>({
-  id: 0,
-  name: "",
-  email: "",
-  firstname: "",
-  lastname: "",
-  password: "",
-  phone: "",
-  complete_address: "",
-  user_type: "",
-});
-
-const passwordVisible = ref(false);
-
-const togglePasswordVisibility = () => {
-  passwordVisible.value = !passwordVisible.value;
-};
-
-const currentPage = ref(1);
-const itemsPerPage = ref(10);
-
-const isAddUserValid = computed(() => {
-  return (
-    newUser.value.firstname.trim() !== "" &&
-    newUser.value.lastname.trim() !== "" &&
-    emailValidator(newUser.value.email) === true &&
-    passwordValidator(newUser.value.password) === true &&
-    newUser.value.phone.trim() !== "" &&
-    newUser.value.complete_address.trim() !== "" &&
-    newUser.value.user_type.trim() !== ""
-  );
-});
-
-const isEditUserValid = computed(() => {
-  const isValidPassword =
-    !editedUser.value.password || passwordValidator(editedUser.value.password);
-
-  return (
-    (editedUser.value.firstname?.trim() || "").length > 0 &&
-    (editedUser.value.lastname?.trim() || "").length > 0 &&
-    emailValidator(editedUser.value.email || "") === true &&
-    isValidPassword &&
-    (editedUser.value.user_type?.trim() || "").length > 0 &&
-    (editedUser.value.phone?.trim() || "").length > 0 &&
-    (editedUser.value.complete_address?.trim() || "").length > 0
-  );
-});
-
-const filteredItems = computed(() => {
-  if (!searchQuery.value.trim()) return items.value;
-
-  const query = searchQuery.value.toLowerCase();
-  return items.value.filter((user) => {
-    const searchFields = [
-      user.id?.toString(),
-      user.email,
-      user.firstname,
-      user.lastname,
-      user.phone,
-      user.complete_address,
-      user.user_type,
-    ];
-    return searchFields.some((field) => field?.toLowerCase().includes(query));
-  });
-});
-
-const totalPages = computed(() =>
-  Math.ceil(filteredItems.value.length / itemsPerPage.value)
-);
-
-const paginatedItems = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return filteredItems.value.slice(start, end);
-});
-
-watch(searchQuery, () => {
-  currentPage.value = 1;
-});
-const handleItemsPerPageChange = () => {
-  currentPage.value = 1;
-};
-
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
-  }
-};
-
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-  }
-};
-
-onMounted(async () => {
-  try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    const { data: profiles, error } = await supabase.from("users").select("*");
-    if (error) {
-      throw error;
-    }
-
-    items.value = profiles.map((profile: any) => ({
-      id: profile.id,
-      name: profile.name,
-      email: profile.email,
-      firstname: profile.firstname,
-      lastname: profile.lastname,
-      phone: profile.phone,
-      password: profile.password,
-      complete_address: profile.complete_address,
-      user_type: profile.user_type,
-    }));
-
-    console.log("Fetched Users:", items.value);
-  } catch (error) {
-    console.error("Error fetching users:", error);
-  }
-});
-
-const openEditDialog = (user?: User) => {
-  editedUser.value = user
-    ? { ...user }
-    : {
-        id: 0,
-        name: "",
-        email: "",
-        firstname: "",
-        lastname: "",
-        password: "",
-        phone: "",
-        complete_address: "",
-        user_type: "",
-      };
-
-  console.log("Opening Edit Dialog:", editedUser.value);
-  showEditUserForm.value = true;
-};
-
-const addUser = async () => {
-  try {
-    const { data, error } = await supabase
-      .from("users")
-      .insert([newUser.value])
-      .select();
-    if (error) {
-      throw error;
-    }
-    items.value.push({ ...newUser.value, id: data[0].id });
-
-    newUser.value = {
-      id: 0,
-      name: "",
-      email: "",
-      password: "",
-      firstname: "",
-      lastname: "",
-      phone: "",
-      complete_address: "",
-      user_type: "",
-    };
-    showAddUserForm.value = false;
-  } catch (error) {
-    console.error("Error adding user:", error);
-  }
-};
-
-const updateUser = async () => {
-  console.log("Edited User:", editedUser.value);
-  try {
-    const { error } = await supabase
-      .from("users")
-      .update(editedUser.value)
-      .eq("id", editedUser.value.id);
-    if (error) {
-      throw error;
-    }
-    const index = items.value.findIndex(
-      (user) => user.id === editedUser.value.id
-    );
-    if (index !== -1) {
-      items.value[index] = { ...editedUser.value };
-    }
-    showEditUserForm.value = false;
-  } catch (error) {
-    console.error("Error updating user:", error);
-  }
-};
-
-const promptDeleteUser = (id: number) => {
-  userToDelete.value = id;
-  showDeleteConfirmation.value = true;
-};
-
-const confirmDeleteUser = async () => {
-  try {
-    if (userToDelete.value !== null) {
-      const { error } = await supabase
-        .from("users")
-        .delete()
-        .eq("id", userToDelete.value);
-      if (error) {
-        throw error;
-      }
-      items.value = items.value.filter(
-        (user) => user.id !== userToDelete.value
-      );
-      userToDelete.value = null;
-    }
-    showDeleteConfirmation.value = false;
-  } catch (error) {
-    console.error("Error deleting user:", error);
-  }
-};
-const activeComponent = ref("StudentsStanding");
-const selectedTable = ref("users");
-</script>
-
 <template>
   <LayoutWrapper>
     <template #content>
       <v-container fluid>
-        <KeepAlive>
-          <WelcomeToDashboard :is="activeComponent" />
-        </KeepAlive>
-
         <div class="p-8 bg-gray-100 min-h-screen">
           <!-- Add User Dialog -->
           <v-dialog v-model="showEditUserForm" max-width="500px">
@@ -488,6 +219,278 @@ const selectedTable = ref("users");
   </LayoutWrapper>
 </template>
 
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue";
+import LayoutWrapper from "@/layouts/LayoutWrapper.vue";
+import DataTable from "@/components/admin/DataTable.vue";
+import SubjectsTable from "@/components/admin/SubjectsTable.vue";
+import {
+  emailValidator,
+  passwordValidator,
+  requiredValidator,
+} from "@/lib/validator";
+import { supabase } from "@/lib/supabase";
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  firstname: string;
+  password: string;
+  lastname: string;
+  phone: string;
+  complete_address: string;
+  user_type: string;
+}
+
+const primaryColor = computed(() => "#004D40");
+const items = ref<User[]>([]);
+const showAddUserForm = ref(false);
+const showEditUserForm = ref(false);
+const showDeleteConfirmation = ref(false);
+const userToDelete = ref<number | null>(null);
+const searchQuery = ref("");
+const newUser = ref<User>({
+  id: 0,
+  name: "",
+  email: "",
+  firstname: "",
+  lastname: "",
+  password: "",
+  phone: "",
+  complete_address: "",
+  user_type: "",
+});
+const editedUser = ref<User>({
+  id: 0,
+  name: "",
+  email: "",
+  firstname: "",
+  lastname: "",
+  password: "",
+  phone: "",
+  complete_address: "",
+  user_type: "",
+});
+
+const passwordVisible = ref(false);
+
+const togglePasswordVisibility = () => {
+  passwordVisible.value = !passwordVisible.value;
+};
+
+// Pagination related state
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
+
+const isAddUserValid = computed(() => {
+  return (
+    newUser.value.firstname.trim() !== "" &&
+    newUser.value.lastname.trim() !== "" &&
+    emailValidator(newUser.value.email) === true &&
+    passwordValidator(newUser.value.password) === true &&
+    newUser.value.phone.trim() !== "" &&
+    newUser.value.complete_address.trim() !== "" &&
+    newUser.value.user_type.trim() !== ""
+  );
+});
+
+const isEditUserValid = computed(() => {
+  const isValidPassword =
+    !editedUser.value.password || passwordValidator(editedUser.value.password);
+
+  return (
+    (editedUser.value.firstname?.trim() || "").length > 0 &&
+    (editedUser.value.lastname?.trim() || "").length > 0 &&
+    emailValidator(editedUser.value.email || "") === true &&
+    isValidPassword && // Check password only if it's not empty
+    (editedUser.value.user_type?.trim() || "").length > 0 &&
+    (editedUser.value.phone?.trim() || "").length > 0 &&
+    (editedUser.value.complete_address?.trim() || "").length > 0
+  );
+});
+
+const filteredItems = computed(() => {
+  if (!searchQuery.value.trim()) return items.value;
+
+  const query = searchQuery.value.toLowerCase();
+  return items.value.filter((user) => {
+    const searchFields = [
+      user.id?.toString(),
+      user.email,
+      user.firstname,
+      user.lastname,
+      user.phone,
+      user.complete_address,
+      user.user_type,
+    ];
+    return searchFields.some((field) => field?.toLowerCase().includes(query));
+  });
+});
+
+// Paginated Items (dynamic based on selected itemsPerPage)
+// Calculate total pages
+const totalPages = computed(() =>
+  Math.ceil(filteredItems.value.length / itemsPerPage.value)
+);
+
+// Get paginated items from filtered results
+const paginatedItems = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredItems.value.slice(start, end);
+});
+
+// Watch search query to reset pagination
+watch(searchQuery, () => {
+  currentPage.value = 1;
+});
+
+// Handle items per page change
+const handleItemsPerPageChange = () => {
+  currentPage.value = 1;
+};
+
+// Pagination methods
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
+
+onMounted(async () => {
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    const { data: profiles, error } = await supabase.from("users").select("*");
+    if (error) {
+      throw error;
+    }
+
+    items.value = profiles.map((profile: any) => ({
+      id: profile.id,
+      name: profile.name,
+      email: profile.email,
+      firstname: profile.firstname,
+      lastname: profile.lastname,
+      phone: profile.phone,
+      password: profile.password,
+      complete_address: profile.complete_address,
+      user_type: profile.user_type,
+    }));
+
+    console.log("Fetched Users:", items.value);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+  }
+});
+
+// Methods for managing users
+const openEditDialog = (user?: User) => {
+  editedUser.value = user
+    ? { ...user }
+    : {
+        id: 0,
+        name: "",
+        email: "",
+        firstname: "",
+        lastname: "",
+        password: "",
+        phone: "",
+        complete_address: "",
+        user_type: "",
+      };
+
+  console.log("Opening Edit Dialog:", editedUser.value);
+  showEditUserForm.value = true;
+};
+
+const addUser = async () => {
+  try {
+    const { data, error } = await supabase
+      .from("users")
+      .insert([newUser.value])
+      .select();
+    if (error) {
+      throw error;
+    }
+    items.value.push({ ...newUser.value, id: data[0].id });
+
+    newUser.value = {
+      id: 0,
+      name: "",
+      email: "",
+      password: "",
+      firstname: "",
+      lastname: "",
+      phone: "",
+      complete_address: "",
+      user_type: "",
+    };
+    showAddUserForm.value = false;
+  } catch (error) {
+    console.error("Error adding user:", error);
+  }
+};
+
+const updateUser = async () => {
+  console.log("Edited User:", editedUser.value);
+  try {
+    const { error } = await supabase
+      .from("users")
+      .update(editedUser.value)
+      .eq("id", editedUser.value.id);
+    if (error) {
+      throw error;
+    }
+    const index = items.value.findIndex(
+      (user) => user.id === editedUser.value.id
+    );
+    if (index !== -1) {
+      items.value[index] = { ...editedUser.value };
+    }
+    showEditUserForm.value = false;
+  } catch (error) {
+    console.error("Error updating user:", error);
+  }
+};
+
+const promptDeleteUser = (id: number) => {
+  userToDelete.value = id;
+  showDeleteConfirmation.value = true;
+};
+
+const confirmDeleteUser = async () => {
+  try {
+    if (userToDelete.value !== null) {
+      const { error } = await supabase
+        .from("users")
+        .delete()
+        .eq("id", userToDelete.value);
+      if (error) {
+        throw error;
+      }
+      items.value = items.value.filter(
+        (user) => user.id !== userToDelete.value
+      );
+      userToDelete.value = null;
+    }
+    showDeleteConfirmation.value = false;
+  } catch (error) {
+    console.error("Error deleting user:", error);
+  }
+};
+
+const selectedTable = ref("users");
+</script>
 <style scoped>
 /* Light Mode */
 :deep(.v-pagination__item--active) {
