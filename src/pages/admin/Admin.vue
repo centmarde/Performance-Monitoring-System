@@ -1,3 +1,224 @@
+<template>
+  <LayoutWrapper>
+    <template #content>
+      <v-container fluid>
+        <div class="p-8 bg-gray-100 min-h-screen">
+          <!-- Add User Dialog -->
+          <v-dialog v-model="showEditUserForm" max-width="500px">
+            <v-card
+              class="pa-5 rounded-xl elevation-10"
+              style="
+                background: #eeefee;
+                backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+              "
+            >
+              <v-card-title
+                class="text-center font-weight-bold py-4"
+                style="
+                  background: linear-gradient(135deg, #004d40, #00332e);
+                  color: white;
+                  border-radius: 12px 12px 0 0;
+                  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+                "
+                >Edit User</v-card-title
+              >
+              <v-card-text>
+                <v-form @submit.prevent="updateUser">
+                  <v-row>
+                    <v-col cols="6">
+                      <v-text-field
+                        v-model="editedUser.firstname"
+                        label="First Name"
+                        outlined
+                      />
+                    </v-col>
+                    <v-col cols="6">
+                      <v-text-field
+                        v-model="editedUser.lastname"
+                        label="Last Name"
+                        outlined
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-text-field
+                    v-model="editedUser.email"
+                    label="Email"
+                    :rules="[requiredValidator, emailValidator]"
+                    outlined
+                  />
+                  <v-text-field
+                    v-model="editedUser.phone"
+                    label="Phone"
+                    outlined
+                  />
+                  <v-text-field
+                    v-model="editedUser.complete_address"
+                    label="Address"
+                    outlined
+                  />
+                  <v-text-field
+                    v-model="editedUser.user_type"
+                    label="Role"
+                    outlined
+                  />
+                </v-form>
+              </v-card-text>
+              <v-card-actions class="">
+                <v-btn @click="showEditUserForm = false" color="grey darken-1"
+                  >Cancel</v-btn
+                >
+                <v-btn
+                  @click="updateUser"
+                  color="teal darken-3"
+                  :disabled="!isEditUserValid"
+                >
+                  Save Changes
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
+          <!-- Edit User Dialog -->
+          <v-dialog v-model="showAddUserForm" max-width="500px">
+            <v-card>
+              <v-card-title>Add User</v-card-title>
+              <v-card-text>
+                <v-form @submit.prevent="addUser">
+                  <v-row>
+                    <v-col cols="6">
+                      <v-text-field
+                        v-model="newUser.firstname"
+                        label="First Name"
+                        outlined
+                      />
+                    </v-col>
+                    <v-col cols="6">
+                      <v-text-field
+                        v-model="newUser.lastname"
+                        label="Last Name"
+                        outlined
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-text-field
+                    v-model="newUser.email"
+                    label="Email"
+                    :rules="[requiredValidator, emailValidator]"
+                    outlined
+                  />
+                  <v-text-field
+                    v-model="newUser.password"
+                    label="Password"
+                    :type="passwordVisible ? 'text' : 'password'"
+                    :rules="[requiredValidator, passwordValidator]"
+                    append-inner-icon="mdi-eye"
+                    @click:append-inner="togglePasswordVisibility"
+                    outlined
+                  />
+                  <v-text-field
+                    v-model="newUser.phone"
+                    label="Phone"
+                    :rules="[requiredValidator]"
+                    outlined
+                  />
+                  <v-text-field
+                    v-model="newUser.complete_address"
+                    label="Address"
+                    outlined
+                  />
+                  <v-text-field
+                    v-model="newUser.user_type"
+                    label="Role"
+                    outlined
+                  />
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn @click="showAddUserForm = false" color="grey darken-1"
+                  >Cancel</v-btn
+                >
+                <v-btn
+                  @click="addUser"
+                  color="teal darken-3"
+                  :disabled="!isAddUserValid"
+                >
+                  Add User
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
+          <!-- Delete Confirmation Dialog -->
+          <v-dialog v-model="showDeleteConfirmation" max-width="400px">
+            <v-card>
+              <v-card-title>Confirm Deletion</v-card-title>
+              <v-card-text>
+                Are you sure you want to delete this user?
+              </v-card-text>
+              <v-card-actions class="mx-auto">
+                <v-btn
+                  @click="showDeleteConfirmation = false"
+                  color="grey darken-1"
+                  >Cancel</v-btn
+                >
+                <v-btn @click="confirmDeleteUser" color="red">Delete</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
+          <!-- Data Table -->
+          <v-container>
+            <v-row align="center" justify="start">
+              <v-col cols="auto">
+                <v-btn-toggle v-model="selectedTable" mandatory>
+                  <v-btn :color="primaryColor" value="users">Users</v-btn>
+                  <v-btn :color="primaryColor" value="subjects">Subjects</v-btn>
+                </v-btn-toggle>
+              </v-col>
+            </v-row>
+            <DataTable
+              v-if="selectedTable === 'users'"
+              :items="paginatedItems"
+              :search-query="searchQuery"
+              @update:search-query="searchQuery = $event"
+              @edit-user="openEditDialog"
+              @delete-user="promptDeleteUser"
+            />
+            <SubjectsTable v-else />
+          </v-container>
+          <v-container class="mt-4">
+            <v-row class="align-center justify-center">
+              <v-pagination
+                v-model="currentPage"
+                :length="totalPages"
+                :total-visible="3"
+                rounded
+                density="comfortable"
+                class="custom-pagination"
+              ></v-pagination>
+            </v-row>
+
+            <v-row class="align-center justify-end mt-2">
+              <v-col cols="auto">
+                <v-select
+                  v-model="itemsPerPage"
+                  :items="[10, 20, 30, 50, 100]"
+                  label="Items per page"
+                  dense
+                  outlined
+                  style="min-width: 150px; max-width: 200px"
+                  @change="handleItemsPerPageChange"
+                />
+              </v-col>
+            </v-row>
+          </v-container>
+        </div>
+      </v-container>
+    </template>
+  </LayoutWrapper>
+</template>
+
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
 import LayoutWrapper from "@/layouts/LayoutWrapper.vue";
@@ -9,8 +230,7 @@ import {
   requiredValidator,
 } from "@/lib/validator";
 import { supabase } from "@/lib/supabase";
-//@ts-ignore
-import WelcomeToDashboard from "@/components/system/WelcomeToDashboard.vue";
+
 interface User {
   id: number;
   name: string;
@@ -268,238 +488,9 @@ const confirmDeleteUser = async () => {
     console.error("Error deleting user:", error);
   }
 };
-const activeComponent = ref("StudentsStanding");
+
 const selectedTable = ref("users");
 </script>
-
-
-<template>
-  <LayoutWrapper>
-    <template #content>
-      <v-container fluid>
-
-        <KeepAlive>
-          <WelcomeToDashboard :is="activeComponent" />
-        </KeepAlive>
-        
-        <div class="p-8 bg-gray-100 min-h-screen">
-          <!-- Add User Dialog -->
-          <v-dialog v-model="showEditUserForm" max-width="500px">
-            <v-card
-              class="pa-5 rounded-xl elevation-10"
-              style="
-                background: #eeefee;
-                backdrop-filter: blur(12px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-              "
-            >
-              <v-card-title
-                class="text-center font-weight-bold py-4"
-                style="
-                  background: linear-gradient(135deg, #004d40, #00332e);
-                  color: white;
-                  border-radius: 12px 12px 0 0;
-                  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-                "
-                >Edit User</v-card-title
-              >
-              <v-card-text>
-                <v-form @submit.prevent="updateUser">
-                  <v-row>
-                    <v-col cols="6">
-                      <v-text-field
-                        v-model="editedUser.firstname"
-                        label="First Name"
-                        outlined
-                      />
-                    </v-col>
-                    <v-col cols="6">
-                      <v-text-field
-                        v-model="editedUser.lastname"
-                        label="Last Name"
-                        outlined
-                      />
-                    </v-col>
-                  </v-row>
-                  <v-text-field
-                    v-model="editedUser.email"
-                    label="Email"
-                    :rules="[requiredValidator, emailValidator]"
-                    outlined
-                  />
-                  <v-text-field
-                    v-model="editedUser.phone"
-                    label="Phone"
-                    outlined
-                  />
-                  <v-text-field
-                    v-model="editedUser.complete_address"
-                    label="Address"
-                    outlined
-                  />
-                  <v-text-field
-                    v-model="editedUser.user_type"
-                    label="Role"
-                    outlined
-                  />
-                </v-form>
-              </v-card-text>
-              <v-card-actions class="">
-                <v-btn @click="showEditUserForm = false" color="grey darken-1"
-                  >Cancel</v-btn
-                >
-                <v-btn
-                  @click="updateUser"
-                  color="teal darken-3"
-                  :disabled="!isEditUserValid"
-                >
-                  Save Changes
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-
-          <!-- Edit User Dialog -->
-          <v-dialog v-model="showAddUserForm" max-width="500px">
-            <v-card>
-              <v-card-title>Add User</v-card-title>
-              <v-card-text>
-                <v-form @submit.prevent="addUser">
-                  <v-row>
-                    <v-col cols="6">
-                      <v-text-field
-                        v-model="newUser.firstname"
-                        label="First Name"
-                        outlined
-                      />
-                    </v-col>
-                    <v-col cols="6">
-                      <v-text-field
-                        v-model="newUser.lastname"
-                        label="Last Name"
-                        outlined
-                      />
-                    </v-col>
-                  </v-row>
-                  <v-text-field
-                    v-model="newUser.email"
-                    label="Email"
-                    :rules="[requiredValidator, emailValidator]"
-                    outlined
-                  />
-                  <v-text-field
-                    v-model="newUser.password"
-                    label="Password"
-                    :type="passwordVisible ? 'text' : 'password'"
-                    :rules="[requiredValidator, passwordValidator]"
-                    append-inner-icon="mdi-eye"
-                    @click:append-inner="togglePasswordVisibility"
-                    outlined
-                  />
-                  <v-text-field
-                    v-model="newUser.phone"
-                    label="Phone"
-                    :rules="[requiredValidator]"
-                    outlined
-                  />
-                  <v-text-field
-                    v-model="newUser.complete_address"
-                    label="Address"
-                    outlined
-                  />
-                  <v-text-field
-                    v-model="newUser.user_type"
-                    label="Role"
-                    outlined
-                  />
-                </v-form>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn @click="showAddUserForm = false" color="grey darken-1"
-                  >Cancel</v-btn
-                >
-                <v-btn
-                  @click="addUser"
-                  color="teal darken-3"
-                  :disabled="!isAddUserValid"
-                >
-                  Add User
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-
-          <!-- Delete Confirmation Dialog -->
-          <v-dialog v-model="showDeleteConfirmation" max-width="400px">
-            <v-card>
-              <v-card-title>Confirm Deletion</v-card-title>
-              <v-card-text>
-                Are you sure you want to delete this user?
-              </v-card-text>
-              <v-card-actions class="mx-auto">
-                <v-btn
-                  @click="showDeleteConfirmation = false"
-                  color="grey darken-1"
-                  >Cancel</v-btn
-                >
-                <v-btn @click="confirmDeleteUser" color="red">Delete</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-
-          <!-- Data Table -->
-          <v-container>
-            <v-row align="center" justify="start">
-              <v-col cols="auto">
-                <v-btn-toggle v-model="selectedTable" mandatory>
-                  <v-btn :color="primaryColor" value="users">Users</v-btn>
-                  <v-btn :color="primaryColor" value="subjects">Subjects</v-btn>
-                </v-btn-toggle>
-              </v-col>
-            </v-row>
-            <DataTable
-              v-if="selectedTable === 'users'"
-              :items="paginatedItems"
-              :search-query="searchQuery"
-              @update:search-query="searchQuery = $event"
-              @edit-user="openEditDialog"
-              @delete-user="promptDeleteUser"
-            />
-            <SubjectsTable v-else />
-          </v-container>
-          <v-container class="mt-4">
-            <v-row class="align-center justify-center">
-              <v-pagination
-                v-model="currentPage"
-                :length="totalPages"
-                :total-visible="3"
-                rounded
-                density="comfortable"
-                class="custom-pagination"
-              ></v-pagination>
-            </v-row>
-
-            <v-row class="align-center justify-end mt-2">
-              <v-col cols="auto">
-                <v-select
-                  v-model="itemsPerPage"
-                  :items="[10, 20, 30, 50, 100]"
-                  label="Items per page"
-                  dense
-                  outlined
-                  style="min-width: 150px; max-width: 200px"
-                  @change="handleItemsPerPageChange"
-                />
-              </v-col>
-            </v-row>
-          </v-container>
-        </div>
-      </v-container>
-    </template>
-  </LayoutWrapper>
-</template>
-
-
 <style scoped>
 /* Light Mode */
 :deep(.v-pagination__item--active) {
