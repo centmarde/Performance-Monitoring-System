@@ -7,6 +7,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AllSectionsGraph: typeof import('./components/system/AllSectionsGraph.vue')['default']
     AppFooter: typeof import('./components/common/AppFooter.vue')['default']
     DataTable: typeof import('./components/admin/DataTable.vue')['default']
     InnerNavBar: typeof import('./components/common/InnerNavBar.vue')['default']
@@ -14,11 +15,11 @@ declare module 'vue' {
     NavBar: typeof import('./components/common/NavBar.vue')['default']
     RegisterForm: typeof import('./components/auth/RegisterForm.vue')['default']
     Review: typeof import('./components/system/Review.vue')['default']
-    ReviewOriginal: typeof import('./components/system/ReviewOriginal.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScrollDown: typeof import('./components/common/ScrollDown.vue')['default']
     SearchBar: typeof import('./components/common/SearchBar.vue')['default']
+    SectionAi: typeof import('./components/system/SectionAi.vue')['default']
     SectionList: typeof import('./components/system/SectionList.vue')['default']
     SectionReview: typeof import('./components/system/SectionReview.vue')['default']
     SidebarMenu: typeof import('./components/common/SidebarMenu.vue')['default']
