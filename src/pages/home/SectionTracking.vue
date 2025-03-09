@@ -2,20 +2,27 @@
     <HomeLayout>
       <template #content>
         <v-container>
+          <v-row>
+            <v-col cols="12">
+              <AllSectionsGraph />
+            </v-col>
+          </v-row>
           <v-row justify="start">
             <v-col cols="auto">
               <v-card class="pa-3 rounded-card glass-card">
                 <h4 class="font-weight-bold text-end">
-                  <span class="mdi mdi-account-school"></span> Student's Missed
-                  Activities Tracking
+                  <span class="mdi mdi-account-school"></span> Section Students Tracking
                 </h4>
               </v-card>
             </v-col>
           </v-row>
   
           <v-row>
-            <Review />
+            <SectionAi />
           </v-row>
+
+          
+
         </v-container>
       </template>
     </HomeLayout>
@@ -24,6 +31,13 @@
   <script setup lang="ts">
   import { ref, computed } from "vue";
   import HomeLayout from "@/layouts/HomeLayout.vue";
+  //@ts-ignore
+  import SectionAi from "@/components/system/SectionAi.vue";
+  //@ts-ignore
+  import AllSectionsGraph from "@/components/system/AllSectionsGraph.vue";
+
+  const selectedSection = ref(localStorage.getItem('selectedSection') || '');
+  const selectedSubject = ref(localStorage.getItem('selectedSubject') || '');
   </script>
   
   <style scoped>
@@ -40,4 +54,3 @@
     font-weight: bold;
   }
   </style>
-  

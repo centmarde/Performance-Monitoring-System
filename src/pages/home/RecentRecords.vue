@@ -901,11 +901,11 @@ const clickSaveButtons = () => {
 const startAutoSave = () => {
   setInterval(async () => {
     await fetchRecords();
-  }, 10000);
+  }, 8000);
 
   setInterval(() => {
     clickSaveButtons();
-  }, 5000);
+  }, 2000);
 };
 
 onMounted(async () => {
