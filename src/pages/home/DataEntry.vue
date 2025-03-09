@@ -536,6 +536,9 @@ const enterRecords = () => {
   height: 250px;
   cursor: pointer;
 }
+.glass-card {
+  border-radius: 12px;
+}
 
 .subject-card:hover {
   transform: scale(1.03);
