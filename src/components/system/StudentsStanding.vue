@@ -30,7 +30,7 @@
                 <SearchBar class="my-5" v-model="searchQuery[record.id]" />
               </div>
               <span class="text-body-2 my-2 text-center">
-                <small>Teacher: {{ record.handled_by }}</small><br>
+               <!--  <small>Teacher: {{ record.handled_by }}</small><br> -->
                 <small>Quarter: {{ record.quarter }}</small><br>
                 <small>Total Students: {{ record.student_count }}</small>
               </span>

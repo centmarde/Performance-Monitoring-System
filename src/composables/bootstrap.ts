@@ -15,7 +15,11 @@ const groq = new Groq({
 });
 
 function formatResponse(content: string): string {
-  return content.replace(/\n/g, "<br>");
+  return content
+    .replace(/\n/g, "<br>")
+    .replace(/\*\*\*(.*?)\*\*\*/g, "<strong><em>$1</em></strong>") // ***bold & italic***
+    .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")              // **bold**
+    .replace(/\*(.*?)\*/g, "<em>$1</em>");                        // *italic*
 }
 
 export function useGroqChat() {
@@ -43,7 +47,7 @@ export function useGroqChat() {
           )}`,
         },
       ],
-      model: "deepseek-r1-distill-llama-70b",
+      model: "gemma2-9b-it",
       temperature: 0.6,
       max_completion_tokens: 600,
       top_p: 0.95,
