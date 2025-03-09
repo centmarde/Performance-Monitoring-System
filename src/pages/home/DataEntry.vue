@@ -336,7 +336,7 @@
       <v-container>
         <v-row justify="start">
           <v-col cols="auto">
-            <v-card class="pa-3 rounded-card glass-card">
+            <v-card class="pa-3 rounded-card glass-card" :color="primaryColor">
               <h4 class="font-weight-bold text-end">
                 <span class="mdi mdi-account-school"></span> Section and
                 Students
