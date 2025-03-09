@@ -310,24 +310,48 @@ const updateSubjectFailRateChart = async () => {
       formatter: "{b}: {c} ({d}%)",
     },
     legend: {
-      orient: "vertical",
-      left: "left",
+      orient: "horizontal",
+      bottom: "0%",
+      itemWidth: 12,
+      itemHeight: 12,
+      textStyle: {
+        fontSize: 12,
+      },
+      padding: 10,
     },
     series: [
       {
         name: "Subject Performance",
         type: "pie",
-        radius: "70%",
+        radius: ["40%", "65%"], // Convert to donut chart for better label space
+        center: ["50%", "45%"], // Move up slightly to make room for legend
+        avoidLabelOverlap: true,
+        label: {
+          show: true,
+          position: "outside",
+          formatter: "{b}\n{c} ({d}%)",
+          fontSize: 12,
+          lineHeight: 16,
+          alignTo: "edge",
+          edgeDistance: 15,
+          bleedMargin: 10,
+        },
+        labelLine: {
+          show: true,
+          length: 15,
+          length2: 12,
+          smooth: true,
+        },
         data: [
-          {
-            value: statsData.value.failingCount,
-            name: "Failing",
-            itemStyle: { color: "#FF5252" },
-          },
           {
             value: statsData.value.passingCount,
             name: "Passing",
             itemStyle: { color: "#4CAF50" },
+          },
+          {
+            value: statsData.value.failingCount,
+            name: "Failing",
+            itemStyle: { color: "#FF5252" },
           },
         ],
         emphasis: {
@@ -340,6 +364,11 @@ const updateSubjectFailRateChart = async () => {
       },
     ],
   };
+
+  // Handle responsive behavior
+  window.addEventListener("resize", () => {
+    myChart.resize();
+  });
 
   myChart.setOption(option);
 
