@@ -358,12 +358,6 @@ const updateSubjectFailRateChart = async () => {
 
 const updateSectionFailRateChart = async () => {
   const chartDom = document.getElementById("sectionFailRateChart");
-
-  // Check if a chart instance already exists and dispose of it
-  if (chartDom) {
-    echarts.dispose(chartDom);
-  }
-
   const myChart = echarts.init(chartDom);
 
   const total = sectionData.value.length;
@@ -382,14 +376,38 @@ const updateSectionFailRateChart = async () => {
       formatter: "{b}: {c} ({d}%)",
     },
     legend: {
-      orient: "vertical",
-      left: "left",
+      orient: "horizontal",
+      bottom: "0%",
+      itemWidth: 12,
+      itemHeight: 12,
+      textStyle: {
+        fontSize: 12,
+      },
+      padding: 10,
     },
     series: [
       {
         name: "Section Performance",
         type: "pie",
-        radius: "70%",
+        radius: ["40%", "65%"], // Convert to donut chart for better label space
+        center: ["50%", "45%"], // Move up slightly to make room for legend
+        avoidLabelOverlap: true,
+        label: {
+          show: true,
+          position: "outside",
+          formatter: "{b}\n{c} ({d}%)",
+          fontSize: 12,
+          lineHeight: 16,
+          alignTo: "edge",
+          edgeDistance: 15,
+          bleedMargin: 10,
+        },
+        labelLine: {
+          show: true,
+          length: 15,
+          length2: 12,
+          smooth: true,
+        },
         data: [
           {
             value: excellentCount,
@@ -423,12 +441,22 @@ const updateSectionFailRateChart = async () => {
     ],
   };
 
+  // Handle responsive behavior
+  window.addEventListener("resize", () => {
+    myChart.resize();
+  });
+
   myChart.setOption(option);
 
   // Add analytics
   isLoadingSectionAnalysis.value = true;
   await analyzeSectionDistribution(
-    { excellentCount, goodCount, averageCount, failingCount },
+    {
+      excellentCount,
+      goodCount,
+      averageCount,
+      failingCount,
+    },
     selectedSection.value
   );
   isLoadingSectionAnalysis.value = false;
