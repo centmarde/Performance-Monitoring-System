@@ -258,7 +258,6 @@ export default defineComponent({
 
 .rounded-card {
   border-radius: 12px;
-  color: #004d40;
 }
 
 .glass-card {
