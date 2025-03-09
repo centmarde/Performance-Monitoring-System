@@ -7,7 +7,7 @@
     <v-container>
       <v-row justify="start">
         <v-col cols="auto">
-          <v-card class="pa-3 rounded-card glass-card">
+          <v-card class="pa-3 rounded-card glass-card" color="teal-darken-3">
             <h4 class="font-weight-bold text-end">
               <span class="mdi mdi-account-school"></span> Student's Standing
             </h4>
@@ -258,6 +258,7 @@ export default defineComponent({
 
 .rounded-card {
   border-radius: 12px;
+  color: #004d40;
 }
 
 .glass-card {
