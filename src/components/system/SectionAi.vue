@@ -358,6 +358,12 @@ const updateSubjectFailRateChart = async () => {
 
 const updateSectionFailRateChart = async () => {
   const chartDom = document.getElementById("sectionFailRateChart");
+
+  // Check if a chart instance already exists and dispose of it
+  if (chartDom) {
+    echarts.dispose(chartDom);
+  }
+
   const myChart = echarts.init(chartDom);
 
   const total = sectionData.value.length;
@@ -422,12 +428,7 @@ const updateSectionFailRateChart = async () => {
   // Add analytics
   isLoadingSectionAnalysis.value = true;
   await analyzeSectionDistribution(
-    {
-      excellentCount,
-      goodCount,
-      averageCount,
-      failingCount,
-    },
+    { excellentCount, goodCount, averageCount, failingCount },
     selectedSection.value
   );
   isLoadingSectionAnalysis.value = false;
