@@ -1,5 +1,9 @@
 <template>
-  <v-lazy :min-height="200" :options="{ threshold: 0.5 }" transition="fade-transition">
+  <v-lazy
+    :min-height="200"
+    :options="{ threshold: 0.5 }"
+    transition="fade-transition"
+  >
     <v-container>
       <v-row justify="start">
         <v-col cols="auto">
@@ -14,35 +18,63 @@
       <v-scale-transition mode="out-in">
         <v-row :key="currentPage">
           <v-col v-if="loading" cols="12" class="text-center">
-            <v-progress-circular indeterminate color="primary"></v-progress-circular>
+            <v-progress-circular
+              indeterminate
+              color="primary"
+            ></v-progress-circular>
           </v-col>
           <v-col v-else-if="paginatedRecords.length === 0" cols="12">
             <v-card class="pa-8 text-center">
               <v-icon size="64" color="grey">mdi-alert-circle-outline</v-icon>
-              <h3 class="mt-4 text-grey-darken-1">Oh no! You have no sections and subjects assigned.</h3>
-              <p class="text-grey">Please contact your administrator to assign sections and subjects to you.</p>
+              <h3 class="mt-4 text-grey-darken-1">
+                Oh no! You have no sections and subjects assigned.
+              </h3>
+              <p class="text-grey">
+                Please contact your administrator to assign sections and
+                subjects to you.
+              </p>
             </v-card>
           </v-col>
-          <v-col v-else v-for="record in paginatedRecords" :key="record.id" cols="12" md="4">
+          <v-col
+            v-else
+            v-for="record in paginatedRecords"
+            :key="record.id"
+            cols="12"
+            md="4"
+          >
             <v-card class="pa-8 student-box fixed-card" color="#E8F5E9">
-              <h3 class="text-center font-weight-bold">Section: {{ record.section }}</h3>
+              <h3 class="text-center font-weight-bold">
+                Section: {{ record.section }}
+              </h3>
               <div class="search-bar-container">
                 <SearchBar class="my-5" v-model="searchQuery[record.id]" />
               </div>
               <span class="text-body-2 my-2 text-center">
-               <!--  <small>Teacher: {{ record.handled_by }}</small><br> -->
-                <small>Quarter: {{ record.quarter }}</small><br>
+                <!--  <small>Teacher: {{ record.handled_by }}</small><br> -->
+                <small>Quarter: {{ record.quarter }}</small
+                ><br />
                 <small>Total Students: {{ record.student_count }}</small>
               </span>
               <v-divider class="mb-2"></v-divider>
               <PerfectScrollbar :options="{ suppressScrollX: true }">
                 <div>
-                  <v-row v-for="(student, index) in filteredStudents(record.id)" :key="student.name" align="center">
+                  <v-row
+                    v-for="(student, index) in filteredStudents(record.id)"
+                    :key="student.name"
+                    align="center"
+                  >
                     <v-col cols="9">{{ student.name }}</v-col>
-                    <v-col cols="3" class="text-right" :class="getColorClass(student.initialGrade)">
+                    <v-col
+                      cols="3"
+                      class="text-right"
+                      :class="getColorClass(student.initialGrade)"
+                    >
                       <span class="smallFont">{{ student.initialGrade }}%</span>
                     </v-col>
-                    <v-divider v-if="index < (record.students?.length || 0) - 1" class="my-1"></v-divider>
+                    <v-divider
+                      v-if="index < (record.students?.length || 0) - 1"
+                      class="my-1"
+                    ></v-divider>
                   </v-row>
                 </div>
               </PerfectScrollbar>
@@ -51,12 +83,13 @@
         </v-row>
       </v-scale-transition>
 
-      <v-pagination 
-        v-if="paginatedRecords.length > 0" 
-        v-model="currentPage" 
-        :length="totalPages" 
-        :total-visible="5" 
-        class="mt-4">
+      <v-pagination
+        v-if="paginatedRecords.length > 0"
+        v-model="currentPage"
+        :length="totalPages"
+        :total-visible="5"
+        class="mt-4"
+      >
       </v-pagination>
     </v-container>
   </v-lazy>
@@ -92,7 +125,7 @@ export default defineComponent({
       await sectionsStore.fetchSections();
       await teacherList.fetchTeachersInfo();
       await fetchAllClassRecordsWithDetails();
-      
+
       for (const record of classRecords.value) {
         searchQuery[record.id] = "";
         await fetchStudentsByClassRecord(record.id, record.section_id);
@@ -101,7 +134,9 @@ export default defineComponent({
       loading.value = false;
     });
 
-    const totalPages = computed(() => Math.ceil(classRecords.value.length / recordsPerPage));
+    const totalPages = computed(() =>
+      Math.ceil(classRecords.value.length / recordsPerPage)
+    );
 
     const paginatedRecords = computed(() => {
       const start = (currentPage.value - 1) * recordsPerPage;
@@ -112,7 +147,9 @@ export default defineComponent({
     function filteredStudents(recordId) {
       return (
         studentStanding[recordId]?.filter((student) =>
-          student.name.toLowerCase().includes(String(searchQuery[recordId]).toLowerCase())
+          student.name
+            .toLowerCase()
+            .includes(String(searchQuery[recordId]).toLowerCase())
         ) || []
       );
     }
@@ -122,20 +159,22 @@ export default defineComponent({
       const userId = localStorage.getItem("user_id");
       const { data, error } = await supabase
         .from("class_record")
-        .select(`
+        .select(
+          `
           id, quarter, created_at, section_id,
           subjects (title),
           sections (code, id),
           users (email),
           records (student_id, initial_grade)
-        `)
+        `
+        )
         .order("created_at", { ascending: false })
         .eq("teacher_id", userId);
 
       if (error) {
         console.error(error.message);
       } else {
-        classRecords.value = data.map(record => ({
+        classRecords.value = data.map((record) => ({
           ...record,
           subjectName: record.subjects.title,
           section: record.sections.code,
@@ -219,6 +258,7 @@ export default defineComponent({
 
 .rounded-card {
   border-radius: 12px;
+  color: #004d40;
 }
 
 .glass-card {
