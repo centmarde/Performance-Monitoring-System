@@ -797,7 +797,7 @@ const getGradeClass = (grade) => {
   if (grade >= 90) return "excellent"; // Green
   if (grade >= 80) return "good"; // Blue
   if (grade >= 75) return "passing"; // Yellow
-  return ""; // Default
+  return "";
 };
 
 const fetchGradeCalculations = async (classRecordId) => {
