@@ -13,37 +13,54 @@ import { supabase } from '@/lib/supabase';
 import * as echarts from 'echarts';
 
 const sectionsData = ref([]);
+const teacherId = localStorage.getItem("user_id");
 
 const fetchData = async () => {
-  // Fetch all sections with their subjects and records
+  // First fetch teacher's assigned subjects
+  const { data: assignedSubjects } = await supabase
+    .from('asign_subjects')
+    .select('subject_id')
+    .eq('user_id', teacherId);
+
+  if (!assignedSubjects) return;
+
+  const subjectIds = assignedSubjects.map(item => item.subject_id);
+
+  // Fetch sections data with their subjects and records
   const { data: sections } = await supabase
     .from('sections')
     .select(`
       code,
       id,
-      class_record (
+      section_subjects!inner (
         subject_id,
         subjects (
+          id,
           title
-        ),
+        )
+      ),
+      class_record (
+        subject_id,
         records (
           initial_grade
         )
       )
-    `);
+    `)
+    .in('section_subjects.subject_id', subjectIds);
 
   if (sections) {
-    // Process the data for visualization
     sectionsData.value = sections.map(section => {
-      const subjectsData = section.class_record.reduce((acc, record) => {
-        if (record.subjects && record.records) {
-          const subjectTitle = record.subjects.title;
-          const passingCount = record.records.filter(r => r.initial_grade >= 75).length;
-          const totalCount = record.records.length;
-          const passRate = totalCount > 0 ? (passingCount / totalCount) * 100 : 0;
+      const subjectsData = section.section_subjects.reduce((acc, subjectRel) => {
+        const subject = subjectRel.subjects;
+        const records = section.class_record
+          .filter(record => record.subject_id === subject.id)
+          .flatMap(record => record.records || []);
+        
+        const passingCount = records.filter(r => r.initial_grade >= 75).length;
+        const totalCount = records.length;
+        const passRate = totalCount > 0 ? (passingCount / totalCount) * 100 : 0;
 
-          acc[subjectTitle] = passRate;
-        }
+        acc[subject.title] = passRate;
         return acc;
       }, {});
 

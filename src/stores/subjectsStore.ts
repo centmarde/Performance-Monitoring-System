@@ -28,7 +28,7 @@ export const useSubjectsStore = defineStore("subjectsStore", () => {
     } else {
       subjects.value = data as Subject[];
       subjectCount.value = data.length;
-      console.log("Fetched subjects:", data); // Add this line to debug
+      console.log("Fetched subjects:", data);
     }
     loading.value = false;
   }
