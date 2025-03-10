@@ -995,13 +995,13 @@ onMounted(async () => {
 }
 
 .fail {
-  color: #e74c3c;
-  background-color: #fdecea;
+  background-color: #ffcccc;
+  color: #000;
+  padding: 5px 8px;
+  border-radius: 5px;
   font-weight: bold;
-  padding: 4px;
-  border-radius: 4px;
+  display: inline-block;
 }
-
 /* .excellent {
   color: #2ecc71;
   background-color: #e8f5e9;
@@ -1019,11 +1019,12 @@ onMounted(async () => {
 } */
 
 .almost-fail {
-  color: #f1c40f;
   background-color: #fff3cd;
+  color: #000;
+  padding: 5px 8px;
+  border-radius: 5px;
   font-weight: bold;
-  padding: 4px;
-  border-radius: 4px;
+  display: inline-block;
 }
 tbody tr:nth-child(even) {
   background-color: #f8f9fa;
