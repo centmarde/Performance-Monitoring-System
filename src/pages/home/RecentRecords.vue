@@ -673,7 +673,7 @@ import { useRecordsStore } from "@/stores/recordsStore";
 import { useStudentsStore } from "@/stores/studentsStore";
 import SearchBar from "@/components/common/SearchBar.vue";
 import { supabase } from "@/lib/supabase";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
@@ -684,7 +684,7 @@ const navigateToTracking = (item) => {
   const subjectId = localStorage.getItem("selectedSubject"); // Get subject ID instead of subject name
   console.log(section, quarter, subjectId);
   router.push({
-    path: '/tracking',
+    path: "/tracking",
     query: {
       studentId: item.id,
       name: item.name,
@@ -694,8 +694,8 @@ const navigateToTracking = (item) => {
       quarterly_grade: item.quarterly_grade,
       section: section,
       quarter: quarter,
-      subject: subjectId // Pass subject ID instead of subject name
-    }
+      subject: subjectId, // Pass subject ID instead of subject name
+    },
   });
 };
 
@@ -974,6 +974,25 @@ onMounted(async () => {
   backdrop-filter: blur(10px); /* Blur effect for glass background */
   -webkit-backdrop-filter: blur(10px); /* Safari support */
   box-shadow: 0 0 10px #004d40; /* Glowing effect */
+}
+.failing {
+  color: red;
+  font-weight: bold;
+}
+
+.excellent {
+  color: green;
+  font-weight: bold;
+}
+
+.good {
+  color: blue;
+  font-weight: bold;
+}
+
+.passing {
+  color: yellow;
+  font-weight: bold;
 }
 
 /* Responsive Design */
