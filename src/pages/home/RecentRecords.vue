@@ -795,7 +795,7 @@ const saveChanges = async (item) => {
 const getGradeClass = (grade) => {
   if (grade < 75) return "failing"; // Red
   if (grade >= 90) return "excellent"; // Green
-  if (grade >= 80) return "good"; // Blue
+  if (grade >= 80) return "good";
   if (grade >= 75) return "passing";
   return "";
 };
