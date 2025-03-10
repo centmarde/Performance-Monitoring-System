@@ -799,7 +799,7 @@ const getGradeClass = (grade) => {
   if (grade < 75) return "fail";
   /* if (grade >= 90) return "excellent";
   if (grade >= 80) return "good"; */
-  if (grade >= 75) return "failing";
+  if (grade >= 75 && grade < 80) return "almost-fail";
   return "";
 };
 
