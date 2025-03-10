@@ -405,6 +405,7 @@
                     <input
                       v-model="item.id"
                       disabled
+                      class="student-id"
                       style="
                         width: 30px;
                         height: 24px;
@@ -419,6 +420,7 @@
                   <td>
                     <input
                       v-model="item.name"
+                      :class="getGradeClass(item.quarterly_grade)"
                       style="
                         width: 100px;
                         height: 24px;
@@ -430,6 +432,7 @@
                       "
                     />
                   </td>
+
                   <td v-for="n in 10" :key="'ww' + n">
                     <input
                       v-model="item['ww' + n]"
@@ -605,6 +608,7 @@
                     <input
                       v-model="item.initial_grade"
                       disabled
+                      :class="getGradeClass(item.initial_grade)"
                       style="
                         width: 50px;
                         height: 24px;
@@ -673,7 +677,7 @@ import { useRecordsStore } from "@/stores/recordsStore";
 import { useStudentsStore } from "@/stores/studentsStore";
 import SearchBar from "@/components/common/SearchBar.vue";
 import { supabase } from "@/lib/supabase";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
@@ -684,7 +688,7 @@ const navigateToTracking = (item) => {
   const subjectId = localStorage.getItem("selectedSubject"); // Get subject ID instead of subject name
   console.log(section, quarter, subjectId);
   router.push({
-    path: '/tracking',
+    path: "/tracking",
     query: {
       studentId: item.id,
       name: item.name,
@@ -694,8 +698,8 @@ const navigateToTracking = (item) => {
       quarterly_grade: item.quarterly_grade,
       section: section,
       quarter: quarter,
-      subject: subjectId // Pass subject ID instead of subject name
-    }
+      subject: subjectId, // Pass subject ID instead of subject name
+    },
   });
 };
 
@@ -789,6 +793,13 @@ const saveChanges = async (item) => {
   } catch (error) {
     console.error("Error saving changes:", error);
   }
+};
+const getGradeClass = (grade) => {
+  if (grade < 75) return "fail";
+  /* if (grade >= 90) return "excellent";
+  if (grade >= 80) return "good"; */
+  if (grade >= 75 && grade < 80) return "almost-fail";
+  return "";
 };
 
 const fetchGradeCalculations = async (classRecordId) => {
@@ -974,6 +985,74 @@ onMounted(async () => {
   backdrop-filter: blur(10px); /* Blur effect for glass background */
   -webkit-backdrop-filter: blur(10px); /* Safari support */
   box-shadow: 0 0 10px #004d40; /* Glowing effect */
+}
+.student-id {
+  text-align: center;
+  min-width: 50px;
+  font-weight: bold;
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.fail {
+  background-color: #ffcccc;
+  color: #000;
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-weight: bold;
+  display: inline-block;
+}
+/* .excellent {
+  color: #2ecc71;
+  background-color: #e8f5e9;
+  font-weight: bold;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.good {
+  color: #3498db;
+  background-color: #e3f2fd;
+  font-weight: bold;
+  padding: 4px;
+  border-radius: 4px;
+} */
+
+.almost-fail {
+  background-color: #fff3cd;
+  color: #000;
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-weight: bold;
+  display: inline-block;
+}
+tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+.student-id {
+  width: 40px;
+  height: 24px;
+  text-align: center;
+  background-color: #f0f0f0; /* Light gray to indicate read-only */
+  border: none;
+  border-radius: 4px;
+  padding: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.total-score {
+  width: 60px;
+  height: 24px;
+  text-align: center;
+  background-color: #d1e7dd; /* Light green for visibility */
+  border: none;
+  border-radius: 4px;
+  padding: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #155724; /* Darker green for contrast */
 }
 
 /* Responsive Design */

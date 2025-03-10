@@ -16,7 +16,7 @@
 
         <v-row justify="start">
           <v-col cols="auto">
-            <v-card class="pa-3 rounded-card glass-card">
+            <v-card class="pa-3 rounded-card glass-card" :color="primaryColor">
               <h4 class="font-weight-bold text-end">
                 <span class="mdi mdi-account-school"></span> Subject Management
               </h4>
@@ -42,7 +42,9 @@
             <v-card class="pa-8 text-center">
               <v-icon size="64" color="grey">mdi-book-off-outline</v-icon>
               <h3 class="mt-4 text-grey-darken-1">No Class Record available</h3>
-              <p class="text-grey">Click "Add New" to create your first Class Record entry.</p>
+              <p class="text-grey">
+                Click "Add New" to create your first Class Record entry.
+              </p>
             </v-card>
           </v-col>
 
@@ -334,7 +336,7 @@
       <v-container>
         <v-row justify="start">
           <v-col cols="auto">
-            <v-card class="pa-3 rounded-card glass-card">
+            <v-card class="pa-3 rounded-card glass-card" :color="primaryColor">
               <h4 class="font-weight-bold text-end">
                 <span class="mdi mdi-account-school"></span> Section and
                 Students
@@ -505,9 +507,11 @@ const activeSubjectId = ref<number | null>(null);
 const handleCardClick = async (classRecordId: number) => {
   activeSubjectId.value = classRecordId;
   cardDialog.value = true;
-  
+
   // Fetch and store the selected card's details
-  const selectedCard = subjects.value.find(subject => subject.id === classRecordId);
+  const selectedCard = subjects.value.find(
+    (subject) => subject.id === classRecordId
+  );
   console.log("Selected Card:", selectedCard);
   if (selectedCard) {
     localStorage.setItem("selectedSection", selectedCard.section);
@@ -531,6 +535,9 @@ const enterRecords = () => {
   transition: 0.3s;
   height: 250px;
   cursor: pointer;
+}
+.glass-card {
+  border-radius: 12px;
 }
 
 .subject-card:hover {
