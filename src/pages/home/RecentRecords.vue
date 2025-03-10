@@ -984,6 +984,14 @@ onMounted(async () => {
   -webkit-backdrop-filter: blur(10px); /* Safari support */
   box-shadow: 0 0 10px #004d40; /* Glowing effect */
 }
+.student-id {
+  text-align: center;
+  min-width: 50px;
+  font-weight: bold;
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
 .failing {
   color: #e74c3c;
   background-color: #fdecea;
@@ -1014,6 +1022,9 @@ onMounted(async () => {
   font-weight: bold;
   padding: 4px;
   border-radius: 4px;
+}
+tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
 }
 
 /* Responsive Design */
