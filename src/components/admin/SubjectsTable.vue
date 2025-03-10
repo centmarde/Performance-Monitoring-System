@@ -76,17 +76,20 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import { useSubjectsStore } from "@/stores/subjectsStore";
 import { requiredValidator } from "@/lib/validator";
 import { supabase } from "@/lib/supabase";
 import { useTheme } from "vuetify";
 
+interface Subject {
+  id: number;
+  created_at: string;
+  title: string;
+}
+
 const theme = useTheme();
 const primaryColor = computed(() => "#004D40");
 
-const subjectsStore = useSubjectsStore();
-const { subjects, fetchSubjects } = subjectsStore;
-
+const subjects = ref<Subject[]>([]);
 const showAddSubjectForm = ref(false);
 const newSubject = ref({ title: "" });
 
@@ -94,16 +97,24 @@ const isAddSubjectValid = computed(() => {
   return newSubject.value.title.trim() !== "";
 });
 
+const fetchSubjects = async () => {
+  try {
+    const { data, error } = await supabase.from("subjects").select("*");
+    if (error) throw error;
+    subjects.value = data as Subject[];
+  } catch (error) {
+    console.error("Error fetching subjects:", error);
+  }
+};
+
 const addSubject = async () => {
   try {
     const { data, error } = await supabase
       .from("subjects")
       .insert([newSubject.value])
       .select();
-    if (error) {
-      throw error;
-    }
-    subjects.push({
+    if (error) throw error;
+    subjects.value.push({
       ...newSubject.value,
       id: data[0].id,
       created_at: data[0].created_at,

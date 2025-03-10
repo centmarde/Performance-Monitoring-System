@@ -2,6 +2,7 @@
   <LayoutWrapper>
     <template #content>
       <v-container fluid>
+        <WelcomeToDashboard/>
         <div class="p-8 bg-gray-100 min-h-screen">
           <!-- Add User Dialog -->
           <v-dialog v-model="showEditUserForm" max-width="500px">
