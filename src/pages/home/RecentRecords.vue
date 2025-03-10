@@ -405,6 +405,7 @@
                     <input
                       v-model="item.id"
                       disabled
+                      class="student-id"
                       style="
                         width: 30px;
                         height: 24px;
@@ -453,6 +454,7 @@
                     <input
                       v-model="item.wwTotal"
                       disabled
+                      class="total-score"
                       style="
                         width: 50px;
                         height: 24px;
@@ -515,6 +517,7 @@
                     <input
                       v-model="item.ptTotal"
                       disabled
+                      class="total-score"
                       style="
                         width: 50px;
                         height: 24px;
@@ -793,10 +796,10 @@ const saveChanges = async (item) => {
   }
 };
 const getGradeClass = (grade) => {
-  if (grade < 75) return "failing";
-  if (grade >= 90) return "excellent";
-  if (grade >= 80) return "good";
-  if (grade >= 75) return "passing";
+  if (grade < 75) return "fail";
+  /* if (grade >= 90) return "excellent";
+  if (grade >= 80) return "good"; */
+  if (grade >= 75) return "failing";
   return "";
 };
 
@@ -992,7 +995,7 @@ onMounted(async () => {
   border-radius: 4px;
 }
 
-.failing {
+.fail {
   color: #e74c3c;
   background-color: #fdecea;
   font-weight: bold;
@@ -1016,7 +1019,7 @@ onMounted(async () => {
   border-radius: 4px;
 }
 
-.passing {
+.almost-fail {
   color: #f1c40f;
   background-color: #fff3cd;
   font-weight: bold;
@@ -1025,6 +1028,31 @@ onMounted(async () => {
 }
 tbody tr:nth-child(even) {
   background-color: #f8f9fa;
+}
+.student-id {
+  width: 40px;
+  height: 24px;
+  text-align: center;
+  background-color: #f0f0f0; /* Light gray to indicate read-only */
+  border: none;
+  border-radius: 4px;
+  padding: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.total-score {
+  width: 60px;
+  height: 24px;
+  text-align: center;
+  background-color: #d1e7dd; /* Light green for visibility */
+  border: none;
+  border-radius: 4px;
+  padding: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #155724; /* Darker green for contrast */
 }
 
 /* Responsive Design */
