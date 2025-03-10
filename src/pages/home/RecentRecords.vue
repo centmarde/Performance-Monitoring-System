@@ -419,6 +419,7 @@
                   <td>
                     <input
                       v-model="item.name"
+                      :class="getGradeClass(item.quarterly_grade)"
                       style="
                         width: 100px;
                         height: 24px;
@@ -430,6 +431,7 @@
                       "
                     />
                   </td>
+
                   <td v-for="n in 10" :key="'ww' + n">
                     <input
                       v-model="item['ww' + n]"
@@ -789,6 +791,13 @@ const saveChanges = async (item) => {
   } catch (error) {
     console.error("Error saving changes:", error);
   }
+};
+const getGradeClass = (grade) => {
+  if (grade < 75) return "failing"; // Red
+  if (grade >= 90) return "excellent"; // Green
+  if (grade >= 80) return "good"; // Blue
+  if (grade >= 75) return "passing"; // Yellow
+  return ""; // Default
 };
 
 const fetchGradeCalculations = async (classRecordId) => {
