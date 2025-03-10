@@ -11,7 +11,6 @@
             v-model="selectedSection"
             prepend-inner-icon="mdi-account-group"
           >
-           
           </v-select>
         </v-card>
       </v-col>
@@ -26,7 +25,6 @@
             :disabled="!selectedSection"
             prepend-inner-icon="mdi-book-open-variant"
           >
-           
           </v-select>
         </v-card>
       </v-col>
@@ -35,7 +33,9 @@
     <v-row>
       <v-col cols="12">
         <v-card class="glass-card pa-4 rounded-card" elevation="3">
-          <v-card-title class="font-semibold text-lg">Section Performance Analysis</v-card-title>
+          <v-card-title class="font-semibold text-lg"
+            >Section Performance Analysis</v-card-title
+          >
           <v-card-text>
             <div id="sectionChart" style="width: 100%; height: 400px"></div>
           </v-card-text>
@@ -46,7 +46,9 @@
     <v-row>
       <v-col cols="12">
         <v-card class="glass-card pa-4 rounded-card" elevation="3">
-          <v-card-title class="font-semibold text-lg">Performance Statistics</v-card-title>
+          <v-card-title class="font-semibold text-lg"
+            >Performance Statistics</v-card-title
+          >
           <v-card-text>
             <div class="d-flex justify-space-around">
               <div class="text-center">
@@ -58,7 +60,9 @@
                 <div class="text-subtitle-1">Failing</div>
               </div>
               <div class="text-center">
-                <div class="text-h6">{{ statsData.averageGrade.toFixed(2) }}</div>
+                <div class="text-h6">
+                  {{ statsData.averageGrade.toFixed(2) }}
+                </div>
                 <div class="text-subtitle-1">Class Average</div>
               </div>
             </div>
@@ -70,17 +74,27 @@
     <v-row>
       <v-col cols="6">
         <v-card class="glass-card pa-4 rounded-card" elevation="3">
-          <v-card-title class="font-semibold text-lg">Subject Failing Rate</v-card-title>
+          <v-card-title class="font-semibold text-lg"
+            >Subject Failing Rate</v-card-title
+          >
           <v-card-text>
-            <div id="subjectFailRateChart" style="width: 100%; height: 300px"></div>
+            <div
+              id="subjectFailRateChart"
+              style="width: 100%; height: 300px"
+            ></div>
           </v-card-text>
         </v-card>
       </v-col>
       <v-col cols="6">
         <v-card class="glass-card pa-4 rounded-card" elevation="3">
-          <v-card-title class="font-semibold text-lg">Section Performance Distribution</v-card-title>
+          <v-card-title class="font-semibold text-lg"
+            >Section Performance Distribution</v-card-title
+          >
           <v-card-text>
-            <div id="sectionFailRateChart" style="width: 100%; height: 300px"></div>
+            <div
+              id="sectionFailRateChart"
+              style="width: 100%; height: 300px"
+            ></div>
           </v-card-text>
         </v-card>
       </v-col>
@@ -89,9 +103,15 @@
     <v-row>
       <v-col cols="6">
         <v-card class="glass-card pa-4 rounded-card" elevation="3">
-          <v-card-title class="font-semibold text-lg">Subject Analysis</v-card-title>
+          <v-card-title class="font-semibold text-lg"
+            >Subject Analysis</v-card-title
+          >
           <v-card-text>
-            <div v-if="subjectAnalysis" class="analysis-text" v-html="subjectAnalysis"></div>
+            <div
+              v-if="subjectAnalysis"
+              class="analysis-text"
+              v-html="subjectAnalysis"
+            ></div>
             <v-progress-circular
               v-else-if="isLoadingSubjectAnalysis"
               indeterminate
@@ -102,9 +122,15 @@
       </v-col>
       <v-col cols="6">
         <v-card class="glass-card pa-4 rounded-card" elevation="3">
-          <v-card-title class="font-semibold text-lg">Section Analysis</v-card-title>
+          <v-card-title class="font-semibold text-lg"
+            >Section Analysis</v-card-title
+          >
           <v-card-text>
-            <div v-if="sectionAnalysis" class="analysis-text" v-html="sectionAnalysis"></div>
+            <div
+              v-if="sectionAnalysis"
+              class="analysis-text"
+              v-html="sectionAnalysis"
+            ></div>
             <v-progress-circular
               v-else-if="isLoadingSectionAnalysis"
               indeterminate
@@ -114,7 +140,6 @@
         </v-card>
       </v-col>
     </v-row>
-
   </v-container>
 </template>
 
@@ -122,7 +147,7 @@
 import { ref, watch, onMounted } from "vue";
 import { supabase } from "@/lib/supabase";
 import * as echarts from "echarts";
-import { usePerformanceAnalytics } from '@/composables/performanceAnalytics';
+import { usePerformanceAnalytics } from "@/composables/performanceAnalytics";
 
 const sections = ref([]);
 const subjects = ref([]);
@@ -132,42 +157,51 @@ const sectionData = ref([]);
 const statsData = ref({
   passingCount: 0,
   failingCount: 0,
-  averageGrade: 0
+  averageGrade: 0,
 });
 
-const { subjectAnalysis, sectionAnalysis, analyzeSubjectPerformance, analyzeSectionDistribution } = usePerformanceAnalytics();
+const {
+  subjectAnalysis,
+  sectionAnalysis,
+  analyzeSubjectPerformance,
+  analyzeSectionDistribution,
+} = usePerformanceAnalytics();
 const isLoadingSubjectAnalysis = ref(false);
 const isLoadingSectionAnalysis = ref(false);
 
 const fetchSections = async () => {
-  const { data, error } = await supabase
-    .from("sections")
-    .select("code, id");
+  const { data, error } = await supabase.from("sections").select("code, id");
   if (!error) sections.value = data;
 };
 
 const fetchSubjects = async (sectionCode) => {
-  const section = sections.value.find(sec => sec.code === sectionCode);
+  const section = sections.value.find((sec) => sec.code === sectionCode);
   if (!section) return;
 
   const { data, error } = await supabase
     .from("class_record")
-    .select(`
+    .select(
+      `
       subjects (
         id,
         title
       )
-    `)
+    `
+    )
     .eq("section_id", section.id);
 
   if (!error && data) {
-    const uniqueSubjects = [...new Set(data.map(record => record.subjects).filter(Boolean))];
+    const uniqueSubjects = [
+      ...new Set(data.map((record) => record.subjects).filter(Boolean)),
+    ];
     subjects.value = uniqueSubjects;
   }
 };
 
 const fetchSectionData = async () => {
-  const section = sections.value.find(sec => sec.code === selectedSection.value);
+  const section = sections.value.find(
+    (sec) => sec.code === selectedSection.value
+  );
   if (!section || !selectedSubject.value) return;
 
   const { data: classRecord } = await supabase
@@ -180,20 +214,22 @@ const fetchSectionData = async () => {
   if (classRecord) {
     const { data: records } = await supabase
       .from("records")
-      .select(`
+      .select(
+        `
         student_id,
         initial_grade,
         students (
           firstname,
           lastname
         )
-      `)
+      `
+      )
       .eq("class_record_id", classRecord.id);
 
     if (records) {
-      sectionData.value = records.map(record => ({
+      sectionData.value = records.map((record) => ({
         name: `${record.students.firstname} ${record.students.lastname}`,
-        grade: record.initial_grade || 0
+        grade: record.initial_grade || 0,
       }));
       updateChart();
       calculateStats();
@@ -204,11 +240,12 @@ const fetchSectionData = async () => {
 };
 
 const calculateStats = () => {
-  const grades = sectionData.value.map(student => student.grade);
+  const grades = sectionData.value.map((student) => student.grade);
   statsData.value = {
-    passingCount: grades.filter(grade => grade >= 75).length,
-    failingCount: grades.filter(grade => grade < 75).length,
-    averageGrade: grades.reduce((sum, grade) => sum + grade, 0) / grades.length || 0
+    passingCount: grades.filter((grade) => grade >= 75).length,
+    failingCount: grades.filter((grade) => grade < 75).length,
+    averageGrade:
+      grades.reduce((sum, grade) => sum + grade, 0) / grades.length || 0,
   };
 };
 
@@ -218,44 +255,46 @@ const updateChart = () => {
 
   const option = {
     tooltip: {
-      trigger: 'axis',
+      trigger: "axis",
       axisPointer: {
-        type: 'shadow'
-      }
+        type: "shadow",
+      },
     },
     grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '3%',
-      containLabel: true
+      left: "3%",
+      right: "4%",
+      bottom: "3%",
+      containLabel: true,
     },
     xAxis: {
-      type: 'category',
-      data: sectionData.value.map(student => student.name),
+      type: "category",
+      data: sectionData.value.map((student) => student.name),
       axisLabel: {
         rotate: 45,
-        interval: 0
-      }
+        interval: 0,
+      },
     },
     yAxis: {
-      type: 'value',
+      type: "value",
       min: 0,
-      max: 100
+      max: 100,
     },
-    series: [{
-      name: 'Grade',
-      type: 'bar',
-      data: sectionData.value.map(student => ({
-        value: student.grade,
-        itemStyle: {
-          color: student.grade >= 75 ? '#4CAF50' : '#FF5252'
-        }
-      })),
-      label: {
-        show: true,
-        position: 'top'
-      }
-    }]
+    series: [
+      {
+        name: "Grade",
+        type: "bar",
+        data: sectionData.value.map((student) => ({
+          value: student.grade,
+          itemStyle: {
+            color: student.grade >= 75 ? "#4CAF50" : "#FF5252",
+          },
+        })),
+        label: {
+          show: true,
+          position: "top",
+        },
+      },
+    ],
   };
 
   myChart.setOption(option);
@@ -267,50 +306,82 @@ const updateSubjectFailRateChart = async () => {
 
   const option = {
     tooltip: {
-      trigger: 'item',
-      formatter: '{b}: {c} ({d}%)'
+      trigger: "item",
+      formatter: "{b}: {c} ({d}%)",
     },
     legend: {
-      orient: 'vertical',
-      left: 'left'
+      orient: "horizontal",
+      bottom: "0%",
+      itemWidth: 12,
+      itemHeight: 12,
+      textStyle: {
+        fontSize: 12,
+      },
+      padding: 10,
     },
     series: [
       {
-        name: 'Subject Performance',
-        type: 'pie',
-        radius: '70%',
+        name: "Subject Performance",
+        type: "pie",
+        radius: ["40%", "65%"], // Convert to donut chart for better label space
+        center: ["50%", "45%"], // Move up slightly to make room for legend
+        avoidLabelOverlap: true,
+        label: {
+          show: true,
+          position: "outside",
+          formatter: "{b}\n{c} ({d}%)",
+          fontSize: 12,
+          lineHeight: 16,
+          alignTo: "edge",
+          edgeDistance: 15,
+          bleedMargin: 10,
+        },
+        labelLine: {
+          show: true,
+          length: 15,
+          length2: 12,
+          smooth: true,
+        },
         data: [
-          { 
-            value: statsData.value.failingCount, 
-            name: 'Failing',
-            itemStyle: { color: '#FF5252' }
+          {
+            value: statsData.value.passingCount,
+            name: "Passing",
+            itemStyle: { color: "#4CAF50" },
           },
-          { 
-            value: statsData.value.passingCount, 
-            name: 'Passing',
-            itemStyle: { color: '#4CAF50' }
-          }
+          {
+            value: statsData.value.failingCount,
+            name: "Failing",
+            itemStyle: { color: "#FF5252" },
+          },
         ],
         emphasis: {
           itemStyle: {
             shadowBlur: 10,
             shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
-          }
-        }
-      }
-    ]
+            shadowColor: "rgba(0, 0, 0, 0.5)",
+          },
+        },
+      },
+    ],
   };
+
+  // Handle responsive behavior
+  window.addEventListener("resize", () => {
+    myChart.resize();
+  });
 
   myChart.setOption(option);
 
   // Add analytics
   isLoadingSubjectAnalysis.value = true;
-  await analyzeSubjectPerformance({
-    passingCount: statsData.value.passingCount,
-    failingCount: statsData.value.failingCount,
-    averageGrade: statsData.value.averageGrade
-  }, subjects.value.find(s => s.id === selectedSubject.value)?.title || '');
+  await analyzeSubjectPerformance(
+    {
+      passingCount: statsData.value.passingCount,
+      failingCount: statsData.value.failingCount,
+      averageGrade: statsData.value.averageGrade,
+    },
+    subjects.value.find((s) => s.id === selectedSubject.value)?.title || ""
+  );
   isLoadingSubjectAnalysis.value = false;
 };
 
@@ -319,68 +390,104 @@ const updateSectionFailRateChart = async () => {
   const myChart = echarts.init(chartDom);
 
   const total = sectionData.value.length;
-  const excellentCount = sectionData.value.filter(s => s.grade >= 90).length;
-  const goodCount = sectionData.value.filter(s => s.grade >= 80 && s.grade < 90).length;
-  const averageCount = sectionData.value.filter(s => s.grade >= 75 && s.grade < 80).length;
-  const failingCount = sectionData.value.filter(s => s.grade < 75).length;
+  const excellentCount = sectionData.value.filter((s) => s.grade >= 90).length;
+  const goodCount = sectionData.value.filter(
+    (s) => s.grade >= 80 && s.grade < 90
+  ).length;
+  const averageCount = sectionData.value.filter(
+    (s) => s.grade >= 75 && s.grade < 80
+  ).length;
+  const failingCount = sectionData.value.filter((s) => s.grade < 75).length;
 
   const option = {
     tooltip: {
-      trigger: 'item',
-      formatter: '{b}: {c} ({d}%)'
+      trigger: "item",
+      formatter: "{b}: {c} ({d}%)",
     },
     legend: {
-      orient: 'vertical',
-      left: 'left'
+      orient: "horizontal",
+      bottom: "0%",
+      itemWidth: 12,
+      itemHeight: 12,
+      textStyle: {
+        fontSize: 12,
+      },
+      padding: 10,
     },
     series: [
       {
-        name: 'Section Performance',
-        type: 'pie',
-        radius: '70%',
+        name: "Section Performance",
+        type: "pie",
+        radius: ["40%", "65%"], // Convert to donut chart for better label space
+        center: ["50%", "45%"], // Move up slightly to make room for legend
+        avoidLabelOverlap: true,
+        label: {
+          show: true,
+          position: "outside",
+          formatter: "{b}\n{c} ({d}%)",
+          fontSize: 12,
+          lineHeight: 16,
+          alignTo: "edge",
+          edgeDistance: 15,
+          bleedMargin: 10,
+        },
+        labelLine: {
+          show: true,
+          length: 15,
+          length2: 12,
+          smooth: true,
+        },
         data: [
-          { 
+          {
             value: excellentCount,
-            name: 'Excellent (90-100)',
-            itemStyle: { color: '#4CAF50' }
+            name: "Excellent (90-100)",
+            itemStyle: { color: "#4CAF50" },
           },
-          { 
+          {
             value: goodCount,
-            name: 'Good (80-89)',
-            itemStyle: { color: '#2196F3' }
+            name: "Good (80-89)",
+            itemStyle: { color: "#2196F3" },
           },
-          { 
+          {
             value: averageCount,
-            name: 'Average (75-79)',
-            itemStyle: { color: '#FFC107' }
+            name: "Average (75-79)",
+            itemStyle: { color: "#FFC107" },
           },
-          { 
+          {
             value: failingCount,
-            name: 'Failing (<75)',
-            itemStyle: { color: '#FF5252' }
-          }
+            name: "Failing (<75)",
+            itemStyle: { color: "#FF5252" },
+          },
         ],
         emphasis: {
           itemStyle: {
             shadowBlur: 10,
             shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
-          }
-        }
-      }
-    ]
+            shadowColor: "rgba(0, 0, 0, 0.5)",
+          },
+        },
+      },
+    ],
   };
+
+  // Handle responsive behavior
+  window.addEventListener("resize", () => {
+    myChart.resize();
+  });
 
   myChart.setOption(option);
 
   // Add analytics
   isLoadingSectionAnalysis.value = true;
-  await analyzeSectionDistribution({
-    excellentCount,
-    goodCount,
-    averageCount,
-    failingCount
-  }, selectedSection.value);
+  await analyzeSectionDistribution(
+    {
+      excellentCount,
+      goodCount,
+      averageCount,
+      failingCount,
+    },
+    selectedSection.value
+  );
   isLoadingSectionAnalysis.value = false;
 };
 
