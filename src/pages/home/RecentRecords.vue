@@ -610,6 +610,7 @@
                     <input
                       v-model="item.initial_grade"
                       disabled
+                      :class="getGradeClass(item.initial_grade)"
                       style="
                         width: 50px;
                         height: 24px;
@@ -625,6 +626,7 @@
                     <input
                       v-model="item.quarterly_grade"
                       disabled
+                      :class="getGradeClass(item.quarterly_grade)"
                       style="
                         width: 50px;
                         height: 24px;
