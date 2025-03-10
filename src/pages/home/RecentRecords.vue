@@ -1004,7 +1004,7 @@ onMounted(async () => {
   border-radius: 4px;
 }
 
-.excellent {
+/* .excellent {
   color: #2ecc71;
   background-color: #e8f5e9;
   font-weight: bold;
@@ -1018,7 +1018,7 @@ onMounted(async () => {
   font-weight: bold;
   padding: 4px;
   border-radius: 4px;
-}
+} */
 
 .almost-fail {
   color: #f1c40f;
