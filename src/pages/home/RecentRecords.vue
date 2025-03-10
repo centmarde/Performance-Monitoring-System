@@ -985,23 +985,35 @@ onMounted(async () => {
   box-shadow: 0 0 10px #004d40; /* Glowing effect */
 }
 .failing {
-  color: red;
+  color: #e74c3c;
+  background-color: #fdecea;
   font-weight: bold;
+  padding: 4px;
+  border-radius: 4px;
 }
 
 .excellent {
-  color: green;
+  color: #2ecc71;
+  background-color: #e8f5e9;
   font-weight: bold;
+  padding: 4px;
+  border-radius: 4px;
 }
 
 .good {
-  color: blue;
+  color: #3498db;
+  background-color: #e3f2fd;
   font-weight: bold;
+  padding: 4px;
+  border-radius: 4px;
 }
 
 .passing {
-  color: yellow;
+  color: #f1c40f;
+  background-color: #fff3cd;
   font-weight: bold;
+  padding: 4px;
+  border-radius: 4px;
 }
 
 /* Responsive Design */
