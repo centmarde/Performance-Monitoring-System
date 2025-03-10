@@ -26,7 +26,7 @@
               md="4"
               lg="3"
             >
-              <v-card class="teacher-card">
+              <v-card class="teacher-card" @click="openSubjectDialog(teacher)">
                 <v-card-title class="text-center" elevation="8">
                   <v-avatar size="80">
                     <v-img
@@ -76,6 +76,41 @@
             active-color="black"
             density="comfortable"
           ></v-pagination>
+          
+          <!-- Subject Assignment Dialog -->
+          <v-dialog v-model="subjectDialog" max-width="500px">
+            <v-card>
+              <v-card-title class="text-h5">
+                Assign Subject to {{ selectedTeacher?.firstname || 'Teacher' }}
+              </v-card-title>
+              
+              <v-card-text>
+                <v-select
+                  v-model="selectedSubject"
+                  :items="availableSubjects"
+                  item-title="title"
+                  item-value="id"
+                  label="Select a subject"
+                  return-object
+                  outlined
+                ></v-select>
+                
+                <div v-if="assignmentMessage" :class="{'text-success': !assignmentError, 'text-error': assignmentError}">
+                  {{ assignmentMessage }}
+                </div>
+              </v-card-text>
+              
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue-darken-1" variant="text" @click="subjectDialog = false">
+                  Close
+                </v-btn>
+                <v-btn color="blue-darken-1" variant="text" @click="assignSubject" :disabled="!selectedSubject">
+                  Assign
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </div>
       </v-container>
     </template>
@@ -83,9 +118,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import LayoutWrapper from "@/layouts/LayoutWrapper.vue";
 import { useTeachers } from "@/composables/useTeachers";
+import { useSubjectsStore } from "@/stores/subjectsStore";
+import { supabase } from "@/lib/supabase";
 
 const {
   teachers,
@@ -98,7 +135,113 @@ const {
   initializeTeachers,
 } = useTeachers();
 
-initializeTeachers();
+const subjectsStore = useSubjectsStore();
+const subjectDialog = ref(false);
+const selectedTeacher = ref<any>(null);
+const selectedSubject = ref<any>(null);
+const assignmentMessage = ref('');
+const assignmentError = ref(false);
+const alreadyAssignedSubjectIds = ref<number[]>([]);
+
+// Fetch subjects on component mount
+onMounted(async () => {
+  await subjectsStore.fetchSubjects();
+  initializeTeachers();
+});
+
+// Watch for changes to selectedTeacher and update assigned subjects
+watch(selectedTeacher, async (teacher) => {
+  if (teacher) {
+    await fetchAssignedSubjects(teacher.id);
+  } else {
+    alreadyAssignedSubjectIds.value = [];
+  }
+});
+
+// Get subjects that aren't already assigned to the selected teacher
+const availableSubjects = computed(() => {
+  if (!selectedTeacher.value) return [];
+
+  // Filter out already assigned subjects using the fetched IDs
+  return subjectsStore.subjects.filter(
+    subject => !alreadyAssignedSubjectIds.value.includes(subject.id)
+  );
+});
+
+// Fetch subjects already assigned to this teacher directly from the database
+async function fetchAssignedSubjects(teacherId: number) {
+  try {
+    const { data, error } = await supabase
+      .from('asign_subjects')
+      .select('subject_id')
+      .eq('user_id', teacherId);
+    
+    if (error) {
+      console.error('Error fetching assigned subjects:', error);
+      alreadyAssignedSubjectIds.value = [];
+      return;
+    }
+    
+    // Extract subject IDs from the result
+    alreadyAssignedSubjectIds.value = data.map(item => item.subject_id);
+    console.log('Already assigned subject IDs:', alreadyAssignedSubjectIds.value);
+  } catch (err) {
+    console.error('Exception when fetching assigned subjects:', err);
+    alreadyAssignedSubjectIds.value = [];
+  }
+}
+
+// Open dialog when a teacher card is clicked
+const openSubjectDialog = async (teacher: any) => {
+  selectedTeacher.value = teacher;
+  selectedSubject.value = null;
+  assignmentMessage.value = '';
+  assignmentError.value = false;
+  
+  // Get the latest assigned subjects from the database
+  await fetchAssignedSubjects(teacher.id);
+  
+  subjectDialog.value = true;
+};
+
+// Assign the selected subject to the teacher
+const assignSubject = async () => {
+  if (!selectedTeacher.value || !selectedSubject.value) return;
+  
+  try {
+    const { data, error } = await supabase
+      .from('asign_subjects')
+      .insert([
+        { 
+          user_id: selectedTeacher.value.id,
+          subject_id: selectedSubject.value.id
+        },
+      ])
+      .select();
+      
+    if (error) {
+      console.error('Error assigning subject:', error);
+      assignmentMessage.value = `Error: ${error.message}`;
+      assignmentError.value = true;
+      return;
+    }
+    
+    assignmentMessage.value = `Subject "${selectedSubject.value.title}" successfully assigned!`;
+    assignmentError.value = false;
+    
+    // Update the assigned subjects list right away
+    alreadyAssignedSubjectIds.value = [...alreadyAssignedSubjectIds.value, selectedSubject.value.id];
+    selectedSubject.value = null;
+    
+    // Refresh teacher data to show the newly assigned subject
+    await initializeTeachers();
+    
+  } catch (err: any) {
+    console.error('Exception when assigning subject:', err);
+    assignmentMessage.value = `Error: ${err.message}`;
+    assignmentError.value = true;
+  }
+};
 </script>
 
 <style scoped>
@@ -159,5 +302,13 @@ initializeTeachers();
   padding: 4px 8px;
   border-radius: 16px;
   font-size: 14px;
+}
+
+.text-success {
+  color: green;
+}
+
+.text-error {
+  color: red;
 }
 </style>

@@ -26,640 +26,651 @@
           </v-col>
         </v-row>
 
-        <v-table>
-          <thead>
-            <tr>
-              <th
-                rowspan="3"
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                Student ID
-              </th>
-              <th
-                rowspan="3"
-                style="
-                  width: 100px;
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                Name
-              </th>
-              <th
-                colspan="10"
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                Written Works
-              </th>
-              <th
-                colspan="3"
-                rowspan="2"
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                Summary
-              </th>
-              <th
-                colspan="10"
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                Performance Task
-              </th>
-              <th
-                colspan="3"
-                rowspan="2"
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                Summary
-              </th>
-              <th
-                colspan="3"
-                rowspan="2"
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                Quarterly Assessment
-              </th>
-              <th
-                rowspan="3"
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                Initial Grade
-              </th>
-              <th
-                rowspan="3"
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                Quarterly Grade
-              </th>
-              <th
-                rowspan="3"
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                Actions
-              </th>
-            </tr>
-            <tr>
-              <th
-                v-for="header in wwHeaders"
-                :key="header.value"
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                {{ header.text }}
-              </th>
-              <th
-                v-for="header in ptHeaders"
-                :key="header.value"
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                {{ header.text }}
-              </th>
-            </tr>
-            <tr>
-              <th
-                v-for="header in wwHeaders"
-                :key="header.value"
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                {{ header.points }}
-              </th>
-              <th
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                Total
-              </th>
-              <th
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                PS
-              </th>
-              <th
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                WS
-              </th>
-              <th
-                v-for="header in ptHeaders"
-                :key="header.value"
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                {{ header.points }}
-              </th>
-              <th
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                Total
-              </th>
-              <th
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                PS
-              </th>
-              <th
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                WS
-              </th>
-              <th
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                1
-              </th>
-              <th
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                PS
-              </th>
-              <th
-                style="
-                  background: #004d40;
-                  color: white;
-                  padding: 14px;
-                  border: 1px solid #00796b;
-                  text-align: center;
-                  font-weight: bold;
-                  position: sticky;
-                  top: 0;
-                  z-index: 2;
-                "
-              >
-                WS
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <div v-if="!jsondata || jsondata.length === 0">
-              <div style="position: absolute" :colspan="tableColumnCount">
-                This class record has no records yet.
-              </div>
-            </div>
-            <tr v-for="item in paginatedData" :key="item.id">
-              <td>
-                <input
-                  v-model="item.id"
-                  disabled
-                  style="
-                    width: 30px;
-                    height: 24px;
-                    text-align: center;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    padding: 4px;
-                    font-size: 14px;
-                  "
-                />
-              </td>
-              <td>
-                <input
-                  v-model="item.name"
-                  style="
-                    width: 100px;
-                    height: 24px;
-                    text-align: center;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    padding: 4px;
-                    font-size: 14px;
-                  "
-                />
-              </td>
-              <td v-for="n in 10" :key="'ww' + n">
-                <input
-                  v-model="item['ww' + n]"
-                  type="number"
-                  min="0"
-                  max="100"
-                  style="
-                    width: 50px;
-                    height: 24px;
-                    text-align: center;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    padding: 4px;
-                    font-size: 14px;
-                  "
-                />
-              </td>
-              <td>
-                <input
-                  v-model="item.wwTotal"
-                  disabled
-                  style="
-                    width: 50px;
-                    height: 24px;
-                    text-align: center;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    padding: 4px;
-                    font-size: 14px;
-                  "
-                />
-              </td>
-              <td>
-                <input
-                  v-model="item.wwps"
-                  disabled
-                  style="
-                    width: 50px;
-                    height: 24px;
-                    text-align: center;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    padding: 4px;
-                    font-size: 14px;
-                  "
-                />
-              </td>
-              <td>
-                <input
-                  v-model="item.wwws"
-                  disabled
-                  style="
-                    width: 50px;
-                    height: 24px;
-                    text-align: center;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    padding: 4px;
-                    font-size: 14px;
-                  "
-                />
-              </td>
-              <td v-for="n in 10" :key="'pt' + n">
-                <input
-                  v-model="item['pt' + n]"
-                  type="number"
-                  min="0"
-                  max="100"
-                  style="
-                    width: 50px;
-                    height: 24px;
-                    text-align: center;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    padding: 4px;
-                    font-size: 14px;
-                  "
-                />
-              </td>
-              <td>
-                <input
-                  v-model="item.ptTotal"
-                  disabled
-                  style="
-                    width: 50px;
-                    height: 24px;
-                    text-align: center;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    padding: 4px;
-                    font-size: 14px;
-                  "
-                />
-              </td>
-              <td>
-                <input
-                  v-model="item.ptps"
-                  disabled
-                  style="
-                    width: 50px;
-                    height: 24px;
-                    text-align: center;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    padding: 4px;
-                    font-size: 14px;
-                  "
-                />
-              </td>
-              <td>
-                <input
-                  v-model="item.ptws"
-                  disabled
-                  style="
-                    width: 50px;
-                    height: 24px;
-                    text-align: center;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    padding: 4px;
-                    font-size: 14px;
-                  "
-                />
-              </td>
-              <td>
-                <input
-                  v-model="item.qa1"
-                  type="number"
-                  min="0"
-                  max="100"
-                  style="
-                    width: 50px;
-                    height: 24px;
-                    text-align: center;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    padding: 4px;
-                    font-size: 14px;
-                  "
-                />
-              </td>
-              <td>
-                <input
-                  v-model="item.qaps"
-                  disabled
-                  style="
-                    width: 50px;
-                    height: 24px;
-                    text-align: center;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    padding: 4px;
-                    font-size: 14px;
-                  "
-                />
-              </td>
-              <td>
-                <input
-                  v-model="item.qaws"
-                  disabled
-                  style="
-                    width: 50px;
-                    height: 24px;
-                    text-align: center;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    padding: 4px;
-                    font-size: 14px;
-                  "
-                />
-              </td>
-              <td>
-                <input
-                  v-model="item.initial_grade"
-                  disabled
-                  style="
-                    width: 50px;
-                    height: 24px;
-                    text-align: center;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    padding: 4px;
-                    font-size: 14px;
-                  "
-                />
-              </td>
-              <td>
-                <input
-                  v-model="item.quarterly_grade"
-                  disabled
-                  style="
-                    width: 50px;
-                    height: 24px;
-                    text-align: center;
-                    border: 1px solid #ccc;
-                    border-radius: 4px;
-                    padding: 4px;
-                    font-size: 14px;
-                  "
-                />
-              </td>
-              <td>
-                <v-btn
-                  v-if="parseFloat(item.quarterly_grade) < 75"
-                  color="warning"
-                  size="small"
-                  @click="navigateToTracking(item)"
-                >
-                  <v-icon left>mdi-brain</v-icon>
-                  AI Analysis
-                </v-btn>
-              </td>
-              <button
-                class="save-btn"
-                @click="saveChanges(item)"
-                style="display: none"
-              >
-                Save
-              </button>
-            </tr>
-          </tbody>
-        </v-table>
+        <v-card class="class-record-card pa-4">
+          <v-card-title class="text-h6">Class Record</v-card-title>
+          <v-divider></v-divider>
+          <v-card-text>
+            <v-table>
+              <thead>
+                <tr>
+                  <th
+                    rowspan="3"
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    Student ID
+                  </th>
+                  <th
+                    rowspan="3"
+                    style="
+                      width: 100px;
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    Name
+                  </th>
+                  <th
+                    colspan="10"
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    Written Works
+                  </th>
+                  <th
+                    colspan="3"
+                    rowspan="2"
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    Summary
+                  </th>
+                  <th
+                    colspan="10"
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    Performance Task
+                  </th>
+                  <th
+                    colspan="3"
+                    rowspan="2"
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    Summary
+                  </th>
+                  <th
+                    colspan="3"
+                    rowspan="2"
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    Quarterly Assessment
+                  </th>
+                  <th
+                    rowspan="3"
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    Initial Grade
+                  </th>
+                  <th
+                    rowspan="3"
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    Quarterly Grade
+                  </th>
+                  <th
+                    rowspan="3"
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    Actions
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    v-for="header in wwHeaders"
+                    :key="header.value"
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    {{ header.text }}
+                  </th>
+                  <th
+                    v-for="header in ptHeaders"
+                    :key="header.value"
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    {{ header.text }}
+                  </th>
+                </tr>
+                <tr>
+                  <th
+                    v-for="header in wwHeaders"
+                    :key="header.value"
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    {{ header.points }}
+                  </th>
+                  <th
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    Total
+                  </th>
+                  <th
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    PS
+                  </th>
+                  <th
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    WS
+                  </th>
+                  <th
+                    v-for="header in ptHeaders"
+                    :key="header.value"
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    {{ header.points }}
+                  </th>
+                  <th
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    Total
+                  </th>
+                  <th
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    PS
+                  </th>
+                  <th
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    WS
+                  </th>
+                  <th
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    1
+                  </th>
+                  <th
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    PS
+                  </th>
+                  <th
+                    style="
+                      background: #004d40;
+                      color: white;
+                      padding: 14px;
+                      border: 1px solid #00796b;
+                      text-align: center;
+                      font-weight: bold;
+                      position: sticky;
+                      top: 0;
+                      z-index: 2;
+                    "
+                  >
+                    WS
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <div v-if="!jsondata || jsondata.length === 0">
+                  <div style="position: absolute" :colspan="tableColumnCount">
+                    <br />
+                    This class record has no records yet.
+                  </div>
+                </div>
+                <tr v-for="item in paginatedData" :key="item.id">
+                  <td>
+                    <input
+                      v-model="item.id"
+                      disabled
+                      class="student-id"
+                      style="
+                        width: 30px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td>
+                    <input
+                      v-model="item.name"
+                      :class="getGradeClass(item.quarterly_grade)"
+                      style="
+                        width: 100px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td v-for="n in 10" :key="'ww' + n">
+                    <input
+                      v-model="item['ww' + n]"
+                      type="number"
+                      min="0"
+                      max="100"
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td>
+                    <input
+                      v-model="item.wwTotal"
+                      disabled
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td>
+                    <input
+                      v-model="item.wwps"
+                      disabled
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td>
+                    <input
+                      v-model="item.wwws"
+                      disabled
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td v-for="n in 10" :key="'pt' + n">
+                    <input
+                      v-model="item['pt' + n]"
+                      type="number"
+                      min="0"
+                      max="100"
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td>
+                    <input
+                      v-model="item.ptTotal"
+                      disabled
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td>
+                    <input
+                      v-model="item.ptps"
+                      disabled
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td>
+                    <input
+                      v-model="item.ptws"
+                      disabled
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td>
+                    <input
+                      v-model="item.qa1"
+                      type="number"
+                      min="0"
+                      max="100"
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td>
+                    <input
+                      v-model="item.qaps"
+                      disabled
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td>
+                    <input
+                      v-model="item.qaws"
+                      disabled
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td>
+                    <input
+                      v-model="item.initial_grade"
+                      disabled
+                      :class="getGradeClass(item.initial_grade)"
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td>
+                    <input
+                      v-model="item.quarterly_grade"
+                      disabled
+                      :class="getGradeClass(item.quarterly_grade)"
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td>
+                    <v-btn
+                      v-if="parseFloat(item.quarterly_grade) < 75"
+                      color="warning"
+                      size="small"
+                      @click="navigateToTracking(item)"
+                    >
+                      <v-icon left>mdi-brain</v-icon>
+                      AI Analysis
+                    </v-btn>
+                  </td>
+                  <button
+                    class="save-btn"
+                    @click="saveChanges(item)"
+                    style="display: none"
+                  >
+                    Save
+                  </button>
+                </tr>
+              </tbody>
+            </v-table>
+          </v-card-text>
+        </v-card>
 
         <v-pagination
           v-model="page"
@@ -687,8 +698,25 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const navigateToTracking = (item) => {
-  localStorage.setItem('selectedStudent', JSON.stringify(item));
-  router.push('/tracking');
+  // Get values from localStorage that were set in DataEntry.vue
+  const section = localStorage.getItem("selectedSection");
+  const quarter = localStorage.getItem("selectedQuarter");
+  const subjectId = localStorage.getItem("selectedSubject"); // Get subject ID instead of subject name
+
+  router.push({
+    path: "/tracking",
+    query: {
+      studentId: item.id,
+      name: item.name,
+      wwTotal: item.wwTotal,
+      ptTotal: item.ptTotal,
+      qaTotal: item.qa1,
+      quarterly_grade: item.quarterly_grade,
+      section: section,
+      quarter: quarter,
+      subject: subjectId, // Pass subject ID instead of subject name
+    },
+  });
 };
 
 const jsondata = ref([]);
@@ -931,6 +959,12 @@ onMounted(async () => {
 
   isLoading.value = false;
 });
+
+const getGradeClass = (grade) => {
+  if (grade < 75) return "fail";
+  if (grade >= 75 && grade < 80) return "almost-fail";
+  return "";
+};
 </script>
 
 <style scoped>
@@ -993,5 +1027,45 @@ onMounted(async () => {
 
 .v-overlay {
   backdrop-filter: blur(4px);
+}
+
+.class-record-card {
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
+  backdrop-filter: blur(10px); /* Blur effect for glass background */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  box-shadow: 0 0 10px #004d40; /* Glowing effect */
+}
+
+.student-id {
+  text-align: center;
+  min-width: 50px;
+  font-weight: bold;
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.fail {
+  background-color: #ffcccc;
+  color: #000;
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.almost-fail {
+  background-color: #fff3cd;
+  color: #000;
+  padding: 5px 8px;
+  border-radius: 5px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
 }
 </style>

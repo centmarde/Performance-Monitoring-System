@@ -278,7 +278,14 @@ export default defineComponent({
           {
             type: "bar",
             data: Object.values(studentRecord.value),
-            itemStyle: { color: "#2E7D6F" },
+            itemStyle: {
+              color: (params) => {
+                const value = params.data;
+                if (value < 75) return '#FF0000';  // Red for below 75%
+                if (value <= 80) return '#FFD700';  // Yellow for 76-80%
+                return '#2E7D6F';  // Original color for above 80%
+              }
+            },
           },
         ],
       };
