@@ -454,7 +454,6 @@
                     <input
                       v-model="item.wwTotal"
                       disabled
-                      class="total-score"
                       style="
                         width: 50px;
                         height: 24px;
@@ -517,7 +516,6 @@
                     <input
                       v-model="item.ptTotal"
                       disabled
-                      class="total-score"
                       style="
                         width: 50px;
                         height: 24px;
