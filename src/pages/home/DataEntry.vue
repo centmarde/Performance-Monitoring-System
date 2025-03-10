@@ -355,7 +355,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import HomeLayout from "@/layouts/HomeLayout.vue";
 import { useClassRecordStore } from "@/stores/classRecord";
@@ -383,9 +383,12 @@ const subjects = ref<any[]>([]);
 const subjectsStore = useSubjectsStore();
 const sectionsStore = useSectionsStore();
 
+const assignedSubjects = ref<any[]>([]);
+const currentUserId = ref<string | null>(localStorage.getItem("user_id"));
+
+// Modified to only show subjects assigned to the current user
 const subjectOptions = computed(() => {
-  console.log("Subjects in store:", subjectsStore.subjects);
-  return subjectsStore.subjects.map((subject) => subject.title);
+  return assignedSubjects.value.map((subject) => subject.title);
 });
 
 const sectionOptions = computed(() => {
@@ -400,6 +403,7 @@ onMounted(async () => {
   try {
     await sectionsStore.fetchSections();
     await subjectsStore.fetchSubjects();
+    await fetchAssignedSubjects();
     await classRecordStore.fetchAllClassRecordsWithDetails();
     subjects.value = classRecordStore.classRecords;
   } catch (error) {
@@ -408,6 +412,34 @@ onMounted(async () => {
     isLoading.value = false;
   }
 });
+
+// Fetch only the subjects assigned to the current user
+async function fetchAssignedSubjects() {
+  if (!currentUserId.value) {
+    console.error("No user ID found in localStorage");
+    return;
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('asign_subjects')
+      .select('subject_id, subjects(*)')
+      .eq('user_id', currentUserId.value);
+    
+    if (error) {
+      console.error('Error fetching assigned subjects:', error);
+      assignedSubjects.value = [];
+      return;
+    }
+
+    // Extract subject details from the joined query
+    assignedSubjects.value = data.map(item => item.subjects);
+    console.log('Fetched assigned subjects for user:', assignedSubjects.value);
+  } catch (err) {
+    console.error('Exception when fetching assigned subjects:', err);
+    assignedSubjects.value = [];
+  }
+}
 
 const totalPages = computed(() => {
   if (isLoading.value) return 0;
@@ -443,9 +475,12 @@ const saveClassRecord = async () => {
     return;
   }
 
-  const subjectId = await subjectsStore.fetchSubjectIdByTitle(
-    selectedSubject.value
-  );
+  const subjectId = await findSubjectIdForCurrentUser(selectedSubject.value);
+  if (!subjectId) {
+    toast.error("Selected subject is not assigned to you or doesn't exist.");
+    return;
+  }
+
   const sectionId = await sectionsStore.fetchSectionIdByCode(
     selectedSection.value
   );
@@ -479,6 +514,12 @@ const saveClassRecord = async () => {
     timeout: 3000,
   });
 };
+
+// New function to find subject ID while ensuring it's assigned to the current user
+async function findSubjectIdForCurrentUser(title: string): Promise<number | null> {
+  const assignedSubject = assignedSubjects.value.find(subject => subject.title === title);
+  return assignedSubject ? assignedSubject.id : null;
+}
 
 const deleteClassRecord = async (classRecordId: number) => {
   await classRecordStore.deleteClassRecord(classRecordId);

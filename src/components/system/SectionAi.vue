@@ -169,6 +169,8 @@ const {
 const isLoadingSubjectAnalysis = ref(false);
 const isLoadingSectionAnalysis = ref(false);
 
+const teacherId = localStorage.getItem("user_id");
+
 const fetchSections = async () => {
   const { data, error } = await supabase.from("sections").select("code, id");
   if (!error) sections.value = data;
@@ -178,6 +180,17 @@ const fetchSubjects = async (sectionCode) => {
   const section = sections.value.find((sec) => sec.code === sectionCode);
   if (!section) return;
 
+  // First fetch teacher's assigned subjects
+  const { data: assignedSubjects } = await supabase
+    .from('asign_subjects')
+    .select('subject_id')
+    .eq('user_id', teacherId);
+
+  if (!assignedSubjects) return;
+
+  const assignedSubjectIds = assignedSubjects.map(item => item.subject_id);
+
+  // Then fetch subject details that match the assigned subjects
   const { data, error } = await supabase
     .from("class_record")
     .select(
@@ -188,7 +201,8 @@ const fetchSubjects = async (sectionCode) => {
       )
     `
     )
-    .eq("section_id", section.id);
+    .eq("section_id", section.id)
+    .in("subject_id", assignedSubjectIds);
 
   if (!error && data) {
     const uniqueSubjects = [

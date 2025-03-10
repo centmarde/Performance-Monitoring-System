@@ -3,6 +3,9 @@
     <template #content>
       <div>
         <KeepAlive>
+          <Overview></Overview>
+        </KeepAlive>
+        <KeepAlive>
           <StudentsStanding :is="activeComponent" />
         </KeepAlive>
       </div>
