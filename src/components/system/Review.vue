@@ -29,9 +29,7 @@
           class="glass-card fixed-width-card pa-4 rounded-card"
           elevation="2"
         >
-          <div
-           
-          >
+          <div>
             {{ subjectName }}
           </div>
           <div
@@ -76,8 +74,6 @@
         </v-card>
       </v-col>
     </v-row>
-
-   
   </v-container>
 </template>
 
@@ -86,7 +82,7 @@ import { supabase } from "@/lib/supabase";
 import { defineComponent, ref, onMounted, watch } from "vue";
 import * as echarts from "echarts";
 import { useGroqChat } from "@/composables/bootstrap";
-import { useRoute } from 'vue-router';
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   setup() {
@@ -102,7 +98,7 @@ export default defineComponent({
     const availableSubjects = ref([]);
     const selectedQuarter = ref(null);
     const availableQuarters = ref([]);
-    const subjectName = ref('');
+    const subjectName = ref("");
 
     const { chatContent, startChat } = useGroqChat();
 
@@ -203,7 +199,7 @@ export default defineComponent({
       selectedSubject.value = subject;
       selectedQuarter.value = quarter;
       showSubjectDialog.value = false;
-      console.log(selectedStudent.value, );
+      console.log(selectedStudent.value);
       fetchStudentRecord(selectedStudent.value);
     };
 
@@ -281,10 +277,10 @@ export default defineComponent({
             itemStyle: {
               color: (params) => {
                 const value = params.data;
-                if (value < 75) return '#FF0000';  // Red for below 75%
-                if (value <= 80) return '#FFD700';  // Yellow for 76-80%
-                return '#2E7D6F';  // Original color for above 80%
-              }
+                if (value < 75) return "#FF0000"; // Red for below 75%
+                if (value <= 80) return "#FFD700"; // Yellow for 76-80%
+                return "#2E7D6F"; // Original color for above 80%
+              },
             },
           },
         ],
@@ -297,13 +293,13 @@ export default defineComponent({
     watch(selectedStudent, fetchSubjects);
     onMounted(async () => {
       await fetchSections();
-      
+
       // Set the values from route query if they exist
       if (route.query.section) {
         selectedSection.value = route.query.section;
         await fetchStudents(selectedSection.value);
       }
-      
+
       if (route.query.name) {
         selectedStudent.value = route.query.name;
       }
@@ -319,7 +315,7 @@ export default defineComponent({
       if (route.query.subject && route.query.quarter) {
         selectedSubject.value = {
           id: parseInt(route.query.subject),
-          title: storedSubjectName || route.query.subject
+          title: storedSubjectName || route.query.subject,
         };
         selectedQuarter.value = parseInt(route.query.quarter);
         fetchStudentRecord(selectedStudent.value);
