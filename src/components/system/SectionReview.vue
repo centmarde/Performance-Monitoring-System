@@ -136,7 +136,7 @@ export default defineComponent({
     // Add watch effect for studentRecord
     watch(studentRecord, (newValue) => {
       if (newValue) {
-        chatContent.value = ""; // Reset chat content
+        chatContent.value = "";
       }
     });
 
