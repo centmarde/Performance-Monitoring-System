@@ -133,12 +133,6 @@ export default defineComponent({
 
     const { chatContent, startChat } = useGroqChat();
 
-    watch(studentRecord, (newValue) => {
-      if (newValue) {
-        chatContent.value = "";
-      }
-    });
-
     const fetchSections = async () => {
       const { data, error } = await supabase
         .from("sections")
