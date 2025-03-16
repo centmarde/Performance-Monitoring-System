@@ -422,21 +422,21 @@ async function fetchAssignedSubjects() {
 
   try {
     const { data, error } = await supabase
-      .from('asign_subjects')
-      .select('subject_id, subjects(*)')
-      .eq('user_id', currentUserId.value);
-    
+      .from("asign_subjects")
+      .select("subject_id, subjects(*)")
+      .eq("user_id", currentUserId.value);
+
     if (error) {
-      console.error('Error fetching assigned subjects:', error);
+      console.error("Error fetching assigned subjects:", error);
       assignedSubjects.value = [];
       return;
     }
 
     // Extract subject details from the joined query
-    assignedSubjects.value = data.map(item => item.subjects);
-    console.log('Fetched assigned subjects for user:', assignedSubjects.value);
+    assignedSubjects.value = data.map((item) => item.subjects);
+    console.log("Fetched assigned subjects for user:", assignedSubjects.value);
   } catch (err) {
-    console.error('Exception when fetching assigned subjects:', err);
+    console.error("Exception when fetching assigned subjects:", err);
     assignedSubjects.value = [];
   }
 }
@@ -516,8 +516,12 @@ const saveClassRecord = async () => {
 };
 
 // New function to find subject ID while ensuring it's assigned to the current user
-async function findSubjectIdForCurrentUser(title: string): Promise<number | null> {
-  const assignedSubject = assignedSubjects.value.find(subject => subject.title === title);
+async function findSubjectIdForCurrentUser(
+  title: string
+): Promise<number | null> {
+  const assignedSubject = assignedSubjects.value.find(
+    (subject) => subject.title === title
+  );
   return assignedSubject ? assignedSubject.id : null;
 }
 
