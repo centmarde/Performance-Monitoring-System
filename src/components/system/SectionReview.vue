@@ -174,6 +174,7 @@ export default defineComponent({
       );
       if (!student) return;
 
+      // Fetch subjects and their quarters from class_record
       const { data: classRecords, error } = await supabase
         .from("class_record")
         .select(
