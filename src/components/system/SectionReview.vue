@@ -225,6 +225,13 @@ export default defineComponent({
       }
     };
 
+    const selectSubjectAndQuarter = (subject, quarter) => {
+      selectedSubject.value = subject;
+      selectedQuarter.value = quarter;
+      showSubjectDialog.value = false;
+      fetchStudentRecord(selectedStudent.value);
+    };
+
     const fetchStudentRecord = async (studentFullName) => {
       const student = students.value.find(
         (stu) => stu.fullName === studentFullName
