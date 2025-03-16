@@ -187,20 +187,7 @@ export default defineComponent({
         )
         .eq("section_id", student.sectionId);
 
-      if (!error && classRecords) {
-        // Group quarters by subject
-        const subjectQuartersMap = classRecords.reduce((acc, record) => {
-          if (!record.subjects) return acc;
 
-          if (!acc[record.subjects.id]) {
-            acc[record.subjects.id] = {
-              subject: record.subjects,
-              quarters: [],
-            };
-          }
-          acc[record.subjects.id].quarters.push(record.quarter);
-          return acc;
-        }, {});
 
         // Convert to array and sort quarters
         availableSubjects.value = Object.values(subjectQuartersMap).map(
