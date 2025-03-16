@@ -76,14 +76,14 @@
             active-color="black"
             density="comfortable"
           ></v-pagination>
-          
+
           <!-- Subject Assignment Dialog -->
           <v-dialog v-model="subjectDialog" max-width="500px">
             <v-card>
               <v-card-title class="text-h5">
-                Assign Subject to {{ selectedTeacher?.firstname || 'Teacher' }}
+                Assign Subject to {{ selectedTeacher?.firstname || "Teacher" }}
               </v-card-title>
-              
+
               <v-card-text>
                 <v-select
                   v-model="selectedSubject"
@@ -94,18 +94,33 @@
                   return-object
                   outlined
                 ></v-select>
-                
-                <div v-if="assignmentMessage" :class="{'text-success': !assignmentError, 'text-error': assignmentError}">
+
+                <div
+                  v-if="assignmentMessage"
+                  :class="{
+                    'text-success': !assignmentError,
+                    'text-error': assignmentError,
+                  }"
+                >
                   {{ assignmentMessage }}
                 </div>
               </v-card-text>
-              
+
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue-darken-1" variant="text" @click="subjectDialog = false">
+                <v-btn
+                  color="blue-darken-1"
+                  variant="text"
+                  @click="subjectDialog = false"
+                >
                   Close
                 </v-btn>
-                <v-btn color="blue-darken-1" variant="text" @click="assignSubject" :disabled="!selectedSubject">
+                <v-btn
+                  color="blue-darken-1"
+                  variant="text"
+                  @click="assignSubject"
+                  :disabled="!selectedSubject"
+                >
                   Assign
                 </v-btn>
               </v-card-actions>
@@ -139,7 +154,7 @@ const subjectsStore = useSubjectsStore();
 const subjectDialog = ref(false);
 const selectedTeacher = ref<any>(null);
 const selectedSubject = ref<any>(null);
-const assignmentMessage = ref('');
+const assignmentMessage = ref("");
 const assignmentError = ref(false);
 const alreadyAssignedSubjectIds = ref<number[]>([]);
 
@@ -164,7 +179,7 @@ const availableSubjects = computed(() => {
 
   // Filter out already assigned subjects using the fetched IDs
   return subjectsStore.subjects.filter(
-    subject => !alreadyAssignedSubjectIds.value.includes(subject.id)
+    (subject) => !alreadyAssignedSubjectIds.value.includes(subject.id)
   );
 });
 
@@ -172,21 +187,24 @@ const availableSubjects = computed(() => {
 async function fetchAssignedSubjects(teacherId: number) {
   try {
     const { data, error } = await supabase
-      .from('asign_subjects')
-      .select('subject_id')
-      .eq('user_id', teacherId);
-    
+      .from("asign_subjects")
+      .select("subject_id")
+      .eq("user_id", teacherId);
+
     if (error) {
-      console.error('Error fetching assigned subjects:', error);
+      console.error("Error fetching assigned subjects:", error);
       alreadyAssignedSubjectIds.value = [];
       return;
     }
-    
+
     // Extract subject IDs from the result
-    alreadyAssignedSubjectIds.value = data.map(item => item.subject_id);
-    console.log('Already assigned subject IDs:', alreadyAssignedSubjectIds.value);
+    alreadyAssignedSubjectIds.value = data.map((item) => item.subject_id);
+    console.log(
+      "Already assigned subject IDs:",
+      alreadyAssignedSubjectIds.value
+    );
   } catch (err) {
-    console.error('Exception when fetching assigned subjects:', err);
+    console.error("Exception when fetching assigned subjects:", err);
     alreadyAssignedSubjectIds.value = [];
   }
 }
@@ -195,49 +213,51 @@ async function fetchAssignedSubjects(teacherId: number) {
 const openSubjectDialog = async (teacher: any) => {
   selectedTeacher.value = teacher;
   selectedSubject.value = null;
-  assignmentMessage.value = '';
+  assignmentMessage.value = "";
   assignmentError.value = false;
-  
+
   // Get the latest assigned subjects from the database
   await fetchAssignedSubjects(teacher.id);
-  
+
   subjectDialog.value = true;
 };
 
 // Assign the selected subject to the teacher
 const assignSubject = async () => {
   if (!selectedTeacher.value || !selectedSubject.value) return;
-  
+
   try {
     const { data, error } = await supabase
-      .from('asign_subjects')
+      .from("asign_subjects")
       .insert([
-        { 
+        {
           user_id: selectedTeacher.value.id,
-          subject_id: selectedSubject.value.id
+          subject_id: selectedSubject.value.id,
         },
       ])
       .select();
-      
+
     if (error) {
-      console.error('Error assigning subject:', error);
+      console.error("Error assigning subject:", error);
       assignmentMessage.value = `Error: ${error.message}`;
       assignmentError.value = true;
       return;
     }
-    
+
     assignmentMessage.value = `Subject "${selectedSubject.value.title}" successfully assigned!`;
     assignmentError.value = false;
-    
+
     // Update the assigned subjects list right away
-    alreadyAssignedSubjectIds.value = [...alreadyAssignedSubjectIds.value, selectedSubject.value.id];
+    alreadyAssignedSubjectIds.value = [
+      ...alreadyAssignedSubjectIds.value,
+      selectedSubject.value.id,
+    ];
     selectedSubject.value = null;
-    
+
     // Refresh teacher data to show the newly assigned subject
     await initializeTeachers();
-    
   } catch (err: any) {
-    console.error('Exception when assigning subject:', err);
+    console.error("Exception when assigning subject:", err);
     assignmentMessage.value = `Error: ${err.message}`;
     assignmentError.value = true;
   }

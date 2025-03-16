@@ -1026,9 +1026,7 @@ onMounted(async () => {
   font-weight: bold;
   display: inline-block;
 }
-tbody tr:nth-child(even) {
-  background-color: #f8f9fa;
-}
+
 .student-id {
   width: 40px;
   height: 24px;
