@@ -204,12 +204,6 @@ export default defineComponent({
         }, {});
 
         // Convert to array and sort quarters
-        availableSubjects.value = Object.values(subjectQuartersMap).map(
-          ({ subject, quarters }) => ({
-            ...subject,
-            availableQuarters: [...new Set(quarters)].sort((a, b) => a - b),
-          })
-        );
 
         if (
           availableSubjects.value.length === 1 &&
