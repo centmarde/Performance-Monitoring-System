@@ -238,14 +238,57 @@ export default defineComponent({
       );
       if (!student || !selectedSubject.value || !selectedQuarter.value) return;
 
+      const { data: classRecord, error: classError } = await supabase
+        .from("class_record")
+        .select("id")
+        .eq("subject_id", selectedSubject.value.id)
+        .eq("section_id", student.sectionId)
+        .eq("quarter", selectedQuarter.value)
+        .single();
 
+      if (!classError) {
+        const { data, error } = await supabase
+          .from("records")
+          .select(
+            "initial_grade, ww1, ww2, ww3, ww4, ww5, ww6, ww7, ww8, ww9, ww10, pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8, pt9, pt10, qa1"
+          )
+          .eq("student_id", student.id)
+          .eq("class_record_id", classRecord.id)
+          .single();
 
-
+        if (!error) {
+          studentRecord.value = data;
+          isFailing.value = studentRecord.value.initial_grade < 75;
+          updateChart();
+          startChat(studentRecord.value, studentFullName);
+        }
+      }
+    };
 
     const updateChart = () => {
       if (!studentRecord.value) return;
 
-
+      const chartDom = document.getElementById("chart");
+      const myChart = echarts.init(chartDom);
+      const option = {
+        tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+        xAxis: {
+          type: "category",
+          data: [
+            "WW1",
+            "WW2",
+            "WW3",
+            "WW4",
+            "WW5",
+            "WW6",
+            "WW7",
+            "WW8",
+            "WW9",
+            "WW10",
+            "PT1",
+            "PT2",
+            "PT3",
+            "PT4",
             "PT5",
             "PT6",
             "PT7",
