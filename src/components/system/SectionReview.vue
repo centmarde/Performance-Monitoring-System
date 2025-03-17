@@ -245,27 +245,7 @@ export default defineComponent({
     const updateChart = () => {
       if (!studentRecord.value) return;
 
-      const chartDom = document.getElementById("chart");
-      const myChart = echarts.init(chartDom);
-      const option = {
-        tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
-        xAxis: {
-          type: "category",
-          data: [
-            "WW1",
-            "WW2",
-            "WW3",
-            "WW4",
-            "WW5",
-            "WW6",
-            "WW7",
-            "WW8",
-            "WW9",
-            "WW10",
-            "PT1",
-            "PT2",
-            "PT3",
-            "PT4",
+
             "PT5",
             "PT6",
             "PT7",
