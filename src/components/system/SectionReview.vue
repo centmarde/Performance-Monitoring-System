@@ -238,13 +238,7 @@ export default defineComponent({
       );
       if (!student || !selectedSubject.value || !selectedQuarter.value) return;
 
-      const { data: classRecord, error: classError } = await supabase
-        .from("class_record")
-        .select("id")
-        .eq("subject_id", selectedSubject.value.id)
-        .eq("section_id", student.sectionId)
-        .eq("quarter", selectedQuarter.value)
-        .single();
+      
 
       if (!classError) {
         const { data, error } = await supabase
