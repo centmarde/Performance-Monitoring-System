@@ -28,7 +28,28 @@
     </v-row>
 
     <!-- Dialog for Subjects Handled -->
-   
+    <v-dialog v-model="subjectsDialog" max-width="500">
+      <v-card>
+        <v-card-title class="text-h5">
+          <v-icon left color="primary" class="mr-2">mdi-book-open</v-icon>
+          Subjects Information
+        </v-card-title>
+        <v-card-text>
+          <v-list v-if="assignedSubjects.length > 0" class="mt-2">
+            <v-list-subheader class="font-weight-bold"
+              >Your Assigned Subjects:</v-list-subheader
+            >
+            <v-list-item
+              v-for="subject in assignedSubjects"
+              :key="subject.id"
+              class="mb-2"
+            >
+              <template v-slot:prepend>
+                <v-icon color="teal-darken-2">mdi-book-education</v-icon>
+              </template>
+              <v-list-item-title>{{ subject.title }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
           <div v-else-if="subjectLoading" class="d-flex justify-center my-4">
             <v-progress-circular
               indeterminate
@@ -62,8 +83,7 @@
 
 <script>
 import { ref, onMounted, computed } from "vue";
-import { useRouter } from "vue-router";
-import { useSubjectsStore } from "@/stores/subjectsStore";
+
 import { useStudentsStore } from "@/stores/studentsStore";
 import { useRecordsStore } from "@/stores/recordsStore";
 import { useClassRecordStore } from "@/stores/classRecord";
