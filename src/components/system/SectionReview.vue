@@ -334,17 +334,4 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.glass-card {
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-.fixed-width-card {
-  height: 102px;
-}
-.rounded-card {
-  border-radius: 16px;
-}
-</style>
+<style scoped></style>
