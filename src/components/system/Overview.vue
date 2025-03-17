@@ -83,7 +83,8 @@
 
 <script>
 import { ref, onMounted, computed } from "vue";
-
+import { useRouter } from "vue-router";
+import { useSubjectsStore } from "@/stores/subjectsStore";
 import { useStudentsStore } from "@/stores/studentsStore";
 import { useRecordsStore } from "@/stores/recordsStore";
 import { useClassRecordStore } from "@/stores/classRecord";
@@ -96,16 +97,7 @@ export default {
     const assignedSubjects = ref([]);
     const subjectLoading = ref(false);
 
-    const cards = ref([
-      {
-        title: "Subjects Handled",
-        value: 0,
-        icon: "mdi-book-open",
-        color: "bg-green-lighten-5",
-        description: "Total subjects assigned to you",
-        loading: true,
-        action: "dialog",
-      },
+
       {
         title: "Failing Students",
         value: 0,
