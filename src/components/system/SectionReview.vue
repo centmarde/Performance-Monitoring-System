@@ -238,26 +238,9 @@ export default defineComponent({
       );
       if (!student || !selectedSubject.value || !selectedQuarter.value) return;
 
-      
 
-      if (!classError) {
-        const { data, error } = await supabase
-          .from("records")
-          .select(
-            "initial_grade, ww1, ww2, ww3, ww4, ww5, ww6, ww7, ww8, ww9, ww10, pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8, pt9, pt10, qa1"
-          )
-          .eq("student_id", student.id)
-          .eq("class_record_id", classRecord.id)
-          .single();
 
-        if (!error) {
-          studentRecord.value = data;
-          isFailing.value = studentRecord.value.initial_grade < 75;
-          updateChart();
-          startChat(studentRecord.value, studentFullName);
-        }
-      }
-    };
+
 
     const updateChart = () => {
       if (!studentRecord.value) return;
