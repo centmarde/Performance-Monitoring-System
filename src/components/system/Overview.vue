@@ -97,15 +97,17 @@ export default {
     const assignedSubjects = ref([]);
     const subjectLoading = ref(false);
 
+    const cards = ref([
       {
-        title: "Failing Students",
+        title: "Subjects Handled",
         value: 0,
-        icon: "mdi-account-alert",
-        color: "bg-red-lighten-5",
-        description: "Students with grades below 75%",
+        icon: "mdi-book-open",
+        color: "bg-green-lighten-5",
+        description: "Total subjects assigned to you",
         loading: true,
-        action: "/data_entry",
+        action: "dialog",
       },
+
       {
         title: "Passing Students",
         value: 0,
