@@ -109,15 +109,6 @@ export default {
       },
 
       {
-        title: "Passing Students",
-        value: 0,
-        icon: "mdi-account-check",
-        color: "bg-green-lighten-5",
-        description: "passed students",
-        loading: true,
-        action: "/section_tracking",
-      },
-      {
         title: "Class Records",
         value: 0,
         icon: "mdi-clipboard-text",
