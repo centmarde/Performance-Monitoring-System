@@ -107,7 +107,24 @@ export default {
         loading: true,
         action: "dialog",
       },
-
+      {
+        title: "Failing Students",
+        value: 0,
+        icon: "mdi-account-alert",
+        color: "bg-red-lighten-5",
+        description: "Students with grades below 75%",
+        loading: true,
+        action: "/data_entry",
+      },
+      {
+        title: "Passing Students",
+        value: 0,
+        icon: "mdi-account-check",
+        color: "bg-green-lighten-5",
+        description: "passed students",
+        loading: true,
+        action: "/section_tracking",
+      },
       {
         title: "Class Records",
         value: 0,
@@ -127,7 +144,11 @@ export default {
     const recordsStore = useRecordsStore();
     const classRecordStore = useClassRecordStore();
 
-
+    async function fetchSubjectsHandled() {
+      const { data, error } = await supabase
+        .from("asign_subjects")
+        .select("subject_id")
+        .eq("user_id", userId.value);
 
       if (error) {
         console.error("Error fetching subjects:", error);
