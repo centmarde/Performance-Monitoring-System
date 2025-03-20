@@ -169,11 +169,6 @@ export default {
       const classRecordIds = classRecords.map((record) => record.id);
 
       // Get records with grades below 75% from these class records
-      const { data: failingRecords, error: failingError } = await supabase
-        .from("records")
-        .select("student_id")
-        .in("class_record_id", classRecordIds)
-        .lt("initial_grade", 75);
 
       if (failingError) {
         console.error("Error fetching failing students:", failingError);
