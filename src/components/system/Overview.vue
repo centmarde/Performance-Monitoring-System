@@ -127,11 +127,7 @@ export default {
     const recordsStore = useRecordsStore();
     const classRecordStore = useClassRecordStore();
 
-    async function fetchSubjectsHandled() {
-      const { data, error } = await supabase
-        .from("asign_subjects")
-        .select("subject_id")
-        .eq("user_id", userId.value);
+
 
       if (error) {
         console.error("Error fetching subjects:", error);
