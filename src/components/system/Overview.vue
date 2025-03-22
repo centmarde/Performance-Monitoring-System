@@ -158,6 +158,12 @@ export default {
       return data.length;
     }
 
+    async function fetchFailingStudents() {
+      // Get class records created by this teacher
+      const { data: classRecords, error: recordError } = await supabase
+        .from("class_record")
+        .select("id")
+        .eq("teacher_id", userId.value);
 
       if (recordError || !classRecords.length) {
         console.error("Error fetching class records:", recordError);
