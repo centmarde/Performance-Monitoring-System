@@ -191,10 +191,7 @@ export default {
 
 
 
-      if (recordError || !classRecords.length) {
-        console.error("Error fetching class records:", recordError);
-        return 0;
-      }
+
 
       const classRecordIds = classRecords.map((record) => record.id);
 
