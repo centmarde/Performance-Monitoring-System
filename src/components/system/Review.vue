@@ -32,6 +32,21 @@
           <div>
             {{ subjectName }}
           </div>
+          <div
+            v-if="studentRecord"
+            class="d-flex justify-space-between align-center"
+          >
+            <div>Initial Grade: {{ studentRecord.initial_grade }}</div>
+            <v-chip
+              :color="isFailing ? 'red lighten-3' : 'green lighten-3'"
+              :text-color="isFailing ? 'red darken-3' : 'green darken-3'"
+              class="font-bold"
+              small
+            >
+              <span v-if="isFailing">Failing</span>
+              <span v-else>Passing</span>
+            </v-chip>
+          </div>
         </v-card>
       </v-col>
     </v-row>
