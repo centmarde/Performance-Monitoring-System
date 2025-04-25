@@ -650,7 +650,7 @@
                   </td>
                   <td>
                     <v-btn
-                      v-if="parseFloat(item.quarterly_grade) < 75"
+                      v-if="parseFloat(item.quarterly_grade) <= 80 && parseFloat(item.quarterly_grade) >= 76"
                       color="warning"
                       size="small"
                       @click="navigateToTracking(item)"
