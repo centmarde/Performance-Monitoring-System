@@ -39,16 +39,11 @@ const page = ref(1);
 const itemsPerPage = 5;
 
 const wwHeaders = [
-  { text: "1", value: "ww1", points: "100%" },
-  { text: "2", value: "ww2", points: "100%" },
-  { text: "3", value: "ww3", points: "100%" },
-  { text: "4", value: "ww4", points: "100%" },
-  { text: "5", value: "ww5", points: "100%" },
-  { text: "6", value: "ww6", points: "100%" },
-  { text: "7", value: "ww7", points: "100%" },
-  { text: "8", value: "ww8", points: "100%" },
-  { text: "9", value: "ww9", points: "100%" },
-  { text: "10", value: "ww10", points: "100%" },
+  { text: "Topic 1", value: "topic1", points: "100%" },
+  { text: "Topic 2", value: "topic2", points: "100%" },
+  { text: "Topic 3", value: "topic3", points: "100%" },
+  { text: "Topic 4", value: "topic4", points: "100%" },
+  { text: "Topic 5", value: "topic5", points: "100%" },
 ];
 
 const ptHeaders = [
@@ -88,16 +83,12 @@ const saveChanges = async (item) => {
     const { error } = await supabase
       .from("records")
       .update({
-        ww1: item.ww1,
-        ww2: item.ww2,
-        ww3: item.ww3,
-        ww4: item.ww4,
-        ww5: item.ww5,
-        ww6: item.ww6,
-        ww7: item.ww7,
-        ww8: item.ww8,
-        ww9: item.ww9,
-        ww10: item.ww10,
+        topic1: item.topic1,
+        topic2: item.topic2,
+        topic3: item.topic3,
+        topic4: item.topic4,
+        topic5: item.topic5,
+
         pt1: item.pt1,
         pt2: item.pt2,
         pt3: item.pt3,
@@ -171,16 +162,12 @@ const fetchRecords = async () => {
             name: record.students
               ? `${record.students.firstname} ${record.students.lastname}`
               : "Unknown",
-            ww1: record.ww1,
-            ww2: record.ww2,
-            ww3: record.ww3,
-            ww4: record.ww4,
-            ww5: record.ww5,
-            ww6: record.ww6,
-            ww7: record.ww7,
-            ww8: record.ww8,
-            ww9: record.ww9,
-            ww10: record.ww10,
+            topic1: record.topic1,
+            topic2: record.topic2,
+            topic3: record.topic3,
+            topic4: record.topic4,
+            topic5: record.topic5,
+
             pt1: record.pt1,
             pt2: record.pt2,
             pt3: record.pt3,
@@ -193,16 +180,8 @@ const fetchRecords = async () => {
             pt10: record.pt10,
             qa1: record.qa1,
             wwTotal:
-              record.ww1 +
-              record.ww2 +
-              record.ww3 +
-              record.ww4 +
-              record.ww5 +
-              record.ww6 +
-              record.ww7 +
-              record.ww8 +
-              record.ww9 +
-              record.ww10,
+              record.topic1 + record.topic2 + record.topic3 + record.topic4 + record.topic5,
+
             ptTotal:
               record.pt1 +
               record.pt2 +
@@ -253,7 +232,6 @@ onMounted(async () => {
   startAutoSave();
 });
 </script>
-
 
 <template>
   <HomeLayout>
@@ -311,7 +289,7 @@ onMounted(async () => {
                     Name
                   </th>
                   <th
-                    colspan="10"
+                    colspan="5"
                     style="
                       background: #004d40;
                       color: white;
@@ -324,7 +302,7 @@ onMounted(async () => {
                       z-index: 2;
                     "
                   >
-                    Written Works
+                    Topics
                   </th>
                   <th
                     colspan="3"
@@ -444,7 +422,7 @@ onMounted(async () => {
                 </tr>
                 <tr>
                   <th
-                    v-for="header in wwHeaders"
+                    v-for="(header, index) in wwHeaders"
                     :key="header.value"
                     style="
                       background: #004d40;
@@ -456,9 +434,24 @@ onMounted(async () => {
                       position: sticky;
                       top: 0;
                       z-index: 2;
+                      width: 120px;
+                      min-width: 120px;
                     "
                   >
-                    {{ header.text }}
+                    <input
+                      v-model="wwHeaders[index].text"
+                      type="text"
+                      placeholder="Topic name"
+                      style="
+                        width: 90%; /* Make input take up more space within the header */
+                        background: transparent;
+                        color: white;
+                        border: 1px solid #00796b;
+                        border-radius: 4px;
+                        padding: 4px;
+                        text-align: center;
+                      "
+                    />
                   </th>
                   <th
                     v-for="header in ptHeaders"
@@ -690,7 +683,7 @@ onMounted(async () => {
                     />
                   </td>
 
-                  <td v-for="n in 10" :key="'ww' + n">
+                  <td v-for="n in 5" :key="'ww' + n">
                     <input
                       v-model="item['ww' + n]"
                       type="number"
@@ -894,7 +887,10 @@ onMounted(async () => {
                   </td>
                   <td>
                     <v-btn
-                      v-if="parseFloat(item.quarterly_grade) <= 80 && parseFloat(item.quarterly_grade) >= 76"
+                      v-if="
+                        parseFloat(item.quarterly_grade) <= 80 &&
+                        parseFloat(item.quarterly_grade) >= 76
+                      "
                       color="warning"
                       size="small"
                       @click="navigateToTracking(item)"
@@ -978,15 +974,21 @@ onMounted(async () => {
   padding: 6px;
   font-size: 16px;
 }
+
 .class-record-card {
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
-  backdrop-filter: blur(10px); /* Blur effect for glass background */
-  -webkit-backdrop-filter: blur(10px); /* Safari support */
-  box-shadow: 0 0 10px #004d40; /* Glowing effect */
+  border: 1px solid rgba(0, 77, 64, 0.5);
+  /* Border to enhance glass effect */
+  backdrop-filter: blur(10px);
+  /* Blur effect for glass background */
+  -webkit-backdrop-filter: blur(10px);
+  /* Safari support */
+  box-shadow: 0 0 10px #004d40;
+  /* Glowing effect */
 }
+
 .student-id {
   text-align: center;
   min-width: 50px;
@@ -1003,21 +1005,6 @@ onMounted(async () => {
   font-weight: bold;
   display: inline-block;
 }
-/* .excellent {
-  color: #2ecc71;
-  background-color: #e8f5e9;
-  font-weight: bold;
-  padding: 4px;
-  border-radius: 4px;
-}
-
-.good {
-  color: #3498db;
-  background-color: #e3f2fd;
-  font-weight: bold;
-  padding: 4px;
-  border-radius: 4px;
-} */
 
 .almost-fail {
   background-color: #fff3cd;
@@ -1027,14 +1014,17 @@ onMounted(async () => {
   font-weight: bold;
   display: inline-block;
 }
+
 tbody tr:nth-child(even) {
   background-color: #f8f9fa;
 }
+
 .student-id {
   width: 40px;
   height: 24px;
   text-align: center;
-  background-color: #f0f0f0; /* Light gray to indicate read-only */
+  background-color: #f0f0f0;
+  /* Light gray to indicate read-only */
   border: none;
   border-radius: 4px;
   padding: 4px;
@@ -1047,13 +1037,15 @@ tbody tr:nth-child(even) {
   width: 60px;
   height: 24px;
   text-align: center;
-  background-color: #d1e7dd; /* Light green for visibility */
+  background-color: #d1e7dd;
+  /* Light green for visibility */
   border: none;
   border-radius: 4px;
   padding: 4px;
   font-size: 14px;
   font-weight: bold;
-  color: #155724; /* Darker green for contrast */
+  color: #155724;
+  /* Darker green for contrast */
 }
 
 /* Responsive Design */

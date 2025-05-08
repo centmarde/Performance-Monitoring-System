@@ -4,16 +4,11 @@ import { supabase } from "@/lib/supabase";
 
 interface Record {
   student_id: number;
-  ww1: number;
-  ww2: number;
-  ww3: number;
-  ww4: number;
-  ww5: number;
-  ww6: number;
-  ww7: number;
-  ww8: number;
-  ww9: number;
-  ww10: number;
+ topic1: number;
+  topic2: number;
+  topic3: number;
+  topic4: number;
+  topic5: number;
   pt1: number;
   pt2: number;
   pt3: number;
@@ -97,16 +92,12 @@ export const useRecordsStore = defineStore("recordsStore", () => {
 
     const records: Record[] = students.map((student: any) => ({
       student_id: student.id,
-      ww1: getRandomScore(50, 100),
-      ww2: getRandomScore(50, 100),
-      ww3: getRandomScore(70, 100),
-      ww4: getRandomScore(70, 100),
-      ww5: getRandomScore(40, 100),
-      ww6: getRandomScore(70, 100),
-      ww7: getRandomScore(70, 100),
-      ww8: getRandomScore(50, 100),
-      ww9: getRandomScore(50, 100),
-      ww10: getRandomScore(70, 100),
+      topic1: getRandomScore(50, 100),
+      topic2: getRandomScore(50, 100),
+      topic3: getRandomScore(70, 100),
+      topic4: getRandomScore(70, 100),
+      topic5: getRandomScore(40, 100),
+     
       pt1: getRandomScore(50, 100),
       pt2: getRandomScore(50, 100),
       pt3: getRandomScore(70, 100),
@@ -160,16 +151,12 @@ export const useRecordsStore = defineStore("recordsStore", () => {
     }
 
     const columnsToCheck = [
-      "ww1",
-      "ww2",
-      "ww3",
-      "ww4",
-      "ww5",
-      "ww6",
-      "ww7",
-      "ww8",
-      "ww9",
-      "ww10",
+      "topic1",
+      "topic2",
+      "topic3",
+      "topic4",
+      "topic5",
+     
       "pt1",
       "pt2",
       "pt3",

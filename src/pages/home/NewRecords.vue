@@ -1,3 +1,264 @@
+<script setup>
+import HomeLayout from "@/layouts/HomeLayout.vue";
+import { ref, computed, onMounted } from "vue";
+import { useRecordsStore } from "@/stores/recordsStore";
+import { useStudentsStore } from "@/stores/studentsStore";
+import SearchBar from "@/components/common/SearchBar.vue";
+import { supabase } from "@/lib/supabase";
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+const navigateToTracking = (item) => {
+  // Get values from localStorage that were set in DataEntry.vue
+  const section = localStorage.getItem("selectedSection");
+  const quarter = localStorage.getItem("selectedQuarter");
+  const subjectId = localStorage.getItem("selectedSubject"); // Get subject ID instead of subject name
+
+  router.push({
+    path: "/tracking",
+    query: {
+      studentId: item.id,
+      name: item.name,
+      wwTotal: item.wwTotal,
+      ptTotal: item.ptTotal,
+      qaTotal: item.qa1,
+      quarterly_grade: item.quarterly_grade,
+      section: section,
+      quarter: quarter,
+      subject: subjectId, // Pass subject ID instead of subject name
+    },
+  });
+};
+
+const jsondata = ref([]);
+const recordsStore = useRecordsStore();
+const studentsStore = useStudentsStore();
+const searchQuery = ref("");
+const page = ref(1);
+const itemsPerPage = 5;
+
+// Add loading state
+const isLoading = ref(true);
+
+const wwHeaders = [
+  { text: "Topic 1", value: "topic1", points: "100%" },
+  { text: "Topic 2", value: "topic2", points: "100%" },
+  { text: "Topic 3", value: "topic3", points: "100%" },
+  { text: "Topic 4", value: "topic4", points: "100%" },
+  { text: "Topic 5", value: "topic5", points: "100%" },
+];
+
+const ptHeaders = [
+  { text: "1", value: "pt1", points: "100%" },
+  { text: "2", value: "pt2", points: "100%" },
+  { text: "3", value: "pt3", points: "100%" },
+  { text: "4", value: "pt4", points: "100%" },
+  { text: "5", value: "pt5", points: "100%" },
+  { text: "6", value: "pt6", points: "100%" },
+  { text: "7", value: "pt7", points: "100%" },
+  { text: "8", value: "pt8", points: "100%" },
+  { text: "9", value: "pt9", points: "100%" },
+  { text: "10", value: "pt10", points: "100%" },
+];
+
+const filteredData = computed(() => {
+  return jsondata.value.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
+
+const paginatedData = computed(() => {
+  const start = (page.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return filteredData.value.slice(start, end);
+});
+
+const pageCount = computed(() => {
+  return Math.ceil(filteredData.value.length / itemsPerPage);
+});
+
+const saveChanges = async (item) => {
+  try {
+    const { error } = await supabase
+      .from("records")
+      .update({
+        topic1: item.topic1,
+        topic2: item.topic2,
+        topic3: item.topic3,
+        topic4: item.topic4,
+        topic5: item.topic5,
+
+        pt1: item.pt1,
+        pt2: item.pt2,
+        pt3: item.pt3,
+        pt4: item.pt4,
+        pt5: item.pt5,
+        pt6: item.pt6,
+        pt7: item.pt7,
+        pt8: item.pt8,
+        pt9: item.pt9,
+        pt10: item.pt10,
+        qa1: item.qa1,
+        initial_grade: item.initial_grade,
+      })
+      .eq("student_id", item.id);
+
+    if (error) {
+      console.error("Error updating record:", error);
+    } else {
+      console.log("Record updated successfully");
+    }
+  } catch (error) {
+    console.error("Error saving changes:", error);
+  }
+};
+
+const saveAllChanges = async () => {
+  for (const item of jsondata.value) {
+    await saveChanges(item);
+  }
+};
+
+const fetchGradeCalculations = async (classRecordId) => {
+  const { data: records, error } = await supabase
+    .from("calculate_initial_grade")
+    .select("*")
+    .eq("class_record_id", Number(classRecordId));
+
+  if (error) {
+    console.error("Error fetching grade calculations:", error);
+    return [];
+  }
+
+  return records.map((record) => ({
+    student_id: record.id,
+    ww_weighted_score: record.ww_weighted_score,
+    pt_weighted_score: record.pt_weighted_score,
+    qa_weighted_score: record.qa_weighted_score,
+    initial_grade: record.initial_grade,
+    quarterly_grade: record.initial_grade,
+  }));
+};
+
+const fetchRecords = async () => {
+  const classRecordId = localStorage.getItem("addedClassrecord");
+  if (!classRecordId) {
+    console.log("No class record ID found in local storage.");
+    return;
+  }
+
+  console.log("Class Record ID:", classRecordId);
+  const records = await recordsStore.fetchRecordsByClassRecordId(
+    Number(classRecordId)
+  );
+
+  if (!records || records.length === 0) {
+    console.log("This class record has no records yet.");
+    return;
+  }
+
+  const gradeCalculations = await fetchGradeCalculations(classRecordId);
+  jsondata.value = records
+    .map((record) => {
+      const gradeCalculation =
+        gradeCalculations.find((gc) => gc.student_id === record.id) || {};
+      const item = {
+        id: record.student_id,
+        name: record.students
+          ? `${record.students.firstname} ${record.students.lastname}`
+          : "Unknown",
+        topic1: record.topic1,
+        topic2: record.topic2,
+        topic3: record.topic3,
+        topic4: record.topic4,
+        topic5: record.topic5,
+
+        pt1: record.pt1,
+        pt2: record.pt2,
+        pt3: record.pt3,
+        pt4: record.pt4,
+        pt5: record.pt5,
+        pt6: record.pt6,
+        pt7: record.pt7,
+        pt8: record.pt8,
+        pt9: record.pt9,
+        pt10: record.pt10,
+        qa1: record.qa1,
+        wwTotal:
+              record.topic1 + record.topic2 + record.topic3 + record.topic4 + record.topic5,
+
+        ptTotal:
+          record.pt1 +
+          record.pt2 +
+          record.pt3 +
+          record.pt4 +
+          record.pt5 +
+          record.pt6 +
+          record.pt7 +
+          record.pt8 +
+          record.pt9 +
+          record.pt10,
+        qaTotal: record.qa1,
+        wwws: "40%",
+        wwps: gradeCalculation.ww_weighted_score || 0,
+        ptps: gradeCalculation.pt_weighted_score || 0,
+        ptws: "40%",
+        qaps: gradeCalculation.qa_weighted_score || 0,
+        qaws: "20%",
+        initial_grade: gradeCalculation.initial_grade || 0,
+        quarterly_grade: gradeCalculation.initial_grade || 0,
+      };
+      return item;
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
+};
+
+const clickSaveButtons = () => {
+  document.querySelectorAll(".save-btn").forEach((button) => button.click());
+};
+
+const startAutoSave = () => {
+  setInterval(async () => {
+    await fetchRecords();
+  }, 5000);
+
+  setInterval(() => {
+    document.querySelectorAll(".save-btn").forEach((button) => button.click());
+  }, 8000);
+};
+
+onMounted(async () => {
+  isLoading.value = true;
+
+  // Start loading timer
+  const loadingTimer = new Promise((resolve) => setTimeout(resolve, 11000));
+
+  // Fetch data
+  const fetchData = async () => {
+    try {
+      await fetchRecords();
+      await studentsStore.fetchAllStudents();
+      startAutoSave();
+    } catch (error) {
+      console.error("Error in mounting:", error);
+    }
+  };
+
+  // Wait for both timer and data fetching to complete
+  await Promise.all([loadingTimer, fetchData()]);
+
+  isLoading.value = false;
+});
+
+const getGradeClass = (grade) => {
+  if (grade < 75) return "fail";
+  if (grade >= 75 && grade < 80) return "almost-fail";
+  return "";
+};
+</script>
+
+
 <template>
   <HomeLayout>
     <template #content>
@@ -67,7 +328,7 @@
                     Name
                   </th>
                   <th
-                    colspan="10"
+                    colspan="5"
                     style="
                       background: #004d40;
                       color: white;
@@ -80,7 +341,7 @@
                       z-index: 2;
                     "
                   >
-                    Written Works
+                   Topics
                   </th>
                   <th
                     colspan="3"
@@ -200,7 +461,7 @@
                 </tr>
                 <tr>
                   <th
-                    v-for="header in wwHeaders"
+                    v-for="(header, index) in wwHeaders"
                     :key="header.value"
                     style="
                       background: #004d40;
@@ -212,9 +473,24 @@
                       position: sticky;
                       top: 0;
                       z-index: 2;
+                      width: 120px;
+                      min-width: 120px;
                     "
                   >
-                    {{ header.text }}
+                    <input
+                      v-model="wwHeaders[index].text"
+                      type="text"
+                      placeholder="Topic name"
+                      style="
+                        width: 90%; /* Make input take up more space within the header */
+                        background: transparent;
+                        color: white;
+                        border: 1px solid #00796b;
+                        border-radius: 4px;
+                        padding: 4px;
+                        text-align: center;
+                      "
+                    />
                   </th>
                   <th
                     v-for="header in ptHeaders"
@@ -685,287 +961,6 @@
     </template>
   </HomeLayout>
 </template>
-
-<script setup>
-import HomeLayout from "@/layouts/HomeLayout.vue";
-import { ref, computed, onMounted } from "vue";
-import { useRecordsStore } from "@/stores/recordsStore";
-import { useStudentsStore } from "@/stores/studentsStore";
-import SearchBar from "@/components/common/SearchBar.vue";
-import { supabase } from "@/lib/supabase";
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
-
-const navigateToTracking = (item) => {
-  // Get values from localStorage that were set in DataEntry.vue
-  const section = localStorage.getItem("selectedSection");
-  const quarter = localStorage.getItem("selectedQuarter");
-  const subjectId = localStorage.getItem("selectedSubject"); // Get subject ID instead of subject name
-
-  router.push({
-    path: "/tracking",
-    query: {
-      studentId: item.id,
-      name: item.name,
-      wwTotal: item.wwTotal,
-      ptTotal: item.ptTotal,
-      qaTotal: item.qa1,
-      quarterly_grade: item.quarterly_grade,
-      section: section,
-      quarter: quarter,
-      subject: subjectId, // Pass subject ID instead of subject name
-    },
-  });
-};
-
-const jsondata = ref([]);
-const recordsStore = useRecordsStore();
-const studentsStore = useStudentsStore();
-const searchQuery = ref("");
-const page = ref(1);
-const itemsPerPage = 5;
-
-// Add loading state
-const isLoading = ref(true);
-
-const wwHeaders = [
-  { text: "1", value: "ww1", points: "100%" },
-  { text: "2", value: "ww2", points: "100%" },
-  { text: "3", value: "ww3", points: "100%" },
-  { text: "4", value: "ww4", points: "100%" },
-  { text: "5", value: "ww5", points: "100%" },
-  { text: "6", value: "ww6", points: "100%" },
-  { text: "7", value: "ww7", points: "100%" },
-  { text: "8", value: "ww8", points: "100%" },
-  { text: "9", value: "ww9", points: "100%" },
-  { text: "10", value: "ww10", points: "100%" },
-];
-
-const ptHeaders = [
-  { text: "1", value: "pt1", points: "100%" },
-  { text: "2", value: "pt2", points: "100%" },
-  { text: "3", value: "pt3", points: "100%" },
-  { text: "4", value: "pt4", points: "100%" },
-  { text: "5", value: "pt5", points: "100%" },
-  { text: "6", value: "pt6", points: "100%" },
-  { text: "7", value: "pt7", points: "100%" },
-  { text: "8", value: "pt8", points: "100%" },
-  { text: "9", value: "pt9", points: "100%" },
-  { text: "10", value: "pt10", points: "100%" },
-];
-
-const filteredData = computed(() => {
-  return jsondata.value.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-  );
-});
-
-const paginatedData = computed(() => {
-  const start = (page.value - 1) * itemsPerPage;
-  const end = start + itemsPerPage;
-  return filteredData.value.slice(start, end);
-});
-
-const pageCount = computed(() => {
-  return Math.ceil(filteredData.value.length / itemsPerPage);
-});
-
-const saveChanges = async (item) => {
-  try {
-    const { error } = await supabase
-      .from("records")
-      .update({
-        ww1: item.ww1,
-        ww2: item.ww2,
-        ww3: item.ww3,
-        ww4: item.ww4,
-        ww5: item.ww5,
-        ww6: item.ww6,
-        ww7: item.ww7,
-        ww8: item.ww8,
-        ww9: item.ww9,
-        ww10: item.ww10,
-        pt1: item.pt1,
-        pt2: item.pt2,
-        pt3: item.pt3,
-        pt4: item.pt4,
-        pt5: item.pt5,
-        pt6: item.pt6,
-        pt7: item.pt7,
-        pt8: item.pt8,
-        pt9: item.pt9,
-        pt10: item.pt10,
-        qa1: item.qa1,
-        initial_grade: item.initial_grade,
-      })
-      .eq("student_id", item.id);
-
-    if (error) {
-      console.error("Error updating record:", error);
-    } else {
-      console.log("Record updated successfully");
-    }
-  } catch (error) {
-    console.error("Error saving changes:", error);
-  }
-};
-
-const saveAllChanges = async () => {
-  for (const item of jsondata.value) {
-    await saveChanges(item);
-  }
-};
-
-const fetchGradeCalculations = async (classRecordId) => {
-  const { data: records, error } = await supabase
-    .from("calculate_initial_grade")
-    .select("*")
-    .eq("class_record_id", Number(classRecordId));
-
-  if (error) {
-    console.error("Error fetching grade calculations:", error);
-    return [];
-  }
-
-  return records.map((record) => ({
-    student_id: record.id,
-    ww_weighted_score: record.ww_weighted_score,
-    pt_weighted_score: record.pt_weighted_score,
-    qa_weighted_score: record.qa_weighted_score,
-    initial_grade: record.initial_grade,
-    quarterly_grade: record.initial_grade,
-  }));
-};
-
-const fetchRecords = async () => {
-  const classRecordId = localStorage.getItem("addedClassrecord");
-  if (!classRecordId) {
-    console.log("No class record ID found in local storage.");
-    return;
-  }
-
-  console.log("Class Record ID:", classRecordId);
-  const records = await recordsStore.fetchRecordsByClassRecordId(
-    Number(classRecordId)
-  );
-
-  if (!records || records.length === 0) {
-    console.log("This class record has no records yet.");
-    return;
-  }
-
-  const gradeCalculations = await fetchGradeCalculations(classRecordId);
-  jsondata.value = records
-    .map((record) => {
-      const gradeCalculation =
-        gradeCalculations.find((gc) => gc.student_id === record.id) || {};
-      const item = {
-        id: record.student_id,
-        name: record.students
-          ? `${record.students.firstname} ${record.students.lastname}`
-          : "Unknown",
-        ww1: record.ww1,
-        ww2: record.ww2,
-        ww3: record.ww3,
-        ww4: record.ww4,
-        ww5: record.ww5,
-        ww6: record.ww6,
-        ww7: record.ww7,
-        ww8: record.ww8,
-        ww9: record.ww9,
-        ww10: record.ww10,
-        pt1: record.pt1,
-        pt2: record.pt2,
-        pt3: record.pt3,
-        pt4: record.pt4,
-        pt5: record.pt5,
-        pt6: record.pt6,
-        pt7: record.pt7,
-        pt8: record.pt8,
-        pt9: record.pt9,
-        pt10: record.pt10,
-        qa1: record.qa1,
-        wwTotal:
-          record.ww1 +
-          record.ww2 +
-          record.ww3 +
-          record.ww4 +
-          record.ww5 +
-          record.ww6 +
-          record.ww7 +
-          record.ww8 +
-          record.ww9 +
-          record.ww10,
-        ptTotal:
-          record.pt1 +
-          record.pt2 +
-          record.pt3 +
-          record.pt4 +
-          record.pt5 +
-          record.pt6 +
-          record.pt7 +
-          record.pt8 +
-          record.pt9 +
-          record.pt10,
-        qaTotal: record.qa1,
-        wwws: "40%",
-        wwps: gradeCalculation.ww_weighted_score || 0,
-        ptps: gradeCalculation.pt_weighted_score || 0,
-        ptws: "40%",
-        qaps: gradeCalculation.qa_weighted_score || 0,
-        qaws: "20%",
-        initial_grade: gradeCalculation.initial_grade || 0,
-        quarterly_grade: gradeCalculation.initial_grade || 0,
-      };
-      return item;
-    })
-    .sort((a, b) => a.name.localeCompare(b.name));
-};
-
-const clickSaveButtons = () => {
-  document.querySelectorAll(".save-btn").forEach((button) => button.click());
-};
-
-const startAutoSave = () => {
-  setInterval(async () => {
-    await fetchRecords();
-  }, 5000);
-
-  setInterval(() => {
-    document.querySelectorAll(".save-btn").forEach((button) => button.click());
-  }, 8000);
-};
-
-onMounted(async () => {
-  isLoading.value = true;
-
-  // Start loading timer
-  const loadingTimer = new Promise((resolve) => setTimeout(resolve, 11000));
-
-  // Fetch data
-  const fetchData = async () => {
-    try {
-      await fetchRecords();
-      await studentsStore.fetchAllStudents();
-      startAutoSave();
-    } catch (error) {
-      console.error("Error in mounting:", error);
-    }
-  };
-
-  // Wait for both timer and data fetching to complete
-  await Promise.all([loadingTimer, fetchData()]);
-
-  isLoading.value = false;
-});
-
-const getGradeClass = (grade) => {
-  if (grade < 75) return "fail";
-  if (grade >= 75 && grade < 80) return "almost-fail";
-  return "";
-};
-</script>
 
 <style scoped>
 .styled-table {
