@@ -98,7 +98,7 @@
     ]
   },
   {
-    "subject": "Edukasyon sa Pagpapakatao (EsP)",
+    "subject": "Edukasyon sa Pagpapakatao",
     "topics": [
       "Pagkilala sa Mabuti at Masamang Gawain",
       "Pagpapasya Batay sa Halaga",
@@ -114,14 +114,12 @@
       "Philippine Folk Songs",
       "Elements of Art (Line, Shape, Color)",
       "Drawing Traditional Filipino Crafts",
-      "Basic Movement Patterns",
-      "Rules of Volleyball",
-      "Nutritional Guidelines",
-      "Effects of Substance Abuse"
+      "Basic Movement Patterns"
+      
     ]
   },
   {
-    "subject": "Edukasyong Pantahanan at Pangkabuhayan (EPP)",
+    "subject": "Edukasyong Pantahanan at Pangkabuhayan",
     "topics": [
       "Wastong Paraan ng Pagtatanim",
       "Pagluluto ng Simpleng Ulam",
@@ -130,13 +128,20 @@
     ]
   },
   {
-    "subject": "Technology and Livelihood Education (TLE)",
+    "subject": "Technology and Livelihood Education",
     "topics": [
       "Installing Operating Systems (ICT)",
       "Preparing Cake Ingredients (Home Economics)",
       "Electrical Wiring Layout (Industrial Arts)",
       "Propagation of Plants (Agri-Fishery)",
       "Financial Planning in Business (Entrepreneurship)"
+    ]
+  },
+  {
+    "subject": "Arts",
+    "topics": [
+      "Elements of Art (Line, Shape, Color)",
+      "Drawing Traditional Filipino Crafts"
     ]
   }
 ]

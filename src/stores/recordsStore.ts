@@ -1,14 +1,15 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import { supabase } from "@/lib/supabase";
+import topicsData from "@/../public/data/topics.json"; // Import topics.json
 
 interface Record {
   student_id: number;
-  topic1: number;
-  topic2: number;
-  topic3: number;
-  topic4: number;
-  topic5: number;
+  topic1: number | null;
+  topic2: number | null;
+  topic3: number | null;
+  topic4: number | null;
+  topic5: number | null;
   pt1: number;
   pt2: number;
   pt3: number;
@@ -87,30 +88,45 @@ export const useRecordsStore = defineStore("recordsStore", () => {
       return null;
     }
 
+    const subjectName = localStorage.getItem("selectedSubjectName");
+    const subjectTopics = topicsData.find(
+      (subject) => subject.subject === subjectName
+    )?.topics || [];
+
     const getRandomScore = (min: number, max: number) =>
       Math.floor(Math.random() * (max - min + 1)) + min;
 
-    const records: Record[] = students.map((student: any) => ({
-      student_id: student.id,
-      topic1: getRandomScore(50, 100),
-      topic2: getRandomScore(50, 100),
-      topic3: getRandomScore(70, 100),
-      topic4: getRandomScore(70, 100),
-      topic5: getRandomScore(40, 100),
-      
-      pt1: getRandomScore(50, 100),
-      pt2: getRandomScore(50, 100),
-      pt3: getRandomScore(70, 100),
-      pt4: getRandomScore(50, 100),
-      pt5: getRandomScore(70, 100),
-      pt6: getRandomScore(20, 100),
-      pt7: getRandomScore(70, 100),
-      pt8: getRandomScore(70, 100),
-      pt9: getRandomScore(50, 100),
-      pt10: getRandomScore(50, 100),
-      qa1: getRandomScore(50, 100),
-      class_record_id: classRecordId,
-    }));
+    const records: Record[] = students.map((student: any) => {
+      const record: Record = {
+        student_id: student.id,
+        topic1: subjectTopics[0] ? getRandomScore(50, 100) : null,
+        topic2: subjectTopics[1] ? getRandomScore(50, 100) : null,
+        topic3: subjectTopics[2] ? getRandomScore(50, 100) : null,
+        topic4: subjectTopics[3] ? getRandomScore(50, 100) : null,
+        topic5: subjectTopics[4] ? getRandomScore(50, 100) : null,
+        pt1: getRandomScore(50, 100),
+        pt2: getRandomScore(50, 100),
+        pt3: getRandomScore(70, 100),
+        pt4: getRandomScore(50, 100),
+        pt5: getRandomScore(70, 100),
+        pt6: getRandomScore(20, 100),
+        pt7: getRandomScore(70, 100),
+        pt8: getRandomScore(70, 100),
+        pt9: getRandomScore(50, 100),
+        pt10: getRandomScore(50, 100),
+        qa1: getRandomScore(50, 100),
+        class_record_id: classRecordId,
+      };
+
+      // Remove null values for topics if less than 5
+      Object.keys(record).forEach((key) => {
+        if (key.startsWith("topic") && record[key as keyof Record] === null) {
+          delete record[key as keyof Record];
+        }
+      });
+
+      return record;
+    });
 
     const { error: insertError } = await supabase
       .from("records")

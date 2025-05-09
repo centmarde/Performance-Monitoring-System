@@ -241,15 +241,17 @@ const updateTopicHeaders = async () => {
 
       // If topics are found, update the wwHeaders
       if (topics.length > 0) {
-        // Use up to 5 topics (since we have 5 topic fields)
-        const topicsToUse = topics.slice(0, 5);
+        // Use up to the number of available topics
+        const topicsToUse = topics.slice(0, topics.length);
 
         // Update the text property of each header
-        topicsToUse.forEach((topic, index) => {
-          if (index < wwHeaders.value.length) {
-            wwHeaders.value[index].text = topic;
-          }
-        });
+        wwHeaders.value = wwHeaders.value.map((header, index) => ({
+          text: topicsToUse[index] || "", // Set blank if no topic
+          value: `topic${index + 1}`,
+          points: "100%",
+          expanded: false,
+          disabled: !topicsToUse[index], // Disable if no topic
+        }));
 
         console.log("Updated topic headers:", wwHeaders.value);
       }
@@ -486,8 +488,7 @@ onMounted(async () => {
                     }"
                   >
                     <span
-                      @click="editTopic(index)"
-                      :title="wwHeaders[index].text || 'Topic name'"
+                      :title="header.text || 'Topic name'"
                       style="
                         display: inline-block;
                         width: 90%;
@@ -500,10 +501,9 @@ onMounted(async () => {
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
-                        cursor: pointer;
                       "
                     >
-                      {{ wwHeaders[index].text || "Topic name" }}
+                      {{ header.text || "" }}
                     </span>
                     <v-icon
                       class="expand-icon"
@@ -743,9 +743,10 @@ onMounted(async () => {
                     />
                   </td>
 
-                  <td v-for="n in 5" :key="'topic' + n">
+                  <td v-for="(header, index) in wwHeaders" :key="header.value">
                     <input
-                      v-model="item['topic' + n]"
+                      v-if="!header.disabled"
+                      v-model="item[header.value]"
                       type="number"
                       min="0"
                       max="100"

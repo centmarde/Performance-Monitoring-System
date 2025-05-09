@@ -291,7 +291,6 @@ export default defineComponent({
               "TOPIC3",
               "TOPIC4",
               "TOPIC5",
-              
               "PT1",
               "PT2",
               "PT3",
@@ -312,20 +311,11 @@ export default defineComponent({
               data: Object.values(studentRecord.value),
               itemStyle: { color: "#2E7D6F" },
             },
-
           ],
-        },
-        yAxis: { type: "value" },
-        series: [
-          {
-            type: "bar",
-            data: Object.values(studentRecord.value),
-            itemStyle: { color: "#2E7D6F" },
-          },
-        ],
-      };
+        };
 
-      myChart.setOption(option);
+        myChart.setOption(option);
+      };
     };
 
     watch(selectedSection, fetchStudents);

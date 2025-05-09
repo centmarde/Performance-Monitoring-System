@@ -232,23 +232,25 @@ const startAutoSave = () => {
 const updateTopicHeaders = async () => {
   const subjectId = localStorage.getItem("selectedSubject");
   const subjectName = localStorage.getItem("selectedSubjectName");
-  
+
   if (subjectName) {
     try {
       const topics = await getTopicsForSubject(subjectName);
-      
+
       // If topics are found, update the wwHeaders
       if (topics.length > 0) {
-        // Use up to 5 topics (since we have 5 topic fields)
-        const topicsToUse = topics.slice(0, 5);
-        
+        // Use up to the number of available topics
+        const topicsToUse = topics.slice(0, topics.length);
+
         // Update the text property of each header
-        topicsToUse.forEach((topic, index) => {
-          if (index < wwHeaders.value.length) {
-            wwHeaders.value[index].text = topic;
-          }
-        });
-        
+        wwHeaders.value = wwHeaders.value.map((header, index) => ({
+          text: topicsToUse[index] || "", // Set blank if no topic
+          value: `topic${index + 1}`,
+          points: "100%",
+          expanded: false,
+          disabled: !topicsToUse[index], // Disable if no topic
+        }));
+
         console.log("Updated topic headers:", wwHeaders.value);
       }
     } catch (error) {
@@ -777,8 +779,9 @@ const getGradeClass = (grade) => {
                       "
                     />
                   </td>
-                  <td v-for="header in wwHeaders" :key="header.value">
+                  <td v-for="(header, index) in wwHeaders" :key="header.value">
                     <input
+                      v-if="!header.disabled"
                       v-model="item[header.value]"
                       type="number"
                       min="0"
