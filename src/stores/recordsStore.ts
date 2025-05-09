@@ -76,7 +76,8 @@ export const useRecordsStore = defineStore("recordsStore", () => {
 
   async function addRecordsForSection(
     sectionId: number,
-    classRecordId: number
+    classRecordId: number,
+    subjectTitle?: string // Add optional parameter for subject title
   ) {
     const { data: students, error } = await supabase
       .from("students")
@@ -88,7 +89,8 @@ export const useRecordsStore = defineStore("recordsStore", () => {
       return null;
     }
 
-    const subjectName = localStorage.getItem("selectedSubjectName");
+    // Use the provided subjectTitle or fall back to localStorage
+    const subjectName = subjectTitle || localStorage.getItem("selectedSubjectName");
     const subjectTopics = topicsData.find(
       (subject) => subject.subject === subjectName
     )?.topics || [];

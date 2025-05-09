@@ -263,12 +263,29 @@ const toggleColumnExpanded = (index) => {
   wwHeaders.value[index].expanded = !wwHeaders.value[index].expanded;
 };
 
+// Dynamically calculate column width based on header text length if expanded
 const getColumnWidth = (header) => {
-  return header.expanded ? '200px' : '120px';
+  if (header.expanded) {
+    // 12px per character, min 120px, max 400px
+    const base = 12;
+    const min = 120;
+    const max = 400;
+    const textLen = (header.text || "").length;
+    return Math.max(min, Math.min(max, textLen * base)) + "px";
+  }
+  return "120px";
 };
 
 const getColumnMinWidth = (header) => {
-  return header.expanded ? '200px' : '120px';
+  if (header.expanded) {
+    // Match getColumnWidth for consistency
+    const base = 12;
+    const min = 120;
+    const max = 400;
+    const textLen = (header.text || "").length;
+    return Math.max(min, Math.min(max, textLen * base)) + "px";
+  }
+  return "120px";
 };
 
 onMounted(async () => {
@@ -522,33 +539,34 @@ const getGradeClass = (grade) => {
                       position: 'relative'
                     }"
                   >
-                  <span
-  @click="editTopic(index)"
-  :title="wwHeaders[index].text || 'Topic name'"
-  style="
-    display: inline-block;
-    width: 90%;
-    background: transparent;
-    color: white;
-    border: 1px solid #00796b;
-    border-radius: 4px;
-    padding: 4px;
-    text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    cursor: pointer;
-  "
->
-  {{ wwHeaders[index].text || 'Topic name' }}
-</span>
-                    <v-icon 
-                      class="expand-icon" 
-                      size="small" 
-                      @click="toggleColumnExpanded(index)"
+                    <span
+                      :title="header.text"
+                      style="
+                        display: inline-block;
+                        width: 90%;
+                        background: transparent;
+                        color: white;
+                        border: 1px solid #00796b;
+                        border-radius: 4px;
+                        padding: 4px;
+                        text-align: center;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                      "
                     >
-                      {{ header.expanded ? 'mdi-minus' : 'mdi-plus' }}
-                    </v-icon>
+                      {{ header.text}}
+                    </span>
+                    <template v-if="!header.disabled">
+                      <v-icon
+                        class="expand-icon"
+                        size="small"
+                        style="position: absolute; right: 4px; top: 50%; transform: translateY(-50%); cursor: pointer;"
+                        @click="toggleColumnExpanded(index)"
+                      >
+                        {{ header.expanded ? 'mdi-chevron-down' : 'mdi-chevron-right' }}
+                      </v-icon>
+                    </template>
                   </th>
                   <th
                     v-for="header in ptHeaders"
