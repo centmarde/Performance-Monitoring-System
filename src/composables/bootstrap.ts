@@ -25,24 +25,23 @@ function formatResponse(content: string): string {
 export function useGroqChat() {
   const chatContent = ref("");
 
-  async function startChat(studentRecord: any, studentName: string) {
+  async function startChat(studentRecord: any, studentName: string, topicNames: string[] = []) {
     const chatCompletion = await groq.chat.completions.create({
       messages: [
-        /* {
-          role: "assistant",
-          content:
-            "Hello there, teacher. It's great to see you. I trust you're having a wonderful day so far. Is there something specific you'd like to discuss or learn about today, or would you like me to suggest some topics we could explore together?",
-        }, */
         {
           role: "assistant",
           content:
-            "provide advice for the teacher to help the student improve their performance. dont provide a list in your responsne also shorten it in 500 words.",
+            "Analyze this student's performance data to identify which specific topics they are struggling with. Focus on the lowest scores and suggest targeted strategies to help improve in those specific areas. Use the actual topic names in your feedback, not just topic numbers. Keep your response under 500 words."
         },
         {
           role: "system",
           content: ` 
-          WW = written works, PT = personal task, and QA = quality assessment.
-          Also, remember the name of the student: ${studentName}. ${JSON.stringify(
+          The actual topic names for topic1 through topic5 are: ${JSON.stringify(topicNames)}.
+          WW = written works (these are the named topics), PT = personal task (pt1 through pt10), and QA = quality assessment (qa1).
+          Scores below 75 are considered failing, 75-80 are borderline, and above 80 are good.
+          Identify which specific named topics have the lowest scores and suggest concrete improvement strategies tailored to those topics.
+          Always refer to topics by their actual names (not as topic1, topic2, etc.) when providing advice.
+          Remember the name of the student: ${studentName}. ${JSON.stringify(
             studentRecord
           )}`,
         },

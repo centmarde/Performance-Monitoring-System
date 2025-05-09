@@ -957,7 +957,7 @@ onMounted(async () => {
                     <v-btn
                       v-if="
                         parseFloat(item.quarterly_grade) <= 80 &&
-                        parseFloat(item.quarterly_grade) >= 76
+                        parseFloat(item.quarterly_grade) >= 75
                       "
                       color="warning"
                       size="small"

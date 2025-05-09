@@ -83,6 +83,7 @@ import { defineComponent, ref, onMounted, watch } from "vue";
 import * as echarts from "echarts";
 import { useGroqChat } from "@/composables/bootstrap";
 import { useRoute } from "vue-router";
+import axios from "axios";
 
 export default defineComponent({
   setup() {
@@ -99,13 +100,49 @@ export default defineComponent({
     const selectedQuarter = ref(null);
     const availableQuarters = ref([]);
     const subjectName = ref("");
+    const topicNames = ref([]);
 
     const { chatContent, startChat } = useGroqChat();
 
+    // Fetch topic names for a given subject
+    const fetchTopicNames = async (subjectName) => {
+      try {
+        const response = await axios.get('/data/topics.json');
+        const subjects = response.data;
+        
+        // Find the subject that matches
+        const subject = subjects.find(s => 
+          s.subject.toLowerCase() === subjectName.toLowerCase());
+        
+        if (subject && subject.topics) {
+          topicNames.value = subject.topics.slice(0, 5); // Get up to 5 topics
+          // Fill with empty strings if less than 5 topics
+          while (topicNames.value.length < 5) {
+            topicNames.value.push("");
+          }
+          return topicNames.value;
+        } else {
+          console.warn(`Subject "${subjectName}" not found in topics.json`);
+          return ["Topic 1", "Topic 2", "Topic 3", "Topic 4", "Topic 5"];
+        }
+      } catch (error) {
+        console.error("Error fetching topic names:", error);
+        return ["Topic 1", "Topic 2", "Topic 3", "Topic 4", "Topic 5"];
+      }
+    };
+
     // Add watch effect for studentRecord
-    watch(studentRecord, (newValue) => {
+    watch(studentRecord, async (newValue) => {
       if (newValue) {
         chatContent.value = ""; // Reset chat content
+        
+        // Start chat with topic names
+        if (subjectName.value) {
+          const topics = await fetchTopicNames(subjectName.value);
+          startChat(studentRecord.value, selectedStudent.value, topics);
+        } else {
+          startChat(studentRecord.value, selectedStudent.value);
+        }
       }
     });
 
@@ -221,7 +258,7 @@ export default defineComponent({
         const { data, error } = await supabase
           .from("records")
           .select(
-            "initial_grade, topic1, topic2, topic3, topic4, topic5, pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8, pt9, pt10, qa1"
+            " topic1, topic2, topic3, topic4, topic5, pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8, pt9, pt10, qa1, initial_grade"
           )
           .eq("student_id", student.id)
           .eq("class_record_id", classRecord.id)
@@ -230,46 +267,78 @@ export default defineComponent({
         if (!error) {
           studentRecord.value = data;
           isFailing.value = studentRecord.value.initial_grade < 75;
+          
+          if (selectedSubject.value && selectedSubject.value.title) {
+            subjectName.value = selectedSubject.value.title;
+            await fetchTopicNames(selectedSubject.value.title);
+          }
+          
           updateChart();
-          startChat(studentRecord.value, studentFullName);
         }
       }
     };
 
-    const updateChart = () => {
+    const updateChart = async () => {
       if (!studentRecord.value) return;
+
+      // Ensure we have topic names
+      if (subjectName.value && topicNames.value.length === 0) {
+        await fetchTopicNames(subjectName.value);
+      }
 
       const chartDom = document.getElementById("chart");
       const myChart = echarts.init(chartDom);
+      
+      // Prepare data for chart
+      const chartData = [];
+      const labels = [];
+      
+      // Add topics with their actual names
+      for (let i = 1; i <= 5; i++) {
+        const topicKey = `topic${i}`;
+        if (studentRecord.value[topicKey] !== undefined) {
+          chartData.push(studentRecord.value[topicKey]);
+          labels.push(topicNames.value[i-1] || `Topic ${i}`);
+        }
+      }
+      
+      // Add PT items
+      for (let i = 1; i <= 10; i++) {
+        const ptKey = `pt${i}`;
+        if (studentRecord.value[ptKey] !== undefined) {
+          chartData.push(studentRecord.value[ptKey]);
+          labels.push(`PT${i}`);
+        }
+      }
+      
+      // Add QA
+      if (studentRecord.value.qa1 !== undefined) {
+        chartData.push(studentRecord.value.qa1);
+        labels.push("QA");
+      }
+
       const option = {
         tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
         xAxis: {
           type: "category",
-          data: [
-            "TOPIC1",
-            "TOPIC2",
-            "TOPIC3",
-            "TOPIC4",
-            "TOPIC5",
-           
-            "PT1",
-            "PT2",
-            "PT3",
-            "PT4",
-            "PT5",
-            "PT6",
-            "PT7",
-            "PT8",
-            "PT9",
-            "PT10",
-            "QA1",
-          ],
+          data: labels,
+          axisLabel: {
+            interval: 0,
+            rotate: 45,
+            textStyle: {
+              fontSize: 10
+            }
+          }
         },
-        yAxis: { type: "value" },
+        yAxis: { 
+          type: "value",
+          min: 0,
+          max: 100
+        },
         series: [
           {
             type: "bar",
-            data: Object.values(studentRecord.value),
+            data: chartData,
             itemStyle: {
               color: (params) => {
                 const value = params.data;
@@ -302,9 +371,9 @@ export default defineComponent({
 
       // Get subject name from localStorage
       const storedSubjectName = localStorage.getItem("selectedSubjectName");
-      console.log(storedSubjectName);
       if (storedSubjectName) {
         subjectName.value = storedSubjectName;
+        await fetchTopicNames(storedSubjectName);
       }
 
       // Handle subject and quarter selection automatically
@@ -333,6 +402,7 @@ export default defineComponent({
       selectedQuarter,
       availableQuarters,
       subjectName,
+      topicNames,
     };
   },
 });

@@ -161,10 +161,26 @@ const fetchRecords = async () => {
   }
 
   const gradeCalculations = await fetchGradeCalculations(classRecordId);
+  
+  // Get topic count for the selected subject
+  const subjectName = localStorage.getItem("selectedSubjectName");
+  const topics = await getTopicsForSubject(subjectName || "");
+  const topicCount = topics.length;
+  
   jsondata.value = records
     .map((record) => {
       const gradeCalculation =
         gradeCalculations.find((gc) => gc.student_id === record.id) || {};
+        
+      // Calculate wwTotal based on the number of available topics
+      let wwTotal = 0;
+      for (let i = 1; i <= Math.min(5, topicCount); i++) {
+        const topicKey = `topic${i}`;
+        if (record[topicKey] !== null && record[topicKey] !== undefined) {
+          wwTotal += record[topicKey];
+        }
+      }
+      
       const item = {
         id: record.student_id,
         name: record.students
@@ -175,7 +191,6 @@ const fetchRecords = async () => {
         topic3: record.topic3,
         topic4: record.topic4,
         topic5: record.topic5,
-
         pt1: record.pt1,
         pt2: record.pt2,
         pt3: record.pt3,
@@ -187,8 +202,7 @@ const fetchRecords = async () => {
         pt9: record.pt9,
         pt10: record.pt10,
         qa1: record.qa1,
-        wwTotal:
-              record.topic1 + record.topic2 + record.topic3 + record.topic4 + record.topic5,
+        wwTotal: wwTotal, // Use the calculated wwTotal
 
         ptTotal:
           record.pt1 +

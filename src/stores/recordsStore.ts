@@ -94,18 +94,21 @@ export const useRecordsStore = defineStore("recordsStore", () => {
     const subjectTopics = topicsData.find(
       (subject) => subject.subject === subjectName
     )?.topics || [];
+    
+    console.log(`Found ${subjectTopics.length} topics for subject ${subjectName}`);
 
     const getRandomScore = (min: number, max: number) =>
       Math.floor(Math.random() * (max - min + 1)) + min;
 
     const records: Record[] = students.map((student: any) => {
+      // Create a base record with all topic fields set to null initially
       const record: Record = {
         student_id: student.id,
-        topic1: subjectTopics[0] ? getRandomScore(50, 100) : null,
-        topic2: subjectTopics[1] ? getRandomScore(50, 100) : null,
-        topic3: subjectTopics[2] ? getRandomScore(50, 100) : null,
-        topic4: subjectTopics[3] ? getRandomScore(50, 100) : null,
-        topic5: subjectTopics[4] ? getRandomScore(50, 100) : null,
+        topic1: null,
+        topic2: null,
+        topic3: null,
+        topic4: null,
+        topic5: null,
         pt1: getRandomScore(50, 100),
         pt2: getRandomScore(50, 100),
         pt3: getRandomScore(70, 100),
@@ -120,12 +123,13 @@ export const useRecordsStore = defineStore("recordsStore", () => {
         class_record_id: classRecordId,
       };
 
-      // Remove null values for topics if less than 5
-      Object.keys(record).forEach((key) => {
-        if (key.startsWith("topic") && record[key as keyof Record] === null) {
-          delete record[key as keyof Record];
+      // Only populate topic fields based on the available topics
+      for (let i = 0; i < Math.min(5, subjectTopics.length); i++) {
+        const topicKey = `topic${i + 1}` as keyof Record;
+        if (subjectTopics[i]) {
+          record[topicKey] = getRandomScore(50, 100);
         }
-      });
+      }
 
       return record;
     });
