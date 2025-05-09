@@ -1,0 +1,142 @@
+[
+  {
+    "subject": "Math",
+    "topics": [
+      "Solving Linear Equations",
+      "Factoring Polynomials",
+      "Pythagorean Theorem",
+      "Measures of Central Tendency",
+      "Graphing Linear Functions"
+    ]
+  },
+  {
+    "subject": "Science",
+    "topics": [
+      "Parts and Functions of the Cell",
+      "Laws of Motion",
+      "Periodic Table of Elements",
+      "Photosynthesis and Cellular Respiration",
+      "Types of Volcanoes and Earthquakes"
+    ]
+  },
+  {
+    "subject": "Programming",
+    "topics": [
+      "Object-Oriented Programming",
+      "Functional Programming",
+      "Web Development",
+      "Mobile Development",
+      "Data Structures"
+    ]
+  },
+  {
+    "subject": "History",
+    "topics": [
+      "Ancient History",
+      "Modern History",
+      "World Wars",
+      "Cultural History"
+    ]
+  },
+  {
+    "subject": "Computer Science",
+    "topics": [
+      "Algorithms",
+      "Operating Systems",
+      "Computer Networks",
+      "Database Systems",
+      "Artificial Intelligence"
+    ]
+  },
+  {
+    "subject": "PE",
+    "topics": [
+      "Team Sports",
+      "Individual Sports",
+      "Fitness Training",
+      "Nutrition"
+    ]
+  },
+  {
+    "subject": "SE",
+    "topics": [
+      "Software Design",
+      "Requirements Engineering",
+      "Software Testing",
+      "Project Management",
+      "Software Maintenance"
+    ]
+  },
+  {
+    "subject": "English",
+    "topics": [
+      "Subject-Verb Agreement",
+      "Figurative Language in Poetry",
+      "Identifying Main Idea and Supporting Details",
+      "Writing a Persuasive Essay",
+      "Elements of a Short Story"
+    ]
+  },
+  {
+    "subject": "Filipino",
+    "topics": [
+      "Pagsusuri ng Tauhan sa Nobela",
+      "Gamit ng Pangatnig at Transitional Devices",
+      "Pagkilala sa Uri ng Teksto (Impormatibo, Naratibo)",
+      "Pagsulat ng Sanaysay",
+      "Panunuring Pampanitikan: Tula"
+    ]
+  },
+  {
+    "subject": "Araling Panlipunan",
+    "topics": [
+      "Mga Sinaunang Kabihasnan",
+      "Mga Dahilan ng Rebolusyong Pilipino",
+      "Sistemang Pang-ekonomiya",
+      "Heograpiya ng Asya",
+      "Karapatang Pantao"
+    ]
+  },
+  {
+    "subject": "Edukasyon sa Pagpapakatao (EsP)",
+    "topics": [
+      "Pagkilala sa Mabuti at Masamang Gawain",
+      "Pagpapasya Batay sa Halaga",
+      "Papel ng Pamilya sa Paghubog ng Pagkatao",
+      "Paggalang sa Karapatang Pantao",
+      "Pagtanggap sa Pananagutan"
+    ]
+  },
+  {
+    "subject": "MAPEH",
+    "topics": [
+      "Rhythmic Patterns",
+      "Philippine Folk Songs",
+      "Elements of Art (Line, Shape, Color)",
+      "Drawing Traditional Filipino Crafts",
+      "Basic Movement Patterns",
+      "Rules of Volleyball",
+      "Nutritional Guidelines",
+      "Effects of Substance Abuse"
+    ]
+  },
+  {
+    "subject": "Edukasyong Pantahanan at Pangkabuhayan (EPP)",
+    "topics": [
+      "Wastong Paraan ng Pagtatanim",
+      "Pagluluto ng Simpleng Ulam",
+      "Pag-aalaga ng Hayop",
+      "Pagbuo ng Simpleng Plano sa Negosyo"
+    ]
+  },
+  {
+    "subject": "Technology and Livelihood Education (TLE)",
+    "topics": [
+      "Installing Operating Systems (ICT)",
+      "Preparing Cake Ingredients (Home Economics)",
+      "Electrical Wiring Layout (Industrial Arts)",
+      "Propagation of Plants (Agri-Fishery)",
+      "Financial Planning in Business (Entrepreneurship)"
+    ]
+  }
+]

@@ -6,6 +6,7 @@ import { useStudentsStore } from "@/stores/studentsStore";
 import SearchBar from "@/components/common/SearchBar.vue";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from 'vue-router';
+import { getTopicsForSubject } from "./axios/fetchTopics";
 
 const router = useRouter();
 
@@ -41,13 +42,14 @@ const itemsPerPage = 5;
 // Add loading state
 const isLoading = ref(true);
 
-const wwHeaders = [
-  { text: "Topic 1", value: "topic1", points: "100%" },
-  { text: "Topic 2", value: "topic2", points: "100%" },
-  { text: "Topic 3", value: "topic3", points: "100%" },
-  { text: "Topic 4", value: "topic4", points: "100%" },
-  { text: "Topic 5", value: "topic5", points: "100%" },
-];
+// Change from constant array to reactive ref
+const wwHeaders = ref([
+  { text: "Topic 1", value: "topic1", points: "100%", expanded: false },
+  { text: "Topic 2", value: "topic2", points: "100%", expanded: false },
+  { text: "Topic 3", value: "topic3", points: "100%", expanded: false },
+  { text: "Topic 4", value: "topic4", points: "100%", expanded: false },
+  { text: "Topic 5", value: "topic5", points: "100%", expanded: false },
+]);
 
 const ptHeaders = [
   { text: "1", value: "pt1", points: "100%" },
@@ -199,7 +201,6 @@ const fetchRecords = async () => {
           record.pt8 +
           record.pt9 +
           record.pt10,
-        qaTotal: record.qa1,
         wwws: "40%",
         wwps: gradeCalculation.ww_weighted_score || 0,
         ptps: gradeCalculation.pt_weighted_score || 0,
@@ -228,6 +229,46 @@ const startAutoSave = () => {
   }, 8000);
 };
 
+const updateTopicHeaders = async () => {
+  const subjectId = localStorage.getItem("selectedSubject");
+  const subjectName = localStorage.getItem("selectedSubjectName");
+  
+  if (subjectName) {
+    try {
+      const topics = await getTopicsForSubject(subjectName);
+      
+      // If topics are found, update the wwHeaders
+      if (topics.length > 0) {
+        // Use up to 5 topics (since we have 5 topic fields)
+        const topicsToUse = topics.slice(0, 5);
+        
+        // Update the text property of each header
+        topicsToUse.forEach((topic, index) => {
+          if (index < wwHeaders.value.length) {
+            wwHeaders.value[index].text = topic;
+          }
+        });
+        
+        console.log("Updated topic headers:", wwHeaders.value);
+      }
+    } catch (error) {
+      console.error("Error updating topic headers:", error);
+    }
+  }
+};
+
+const toggleColumnExpanded = (index) => {
+  wwHeaders.value[index].expanded = !wwHeaders.value[index].expanded;
+};
+
+const getColumnWidth = (header) => {
+  return header.expanded ? '200px' : '120px';
+};
+
+const getColumnMinWidth = (header) => {
+  return header.expanded ? '200px' : '120px';
+};
+
 onMounted(async () => {
   isLoading.value = true;
 
@@ -239,6 +280,7 @@ onMounted(async () => {
     try {
       await fetchRecords();
       await studentsStore.fetchAllStudents();
+      await updateTopicHeaders(); // Add this line to update topic headers
       startAutoSave();
     } catch (error) {
       console.error("Error in mounting:", error);
@@ -463,34 +505,48 @@ const getGradeClass = (grade) => {
                   <th
                     v-for="(header, index) in wwHeaders"
                     :key="header.value"
-                    style="
-                      background: #004d40;
-                      color: white;
-                      padding: 14px;
-                      border: 1px solid #00796b;
-                      text-align: center;
-                      font-weight: bold;
-                      position: sticky;
-                      top: 0;
-                      z-index: 2;
-                      width: 120px;
-                      min-width: 120px;
-                    "
+                    :style="{
+                      background: '#004d40',
+                      color: 'white',
+                      padding: '14px',
+                      border: '1px solid #00796b',
+                      textAlign: 'center',
+                      fontWeight: 'bold',
+                      position: 'sticky',
+                      top: '0',
+                      zIndex: '2',
+                      width: getColumnWidth(header),
+                      minWidth: getColumnMinWidth(header),
+                      position: 'relative'
+                    }"
                   >
-                    <input
-                      v-model="wwHeaders[index].text"
-                      type="text"
-                      placeholder="Topic name"
-                      style="
-                        width: 90%; /* Make input take up more space within the header */
-                        background: transparent;
-                        color: white;
-                        border: 1px solid #00796b;
-                        border-radius: 4px;
-                        padding: 4px;
-                        text-align: center;
-                      "
-                    />
+                  <span
+  @click="editTopic(index)"
+  :title="wwHeaders[index].text || 'Topic name'"
+  style="
+    display: inline-block;
+    width: 90%;
+    background: transparent;
+    color: white;
+    border: 1px solid #00796b;
+    border-radius: 4px;
+    padding: 4px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+  "
+>
+  {{ wwHeaders[index].text || 'Topic name' }}
+</span>
+                    <v-icon 
+                      class="expand-icon" 
+                      size="small" 
+                      @click="toggleColumnExpanded(index)"
+                    >
+                      {{ header.expanded ? 'mdi-minus' : 'mdi-plus' }}
+                    </v-icon>
                   </th>
                   <th
                     v-for="header in ptHeaders"
@@ -721,9 +777,9 @@ const getGradeClass = (grade) => {
                       "
                     />
                   </td>
-                  <td v-for="n in 10" :key="'ww' + n">
+                  <td v-for="header in wwHeaders" :key="header.value">
                     <input
-                      v-model="item['ww' + n]"
+                      v-model="item[header.value]"
                       type="number"
                       min="0"
                       max="100"
@@ -783,9 +839,9 @@ const getGradeClass = (grade) => {
                       "
                     />
                   </td>
-                  <td v-for="n in 10" :key="'pt' + n">
+                  <td v-for="header in ptHeaders" :key="header.value">
                     <input
-                      v-model="item['pt' + n]"
+                      v-model="item[header.value]"
                       type="number"
                       min="0"
                       max="100"
@@ -1062,5 +1118,21 @@ const getGradeClass = (grade) => {
 
 tbody tr:nth-child(even) {
   background-color: #f8f9fa;
+}
+
+.expand-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  padding: 2px;
+  font-size: 12px;
+}
+
+.expand-icon:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+  transform: scale(1.1);
 }
 </style>

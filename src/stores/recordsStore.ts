@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 
 interface Record {
   student_id: number;
- topic1: number;
+  topic1: number;
   topic2: number;
   topic3: number;
   topic4: number;
@@ -97,7 +97,7 @@ export const useRecordsStore = defineStore("recordsStore", () => {
       topic3: getRandomScore(70, 100),
       topic4: getRandomScore(70, 100),
       topic5: getRandomScore(40, 100),
-     
+      
       pt1: getRandomScore(50, 100),
       pt2: getRandomScore(50, 100),
       pt3: getRandomScore(70, 100),
