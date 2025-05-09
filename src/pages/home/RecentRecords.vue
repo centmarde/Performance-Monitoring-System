@@ -300,11 +300,31 @@ const toggleColumnExpanded = (index) => {
   wwHeaders.value[index].expanded = !wwHeaders.value[index].expanded;
 };
 
+// Add loading state
+const isLoading = ref(true);
+
 onMounted(async () => {
-  await fetchRecords();
-  await studentsStore.fetchAllStudents();
-  await updateTopicHeaders();
-  startAutoSave();
+  isLoading.value = true;
+
+  // Start loading timer
+  const loadingTimer = new Promise((resolve) => setTimeout(resolve, 5000));
+
+  // Fetch data
+  const fetchData = async () => {
+    try {
+      await fetchRecords();
+      await studentsStore.fetchAllStudents();
+      await updateTopicHeaders();
+      startAutoSave();
+    } catch (error) {
+      console.error("Error in mounting:", error);
+    }
+  };
+
+  // Wait for both timer and data fetching to complete
+  await Promise.all([loadingTimer, fetchData()]);
+
+  isLoading.value = false;
 });
 </script>
 
@@ -312,6 +332,19 @@ onMounted(async () => {
   <HomeLayout>
     <template #content>
       <v-container>
+        <!-- Add loading overlay -->
+        <v-overlay
+          :model-value="isLoading"
+          class="align-center justify-center"
+          persistent
+        >
+          <v-progress-circular
+            color="primary"
+            indeterminate
+            size="64"
+          ></v-progress-circular>
+        </v-overlay>
+
         <v-row justify="end">
           <v-col>
             <router-link to="/data_entry">
@@ -919,7 +952,30 @@ onMounted(async () => {
                     <input
                       v-model="item.qaps"
                       disabled
-                      style="padding: 4px; font-size: 14px"
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td>
+                    <input
+                      v-model="item.qaws"
+                      disabled
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
                     />
                   </td>
                   <td>
@@ -942,6 +998,7 @@ onMounted(async () => {
                     <input
                       v-model="item.quarterly_grade"
                       disabled
+                      :class="getGradeClass(item.quarterly_grade)"
                       style="
                         width: 50px;
                         height: 24px;
@@ -1116,6 +1173,26 @@ tbody tr:nth-child(even) {
   font-weight: bold;
   color: #155724;
   /* Darker green for contrast */
+}
+
+.v-overlay {
+  backdrop-filter: blur(4px);
+}
+
+.expand-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  padding: 2px;
+  font-size: 12px;
+}
+
+.expand-icon:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+  transform: scale(1.1);
 }
 
 /* Responsive Design */
