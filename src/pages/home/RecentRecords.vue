@@ -1,11 +1,12 @@
 <script setup>
 import HomeLayout from "@/layouts/HomeLayout.vue";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useRecordsStore } from "@/stores/recordsStore";
 import { useStudentsStore } from "@/stores/studentsStore";
 import SearchBar from "@/components/common/SearchBar.vue";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "vue-router";
+import { getTopicsForSubject } from "./axios/fetchTopics";
 
 const router = useRouter();
 
@@ -38,18 +39,13 @@ const searchQuery = ref("");
 const page = ref(1);
 const itemsPerPage = 5;
 
-const wwHeaders = [
-  { text: "1", value: "ww1", points: "100%" },
-  { text: "2", value: "ww2", points: "100%" },
-  { text: "3", value: "ww3", points: "100%" },
-  { text: "4", value: "ww4", points: "100%" },
-  { text: "5", value: "ww5", points: "100%" },
-  { text: "6", value: "ww6", points: "100%" },
-  { text: "7", value: "ww7", points: "100%" },
-  { text: "8", value: "ww8", points: "100%" },
-  { text: "9", value: "ww9", points: "100%" },
-  { text: "10", value: "ww10", points: "100%" },
-];
+const wwHeaders = ref([
+  { text: "Topic1", value: "topic1", points: "100%", expanded: false },
+  { text: "Topic2", value: "topic2", points: "100%", expanded: false },
+  { text: "Topic3", value: "topic3", points: "100%", expanded: false },
+  { text: "Topic4", value: "topic4", points: "100%", expanded: false },
+  { text: "Topic5", value: "topic5", points: "100%", expanded: false },
+]);
 
 const ptHeaders = [
   { text: "1", value: "pt1", points: "100%" },
@@ -88,16 +84,12 @@ const saveChanges = async (item) => {
     const { error } = await supabase
       .from("records")
       .update({
-        ww1: item.ww1,
-        ww2: item.ww2,
-        ww3: item.ww3,
-        ww4: item.ww4,
-        ww5: item.ww5,
-        ww6: item.ww6,
-        ww7: item.ww7,
-        ww8: item.ww8,
-        ww9: item.ww9,
-        ww10: item.ww10,
+        topic1: item.topic1,
+        topic2: item.topic2,
+        topic3: item.topic3,
+        topic4: item.topic4,
+        topic5: item.topic5,
+
         pt1: item.pt1,
         pt2: item.pt2,
         pt3: item.pt3,
@@ -171,16 +163,12 @@ const fetchRecords = async () => {
             name: record.students
               ? `${record.students.firstname} ${record.students.lastname}`
               : "Unknown",
-            ww1: record.ww1,
-            ww2: record.ww2,
-            ww3: record.ww3,
-            ww4: record.ww4,
-            ww5: record.ww5,
-            ww6: record.ww6,
-            ww7: record.ww7,
-            ww8: record.ww8,
-            ww9: record.ww9,
-            ww10: record.ww10,
+            topic1: record.topic1,
+            topic2: record.topic2,
+            topic3: record.topic3,
+            topic4: record.topic4,
+            topic5: record.topic5,
+
             pt1: record.pt1,
             pt2: record.pt2,
             pt3: record.pt3,
@@ -193,16 +181,12 @@ const fetchRecords = async () => {
             pt10: record.pt10,
             qa1: record.qa1,
             wwTotal:
-              record.ww1 +
-              record.ww2 +
-              record.ww3 +
-              record.ww4 +
-              record.ww5 +
-              record.ww6 +
-              record.ww7 +
-              record.ww8 +
-              record.ww9 +
-              record.ww10,
+              record.topic1 +
+              record.topic2 +
+              record.topic3 +
+              record.topic4 +
+              record.topic5,
+
             ptTotal:
               record.pt1 +
               record.pt2 +
@@ -247,13 +231,55 @@ const startAutoSave = () => {
   }, 2000);
 };
 
+const updateTopicHeaders = async () => {
+  const subjectId = localStorage.getItem("selectedSubject");
+  const subjectName = localStorage.getItem("selectedSubjectName");
+
+  if (subjectName) {
+    try {
+      const topics = await getTopicsForSubject(subjectName);
+
+      // If topics are found, update the wwHeaders
+      if (topics.length > 0) {
+        // Use up to the number of available topics
+        const topicsToUse = topics.slice(0, topics.length);
+
+        // Update the text property of each header
+        wwHeaders.value = wwHeaders.value.map((header, index) => ({
+          text: topicsToUse[index] || "", // Set blank if no topic
+          value: `topic${index + 1}`,
+          points: "100%",
+          expanded: false,
+          disabled: !topicsToUse[index], // Disable if no topic
+        }));
+
+        console.log("Updated topic headers:", wwHeaders.value);
+      }
+    } catch (error) {
+      console.error("Error updating topic headers:", error);
+    }
+  }
+};
+
+const toggleColumnExpanded = (index) => {
+  wwHeaders.value[index].expanded = !wwHeaders.value[index].expanded;
+};
+
+const getColumnWidth = (header) => {
+  return header.expanded ? "200px" : "120px";
+};
+
+const getColumnMinWidth = (header) => {
+  return header.expanded ? "200px" : "120px";
+};
+
 onMounted(async () => {
   await fetchRecords();
   await studentsStore.fetchAllStudents();
+  await updateTopicHeaders();
   startAutoSave();
 });
 </script>
-
 
 <template>
   <HomeLayout>
@@ -311,7 +337,7 @@ onMounted(async () => {
                     Name
                   </th>
                   <th
-                    colspan="10"
+                    colspan="5"
                     style="
                       background: #004d40;
                       color: white;
@@ -324,7 +350,7 @@ onMounted(async () => {
                       z-index: 2;
                     "
                   >
-                    Written Works
+                    Topics
                   </th>
                   <th
                     colspan="3"
@@ -444,21 +470,48 @@ onMounted(async () => {
                 </tr>
                 <tr>
                   <th
-                    v-for="header in wwHeaders"
+                    v-for="(header, index) in wwHeaders"
                     :key="header.value"
-                    style="
-                      background: #004d40;
-                      color: white;
-                      padding: 14px;
-                      border: 1px solid #00796b;
-                      text-align: center;
-                      font-weight: bold;
-                      position: sticky;
-                      top: 0;
-                      z-index: 2;
-                    "
+                    :style="{
+                      background: '#004d40',
+                      color: 'white',
+                      padding: '14px',
+                      border: '1px solid #00796b',
+                      textAlign: 'center',
+                      fontWeight: 'bold',
+                      position: 'sticky',
+                      top: '0',
+                      zIndex: '2',
+                      width: getColumnWidth(header),
+                      minWidth: getColumnMinWidth(header),
+                      position: 'relative',
+                    }"
                   >
-                    {{ header.text }}
+                    <span
+                      :title="header.text || 'Topic name'"
+                      style="
+                        display: inline-block;
+                        width: 90%;
+                        background: transparent;
+                        color: white;
+                        border: 1px solid #00796b;
+                        border-radius: 4px;
+                        padding: 4px;
+                        text-align: center;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                      "
+                    >
+                      {{ header.text || "" }}
+                    </span>
+                    <v-icon
+                      class="expand-icon"
+                      size="small"
+                      @click="toggleColumnExpanded(index)"
+                    >
+                      {{ header.expanded ? "mdi-minus" : "mdi-plus" }}
+                    </v-icon>
                   </th>
                   <th
                     v-for="header in ptHeaders"
@@ -690,9 +743,10 @@ onMounted(async () => {
                     />
                   </td>
 
-                  <td v-for="n in 10" :key="'ww' + n">
+                  <td v-for="(header, index) in wwHeaders" :key="header.value">
                     <input
-                      v-model="item['ww' + n]"
+                      v-if="!header.disabled"
+                      v-model="item[header.value]"
                       type="number"
                       min="0"
                       max="100"
@@ -835,30 +889,7 @@ onMounted(async () => {
                     <input
                       v-model="item.qaps"
                       disabled
-                      style="
-                        width: 50px;
-                        height: 24px;
-                        text-align: center;
-                        border: 1px solid #ccc;
-                        border-radius: 4px;
-                        padding: 4px;
-                        font-size: 14px;
-                      "
-                    />
-                  </td>
-                  <td>
-                    <input
-                      v-model="item.qaws"
-                      disabled
-                      style="
-                        width: 50px;
-                        height: 24px;
-                        text-align: center;
-                        border: 1px solid #ccc;
-                        border-radius: 4px;
-                        padding: 4px;
-                        font-size: 14px;
-                      "
+                      style="padding: 4px; font-size: 14px"
                     />
                   </td>
                   <td>
@@ -894,7 +925,10 @@ onMounted(async () => {
                   </td>
                   <td>
                     <v-btn
-                      v-if="parseFloat(item.quarterly_grade) <= 80 && parseFloat(item.quarterly_grade) >= 76"
+                      v-if="
+                        parseFloat(item.quarterly_grade) <= 80 &&
+                        parseFloat(item.quarterly_grade) >= 76
+                      "
                       color="warning"
                       size="small"
                       @click="navigateToTracking(item)"
@@ -978,15 +1012,21 @@ onMounted(async () => {
   padding: 6px;
   font-size: 16px;
 }
+
 .class-record-card {
   border-radius: 12px;
   padding: 16px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(0, 77, 64, 0.5); /* Border to enhance glass effect */
-  backdrop-filter: blur(10px); /* Blur effect for glass background */
-  -webkit-backdrop-filter: blur(10px); /* Safari support */
-  box-shadow: 0 0 10px #004d40; /* Glowing effect */
+  border: 1px solid rgba(0, 77, 64, 0.5);
+  /* Border to enhance glass effect */
+  backdrop-filter: blur(10px);
+  /* Blur effect for glass background */
+  -webkit-backdrop-filter: blur(10px);
+  /* Safari support */
+  box-shadow: 0 0 10px #004d40;
+  /* Glowing effect */
 }
+
 .student-id {
   text-align: center;
   min-width: 50px;
@@ -1003,21 +1043,6 @@ onMounted(async () => {
   font-weight: bold;
   display: inline-block;
 }
-/* .excellent {
-  color: #2ecc71;
-  background-color: #e8f5e9;
-  font-weight: bold;
-  padding: 4px;
-  border-radius: 4px;
-}
-
-.good {
-  color: #3498db;
-  background-color: #e3f2fd;
-  font-weight: bold;
-  padding: 4px;
-  border-radius: 4px;
-} */
 
 .almost-fail {
   background-color: #fff3cd;
@@ -1028,11 +1053,18 @@ onMounted(async () => {
   display: inline-block;
 }
 
+
+tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+
 .student-id {
   width: 40px;
   height: 24px;
   text-align: center;
-  background-color: #f0f0f0; /* Light gray to indicate read-only */
+  background-color: #f0f0f0;
+  /* Light gray to indicate read-only */
   border: none;
   border-radius: 4px;
   padding: 4px;
@@ -1045,13 +1077,15 @@ onMounted(async () => {
   width: 60px;
   height: 24px;
   text-align: center;
-  background-color: #d1e7dd; /* Light green for visibility */
+  background-color: #d1e7dd;
+  /* Light green for visibility */
   border: none;
   border-radius: 4px;
   padding: 4px;
   font-size: 14px;
   font-weight: bold;
-  color: #155724; /* Darker green for contrast */
+  color: #155724;
+  /* Darker green for contrast */
 }
 
 /* Responsive Design */

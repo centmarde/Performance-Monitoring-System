@@ -2,7 +2,7 @@ import { ref } from 'vue';
 
 export function useGradeCalculations() {
   const calculateWWPS = (record) => {
-    const totalWW = record.ww1 + record.ww2 + record.ww3 + record.ww4 + record.ww5 + record.ww6 + record.ww7 + record.ww8 + record.ww9 + record.ww10;
+    const totalWW = record.topic1 + record.topic2 + record.topic3 + record.topic4 + record.topic5;
     const maxWW = record.wwMax1 + record.wwMax2 + record.wwMax3 + record.wwMax4 + record.wwMax5 + record.wwMax6 + record.wwMax7 + record.wwMax8 + record.wwMax9 + record.wwMax10;
     return maxWW ? (totalWW / maxWW) * 100 : 0;
   };

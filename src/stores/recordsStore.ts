@@ -1,19 +1,15 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import { supabase } from "@/lib/supabase";
+import topicsData from "@/../public/data/topics.json"; // Import topics.json
 
 interface Record {
   student_id: number;
-  ww1: number;
-  ww2: number;
-  ww3: number;
-  ww4: number;
-  ww5: number;
-  ww6: number;
-  ww7: number;
-  ww8: number;
-  ww9: number;
-  ww10: number;
+  topic1: number | null;
+  topic2: number | null;
+  topic3: number | null;
+  topic4: number | null;
+  topic5: number | null;
   pt1: number;
   pt2: number;
   pt3: number;
@@ -92,34 +88,45 @@ export const useRecordsStore = defineStore("recordsStore", () => {
       return null;
     }
 
+    const subjectName = localStorage.getItem("selectedSubjectName");
+    const subjectTopics = topicsData.find(
+      (subject) => subject.subject === subjectName
+    )?.topics || [];
+
     const getRandomScore = (min: number, max: number) =>
       Math.floor(Math.random() * (max - min + 1)) + min;
 
-    const records: Record[] = students.map((student: any) => ({
-      student_id: student.id,
-      ww1: getRandomScore(50, 100),
-      ww2: getRandomScore(50, 100),
-      ww3: getRandomScore(70, 100),
-      ww4: getRandomScore(70, 100),
-      ww5: getRandomScore(40, 100),
-      ww6: getRandomScore(70, 100),
-      ww7: getRandomScore(70, 100),
-      ww8: getRandomScore(50, 100),
-      ww9: getRandomScore(50, 100),
-      ww10: getRandomScore(70, 100),
-      pt1: getRandomScore(50, 100),
-      pt2: getRandomScore(50, 100),
-      pt3: getRandomScore(70, 100),
-      pt4: getRandomScore(50, 100),
-      pt5: getRandomScore(70, 100),
-      pt6: getRandomScore(20, 100),
-      pt7: getRandomScore(70, 100),
-      pt8: getRandomScore(70, 100),
-      pt9: getRandomScore(50, 100),
-      pt10: getRandomScore(50, 100),
-      qa1: getRandomScore(50, 100),
-      class_record_id: classRecordId,
-    }));
+    const records: Record[] = students.map((student: any) => {
+      const record: Record = {
+        student_id: student.id,
+        topic1: subjectTopics[0] ? getRandomScore(50, 100) : null,
+        topic2: subjectTopics[1] ? getRandomScore(50, 100) : null,
+        topic3: subjectTopics[2] ? getRandomScore(50, 100) : null,
+        topic4: subjectTopics[3] ? getRandomScore(50, 100) : null,
+        topic5: subjectTopics[4] ? getRandomScore(50, 100) : null,
+        pt1: getRandomScore(50, 100),
+        pt2: getRandomScore(50, 100),
+        pt3: getRandomScore(70, 100),
+        pt4: getRandomScore(50, 100),
+        pt5: getRandomScore(70, 100),
+        pt6: getRandomScore(20, 100),
+        pt7: getRandomScore(70, 100),
+        pt8: getRandomScore(70, 100),
+        pt9: getRandomScore(50, 100),
+        pt10: getRandomScore(50, 100),
+        qa1: getRandomScore(50, 100),
+        class_record_id: classRecordId,
+      };
+
+      // Remove null values for topics if less than 5
+      Object.keys(record).forEach((key) => {
+        if (key.startsWith("topic") && record[key as keyof Record] === null) {
+          delete record[key as keyof Record];
+        }
+      });
+
+      return record;
+    });
 
     const { error: insertError } = await supabase
       .from("records")
@@ -160,16 +167,12 @@ export const useRecordsStore = defineStore("recordsStore", () => {
     }
 
     const columnsToCheck = [
-      "ww1",
-      "ww2",
-      "ww3",
-      "ww4",
-      "ww5",
-      "ww6",
-      "ww7",
-      "ww8",
-      "ww9",
-      "ww10",
+      "topic1",
+      "topic2",
+      "topic3",
+      "topic4",
+      "topic5",
+     
       "pt1",
       "pt2",
       "pt3",

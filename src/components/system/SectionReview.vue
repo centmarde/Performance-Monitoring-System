@@ -256,59 +256,66 @@ export default defineComponent({
           .eq("class_record_id", classRecord.id)
           .single();
 
-        if (!error) {
-          studentRecord.value = data;
-          isFailing.value = studentRecord.value.initial_grade < 75;
-          updateChart();
-          startChat(studentRecord.value, studentFullName);
+  
+        if (!classError) {
+          const { data, error } = await supabase
+            .from("records")
+            .select(
+              "initial_grade, topic1, topic2, topic3, topic4, topic5, pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8, pt9, pt10, qa1"
+            )
+            .eq("student_id", student.id)
+            .eq("class_record_id", classRecord.id)
+            .single();
+  
+          if (!error) {
+            studentRecord.value = data;
+            isFailing.value = studentRecord.value.initial_grade < 75;
+            updateChart();
+            startChat(studentRecord.value, studentFullName);
+          }
         }
-      }
-    };
-
-    const updateChart = () => {
-      if (!studentRecord.value) return;
-
-      const chartDom = document.getElementById("chart");
-      const myChart = echarts.init(chartDom);
-      const option = {
-        tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
-        xAxis: {
-          type: "category",
-          data: [
-            "WW1",
-            "WW2",
-            "WW3",
-            "WW4",
-            "WW5",
-            "WW6",
-            "WW7",
-            "WW8",
-            "WW9",
-            "WW10",
-            "PT1",
-            "PT2",
-            "PT3",
-            "PT4",
-            "PT5",
-            "PT6",
-            "PT7",
-            "PT8",
-            "PT9",
-            "PT10",
-            "QA1",
-          ],
-        },
-        yAxis: { type: "value" },
-        series: [
-          {
-            type: "bar",
-            data: Object.values(studentRecord.value),
-            itemStyle: { color: "#2E7D6F" },
-          },
-        ],
       };
+  
+      const updateChart = () => {
+        if (!studentRecord.value) return;
+  
+        const chartDom = document.getElementById("chart");
+        const myChart = echarts.init(chartDom);
+        const option = {
+          tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
+          xAxis: {
+            type: "category",
+            data: [
+              "TOPIC1",
+              "TOPIC2",
+              "TOPIC3",
+              "TOPIC4",
+              "TOPIC5",
+              "PT1",
+              "PT2",
+              "PT3",
+              "PT4",
+              "PT5",
+              "PT6",
+              "PT7",
+              "PT8",
+              "PT9",
+              "PT10",
+              "QA1",
+            ],
+          },
+          yAxis: { type: "value" },
+          series: [
+            {
+              type: "bar",
+              data: Object.values(studentRecord.value),
+              itemStyle: { color: "#2E7D6F" },
+            },
+          ],
+        };
 
-      myChart.setOption(option);
+        myChart.setOption(option);
+      };
     };
 
     watch(selectedSection, fetchStudents);

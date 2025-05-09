@@ -105,15 +105,7 @@
                       </div>
                     </v-col>
                     <v-col cols="12">
-                      <div class="subject-info d-flex align-center">
-                        <v-icon size="20" color="teal-darken-4"
-                          >mdi-account-tie</v-icon
-                        >
-                        <span
-                          >Handled by:
-                          <strong>{{ subject.handled_by }}</strong>
-                        </span>
-                      </div>
+                      
                     </v-col>
                   </v-row>
                 </v-container>

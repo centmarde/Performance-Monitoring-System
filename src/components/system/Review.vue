@@ -221,7 +221,7 @@ export default defineComponent({
         const { data, error } = await supabase
           .from("records")
           .select(
-            "initial_grade, ww1, ww2, ww3, ww4, ww5, ww6, ww7, ww8, ww9, ww10, pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8, pt9, pt10, qa1"
+            "initial_grade, topic1, topic2, topic3, topic4, topic5, pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8, pt9, pt10, qa1"
           )
           .eq("student_id", student.id)
           .eq("class_record_id", classRecord.id)
@@ -246,16 +246,12 @@ export default defineComponent({
         xAxis: {
           type: "category",
           data: [
-            "WW1",
-            "WW2",
-            "WW3",
-            "WW4",
-            "WW5",
-            "WW6",
-            "WW7",
-            "WW8",
-            "WW9",
-            "WW10",
+            "TOPIC1",
+            "TOPIC2",
+            "TOPIC3",
+            "TOPIC4",
+            "TOPIC5",
+           
             "PT1",
             "PT2",
             "PT3",
