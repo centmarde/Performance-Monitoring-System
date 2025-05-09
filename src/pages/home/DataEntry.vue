@@ -494,11 +494,15 @@ const saveClassRecord = async () => {
   if (!isNaN(sectionId) && !isNaN(classRecordId)) {
     await recordsStore.addRecordsForSection(
       Number(sectionId),
-      Number(classRecordId)
+      Number(classRecordId),
+      selectedSubject.value // Pass the subject title here
     );
   } else {
     console.error("Invalid section or class record ID");
   }
+
+  // Store selected subject name for later use
+  localStorage.setItem("selectedSubjectName", selectedSubject.value);
 
   classRecordDialog.value = false;
 
