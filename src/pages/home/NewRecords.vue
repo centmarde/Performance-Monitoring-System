@@ -1018,6 +1018,8 @@ const getGradeClass = (grade) => {
   </HomeLayout>
 </template>
 
+
+
 <style scoped>
 .styled-table {
   width: 100%;
