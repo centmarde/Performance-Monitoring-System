@@ -83,7 +83,6 @@ import { defineComponent, ref, onMounted, watch } from "vue";
 import * as echarts from "echarts";
 import { useGroqChat } from "@/composables/bootstrap";
 import { useRoute } from "vue-router";
-import axios from "axios";
 
 export default defineComponent({
   setup() {
@@ -108,12 +107,16 @@ export default defineComponent({
     // Fetch topic names for a given subject
     const fetchTopicNames = async (subjectName) => {
       try {
-        // First, try to fetch topics from Supabase
+        // Fetch topics from Supabase
         const { data: supabaseTopics, error: supabaseError } = await supabase
           .from('topics')
           .select('title')
+          .eq('subject_id', selectedSubject.value.id)
+     
           .order('id', { ascending: true })
           .limit(5);
+        
+        console.log("topics", supabaseTopics);
         
         // If Supabase fetch was successful and returned topics
         if (!supabaseError && supabaseTopics && supabaseTopics.length > 0) {
@@ -125,32 +128,17 @@ export default defineComponent({
           while (topicNames.value.length < 5) {
             topicNames.value.push("");
           }
-          return topicNames.value;
-        } 
-        
-        // Fallback: If Supabase fetch failed or returned no topics, try the local JSON file
-        console.warn('Falling back to local JSON file for topics');
-        const response = await axios.get('/data/topics.json');
-        const subjects = response.data;
-        
-        // Find the subject that matches
-        const subject = subjects.find(s => 
-          s.subject.toLowerCase() === subjectName.toLowerCase());
-        
-        if (subject && subject.topics) {
-          topicNames.value = subject.topics.slice(0, 5); // Get up to 5 topics
-          // Fill with empty strings if less than 5 topics
-          while (topicNames.value.length < 5) {
-            topicNames.value.push("");
-          }
-          return topicNames.value;
         } else {
-          console.warn(`Subject "${subjectName}" not found in topics.json`);
-          return ["Topic 1", "Topic 2", "Topic 3", "Topic 4", "Topic 5"];
+          // If no topics found or there was an error, use default topic names
+          console.warn('No topics found in Supabase or there was an error:', supabaseError);
+          topicNames.value = ["Topic 1", "Topic 2", "Topic 3", "Topic 4", "Topic 5"];
         }
+        
+        return topicNames.value;
       } catch (error) {
         console.error("Error fetching topic names:", error);
-        return ["Topic 1", "Topic 2", "Topic 3", "Topic 4", "Topic 5"];
+        topicNames.value = ["Topic 1", "Topic 2", "Topic 3", "Topic 4", "Topic 5"];
+        return topicNames.value;
       }
     };
 
