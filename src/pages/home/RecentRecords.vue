@@ -7,18 +7,65 @@ import SearchBar from "@/components/common/SearchBar.vue";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "vue-router";
 import { getTopicsForSubject } from "./axios/fetchTopics";
+import { updateTopicTitle, getTopicsWithIds, createTopic, deleteTopic } from "./axios/updateTopics";
 
 const router = useRouter();
 
-const navigateToTracking = (item) => {
-  // Get values from localStorage that were set in DataEntry.vue
+const navigateToTracking = async (item) => {
+  // Get values from localStorage
   const section = localStorage.getItem("selectedSection");
   const quarter = localStorage.getItem("selectedQuarter");
-  const subjectId = localStorage.getItem("selectedSubject"); // Get subject ID instead of subject name
-  console.log(section, quarter, subjectId);
+  const subjectId = localStorage.getItem("selectedSubject");
+  const classRecordId = localStorage.getItem("classRecordId");
+  
+  // Fetch both topics and their IDs
+  let topicNames = [];
+  let topicIdsMap = {}; // Will store topic name -> id mapping
+  
+  try {
+    if (subjectId) {
+      const parsedSubjectId = parseInt(subjectId);
+      const parsedClassRecordId = classRecordId ? parseInt(classRecordId) : null;
+      
+      // Get topics with their IDs first
+      const topicsWithIds = await getTopicsWithIds(parsedSubjectId);
+      
+      // Then get the topic details including titles
+      const topics = await getTopicsForSubject(
+        localStorage.getItem("selectedSubjectName"),
+        parsedSubjectId,
+        parsedClassRecordId
+      );
+      
+      // Create a map of topic titles to their IDs
+      if (topicsWithIds && topicsWithIds.length > 0) {
+        topicsWithIds.forEach(topic => {
+          if (topic && topic.title) {
+            topicIdsMap[topic.title] = topic.id;
+          }
+        });
+      }
+      
+      // Filter and extract topic names as before
+      topicNames = topics
+        .filter(topic => typeof topic === 'object' ? topic.title : topic)
+        .map(topic => typeof topic === 'object' ? topic.title : topic)
+        .filter(title => title && title.trim() !== "");
+    }
+  } catch (error) {
+    console.error("Error fetching topic data:", error);
+  }
+
+  // Serialize both the topic names and their IDs map
+  const serializedTopicNames = JSON.stringify(topicNames);
+  const serializedTopicIds = JSON.stringify(topicIdsMap);
+
+  // Navigate with both sets of data
   router.push({
     path: "/tracking",
     query: {
+      topicNames: serializedTopicNames,
+      topicIds: serializedTopicIds,
       studentId: item.id,
       name: item.name,
       wwTotal: item.wwTotal,
@@ -27,7 +74,7 @@ const navigateToTracking = (item) => {
       quarterly_grade: item.quarterly_grade,
       section: section,
       quarter: quarter,
-      subject: subjectId, // Pass subject ID instead of subject name
+      subject: subjectId,
     },
   });
 };
@@ -40,11 +87,11 @@ const page = ref(1);
 const itemsPerPage = 5;
 
 const wwHeaders = ref([
-  { text: "Topic1", value: "topic1", points: "100%", expanded: false },
-  { text: "Topic2", value: "topic2", points: "100%", expanded: false },
-  { text: "Topic3", value: "topic3", points: "100%", expanded: false },
-  { text: "Topic4", value: "topic4", points: "100%", expanded: false },
-  { text: "Topic5", value: "topic5", points: "100%", expanded: false },
+  { text: "Topic1", value: "topic1", points: "100%", expanded: false, id: null, editing: false },
+  { text: "Topic2", value: "topic2", points: "100%", expanded: false, id: null, editing: false },
+  { text: "Topic3", value: "topic3", points: "100%", expanded: false, id: null, editing: false },
+  { text: "Topic4", value: "topic4", points: "100%", expanded: false, id: null, editing: false },
+  { text: "Topic5", value: "topic5", points: "100%", expanded: false, id: null, editing: false },
 ]);
 
 const ptHeaders = [
@@ -234,24 +281,68 @@ const startAutoSave = () => {
 const updateTopicHeaders = async () => {
   const subjectId = localStorage.getItem("selectedSubject");
   const subjectName = localStorage.getItem("selectedSubjectName");
+  const classRecordId = localStorage.getItem("classRecordId");
 
   if (subjectName) {
     try {
-      const topics = await getTopicsForSubject(subjectName);
+      // First get topics with IDs if subject ID is available
+      let topics = [];
+      let topicsWithIds = [];
+      
+      if (subjectId) {
+        // Pass both subject ID and class record ID
+        const parsedSubjectId = parseInt(subjectId);
+        const parsedClassRecordId = classRecordId ? parseInt(classRecordId) : null;
+        
+        topicsWithIds = await getTopicsWithIds(parsedSubjectId);
+        topics = await getTopicsForSubject(
+          subjectName,
+          parsedSubjectId,
+          parsedClassRecordId
+        );
+      }
+
+      // If no topics with IDs, fall back to simple topic list
+      if (topics.length === 0) {
+        topics = await getTopicsForSubject(
+          subjectName,
+          subjectId ? parseInt(subjectId) : null
+        );
+      }
 
       // If topics are found, update the wwHeaders
       if (topics.length > 0) {
         // Use up to the number of available topics
-        const topicsToUse = topics.slice(0, topics.length);
+        const topicsToUse = topics.slice(0, Math.min(topics.length, wwHeaders.value.length));
 
-        // Update the text property of each header
-        wwHeaders.value = wwHeaders.value.map((header, index) => ({
-          text: topicsToUse[index] || "", // Set blank if no topic
-          value: `topic${index + 1}`,
-          points: "100%",
-          expanded: false,
-          disabled: !topicsToUse[index], // Disable if no topic
-        }));
+        // Update headers with topics and their IDs
+        wwHeaders.value = wwHeaders.value.map((header, index) => {
+          if (index < topicsToUse.length) {
+            const topicText = typeof topics[index] === 'string' ? topics[index] : topics[index]?.title || "";
+            const topicId = topicsWithIds[index]?.id || null;
+            
+            return {
+              text: topicText,
+              value: `topic${index + 1}`,
+              points: "100%",
+              expanded: header.expanded,
+              disabled: false,
+              id: topicId,
+              editing: false
+            };
+          } else {
+            // Keep empty slots for additional topics
+            return {
+              text: "",
+              value: `topic${index + 1}`,
+              points: "100%",
+              expanded: header.expanded,
+              disabled: true,
+              id: null,
+              editing: false
+            };
+          }
+        });
 
         console.log("Updated topic headers:", wwHeaders.value);
       }
@@ -300,11 +391,94 @@ const toggleColumnExpanded = (index) => {
   wwHeaders.value[index].expanded = !wwHeaders.value[index].expanded;
 };
 
+// Add loading state
+const isLoading = ref(true);
+
+// State to track if we're in edit mode for topic headers
+const editingTopics = ref(false);
+const topicsChanged = ref(false);
+
+// Toggle editing mode for headers
+const toggleEditTopics = () => {
+  editingTopics.value = !editingTopics.value;
+  // If we're exiting edit mode and changes were made, save changes
+  if (!editingTopics.value && topicsChanged.value) {
+    saveTopicChanges();
+    topicsChanged.value = false;
+  }
+};
+
+// Start editing a specific topic
+const startEditingTopic = (index) => {
+  if (!editingTopics.value) return;
+  wwHeaders.value[index].editing = true;
+};
+
+// Handle when a topic title changes
+const onTopicChange = () => {
+  topicsChanged.value = true;
+};
+
+// Save changes to topic headers
+const saveTopicChanges = async () => {
+  const subjectId = localStorage.getItem("selectedSubject");
+  const classRecordId = localStorage.getItem("classRecordId");
+  
+  if (!subjectId) {
+    console.error("No subject ID found, cannot save topic changes");
+    return;
+  }
+
+  try {
+    for (const header of wwHeaders.value) {
+      if (!header.text.trim()) continue; // Skip empty topics
+      
+      if (header.id) {
+        // Update existing topic
+        await updateTopicTitle(header.id, header.text);
+      } else {
+        // Create new topic with class_record_id
+        const newTopic = await createTopic(
+          parseInt(subjectId), 
+          header.text, 
+          classRecordId ? parseInt(classRecordId) : null
+        );
+        if (newTopic) {
+          header.id = newTopic.id;
+        }
+      }
+    }
+    
+    console.log("Topic changes saved successfully");
+    // Refresh topic headers to get any updates
+    await updateTopicHeaders();
+  } catch (error) {
+    console.error("Error saving topic changes:", error);
+  }
+};
+
 onMounted(async () => {
-  await fetchRecords();
-  await studentsStore.fetchAllStudents();
-  await updateTopicHeaders();
-  startAutoSave();
+  isLoading.value = true;
+
+  // Start loading timer
+  const loadingTimer = new Promise((resolve) => setTimeout(resolve, 5000));
+
+  // Fetch data
+  const fetchData = async () => {
+    try {
+      await fetchRecords();
+      await studentsStore.fetchAllStudents();
+      await updateTopicHeaders();
+      startAutoSave();
+    } catch (error) {
+      console.error("Error in mounting:", error);
+    }
+  };
+
+  // Wait for both timer and data fetching to complete
+  await Promise.all([loadingTimer, fetchData()]);
+
+  isLoading.value = false;
 });
 </script>
 
@@ -312,6 +486,19 @@ onMounted(async () => {
   <HomeLayout>
     <template #content>
       <v-container>
+        <!-- Add loading overlay -->
+        <v-overlay
+          :model-value="isLoading"
+          class="align-center justify-center"
+          persistent
+        >
+          <v-progress-circular
+            color="primary"
+            indeterminate
+            size="64"
+          ></v-progress-circular>
+        </v-overlay>
+
         <v-row justify="end">
           <v-col>
             <router-link to="/data_entry">
@@ -320,6 +507,16 @@ onMounted(async () => {
           </v-col>
           <v-col cols="4" class="mb-3">
             <SearchBar v-model="searchQuery" />
+          </v-col>
+          <v-col cols="2">
+            <v-btn 
+              :color="editingTopics ? 'success' : 'primary'" 
+              @click="toggleEditTopics"
+              class="ml-2"
+            >
+              <v-icon left>{{ editingTopics ? 'mdi-content-save' : 'mdi-pencil' }}</v-icon>
+              {{ editingTopics ? 'Save Topics' : 'Edit Topics' }}
+            </v-btn>
           </v-col>
         </v-row>
 
@@ -378,6 +575,16 @@ onMounted(async () => {
                     "
                   >
                     Topics
+                    <v-btn
+                      v-if="editingTopics"
+                      icon="mdi-plus"
+                      size="x-small"
+                      color="white"
+                      class="ml-2"
+                      variant="text"
+                      title="Add new topic"
+                      @click="toggleAllWwColumns"
+                    ></v-btn>
                   </th>
                   <th
                     colspan="3"
@@ -514,7 +721,26 @@ onMounted(async () => {
                       position: 'relative',
                     }"
                   >
+                    <div v-if="editingTopics" class="topic-edit-container">
+                      <input
+                        v-model="header.text"
+                        type="text"
+                        @input="onTopicChange"
+                        :placeholder="'Topic ' + (index + 1)"
+                        class="topic-edit-input"
+                        :style="{
+                          width: '90%',
+                          background: 'white',
+                          color: 'black',
+                          border: '1px solid #00796b',
+                          borderRadius: '4px',
+                          padding: '4px',
+                          textAlign: 'center',
+                        }"
+                      />
+                    </div>
                     <span
+                      v-else
                       :title="header.text || 'Topic name'"
                       style="
                         display: inline-block;
@@ -529,6 +755,7 @@ onMounted(async () => {
                         text-overflow: ellipsis;
                         white-space: nowrap;
                       "
+                      @dblclick="startEditingTopic(index)"
                     >
                       {{ header.text || "" }}
                     </span>
@@ -919,7 +1146,30 @@ onMounted(async () => {
                     <input
                       v-model="item.qaps"
                       disabled
-                      style="padding: 4px; font-size: 14px"
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
+                    />
+                  </td>
+                  <td>
+                    <input
+                      v-model="item.qaws"
+                      disabled
+                      style="
+                        width: 50px;
+                        height: 24px;
+                        text-align: center;
+                        border: 1px solid #ccc;
+                        border-radius: 4px;
+                        padding: 4px;
+                        font-size: 14px;
+                      "
                     />
                   </td>
                   <td>
@@ -942,6 +1192,7 @@ onMounted(async () => {
                     <input
                       v-model="item.quarterly_grade"
                       disabled
+                      :class="getGradeClass(item.quarterly_grade)"
                       style="
                         width: 50px;
                         height: 24px;
@@ -1118,6 +1369,26 @@ tbody tr:nth-child(even) {
   /* Darker green for contrast */
 }
 
+.v-overlay {
+  backdrop-filter: blur(4px);
+}
+
+.expand-icon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  padding: 2px;
+  font-size: 12px;
+}
+
+.expand-icon:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+  transform: scale(1.1);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .styled-table input {
@@ -1125,5 +1396,28 @@ tbody tr:nth-child(even) {
     height: 32px;
     font-size: 14px;
   }
+}
+
+.topic-edit-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.topic-edit-input {
+  background-color: white;
+  color: black;
+  border: 1px solid #00796b;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 14px;
+  width: 90%;
+  transition: all 0.3s;
+}
+
+.topic-edit-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 77, 64, 0.5);
+  border-color: #004d40;
 }
 </style>

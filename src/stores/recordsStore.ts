@@ -1,7 +1,7 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
 import { supabase } from "@/lib/supabase";
-import topicsData from "@/../public/data/topics.json"; // Import topics.json
+import topicsData from "@/data/topics.json"; // Import topics.json
 
 interface Record {
   student_id: number;

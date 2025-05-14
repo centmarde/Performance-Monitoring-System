@@ -6,7 +6,9 @@ import { useStudentsStore } from "@/stores/studentsStore";
 import SearchBar from "@/components/common/SearchBar.vue";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from 'vue-router';
-import { getTopicsForSubject } from "./axios/fetchTopics";
+import { getTopicsForSubject, getTopicIdsByClassRecord } from "./axios/fetchTopics";
+import { createTopic, updateTopicTitle } from "./axios/updateTopics";
+import NewRecordsDialog from "./dialogs/NewRecordsDialog.vue";
 
 const router = useRouter();
 
@@ -31,6 +33,7 @@ const navigateToTracking = (item) => {
     },
   });
 };
+const showSuccessDialog = ref(false);
 
 const jsondata = ref([]);
 const recordsStore = useRecordsStore();
@@ -44,11 +47,11 @@ const isLoading = ref(true);
 
 // Change from constant array to reactive ref
 const wwHeaders = ref([
-  { text: "Topic 1", value: "topic1", points: "100%", expanded: false },
-  { text: "Topic 2", value: "topic2", points: "100%", expanded: false },
-  { text: "Topic 3", value: "topic3", points: "100%", expanded: false },
-  { text: "Topic 4", value: "topic4", points: "100%", expanded: false },
-  { text: "Topic 5", value: "topic5", points: "100%", expanded: false },
+  { text: "Topic 1", value: "topic1", points: "100%", expanded: false, id: null },
+  { text: "Topic 2", value: "topic2", points: "100%", expanded: false, id: null },
+  { text: "Topic 3", value: "topic3", points: "100%", expanded: false, id: null },
+  { text: "Topic 4", value: "topic4", points: "100%", expanded: false, id: null },
+  { text: "Topic 5", value: "topic5", points: "100%", expanded: false, id: null },
 ]);
 
 const ptHeaders = [
@@ -243,33 +246,84 @@ const startAutoSave = () => {
   }, 8000);
 };
 
-const updateTopicHeaders = async () => {
-  const subjectId = localStorage.getItem("selectedSubject");
-  const subjectName = localStorage.getItem("selectedSubjectName");
-
-  if (subjectName) {
-    try {
-      const topics = await getTopicsForSubject(subjectName);
-
-      // If topics are found, update the wwHeaders
-      if (topics.length > 0) {
-        // Use up to the number of available topics
-        const topicsToUse = topics.slice(0, topics.length);
-
-        // Update the text property of each header
-        wwHeaders.value = wwHeaders.value.map((header, index) => ({
-          text: topicsToUse[index] || "", // Set blank if no topic
-          value: `topic${index + 1}`,
-          points: "100%",
-          expanded: false,
-          disabled: !topicsToUse[index], // Disable if no topic
-        }));
-
-        console.log("Updated topic headers:", wwHeaders.value);
-      }
-    } catch (error) {
-      console.error("Error updating topic headers:", error);
+// Add new topic to supabase
+const saveTopicToSupabase = async (index, title) => {
+  const subjectId = parseInt(localStorage.getItem("selectedSubject"), 10);
+  const classRecordId = parseInt(localStorage.getItem("addedClassrecord"), 10);
+  
+  if (!subjectId || !classRecordId) {
+    console.error('Missing subject ID or class record ID for topic creation');
+    return;
+  }
+  
+  // Check if this header already has an ID (existing topic)
+  if (wwHeaders.value[index].id) {
+    // Update existing topic
+    const success = await updateTopicTitle(wwHeaders.value[index].id, title);
+    if (success) {
+      console.log(`Updated topic ${wwHeaders.value[index].id} to "${title}"`);
     }
+  } else {
+    // Create new topic
+    const newTopic = await createTopic(subjectId, title, classRecordId);
+    if (newTopic) {
+      wwHeaders.value[index].id = newTopic.id;
+      console.log(`Created new topic "${title}" with ID ${newTopic.id}`);
+    }
+  }
+};
+
+// Handle topic title change
+const handleTopicChange = async (index, event) => {
+  const newTitle = event.target.value;
+  if (newTitle && newTitle !== wwHeaders.value[index].text) {
+    wwHeaders.value[index].text = newTitle;
+    await saveTopicToSupabase(index, newTitle);
+  }
+};
+
+const updateTopicHeaders = async () => {
+  const subjectId = parseInt(localStorage.getItem("selectedSubject"), 10);
+  const subjectName = localStorage.getItem("selectedSubjectName");
+  const classRecordId = parseInt(localStorage.getItem("addedClassrecord"), 10);
+
+  if (!subjectId || !subjectName) return;
+
+  try {
+    // First try to get topics specific to this class record
+    let topicsWithIds = [];
+    if (classRecordId) {
+      topicsWithIds = await getTopicIdsByClassRecord(subjectId, classRecordId);
+    }
+    
+    // If no class-specific topics found, get generic topics
+    if (topicsWithIds.length === 0) {
+      const topics = await getTopicsForSubject(subjectName, subjectId);
+      
+      // Update headers with these topics (without IDs as they're not specific to this class)
+      wwHeaders.value = wwHeaders.value.map((header, index) => ({
+        text: topics[index] || "",
+        value: `topic${index + 1}`,
+        points: "100%",
+        expanded: false,
+        disabled: !topics[index],
+        id: null
+      }));
+    } else {
+      // Update headers with class-specific topics including their IDs
+      wwHeaders.value = wwHeaders.value.map((header, index) => ({
+        text: topicsWithIds[index]?.title || "",
+        value: `topic${index + 1}`,
+        points: "100%",
+        expanded: false,
+        disabled: !topicsWithIds[index],
+        id: topicsWithIds[index]?.id || null
+      }));
+    }
+
+    console.log("Updated topic headers:", wwHeaders.value);
+  } catch (error) {
+    console.error("Error updating topic headers:", error);
   }
 };
 
@@ -324,12 +378,19 @@ onMounted(async () => {
   await Promise.all([loadingTimer, fetchData()]);
 
   isLoading.value = false;
+
+  // Show the dialog after loading is complete
+  showSuccessDialog.value = true;
 });
 
 const getGradeClass = (grade) => {
   if (grade < 75) return "fail";
   if (grade >= 75 && grade < 80) return "almost-fail";
   return "";
+};
+
+const closeSuccessDialog = () => {
+  showSuccessDialog.value = false;
 };
 </script>
 
@@ -351,6 +412,13 @@ const getGradeClass = (grade) => {
           ></v-progress-circular>
         </v-overlay>
 
+         <!-- Add the success dialog component -->
+        <NewRecordsDialog
+          :show="showSuccessDialog"
+          @close="closeSuccessDialog"
+          title="Class Record Ready"
+          message="Your class record is now ready to edit."
+        />
         <v-row justify="end">
           <v-col>
             <router-link to="/data_entry">
@@ -553,8 +621,10 @@ const getGradeClass = (grade) => {
                       position: 'relative'
                     }"
                   >
-                    <span
+                    <input
+                      :value="header.text"
                       :title="header.text"
+                      @blur="handleTopicChange(index, $event)"
                       style="
                         display: inline-block;
                         width: 90%;
@@ -568,9 +638,7 @@ const getGradeClass = (grade) => {
                         text-overflow: ellipsis;
                         white-space: nowrap;
                       "
-                    >
-                      {{ header.text}}
-                    </span>
+                    />
                     <template v-if="!header.disabled">
                       <v-icon
                         class="expand-icon"
