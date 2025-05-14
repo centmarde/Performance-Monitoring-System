@@ -26,6 +26,9 @@ export function useGroqChat() {
   const chatContent = ref("");
 
   async function startChat(studentRecord: any, studentName: string, topicNames: string[] = []) {
+    // Filter out any empty topic names
+    const validTopicNames = topicNames.filter(topic => topic && topic.trim() !== "");
+    
     const chatCompletion = await groq.chat.completions.create({
       messages: [
         {
@@ -36,7 +39,7 @@ export function useGroqChat() {
         {
           role: "system",
           content: ` 
-          The actual topic names for topic1 through topic5 are: ${JSON.stringify(topicNames)}.
+          The actual topic names for topic1 through topic5 are: ${JSON.stringify(validTopicNames)}.
           WW = written works (these are the named topics), PT = personal task (pt1 through pt10), and QA = quality assessment (qa1).
           Scores below 75 are considered failing, 75-80 are borderline, and above 80 are good.
           Identify which specific named topics have the lowest scores and suggest concrete improvement strategies tailored to those topics.

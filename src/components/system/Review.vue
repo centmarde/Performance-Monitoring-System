@@ -101,12 +101,35 @@ export default defineComponent({
     const availableQuarters = ref([]);
     const subjectName = ref("");
     const topicNames = ref([]);
+    const topicIds = ref({});
 
     const { chatContent, startChat } = useGroqChat();
 
     // Fetch topic names for a given subject
     const fetchTopicNames = async (subjectName) => {
       try {
+        // First, try to fetch topics from Supabase
+        const { data: supabaseTopics, error: supabaseError } = await supabase
+          .from('topics')
+          .select('title')
+          .order('id', { ascending: true })
+          .limit(5);
+        
+        // If Supabase fetch was successful and returned topics
+        if (!supabaseError && supabaseTopics && supabaseTopics.length > 0) {
+          console.log('Topics fetched from Supabase:', supabaseTopics);
+          // Extract topic titles from the fetched data
+          topicNames.value = supabaseTopics.map(topic => topic.title);
+          
+          // Fill with empty strings if less than 5 topics
+          while (topicNames.value.length < 5) {
+            topicNames.value.push("");
+          }
+          return topicNames.value;
+        } 
+        
+        // Fallback: If Supabase fetch failed or returned no topics, try the local JSON file
+        console.warn('Falling back to local JSON file for topics');
         const response = await axios.get('/data/topics.json');
         const subjects = response.data;
         
@@ -138,8 +161,13 @@ export default defineComponent({
         
         // Start chat with topic names
         if (subjectName.value) {
-          const topics = await fetchTopicNames(subjectName.value);
-          startChat(studentRecord.value, selectedStudent.value, topics);
+          // Use topicNames from route if available, otherwise fetch them
+          if (topicNames.value.length === 0) {
+            const topics = await fetchTopicNames(subjectName.value);
+            startChat(studentRecord.value, selectedStudent.value, topics);
+          } else {
+            startChat(studentRecord.value, selectedStudent.value, topicNames.value);
+          }
         } else {
           startChat(studentRecord.value, selectedStudent.value);
         }
@@ -298,6 +326,7 @@ export default defineComponent({
         const topicKey = `topic${i}`;
         if (studentRecord.value[topicKey] !== undefined) {
           chartData.push(studentRecord.value[topicKey]);
+          // Use the provided topic names if available
           labels.push(topicNames.value[i-1] || `Topic ${i}`);
         }
       }
@@ -359,6 +388,26 @@ export default defineComponent({
     onMounted(async () => {
       await fetchSections();
 
+      // Parse the topic names from route
+      try {
+        if (route.query.topicNames) {
+          topicNames.value = JSON.parse(route.query.topicNames);
+          console.log('Topic names from route:', topicNames.value);
+        }
+      } catch (error) {
+        console.error('Error parsing topic names:', error);
+      }
+      
+      // Parse the topic IDs map from route
+      try {
+        if (route.query.topicIds) {
+          topicIds.value = JSON.parse(route.query.topicIds);
+          console.log('Topic ID mappings from route:', topicIds.value);
+        }
+      } catch (error) {
+        console.error('Error parsing topic IDs:', error);
+      }
+
       // Set the values from route query if they exist
       if (route.query.section) {
         selectedSection.value = route.query.section;
@@ -369,11 +418,14 @@ export default defineComponent({
         selectedStudent.value = route.query.name;
       }
 
-      // Get subject name from localStorage
+      // Get subject name from localStorage or route
       const storedSubjectName = localStorage.getItem("selectedSubjectName");
       if (storedSubjectName) {
         subjectName.value = storedSubjectName;
-        await fetchTopicNames(storedSubjectName);
+        // Only fetch topics if we don't already have them from the route
+        if (topicNames.value.length === 0) {
+          await fetchTopicNames(storedSubjectName);
+        }
       }
 
       // Handle subject and quarter selection automatically
@@ -403,6 +455,7 @@ export default defineComponent({
       availableQuarters,
       subjectName,
       topicNames,
+      topicIds,
     };
   },
 });

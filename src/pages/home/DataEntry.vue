@@ -357,6 +357,8 @@ import { useRecordsStore } from "@/stores/recordsStore";
 import { useToast } from "vue-toastification";
 import { supabase } from "@/lib/supabase";
 import { useTheme } from "vuetify";
+import { fetchTopicsFromJson } from "@/pages/home/axios/fetchTopics";
+import { createTopic } from "@/pages/home/axios/updateTopics";
 
 const theme = useTheme();
 const isDarkMode = computed(() => theme.current.value.dark);
@@ -482,33 +484,66 @@ const saveClassRecord = async () => {
     return;
   }
 
-  await classRecordStore.addClassRecord(
-    parsedQuarter.toString(),
-    subjectId.toString(),
-    sectionId.toString()
-  );
-
-  const addedClassRecordId = localStorage.getItem("addedClassrecord");
-  const classRecordId = parseInt(addedClassRecordId ?? "0", 10);
-
-  if (!isNaN(sectionId) && !isNaN(classRecordId)) {
-    await recordsStore.addRecordsForSection(
-      Number(sectionId),
-      Number(classRecordId),
-      selectedSubject.value // Pass the subject title here
+  try {
+    // Add class record
+    await classRecordStore.addClassRecord(
+      parsedQuarter.toString(),
+      subjectId.toString(),
+      sectionId.toString()
     );
-  } else {
-    console.error("Invalid section or class record ID");
+
+    // Get the ID of the newly added class record
+    const addedClassRecordId = localStorage.getItem("addedClassrecord");
+    const classRecordId = parseInt(addedClassRecordId ?? "0", 10);
+
+    if (isNaN(classRecordId)) {
+      console.error("Invalid class record ID");
+      return;
+    }
+
+    // Add student records
+    if (!isNaN(sectionId) && !isNaN(classRecordId)) {
+      await recordsStore.addRecordsForSection(
+        Number(sectionId),
+        Number(classRecordId),
+        selectedSubject.value
+      );
+    }
+
+    // Fetch topics from JSON and add them to the database
+    try {
+      const topicsFromJson = await fetchTopicsFromJson();
+      const subjectData = topicsFromJson.find(
+        (item) => item.subject.toLowerCase() === selectedSubject.value.toLowerCase()
+      );
+
+      if (subjectData && Array.isArray(subjectData.topics)) {
+        for (const topicTitle of subjectData.topics) {
+          await createTopic(subjectId, topicTitle, classRecordId);
+        }
+        console.log(`Added ${subjectData.topics.length} topics for ${selectedSubject.value}`);
+      } else {
+        console.log(`No topics found for subject ${selectedSubject.value} in JSON`);
+      }
+    } catch (topicError) {
+      console.error("Error adding topics:", topicError);
+      // Continue without failing the entire process
+    }
+
+    // Store selected subject name for later use
+    localStorage.setItem("selectedSubjectName", selectedSubject.value);
+
+    classRecordDialog.value = false;
+
+    toast.success("Subject and topics added successfully.", {
+      timeout: 3000,
+    });
+  } catch (error) {
+    console.error("Error saving class record:", error);
+    toast.error("Failed to add subject. Please try again.", {
+      timeout: 3000,
+    });
   }
-
-  // Store selected subject name for later use
-  localStorage.setItem("selectedSubjectName", selectedSubject.value);
-
-  classRecordDialog.value = false;
-
-  toast.success("Subject added successfully.", {
-    timeout: 3000,
-  });
 };
 
 // New function to find subject ID while ensuring it's assigned to the current user
@@ -562,7 +597,7 @@ const handleCardClick = async (classRecordId: number) => {
   }
 };
 
-const enterRecords = () => {
+const enterRecords = async () => {
   if (activeSubjectId.value !== null) {
     localStorage.setItem("classRecordId", activeSubjectId.value.toString());
     router.push("/recentrecords");
